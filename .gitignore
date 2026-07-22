@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Environment files
+.env
+
+# Build outputs
+.output/
+dist/
+
+# Logs
+*.log
+
+# AI agent files
+.agents/
+.claude/
+.windsurf/
+skills-lock.json
+
+# Generated
+/generated/prisma
