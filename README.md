@@ -1,5 +1,16 @@
 # AI Hackathon
 
+## 每次開始前確認動作
+
+```
+git fetch origin    # 確認是否有未抓取的新檔案
+git rebase origin/main  # 進行同步(可以視情況換成需要的指令)
+
+```
+- 編輯前確認所在分枝(branch)
+- 透過 github 頁面進行 pull request 合併至主分枝(main)
+- 請撰寫有意義的 commit
+
 ## 專案結構
 
 ```
@@ -50,10 +61,12 @@ npx prisma dev
 
 # Terminal 2 - 後端
 cd backend
+npm install
 node index.js
 
 # Terminal 3 - 前端
 cd frontend
+npm install
 npm run dev
 ```
 
