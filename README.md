@@ -17,7 +17,7 @@ ai-hackthon/
 ## 取得專案
 
 ```bash
-git clone <你的 repo URL>
+git clone https://github.com/yichen-bear/ai-hackthon
 cd ai-hackthon
 ```
 
