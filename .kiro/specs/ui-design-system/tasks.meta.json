@@ -1,0 +1,355 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 建立 `frontend/app/assets/css/design-system.css`，在 `:root` 中定義所有 CSS Token": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830672164
+      },
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830682194
+      },
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830766735
+      }
+    ],
+    "1.2 更新 `frontend/nuxt.config.ts`，在 `css` 陣列中全站引入 `design-system.css`": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830672210
+      },
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830682870
+      },
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830767805
+      }
+    ],
+    "1.3 更新 `frontend/app/layouts/default.vue`，實作 430px 置中容器 Layout": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830672251
+      },
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830771512
+      },
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830806752
+      }
+    ],
+    "2.1 建立 `frontend/app/components/ui/ModuleTab.vue`": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830672319
+      },
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830811378
+      },
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830912899
+      }
+    ],
+    "2.2 建立 `frontend/app/components/ui/StatusBadge.vue`": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830672352
+      },
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830812095
+      },
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830913415
+      }
+    ],
+    "2.3 建立 `frontend/app/components/ui/TimelineSelector.vue`": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830672392
+      },
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830812602
+      },
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830914228
+      }
+    ],
+    "2.4 建立 `frontend/app/components/ui/ProgressBar.vue`": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830672441
+      },
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830813531
+      },
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830914998
+      }
+    ],
+    "2.6 建立 `frontend/app/components/ui/DashboardCard.vue`": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830672488
+      },
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830814287
+      },
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830915531
+      }
+    ],
+    "2.7 建立 `frontend/app/components/ui/AiButton.vue`": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830672520
+      },
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830814804
+      },
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830916306
+      }
+    ],
+    "3.1 建立 `frontend/app/components/ui/AppHeader.vue`": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830672554
+      },
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830921038
+      },
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831324485
+      }
+    ],
+    "3.2 更新 `frontend/app/layouts/default.vue`，加入 AppHeader 與 AiButton": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830672588
+      },
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831339759
+      },
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831379719
+      }
+    ],
+    "4. 檢查點 — 全域元件基礎整合驗證": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830672634
+      },
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831383827
+      }
+    ],
+    "5.1 建立 `frontend/app/components/food/BookingCard.vue`": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830672692
+      },
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831388669
+      },
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831487618
+      }
+    ],
+    "5.2 建立 `frontend/app/components/food/FoodMap.vue`": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830672729
+      },
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831389332
+      },
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831488316
+      }
+    ],
+    "5.3 建立 `frontend/app/components/food/CalorieDashboard.vue`": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830672760
+      },
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831390375
+      },
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831488855
+      }
+    ],
+    "5.5 建立 `frontend/app/components/food/FoodPassport.vue`": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830672797
+      },
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831391052
+      },
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831489883
+      }
+    ],
+    "6.1 更新 `frontend/app/pages/food.vue`，套用 `.food-module` 作用域 Token 覆寫與完整頁面佈局": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830672836
+      },
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831496133
+      },
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831570333
+      }
+    ],
+    "7.1 為所有可互動元件補充無障礙屬性與鍵盤支援": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830672868
+      },
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831574961
+      }
+    ],
+    "8. 最終檢查點 — 全面整合驗證": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830672910
+      },
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831580476
+      }
+    ],
+    "1. 建立全域 CSS 設計 Token 與基礎配置": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830806828
+      }
+    ],
+    "2. 實作全域 UI 基礎元件": [
+      {
+        "executionId": "4784b95d-595a-42e6-98cb-3b94ca05f286",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784830916342
+      }
+    ],
+    "3. 建立 Header 元件與全域 Layout 整合": [
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831379765
+      }
+    ],
+    "5. 實作食模組元件": [
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831489932
+      }
+    ],
+    "6. 組裝食模組頁面與作用域 Token 覆寫": [
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831570404
+      }
+    ],
+    "7. 無障礙驗收與互動回饋補強": [
+      {
+        "executionId": "d7471442-ae5f-439c-9b6f-b228ed31b5ac",
+        "chatSessionId": "sess_ee70ecd8-53ea-4e45-bb23-ec10f410e8c9",
+        "timestamp": 1784831575027
+      }
+    ]
+  }
+}

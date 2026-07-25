@@ -1,0 +1,86 @@
+/* ============================================================
+   AI 生活助手 — Design System
+   全域 CSS Token（CSS 自訂屬性）、基礎重置與版面樣式
+   ============================================================ */
+
+/* ── CSS Token 定義（:root）── */
+:root {
+  /* ── 顏色：背景 ── */
+  --color-bg-page: #fafaf9;          /* 頁面背景，米白 */
+  --color-bg-card: #ffffff;          /* 卡片背景，純白 */
+
+  /* ── 顏色：主色（橘紅系） ── */
+  --color-primary: #f97316;          /* 主色，橘紅，選中狀態與強調 */
+  --color-primary-light: #fff7ed;    /* 主色淡底 */
+
+  /* ── 顏色：次色（鮮綠系） ── */
+  --color-secondary: #22c55e;        /* 次色，鮮綠，選中時段按鈕 */
+  --color-secondary-light: #dcfce7;  /* 次色淡底 */
+
+  /* ── 顏色：強調色 ── */
+  --color-accent-blue: #0369a1;      /* 藍色強調字（外送標籤） */
+  --color-accent-blue-light: #e0f2fe;
+  --color-accent-red: #e11d48;       /* 紅色強調字（熱門/超標） */
+  --color-accent-red-light: #ffe4e6;
+
+  /* ── 顏色：文字 ── */
+  --color-text-primary: #1c1917;     /* 主要文字，近黑 */
+  --color-text-secondary: #78716c;   /* 次要文字，灰 */
+  --color-text-disabled: #cbd5e1;    /* 停用/未選中文字，淡灰 */
+
+  /* ── 顏色：結構 ── */
+  --color-border: #e2e8f0;           /* 一般邊框 */
+  --color-progress-bg: #f1f5f9;      /* 進度條底色 */
+
+  /* ── 間距（4px 基礎單位） ── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+
+  /* ── 圓角 ── */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* ── 陰影 ── */
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.06);    /* 卡片極輕微陰影 */
+  --shadow-float: 0 4px 16px rgba(0, 0, 0, 0.14);  /* 懸浮元素陰影 */
+
+  /* ── 字體大小 ── */
+  --text-xs: 11px;
+  --text-sm: 13px;
+  --text-base: 15px;
+  --text-lg: 17px;
+  --text-xl: 20px;
+}
+
+/* ── 全域 CSS 重置 ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* body：舊版瀏覽器備用靜態值在 var() 前一行 */
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  /* 備用靜態值（舊版瀏覽器降級） */
+  background-color: #fafaf9;
+  background-color: var(--color-bg-page, #fafaf9);
+}
+
+/* ── .app-container：全站內容置中容器 ── */
+.app-container {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  /* 備用靜態值（舊版瀏覽器降級） */
+  background: #ffffff;
+  background: var(--color-bg-card, #ffffff);
+  position: relative;
+}
