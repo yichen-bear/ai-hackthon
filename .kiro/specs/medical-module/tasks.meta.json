@@ -1,0 +1,241 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Create `frontend/app/pages/medical.vue` with state management and layout": [
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004343379
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004354091
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004449965
+      }
+    ],
+    "1.2 Create `frontend/app/utils/medical-validators.ts` with shared pure logic functions": [
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004343480
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004354695
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004450374
+      }
+    ],
+    "2.1 Create `frontend/app/components/medical/SosHeader.vue`": [
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004343533
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004455951
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004616711
+      }
+    ],
+    "3.1 Create `frontend/app/components/medical/MedicalResourceCard.vue` — State A (resource list/map)": [
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004343584
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004624243
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004745124
+      }
+    ],
+    "3.2 Create `frontend/app/components/medical/MedicalResourceCard.vue` — State B (AI diagnosis)": [
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004343628
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004751079
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004871673
+      }
+    ],
+    "4. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004343701
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004897373
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004901726
+      }
+    ],
+    "5.1 Create `frontend/app/components/medical/HealthReminders.vue`": [
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004343746
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004456695
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004617186
+      }
+    ],
+    "6.1 Create `frontend/app/components/medical/PrescriptionManager.vue`": [
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004343789
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004457397
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004618112
+      }
+    ],
+    "7.1 Create `frontend/app/components/medical/MedicineDelivery.vue`": [
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004343837
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004458088
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004618865
+      }
+    ],
+    "8.1 Wire all components together in medical.vue and verify end-to-end flow": [
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004343880
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004906130
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785005024262
+      }
+    ],
+    "9. Final checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004343928
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785005029606
+      },
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785005034004
+      }
+    ],
+    "1. Set up medical module page and shared utilities": [
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004450433
+      }
+    ],
+    "2. Implement SOS emergency section": [
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004616762
+      }
+    ],
+    "5. Implement Health Reminders component": [
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004617225
+      }
+    ],
+    "6. Implement Prescription Manager component": [
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004618161
+      }
+    ],
+    "7. Implement Medicine Delivery component": [
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004618927
+      }
+    ],
+    "3. Implement Medical Resource Card (dual-state)": [
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785004871723
+      }
+    ],
+    "8. Integration and wiring": [
+      {
+        "executionId": "8c09228b-9de9-45ed-bdd6-db32e3fe9105",
+        "chatSessionId": "sess_7c46ea12-37c3-49c5-9f3e-8af9cde997a5",
+        "timestamp": 1785005024320
+      }
+    ]
+  }
+}
