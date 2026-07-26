@@ -1,5 +1,5 @@
 <script setup lang="ts">
-type ModuleKey = 'food' | 'medical' | 'home' | 'transport' | 'booking' | 'entertainment'
+type ModuleKey = 'food' | 'medical' | 'housing' | 'transport' | 'booking' | 'entertainment'
 
 interface ModuleItem {
   key: ModuleKey
@@ -12,7 +12,7 @@ const props = defineProps<{ activeTab: ModuleKey }>()
 const modules: ModuleItem[] = [
   { key: 'food',          label: '食', route: '/food' },
   { key: 'medical',       label: '醫', route: '/medical' },
-  { key: 'home',          label: '住', route: '/home' },
+  { key: 'housing',       label: '住', route: '/housing' },
   { key: 'transport',     label: '行', route: '/transport' },
   { key: 'booking',       label: '預', route: '/booking' },
   { key: 'entertainment', label: '樂', route: '/entertainment' },

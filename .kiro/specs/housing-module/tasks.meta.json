@@ -1,0 +1,161 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Create `frontend/app/components/housing/CommunityService.vue`": [
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068534599
+      },
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068544590
+      },
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068646221
+      }
+    ],
+    "2.1 Create `frontend/app/components/housing/ParcelDashboard.vue`": [
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068534658
+      },
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068545300
+      },
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068646743
+      }
+    ],
+    "3. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068534708
+      },
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068763217
+      }
+    ],
+    "4.1 Create `frontend/app/components/housing/GarbageAiAssistant.vue`": [
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068534781
+      },
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068657101
+      },
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068748511
+      }
+    ],
+    "5.1 Create `frontend/app/components/housing/RepairTracker.vue`": [
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068534831
+      },
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068782587
+      },
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068874620
+      }
+    ],
+    "6. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068534884
+      },
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068880051
+      }
+    ],
+    "7.1 Create `frontend/app/pages/housing.vue` with state management, layout, and demo panel": [
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068534930
+      },
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068885212
+      },
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068964965
+      }
+    ],
+    "8. Final checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068534975
+      },
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068965651
+      }
+    ],
+    "1. Implement CommunityService component (simplest, list rendering)": [
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068646269
+      }
+    ],
+    "2. Implement ParcelDashboard component (list + toggle logic)": [
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068646790
+      }
+    ],
+    "4. Implement GarbageAiAssistant component (simulation + form)": [
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068748573
+      }
+    ],
+    "5. Implement RepairTracker component (dual-state, most complex)": [
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068874675
+      }
+    ],
+    "7. Assemble housing page and Demo control panel": [
+      {
+        "executionId": "5512578e-e2ea-4c99-8424-f4dd75e010f1",
+        "chatSessionId": "sess_b2fe641a-110e-4588-bdf4-902eba16af0c",
+        "timestamp": 1785068965018
+      }
+    ]
+  }
+}
