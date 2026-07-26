@@ -1,0 +1,192 @@
+[
+  {
+    "key": "food",
+    "label": "食",
+    "name": "飲食",
+    "color": "#ff5252",
+    "features": [
+      {
+        "name": "AI 智能訂位",
+        "description": "透過語音或文字，快速完成餐廳訂位，系統自動帶入您的偏好。",
+        "link": "/food/booking"
+      },
+      {
+        "name": "即時桌位查詢",
+        "description": "查看餐廳當前可訂時段，並直接選取有位時段。",
+        "link": "/food/table"
+      },
+      {
+        "name": "熱量追蹤",
+        "description": "記錄每餐攝取熱量，並與每日目標比對，掌握健康狀態。",
+        "link": "/food/calorie"
+      },
+      {
+        "name": "熱量追蹤",
+        "description": "記錄每餐攝取熱量，並與每日目標比對，掌握健康狀態。",
+        "link": "/food/calorie"
+      },
+      {
+        "name": "熱量追蹤",
+        "description": "記錄每餐攝取熱量，並與每日目標比對，掌握健康狀態。",
+        "link": "/food/calorie"
+      },
+      {
+        "name": "熱量追蹤",
+        "description": "記錄每餐攝取熱量，並與每日目標比對，掌握健康狀態。",
+        "link": "/food/calorie"
+      },
+      {
+        "name": "美食護照",
+        "description": "收集解鎖的餐廳徽章，記錄您的飲食足跡與成就。",
+        "link": ""
+      }
+    ],
+    "description": "從訂位到營養，全面管理您的飲食生活",
+    "route": "/food"
+  },
+  {
+    "key": "medical",
+    "label": "醫",
+    "name": "醫療",
+    "color": "#3b82f6",
+    "features": [
+      {
+        "name": "線上問診",
+        "description": "與專業醫師即時視訊或文字諮詢，免去掛號排隊。",
+        "link": "/medical/consult"
+      },
+      {
+        "name": "智能預約掛號",
+        "description": "根據症狀推薦科別，一鍵完成醫院掛號。",
+        "link": "/medical/appointment"
+      },
+      {
+        "name": "用藥提醒",
+        "description": "設定服藥時間，系統定時通知，不再忘記吃藥。",
+        "link": ""
+      }
+    ],
+    "description": "足不出戶，享受專業醫療健康服務",
+    "route": "/medical"
+  },
+  {
+    "key": "home",
+    "label": "住",
+    "name": "居住",
+    "color": "#8b5cf6",
+    "features": [
+      {
+        "name": "智能家居控制",
+        "description": "遠端操控燈光、空調與家電，打造舒適居家環境。",
+        "link": "/home/control"
+      },
+      {
+        "name": "物業報修",
+        "description": "拍照上傳，即時通報社區管理處處理修繕需求。",
+        "link": "/home/repair"
+      },
+      {
+        "name": "訪客管理",
+        "description": "提前登記訪客，並發送臨時門禁碼，安全便利。",
+        "link": "/home/visitor"
+      },
+      {
+        "name": "社區互動",
+        "description": "查看社區公告、參與活動投票，增進鄰里關係。",
+        "link": ""
+      }
+    ],
+    "description": "打造安全、便捷的智慧居家體驗",
+    "route": "/home"
+  },
+  {
+    "key": "transport",
+    "label": "行",
+    "name": "交通",
+    "color": "#f59e0b",
+    "features": [
+      {
+        "name": "即時路況",
+        "description": "顯示主要道路車流狀況，提前避開擁擠路段。",
+        "link": "/transport/traffic"
+      },
+      {
+        "name": "智能路線規劃",
+        "description": "結合即時路況與大眾運輸資訊，推薦最佳路線。",
+        "link": "/transport/route"
+      },
+      {
+        "name": "共享出行",
+        "description": "整合多種共享運具（單車、機車、汽車），一鍵租借。",
+        "link": "/transport/sharing"
+      },
+      {
+        "name": "共享出行",
+        "description": "整合多種共享運具（單車、機車、汽車），一鍵租借。",
+        "link": "/transport/sharing"
+      },
+      {
+        "name": "停車助手",
+        "description": "查詢附近停車場空位，並引導至最鄰近車位。",
+        "link": ""
+      }
+    ],
+    "description": "讓每一次出行都高效、順暢",
+    "route": "/transport"
+  },
+  {
+    "key": "booking",
+    "label": "預",
+    "name": "預訂",
+    "color": "#14b8a6",
+    "features": [
+      {
+        "name": "酒店預訂",
+        "description": "比價並預訂住宿，支援快速入住與評價查看。",
+        "link": "/booking/hotel"
+      },
+      {
+        "name": "活動票務",
+        "description": "尋找熱門展演、賽事，線上購票並管理電子票券。",
+        "link": "/booking/events"
+      },
+      {
+        "name": "場地預約",
+        "description": "預訂會議室、運動場或派對空間，即時確認可用時段。",
+        "link": "/booking/venue"
+      },
+      {
+        "name": "日程管理",
+        "description": "整合所有預訂行程，提供行事曆與提醒通知。",
+        "link": ""
+      }
+    ],
+    "description": "一站式預訂，輕鬆規劃您的行程",
+    "route": "/booking"
+  },
+  {
+    "key": "entertainment",
+    "label": "樂",
+    "name": "娛樂",
+    "color": "#ec4899",
+    "features": [
+      {
+        "name": "個性推薦",
+        "description": "根據您的興趣與習慣，推薦電影、音樂或遊戲。",
+        "link": "/entertainment/recommend"
+      },
+      {
+        "name": "活動發現",
+        "description": "探索城市中的藝文展覽、市集與派對活動。",
+        "link": "/entertainment/discover"
+      },
+      {
+        "name": "社交互動",
+        "description": "與朋友分享活動、組團參與，擴大社交圈。",
+        "link": "/entertainment/social"
+      }
+    ],
+    "description": "發現精彩，讓生活充滿樂趣",
+    "route": "/entertainment"
+  }
+]
