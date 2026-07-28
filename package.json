@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "concurrently -n prisma,backend,frontend -c blue,green,magenta \"npm run dev:prisma\" \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:prisma": "cd backend && npm install && npx prisma dev",
+    "dev:prisma": "cd backend && npm install && npx prisma db pull && npx prisma generate && npx prisma studio",
     "dev:backend": "cd backend && npm install && node index.js",
     "dev:frontend": "cd frontend && npm install && npm run dev"
   },
