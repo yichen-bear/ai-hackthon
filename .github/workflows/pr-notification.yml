@@ -1,0 +1,19 @@
+name: PR Notification
+
+on:
+  pull_request:
+    types: [opened]
+    branches:
+      - main
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Show PR information
+        run: |
+          echo "A new Pull Request was opened!"
+          echo "Title: ${{ github.event.pull_request.title }}"
+          echo "Author: ${{ github.event.pull_request.user.login }}"
+          echo "URL: ${{ github.event.pull_request.html_url }}"
