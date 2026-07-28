@@ -23,20 +23,19 @@ model CmsHomepageService {
   imgUrl          String?                  @map("img_url")
   description     String?
   vendor          CmsHomepageServiceVendor @relation(fields: [serviceVendorId], references: [id])
+  serviceType     ServiceType              @relation(fields: [type], references: [code])
 
-  serviceType     ServiceType @relation(fields: [type], references: [code])
   @@map("cms_homepage_service")
 }
 
 model ServiceType {
-  code        String   @id @db.VarChar(2)
-  name        String   @db.VarChar(50)
-  description String?  @db.Text
-  sort        Int      @default(0)
-  isDeleted   String   @default("0") @map("is_deleted") @db.VarChar(2)
-  creTime     DateTime @default(now()) @map("cre_time") @db.Timestamptz
-  updTime     DateTime @default(now()) @map("upd_time") @db.Timestamptz
-
+  code        String               @id @db.VarChar(2)
+  name        String               @db.VarChar(50)
+  description String?
+  sort        Int                  @default(0)
+  isDeleted   String               @default("0") @map("is_deleted") @db.VarChar(2)
+  creTime     DateTime             @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updTime     DateTime             @default(now()) @map("upd_time") @db.Timestamptz(6)
   services    CmsHomepageService[]
 
   @@map("service_type")
