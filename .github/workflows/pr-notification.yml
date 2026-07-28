@@ -11,9 +11,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Show PR information
-        run: |
-          echo "A new Pull Request was opened!"
-          echo "Title: ${{ github.event.pull_request.title }}"
-          echo "Author: ${{ github.event.pull_request.user.login }}"
-          echo "URL: ${{ github.event.pull_request.html_url }}"
+      - name: Send PR notification
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.resend.com
+          server_port: 465
+          username: resend
+          password: ${{ secrets.RESEND_API_KEY }}
+          subject: "New Pull Request to main: ${{ github.event.pull_request.title }}"
+          to: ${{ secrets.COLLABORATOR_EMAILS }}
+          from: "GitHub PR Notification <onboarding@resend.dev>"
+          body: |
+            A new Pull Request has been opened to the main branch.
+
+            Title:
+            ${{ github.event.pull_request.title }}
+
+            Author:
+            ${{ github.event.pull_request.user.login }}
+
+            Pull Request URL:
+            ${{ github.event.pull_request.html_url }}
