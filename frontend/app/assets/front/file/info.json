@@ -106,29 +106,39 @@
     "color": "#f59e0b",
     "features": [
       {
-        "name": "即時路況",
-        "description": "顯示主要道路車流狀況，提前避開擁擠路段。",
-        "link": "/transport/traffic"
+        "name": "智慧路線規劃",
+        "description": "支援公車、捷運、高鐵、台鐵、汽車、機車多種交通方式，結合即時路況推薦最佳路線。",
+        "link": "/transport"
       },
       {
-        "name": "智能路線規劃",
-        "description": "結合即時路況與大眾運輸資訊，推薦最佳路線。",
-        "link": "/transport/route"
+        "name": "叫車服務",
+        "description": "整合 yoxi 叫車平台，支援即時/預約叫車、無障礙專車與寵物友善車。",
+        "link": "/transport"
       },
       {
-        "name": "共享出行",
-        "description": "整合多種共享運具（單車、機車、汽車），一鍵租借。",
-        "link": "/transport/sharing"
+        "name": "模擬購票與票券夾",
+        "description": "高鐵/台鐵模擬購票流程，動態 QR Code 票券夾統一管理。",
+        "link": "/transport"
       },
       {
-        "name": "共享出行",
-        "description": "整合多種共享運具（單車、機車、汽車），一鍵租借。",
-        "link": "/transport/sharing"
+        "name": "共享運具租賃",
+        "description": "查看周邊 YouBike、GoShare、iRent 站點，一鍵完成租借。",
+        "link": "/transport"
       },
       {
         "name": "停車助手",
-        "description": "查詢附近停車場空位，並引導至最鄰近車位。",
-        "link": ""
+        "description": "查詢周邊停車場即時空位，記錄停放位置避免找不到車。",
+        "link": "/transport"
+      },
+      {
+        "name": "情境智慧推播",
+        "description": "依據時間、天氣或餐廳行程，主動詢問是否叫車或規劃路線。",
+        "link": "/transport"
+      },
+      {
+        "name": "碳足跡追蹤",
+        "description": "追蹤交通碳排放量，透過減碳成就徽章鼓勵綠色出行。",
+        "link": "/transport"
       }
     ],
     "description": "讓每一次出行都高效、順暢",
