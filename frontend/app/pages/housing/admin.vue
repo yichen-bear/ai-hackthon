@@ -139,29 +139,44 @@ function resetDemo() {
 </script>
 
 <template>
-  <div class="housing-module">
-    <main class="housing-page" role="main">
+  <!-- ═══ 430px 手機容器 ═══ -->
+  <div class="w-full max-w-[430px] mx-auto min-h-screen bg-[#fafaf9] relative flex flex-col pb-20 shadow-xl border-x border-[#e2e8f0]">
 
-      <!-- ═══ 頂部數據看板 ═══ -->
+    <!-- ═══ 固定 Header：三欄式 50px ═══ -->
+    <header class="ha__header">
+      <div class="ha__header-left">
+        <span>📍 台北市</span>
+      </div>
+      <div class="ha__header-center">
+        <NuxtLink
+          class="px-3 py-1 bg-[#fff7ed] text-[#f97316] border border-[#f97316]/20 rounded-full text-xs font-bold inline-flex items-center gap-1 no-underline"
+          to="/housing"
+        >
+          📱 切換至用戶端
+        </NuxtLink>
+      </div>
+      <div class="ha__header-right">
+        <span>👤 小明</span>
+      </div>
+    </header>
+
+    <!-- ═══ 主內容區（Header 下方留空間） ═══ -->
+    <main class="ha__content" role="main">
+
+      <!-- ═══ 頂部數據 Badge 列 ═══ -->
       <section class="ha__stats" aria-label="統計概覽">
-        <div class="ha__stat-item">
-          <span class="ha__stat-icon">🔴</span>
-          <span class="ha__stat-label">急件</span>
-          <span class="ha__stat-value">{{ urgentRepairCount }}</span>
+        <div class="ha__stat-badge ha__stat-badge--red">
+          <span>🔴 急件 ({{ urgentRepairCount }})</span>
         </div>
-        <div class="ha__stat-item">
-          <span class="ha__stat-icon">📦</span>
-          <span class="ha__stat-label">包裹</span>
-          <span class="ha__stat-value">{{ pendingParcelCount }}</span>
+        <div class="ha__stat-badge ha__stat-badge--blue">
+          <span>📦 包裹 ({{ pendingParcelCount }})</span>
         </div>
-        <div class="ha__stat-item">
-          <span class="ha__stat-icon">🛠️</span>
-          <span class="ha__stat-label">完工</span>
-          <span class="ha__stat-value">{{ completedCount }}</span>
+        <div class="ha__stat-badge ha__stat-badge--green">
+          <span>🛠️ 完工 ({{ completedCount }})</span>
         </div>
       </section>
 
-      <!-- ═══ Tab 選擇器 ═══ -->
+      <!-- ═══ Tab 切換列 (Segmented Control) ═══ -->
       <nav class="ha__tabs" role="tablist" aria-label="廠商管理功能切換">
         <button
           v-for="(tab, idx) in tabs"
@@ -173,14 +188,13 @@ function resetDemo() {
           :class="{ 'ha__tab--active': activeTab === idx }"
           @click="activeTab = idx"
         >
-          {{ tab }}
+          {{ ['🛠️', '📦', '🏢'][idx] }} {{ tab }}
         </button>
       </nav>
 
       <!-- ═══ Tab 1：水電派單 ═══ -->
       <section v-show="activeTab === 0" id="panel-0" role="tabpanel" aria-label="水電急件派單">
         <div v-for="ticket in repairTickets" :key="ticket.id" class="ha__card">
-          <!-- 標題列 -->
           <div class="ha__card-row">
             <span
               class="ha__badge"
@@ -190,12 +204,9 @@ function resetDemo() {
             </span>
             <span class="ha__card-category">{{ ticket.category }}</span>
           </div>
-          <!-- 地址 -->
           <p class="ha__card-title">📍 {{ ticket.address }}</p>
-          <!-- 照片 + 描述 -->
           <p class="ha__card-meta">{{ ticket.photo }}</p>
           <p class="ha__card-desc">{{ ticket.description }}</p>
-          <!-- 操作 -->
           <button
             v-if="ticket.status === 'pending'"
             class="ha__action-btn"
@@ -244,8 +255,6 @@ function resetDemo() {
           </div>
           <p class="ha__card-title">{{ parcel.name }}</p>
           <p v-if="parcel.preference" class="ha__card-desc">{{ parcel.preference }}</p>
-
-          <!-- 操作按鈕 -->
           <div v-if="parcel.status === 'pending'" class="ha__btn-group">
             <button class="ha__action-btn" @click="receiveParcel(parcel)" aria-label="簽收">
               ✅ 簽收
@@ -267,8 +276,6 @@ function resetDemo() {
           <p class="ha__card-meta">📍 {{ report.location }} · 👤 {{ report.reporter }}</p>
           <p class="ha__card-meta">{{ report.photo }}</p>
           <p class="ha__card-desc">{{ report.description }}</p>
-
-          <!-- 狀態切換三段式 -->
           <div class="ha__step-group" role="group" aria-label="狀態流程">
             <button
               class="ha__step-btn"
@@ -305,71 +312,98 @@ function resetDemo() {
     </main>
 
     <!-- ═══ Demo 控制面板（Hackathon 展示用） ═══ -->
-    <div class="housing-demo-panel">
-      <button class="housing-demo-btn housing-demo-btn--reset" @click="resetDemo">
+    <div class="ha__demo-panel">
+      <button class="ha__demo-btn" @click="resetDemo">
         🔄 重設
       </button>
     </div>
+
   </div>
 </template>
 
 <style scoped>
-/* ── 住模組作用域 Token 覆寫（與 housing/index.vue 完全一致） ── */
-.housing-module {
-  --color-primary: #d97706;
-  --color-primary-light: #fffbeb;
-  --color-secondary: #0d9488;
-  --color-secondary-light: #ccfbf1;
+/* ═══ 固定 Header：三欄式 50px ═══ */
+.ha__header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+  padding: 0 var(--space-4, 16px);
+  background: var(--color-bg-card, #ffffff);
+  border-bottom: 1px solid var(--color-border, #e2e8f0);
 }
 
-.housing-page {
+.ha__header-left {
+  font-size: var(--text-sm, 13px);
+  font-weight: 600;
+  color: var(--color-text-primary, #1c1917);
+  white-space: nowrap;
+}
+
+.ha__header-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ha__header-right {
+  font-size: var(--text-sm, 13px);
+  font-weight: 600;
+  color: var(--color-text-primary, #1c1917);
+  white-space: nowrap;
+}
+
+/* ═══ 主內容區 ═══ */
+.ha__content {
   display: flex;
   flex-direction: column;
   gap: var(--space-4, 16px);
   padding: var(--space-4, 16px);
+  flex: 1;
 }
 
-/* ═══ 頂部數據看板 ═══ */
+/* ═══ 頂部數據 Badge 列 ═══ */
 .ha__stats {
-  background: var(--color-bg-card, #ffffff);
-  border-radius: var(--radius-lg, 16px);
-  box-shadow: var(--shadow-card, 0 1px 4px rgba(0, 0, 0, 0.06));
-  padding: var(--space-4, 16px);
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  gap: var(--space-2, 8px);
+}
+
+.ha__stat-badge {
+  display: inline-flex;
   align-items: center;
-}
-
-.ha__stat-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-1, 4px);
-}
-
-.ha__stat-icon {
-  font-size: var(--text-lg, 17px);
-  line-height: 1;
-}
-
-.ha__stat-label {
+  padding: 6px 12px;
+  border-radius: var(--radius-full, 9999px);
   font-size: var(--text-xs, 11px);
-  color: var(--color-text-secondary, #78716c);
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-.ha__stat-value {
-  font-size: var(--text-xl, 20px);
-  font-weight: 700;
-  color: var(--color-text-primary, #1c1917);
+.ha__stat-badge--red {
+  background: var(--color-accent-red-light, #ffe4e6);
+  color: var(--color-accent-red, #e11d48);
 }
 
-/* ═══ Tab 選擇器（手機分段式） ═══ */
+.ha__stat-badge--blue {
+  background: var(--color-accent-blue-light, #e0f2fe);
+  color: var(--color-accent-blue, #0369a1);
+}
+
+.ha__stat-badge--green {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+/* ═══ Tab 選擇器（Segmented Control） ═══ */
 .ha__tabs {
   display: flex;
   gap: 0;
   background: var(--color-bg-card, #ffffff);
   border-radius: var(--radius-lg, 16px);
-  box-shadow: var(--shadow-card, 0 1px 4px rgba(0, 0, 0, 0.06));
+  border: 1px solid var(--color-border, #e2e8f0);
   overflow: hidden;
 }
 
@@ -393,20 +427,20 @@ function resetDemo() {
 }
 
 .ha__tab:focus {
-  outline: 2px solid var(--color-primary, #d97706);
+  outline: 2px solid var(--color-primary, #f97316);
   outline-offset: -2px;
 }
 
 .ha__tab--active {
-  background: var(--color-primary, #d97706);
+  background: var(--color-primary, #f97316);
   color: #ffffff;
 }
 
-/* ═══ 卡片（與全站組件一致） ═══ */
+/* ═══ 卡片 ═══ */
 .ha__card {
   background: var(--color-bg-card, #ffffff);
   border-radius: var(--radius-lg, 16px);
-  box-shadow: var(--shadow-card, 0 1px 4px rgba(0, 0, 0, 0.06));
+  border: 1px solid var(--color-border, #e2e8f0);
   padding: var(--space-4, 16px);
   display: flex;
   flex-direction: column;
@@ -451,7 +485,7 @@ function resetDemo() {
   line-height: 1.5;
 }
 
-/* ═══ Badge（標籤） ═══ */
+/* ═══ Badge ═══ */
 .ha__badge {
   display: inline-flex;
   align-items: center;
@@ -468,8 +502,8 @@ function resetDemo() {
 }
 
 .ha__badge--green {
-  background: var(--color-secondary-light, #ccfbf1);
-  color: var(--color-secondary, #0d9488);
+  background: #dcfce7;
+  color: #16a34a;
 }
 
 .ha__badge--blue {
@@ -477,19 +511,19 @@ function resetDemo() {
   color: var(--color-accent-blue, #0369a1);
 }
 
-/* ═══ 滿版操作按鈕（手機觸控友善） ═══ */
+/* ═══ 滿版操作按鈕（手機大按鈕） ═══ */
 .ha__action-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   padding: var(--space-3, 12px) var(--space-4, 16px);
-  background-color: var(--color-primary, #d97706);
+  background-color: var(--color-primary, #f97316);
   color: #ffffff;
   border: none;
   border-radius: var(--radius-md, 12px);
   font-size: var(--text-base, 15px);
-  font-weight: 600;
+  font-weight: 700;
   font-family: inherit;
   cursor: pointer;
   transition: opacity 0.15s ease, transform 0.1s ease;
@@ -504,14 +538,14 @@ function resetDemo() {
 }
 
 .ha__action-btn:focus {
-  outline: 2px solid var(--color-primary, #d97706);
+  outline: 2px solid var(--color-primary, #f97316);
   outline-offset: 2px;
 }
 
 .ha__action-btn--outline {
   background: transparent;
-  border: 1.5px solid var(--color-primary, #d97706);
-  color: var(--color-primary, #d97706);
+  border: 1.5px solid var(--color-primary, #f97316);
+  color: var(--color-primary, #f97316);
 }
 
 .ha__btn-group {
@@ -533,13 +567,13 @@ function resetDemo() {
 }
 
 .ha__status-msg--success {
-  background: var(--color-secondary-light, #ccfbf1);
-  color: var(--color-secondary, #0d9488);
+  background: #dcfce7;
+  color: #16a34a;
 }
 
 .ha__status-msg--warn {
-  background: var(--color-primary-light, #fffbeb);
-  color: var(--color-primary, #d97706);
+  background: var(--color-primary-light, #fff7ed);
+  color: var(--color-primary, #f97316);
 }
 
 /* ═══ 表單元素 ═══ */
@@ -560,7 +594,7 @@ function resetDemo() {
 }
 
 .ha__input:focus {
-  outline: 2px solid var(--color-primary, #d97706);
+  outline: 2px solid var(--color-primary, #f97316);
   outline-offset: 2px;
 }
 
@@ -576,7 +610,7 @@ function resetDemo() {
 }
 
 .ha__select:focus {
-  outline: 2px solid var(--color-primary, #d97706);
+  outline: 2px solid var(--color-primary, #f97316);
   outline-offset: 2px;
 }
 
@@ -607,7 +641,7 @@ function resetDemo() {
 }
 
 .ha__step-btn:focus {
-  outline: 2px solid var(--color-primary, #d97706);
+  outline: 2px solid var(--color-primary, #f97316);
   outline-offset: 2px;
 }
 
@@ -621,11 +655,11 @@ function resetDemo() {
 }
 
 .ha__step-btn--amber {
-  background: var(--color-primary, #d97706);
+  background: var(--color-primary, #f97316);
 }
 
 .ha__step-btn--green {
-  background: var(--color-secondary, #0d9488);
+  background: #16a34a;
 }
 
 .ha__step-arrow {
@@ -634,18 +668,15 @@ function resetDemo() {
   flex-shrink: 0;
 }
 
-/* ═══ Demo 控制面板（與 housing/index.vue 一致） ═══ */
-.housing-demo-panel {
+/* ═══ Demo 控制面板 ═══ */
+.ha__demo-panel {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
   z-index: 999;
 }
 
-.housing-demo-btn {
+.ha__demo-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -659,14 +690,11 @@ function resetDemo() {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   transition: opacity 0.15s, transform 0.1s;
   white-space: nowrap;
-}
-
-.housing-demo-btn:active {
-  transform: scale(0.95);
-}
-
-.housing-demo-btn--reset {
   background: #78716c;
   color: #ffffff;
+}
+
+.ha__demo-btn:active {
+  transform: scale(0.95);
 }
 </style>
