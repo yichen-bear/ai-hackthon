@@ -148,30 +148,35 @@
     "key": "booking",
     "label": "預",
     "name": "預訂",
-    "color": "#14b8a6",
+    "color": "#10b981",
     "features": [
       {
-        "name": "酒店預訂",
-        "description": "比價並預訂住宿，支援快速入住與評價查看。",
-        "link": "/booking/hotel"
+        "name": "i預購",
+        "description": "線上大賣場虛擬門市貨架，主打節慶禮盒、名店美食、限量預購與獨家商品。",
+        "link": "/booking"
       },
       {
-        "name": "活動票務",
-        "description": "尋找熱門展演、賽事，線上購票並管理電子票券。",
-        "link": "/booking/events"
+        "name": "i划算",
+        "description": "7-11門市在地社群團購，主打日用品箱購、生鮮食材與一人即享團購價。",
+        "link": "/booking"
       },
       {
-        "name": "場地預約",
-        "description": "預訂會議室、運動場或派對空間，即時確認可用時段。",
-        "link": "/booking/venue"
+        "name": "AI 對話匹配",
+        "description": "智慧分析需求關鍵字，自動推薦最適合的商品與購買頻道。",
+        "link": "/booking"
       },
       {
-        "name": "日程管理",
-        "description": "整合所有預訂行程，提供行事曆與提醒通知。",
-        "link": ""
+        "name": "訂單追蹤與取貨",
+        "description": "即時追蹤預購/團購進度，到貨提醒並導航至取貨門市。",
+        "link": "/booking"
+      },
+      {
+        "name": "收藏清單",
+        "description": "收藏有興趣的商品，降價或即將截止時自動提醒。",
+        "link": "/booking"
       }
     ],
-    "description": "一站式預訂，輕鬆規劃您的行程",
+    "description": "i預購 × i划算，智慧預購團購一站搞定",
     "route": "/booking"
   },
   {
