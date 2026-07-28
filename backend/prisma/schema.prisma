@@ -291,3 +291,44 @@ model MmsOrderRecord {
   @@unique([orderNo, serviceId])
   @@map("mms_order_record")
 }
+
+model MemberAccount {
+  id           String   @id @default(uuid()) @db.Uuid
+  email        Bytes?   
+  emailHash    String?  @map("email_hash") @db.VarChar(50)
+  phone        Bytes?   
+  phoneHash    String?  @map("phone_hash") @db.VarChar(50)
+  name         Bytes?   
+  nameHash     String?  @map("name_hash") @db.VarChar(50)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  status       String   @default("01") @map("status") @db.VarChar(2)
+  isDeleted    Boolean  @default(false) @map("is_deleted")
+  creId        String   @map("cre_id") @db.Uuid
+  creTime      DateTime @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updId        String   @map("upd_id") @db.Uuid
+  updTime      DateTime @default(now()) @map("upd_time") @db.Timestamptz(6)
+
+  @@unique([emailHash])
+  @@unique([phoneHash])
+  @@map("member_account")
+}
+
+model VendorUser {
+  id           String   @id @default(uuid()) @db.Uuid
+  vendorId     Int      @map("vendor_id")
+  email        Bytes?   
+  emailHash    String?  @map("email_hash") @db.VarChar(50)
+  name         Bytes?   
+  nameHash     String?  @map("name_hash") @db.VarChar(50)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  role         String   @default("staff") @db.VarChar(20)
+  isActive     String   @default("1") @map("is_active") @db.VarChar(2)
+  isDeleted    Boolean  @default(false) @map("is_deleted")
+  creId        String   @map("cre_id") @db.Uuid
+  creTime      DateTime @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updId        String   @map("upd_id") @db.Uuid
+  updTime      DateTime @default(now()) @map("upd_time") @db.Timestamptz(6)
+
+  @@unique([emailHash])
+  @@map("vendor_user")
+}
