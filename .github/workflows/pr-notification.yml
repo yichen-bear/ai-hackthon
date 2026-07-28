@@ -10,10 +10,18 @@ jobs:
   notify:
     runs-on: ubuntu-latest
 
+    permissions:
+      pull-requests: write
+
     steps:
-      - name: Show PR information
+      - name: Request review from team
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          echo "A new Pull Request was opened!"
-          echo "Title: ${{ github.event.pull_request.title }}"
-          echo "Author: ${{ github.event.pull_request.user.login }}"
-          echo "URL: ${{ github.event.pull_request.html_url }}"
+          gh pr edit "$PR_NUMBER" \
+            --repo "$REPO" \
+            --add-reviewer "yichen-bear" \
+            --add-reviewer "Miachen111" \
+            --add-reviewer "sharonshen0707"
