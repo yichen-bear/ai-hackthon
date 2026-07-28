@@ -46,3 +46,13 @@ const mockState: Record<string, vue.Ref> = {}
   dismissSuggestion: vi.fn(),
   scrollToSection: vi.fn(),
 })
+
+// Stub useBookingState for booking module component tests
+;(globalThis as any).useBookingState = () => ({
+  agentRecommendation: vue.ref(null),
+  currentStore: vue.ref({ id: 'store-xinyi', name: '7-11 信義門市', address: '台北市信義區信義路五段 7 號' }),
+  scrollToSection: vi.fn(),
+  dismissRecommendation: vi.fn(),
+  setAgentRecommendation: vi.fn(),
+  switchStore: vi.fn(),
+})
