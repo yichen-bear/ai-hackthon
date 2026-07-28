@@ -48,8 +48,8 @@ model SysCounty {
   isDeleted         String                           @map("is_deleted") @db.VarChar(2)
   updTime           DateTime                         @map("upd_time") @db.Timestamptz(6)
   creTime           DateTime                         @map("cre_time") @db.Timestamptz(6)
+  creId             String                           @default(uuid()) @map("cre_id") @db.Uuid
   updId             String?                          @map("upd_id") @db.Uuid
-  creId             String                           @map("cre_id") @db.Uuid @default(uuid())
   feedbacks         PmsFormFeedback[]
   topicRestrictions PmsTopicCountyDistrictRelation[]
   districts         SysDistrict[]
@@ -67,8 +67,8 @@ model SysDistrict {
   isDeleted         String                           @map("is_deleted") @db.VarChar(2)
   updTime           DateTime                         @map("upd_time") @db.Timestamptz(6)
   creTime           DateTime                         @map("cre_time") @db.Timestamptz(6)
+  creId             String                           @default(uuid()) @map("cre_id") @db.Uuid
   updId             String?                          @map("upd_id") @db.Uuid
-  creId             String                           @map("cre_id") @db.Uuid @default(uuid())
   feedbacks         PmsFormFeedback[]
   topicRestrictions PmsTopicCountyDistrictRelation[]
   county            SysCounty                        @relation(fields: [countyCode], references: [code])
@@ -92,9 +92,9 @@ model PmsForm {
   isDeleted       String            @map("is_deleted") @db.VarChar(2)
   updTime         DateTime          @map("upd_time") @db.Timestamptz(6)
   creTime         DateTime          @map("cre_time") @db.Timestamptz(6)
-  updId           String?           @map("upd_id") @db.Uuid
-  creId           String            @map("cre_id") @db.Uuid @default(uuid())
   feature         Json?
+  creId           String            @default(uuid()) @map("cre_id") @db.Uuid
+  updId           String?           @map("upd_id") @db.Uuid
   feedbacks       PmsFormFeedback[]
   groups          PmsFormGroup[]
   topics          PmsFormTopic[]
@@ -109,9 +109,9 @@ model PmsFormGroup {
   sort    Int
   updTime DateTime       @map("upd_time") @db.Timestamptz(6)
   creTime DateTime       @map("cre_time") @db.Timestamptz(6)
-  updId   String?        @map("upd_id") @db.Uuid
-  creId   String         @map("cre_id") @db.Uuid @default(uuid())
   feature Json?
+  creId   String         @default(uuid()) @map("cre_id") @db.Uuid
+  updId   String?        @map("upd_id") @db.Uuid
   form    PmsForm        @relation(fields: [formId], references: [id])
   topics  PmsFormTopic[]
 
@@ -135,9 +135,9 @@ model PmsFormTopic {
   endDateOffsetDays     Int?                             @map("end_date_offset_days")
   updTime               DateTime                         @map("upd_time") @db.Timestamptz(6)
   creTime               DateTime                         @map("cre_time") @db.Timestamptz(6)
-  updId                 String?                          @map("upd_id") @db.Uuid
-  creId                 String                           @map("cre_id") @db.Uuid @default(uuid())
   feature               Json?
+  creId                 String                           @default(uuid()) @map("cre_id") @db.Uuid
+  updId                 String?                          @map("upd_id") @db.Uuid
   group                 PmsFormGroup                     @relation(fields: [formGroupId], references: [id])
   form                  PmsForm                          @relation(fields: [formId], references: [id])
   restrictions          PmsTopicCountyDistrictRelation[]
@@ -162,9 +162,9 @@ model PmsTopicOption {
   sort               Int
   updTime            DateTime     @map("upd_time") @db.Timestamptz(6)
   creTime            DateTime     @map("cre_time") @db.Timestamptz(6)
-  updId              String?      @map("upd_id") @db.Uuid
-  creId              String       @map("cre_id") @db.Uuid @default(uuid())
   feature            Json?
+  creId              String       @default(uuid()) @map("cre_id") @db.Uuid
+  updId              String?      @map("upd_id") @db.Uuid
   topic              PmsFormTopic @relation(fields: [topicId], references: [id])
 
   @@map("pms_topic_option")
@@ -178,8 +178,8 @@ model PmsTopicMedia {
   sort    Int
   updTime DateTime     @map("upd_time") @db.Timestamptz(6)
   creTime DateTime     @map("cre_time") @db.Timestamptz(6)
+  creId   String       @default(uuid()) @map("cre_id") @db.Uuid
   updId   String?      @map("upd_id") @db.Uuid
-  creId   String       @map("cre_id") @db.Uuid @default(uuid())
   topic   PmsFormTopic @relation(fields: [topicId], references: [id])
 
   @@map("pms_topic_media")
@@ -194,8 +194,8 @@ model PmsTopicCountyDistrictRelation {
   districtCode String       @map("district_code") @db.VarChar(3)
   updTime      DateTime     @map("upd_time") @db.Timestamptz(6)
   creTime      DateTime     @map("cre_time") @db.Timestamptz(6)
+  creId        String       @default(uuid()) @map("cre_id") @db.Uuid
   updId        String?      @map("upd_id") @db.Uuid
-  creId        String       @map("cre_id") @db.Uuid @default(uuid())
   county       SysCounty    @relation(fields: [countyCode], references: [code])
   district     SysDistrict  @relation(fields: [districtCode], references: [code])
   topic        PmsFormTopic @relation(fields: [topicId], references: [id])
@@ -283,9 +283,9 @@ model MmsOrderRecord {
   quoteNo           String?   @map("quote_no") @db.VarChar(64)
   commentStatus     String    @default("00") @map("comment_status") @db.VarChar(2)
   isDeleted         Boolean   @default(false) @map("is_deleted")
-  creId             String    @map("cre_id") @db.Uuid @default(uuid())
+  creId             String    @default(uuid()) @map("cre_id") @db.Uuid
   creTime           DateTime  @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updId             String    @map("upd_id") @db.Uuid @default(uuid())
+  updId             String    @default(uuid()) @map("upd_id") @db.Uuid
   updTime           DateTime  @default(now()) @map("upd_time") @db.Timestamptz(6)
 
   @@unique([orderNo, serviceId])
