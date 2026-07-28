@@ -1,13 +1,334 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model CmsHomepageServiceVendor {
+  id          Int                  @id @default(autoincrement())
+  name        String
+  description String?
+  services    CmsHomepageService[]
+
+  @@map("cms_homepage_service_vendor")
+}
+
+model CmsHomepageService {
+  id              Int                      @id @default(autoincrement())
+  serviceVendorId Int                      @map("service_vendor_id")
+  type            String                   @db.VarChar(2)
+  name            String
+  imgUrl          String?                  @map("img_url")
+  description     String?
+  vendor          CmsHomepageServiceVendor @relation(fields: [serviceVendorId], references: [id])
+  serviceType     ServiceType              @relation(fields: [type], references: [code])
+
+  @@map("cms_homepage_service")
+}
+
+model ServiceType {
+  code        String               @id @db.VarChar(2)
+  name        String               @db.VarChar(50)
+  description String?
+  sort        Int                  @default(0)
+  isDeleted   String               @default("0") @map("is_deleted") @db.VarChar(2)
+  creTime     DateTime             @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updTime     DateTime             @default(now()) @map("upd_time") @db.Timestamptz(6)
+  services    CmsHomepageService[]
+
+  @@map("service_type")
+}
+
+model SysCounty {
+  code              String                           @id @db.VarChar(2)
+  name              String                           @db.VarChar(10)
+  sort              Int
+  isDeleted         String                           @map("is_deleted") @db.VarChar(2)
+  updTime           DateTime                         @map("upd_time") @db.Timestamptz(6)
+  creTime           DateTime                         @map("cre_time") @db.Timestamptz(6)
+  creId             String                           @default(uuid()) @map("cre_id") @db.Uuid
+  updId             String?                          @map("upd_id") @db.Uuid
+  feedbacks         PmsFormFeedback[]
+  topicRestrictions PmsTopicCountyDistrictRelation[]
+  districts         SysDistrict[]
+
+  @@map("sys_county")
+}
+
+model SysDistrict {
+  code              String                           @id @db.VarChar(3)
+  countyCode        String                           @map("county_code") @db.VarChar(2)
+  name              String                           @db.VarChar(20)
+  nameWithCounty    String                           @map("name_with_county") @db.VarChar(20)
+  zip               String                           @db.VarChar(6)
+  sort              Int
+  isDeleted         String                           @map("is_deleted") @db.VarChar(2)
+  updTime           DateTime                         @map("upd_time") @db.Timestamptz(6)
+  creTime           DateTime                         @map("cre_time") @db.Timestamptz(6)
+  creId             String                           @default(uuid()) @map("cre_id") @db.Uuid
+  updId             String?                          @map("upd_id") @db.Uuid
+  feedbacks         PmsFormFeedback[]
+  topicRestrictions PmsTopicCountyDistrictRelation[]
+  county            SysCounty                        @relation(fields: [countyCode], references: [code])
+
+  @@map("sys_district")
+}
+
+model PmsForm {
+  id              Int               @id @default(autoincrement())
+  serviceVendorId Int               @map("service_vendor_id")
+  type            String            @db.VarChar(2)
+  subType         String            @map("sub_type") @db.VarChar(2)
+  name            String            @db.VarChar(50)
+  introContent    String?           @map("intro_content")
+  noticeContent   String?           @map("notice_content")
+  termsContent    String?           @map("terms_content")
+  reviewStatus    String            @map("review_status") @db.VarChar(2)
+  reviewedId      String?           @map("reviewed_id") @db.Uuid
+  reviewedTime    DateTime?         @map("reviewed_time") @db.Timestamptz(6)
+  isEnable        String            @map("is_enable") @db.VarChar(2)
+  isDeleted       String            @map("is_deleted") @db.VarChar(2)
+  updTime         DateTime          @map("upd_time") @db.Timestamptz(6)
+  creTime         DateTime          @map("cre_time") @db.Timestamptz(6)
+  feature         Json?
+  creId           String            @default(uuid()) @map("cre_id") @db.Uuid
+  updId           String?           @map("upd_id") @db.Uuid
+  feedbacks       PmsFormFeedback[]
+  groups          PmsFormGroup[]
+  topics          PmsFormTopic[]
+
+  @@map("pms_form")
+}
+
+model PmsFormGroup {
+  id      Int            @id @default(autoincrement())
+  formId  Int            @map("form_id")
+  name    String         @db.VarChar(50)
+  sort    Int
+  updTime DateTime       @map("upd_time") @db.Timestamptz(6)
+  creTime DateTime       @map("cre_time") @db.Timestamptz(6)
+  feature Json?
+  creId   String         @default(uuid()) @map("cre_id") @db.Uuid
+  updId   String?        @map("upd_id") @db.Uuid
+  form    PmsForm        @relation(fields: [formId], references: [id])
+  topics  PmsFormTopic[]
+
+  @@map("pms_form_group")
+}
+
+model PmsFormTopic {
+  id                    Int                              @id @default(autoincrement())
+  formId                Int                              @map("form_id")
+  formGroupId           Int                              @map("form_group_id")
+  type                  String                           @db.VarChar(2)
+  title                 String                           @db.VarChar(200)
+  remark                String?                          @db.VarChar(500)
+  isRequired            String                           @map("is_required") @db.VarChar(2)
+  sort                  Int
+  isNumberOnly          String?                          @map("is_number_only") @db.VarChar(2)
+  minimumMediasUpload   Int?                             @map("minimum_medias_upload")
+  maximumMediasUpload   Int?                             @map("maximum_medias_upload")
+  specifiedMediasUpload Int?                             @map("specified_medias_upload")
+  startDateOffsetDays   Int?                             @map("start_date_offset_days")
+  endDateOffsetDays     Int?                             @map("end_date_offset_days")
+  updTime               DateTime                         @map("upd_time") @db.Timestamptz(6)
+  creTime               DateTime                         @map("cre_time") @db.Timestamptz(6)
+  feature               Json?
+  creId                 String                           @default(uuid()) @map("cre_id") @db.Uuid
+  updId                 String?                          @map("upd_id") @db.Uuid
+  group                 PmsFormGroup                     @relation(fields: [formGroupId], references: [id])
+  form                  PmsForm                          @relation(fields: [formId], references: [id])
+  restrictions          PmsTopicCountyDistrictRelation[]
+  medias                PmsTopicMedia[]
+  options               PmsTopicOption[]
+
+  @@map("pms_form_topic")
+}
+
+model PmsTopicOption {
+  id                 Int          @id @default(autoincrement())
+  formId             Int          @map("form_id")
+  topicId            Int          @map("topic_id")
+  optionName         String       @map("option_name") @db.VarChar(200)
+  unitPrice          Int?         @map("unit_price")
+  unit               String?      @db.VarChar(30)
+  isQuantity         String?      @map("is_quantity") @db.VarChar(2)
+  minQuantity        Int?         @map("min_quantity")
+  maxQuantity        Int?         @map("max_quantity")
+  isQuotedSeparately String?      @map("is_quoted_separately") @db.VarChar(2)
+  remark             String?      @db.VarChar(500)
+  sort               Int
+  updTime            DateTime     @map("upd_time") @db.Timestamptz(6)
+  creTime            DateTime     @map("cre_time") @db.Timestamptz(6)
+  feature            Json?
+  creId              String       @default(uuid()) @map("cre_id") @db.Uuid
+  updId              String?      @map("upd_id") @db.Uuid
+  topic              PmsFormTopic @relation(fields: [topicId], references: [id])
+
+  @@map("pms_topic_option")
+}
+
+model PmsTopicMedia {
+  id      Int          @id @default(autoincrement())
+  formId  Int          @map("form_id")
+  topicId Int          @map("topic_id")
+  imgUrl  String       @map("img_url")
+  sort    Int
+  updTime DateTime     @map("upd_time") @db.Timestamptz(6)
+  creTime DateTime     @map("cre_time") @db.Timestamptz(6)
+  creId   String       @default(uuid()) @map("cre_id") @db.Uuid
+  updId   String?      @map("upd_id") @db.Uuid
+  topic   PmsFormTopic @relation(fields: [topicId], references: [id])
+
+  @@map("pms_topic_media")
+}
+
+model PmsTopicCountyDistrictRelation {
+  formId       Int          @map("form_id")
+  topicId      Int          @map("topic_id")
+  effTsFrom    DateTime     @map("eff_ts_from") @db.Timestamptz(6)
+  effTsTo      DateTime     @map("eff_ts_to") @db.Timestamptz(6)
+  countyCode   String       @map("county_code") @db.VarChar(2)
+  districtCode String       @map("district_code") @db.VarChar(3)
+  updTime      DateTime     @map("upd_time") @db.Timestamptz(6)
+  creTime      DateTime     @map("cre_time") @db.Timestamptz(6)
+  creId        String       @default(uuid()) @map("cre_id") @db.Uuid
+  updId        String?      @map("upd_id") @db.Uuid
+  county       SysCounty    @relation(fields: [countyCode], references: [code])
+  district     SysDistrict  @relation(fields: [districtCode], references: [code])
+  topic        PmsFormTopic @relation(fields: [topicId], references: [id])
+
+  @@id([formId, topicId, effTsFrom, countyCode, districtCode])
+  @@map("pms_topic_county_district_relation")
+}
+
+model PmsFormFeedback {
+  feedbackNo               String       @id @map("feedback_no") @db.VarChar(16)
+  serviceId                Int          @map("service_id")
+  platformCode             String       @map("platform_code") @db.VarChar(2)
+  formId                   Int          @map("form_id")
+  feedbackContent          Json         @map("feedback_content")
+  formType                 String       @map("form_type") @db.VarChar(2)
+  isRead                   String       @map("is_read") @db.VarChar(2)
+  status                   String       @db.VarChar(2)
+  contactName              Bytes?       @map("contact_name")
+  contactNameHash          String?      @map("contact_name_hash") @db.VarChar(50)
+  contactMobile            Bytes?       @map("contact_mobile")
+  contactMobileHash        String?      @map("contact_mobile_hash") @db.VarChar(50)
+  contactLandline          Bytes?       @map("contact_landline")
+  contactLandlineHash      String?      @map("contact_landline_hash") @db.VarChar(50)
+  contactEmail             Bytes?       @map("contact_email")
+  contactEmailHash         String?      @map("contact_email_hash") @db.VarChar(50)
+  preferredContactTime     String?      @map("preferred_contact_time") @db.VarChar(2)
+  contactAddressCounty     String?      @map("contact_address_county") @db.VarChar(10)
+  contactAddressDistrict   String?      @map("contact_address_district") @db.VarChar(20)
+  contactAddressDetail     Bytes?       @map("contact_address_detail")
+  contactAddressDetailHash String?      @map("contact_address_detail_hash") @db.VarChar(50)
+  description              String?      @db.VarChar(1000)
+  inbrAccountId            String       @map("inbr_account_id") @db.Uuid
+  creTime                  DateTime     @map("cre_time") @db.Timestamptz(6)
+  updId                    String?      @map("upd_id") @db.Uuid
+  updTime                  DateTime     @map("upd_time") @db.Timestamptz(6)
+  county                   SysCounty?   @relation(fields: [contactAddressCounty], references: [code])
+  district                 SysDistrict? @relation(fields: [contactAddressDistrict], references: [code])
+  form                     PmsForm      @relation(fields: [formId], references: [id])
+
+  @@map("pms_form_feedback")
+}
+
+model MmsOrderRecord {
+  recordId          BigInt    @id @default(autoincrement()) @map("record_id")
+  orderNo           String    @map("order_no") @db.VarChar(50)
+  serviceVendorId   Int       @map("service_vendor_id")
+  serviceId         Int       @map("service_id")
+  platformCode      String    @map("platform_code") @db.VarChar(2)
+  inbrAccountId     String    @map("inbr_account_id") @db.Uuid
+  memberName        Bytes?    @map("member_name")
+  memberNameHash    String?   @map("member_name_hash") @db.VarChar(50)
+  memberPhone       Bytes?    @map("member_phone")
+  memberPhoneHash   String?   @map("member_phone_hash") @db.VarChar(50)
+  memberEmail       Bytes?    @map("member_email")
+  memberEmailHash   String?   @map("member_email_hash") @db.VarChar(50)
+  orderType         String    @map("order_type") @db.VarChar(2)
+  orderStatus       String    @map("order_status") @db.VarChar(2)
+  orderTime         DateTime  @map("order_time") @db.Timestamptz(6)
+  depositTime       DateTime? @map("deposit_time") @db.Timestamptz(6)
+  confirmTime       DateTime? @map("confirm_time") @db.Timestamptz(6)
+  serviceTime       DateTime? @map("service_time") @db.Timestamptz(6)
+  completeTime      DateTime? @map("complete_time") @db.Timestamptz(6)
+  cancelTime        DateTime? @map("cancel_time") @db.Timestamptz(6)
+  depositAmount     Decimal   @default(0) @map("deposit_amount") @db.Decimal(10, 2)
+  originalAmount    Decimal   @default(0) @map("original_amount") @db.Decimal(10, 2)
+  discountAmount    Decimal   @default(0) @map("discount_amount") @db.Decimal(10, 2)
+  shippingFeeAmount Decimal   @default(0) @map("shipping_fee_amount") @db.Decimal(10, 2)
+  finalAmount       Decimal   @default(0) @map("final_amount") @db.Decimal(10, 2)
+  refundAmount      Decimal   @default(0) @map("refund_amount") @db.Decimal(10, 2)
+  orderPoints       Decimal   @default(0) @map("order_points") @db.Decimal(10, 2)
+  usedPoints        Decimal   @default(0) @map("used_points") @db.Decimal(10, 2)
+  refundPoints      Decimal   @default(0) @map("refund_points") @db.Decimal(10, 2)
+  earnPoints        Decimal   @default(0) @map("earn_points") @db.Decimal(10, 2)
+  pointStatus       String    @default("01") @map("point_status") @db.VarChar(2)
+  pointGrantTime    DateTime? @map("point_grant_time") @db.Timestamptz(6)
+  vendorData        Json?     @map("vendor_data")
+  orderItems        Json?     @map("order_items")
+  remark            String?
+  cancelReason      String?   @map("cancel_reason")
+  refundReason      String?   @map("refund_reason")
+  sourceFile        String?   @map("source_file") @db.VarChar(200)
+  importBatch       String?   @map("import_batch") @db.VarChar(50)
+  quoteApprovedBy   String?   @map("quote_approved_by") @db.Uuid
+  quoteApprovedTime DateTime? @map("quote_approved_time") @db.Timestamptz(6)
+  quoteNo           String?   @map("quote_no") @db.VarChar(64)
+  commentStatus     String    @default("00") @map("comment_status") @db.VarChar(2)
+  isDeleted         Boolean   @default(false) @map("is_deleted")
+  creId             String    @default(uuid()) @map("cre_id") @db.Uuid
+  creTime           DateTime  @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updId             String    @default(uuid()) @map("upd_id") @db.Uuid
+  updTime           DateTime  @default(now()) @map("upd_time") @db.Timestamptz(6)
+
+  @@unique([orderNo, serviceId])
+  @@map("mms_order_record")
+}
+
+model MemberAccount {
+  id           String   @id @default(uuid()) @db.Uuid
+  email        Bytes?   
+  emailHash    String?  @map("email_hash") @db.VarChar(50)
+  phone        Bytes?   
+  phoneHash    String?  @map("phone_hash") @db.VarChar(50)
+  name         Bytes?   
+  nameHash     String?  @map("name_hash") @db.VarChar(50)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  status       String   @default("01") @map("status") @db.VarChar(2)
+  isDeleted    Boolean  @default(false) @map("is_deleted")
+  creId        String   @map("cre_id") @db.Uuid
+  creTime      DateTime @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updId        String   @map("upd_id") @db.Uuid
+  updTime      DateTime @default(now()) @map("upd_time") @db.Timestamptz(6)
+
+  @@unique([emailHash])
+  @@unique([phoneHash])
+  @@map("member_account")
+}
+
+model VendorUser {
+  id           String   @id @default(uuid()) @db.Uuid
+  vendorId     Int      @map("vendor_id")
+  email        Bytes?   
+  emailHash    String?  @map("email_hash") @db.VarChar(50)
+  name         Bytes?   
+  nameHash     String?  @map("name_hash") @db.VarChar(50)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  role         String   @default("staff") @db.VarChar(20)
+  isActive     String   @default("1") @map("is_active") @db.VarChar(2)
+  isDeleted    Boolean  @default(false) @map("is_deleted")
+  creId        String   @map("cre_id") @db.Uuid
+  creTime      DateTime @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updId        String   @map("upd_id") @db.Uuid
+  updTime      DateTime @default(now()) @map("upd_time") @db.Timestamptz(6)
+
+  @@unique([emailHash])
+  @@map("vendor_user")
 }

@@ -82,7 +82,7 @@ npm run dev
 ```bash
 # Prisma 相關（在 backend/ 目錄下執行）
 npx prisma migrate dev      # 建立 migration
-npx prisma generate         # 產生 Prisma Client
+npx prisma generate         # 產生 Prisma Client ⭐
 npx prisma studio           # 開啟資料庫 GUI
 
 # Frontend（在 frontend/ 目錄下執行）
