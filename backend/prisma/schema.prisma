@@ -48,6 +48,8 @@ model SysCounty {
   isDeleted         String                           @map("is_deleted") @db.VarChar(2)
   updTime           DateTime                         @map("upd_time") @db.Timestamptz(6)
   creTime           DateTime                         @map("cre_time") @db.Timestamptz(6)
+  updId             String?                          @map("upd_id") @db.Uuid
+  creId             String                           @map("cre_id") @db.Uuid @default(uuid())
   feedbacks         PmsFormFeedback[]
   topicRestrictions PmsTopicCountyDistrictRelation[]
   districts         SysDistrict[]
@@ -65,6 +67,8 @@ model SysDistrict {
   isDeleted         String                           @map("is_deleted") @db.VarChar(2)
   updTime           DateTime                         @map("upd_time") @db.Timestamptz(6)
   creTime           DateTime                         @map("cre_time") @db.Timestamptz(6)
+  updId             String?                          @map("upd_id") @db.Uuid
+  creId             String                           @map("cre_id") @db.Uuid @default(uuid())
   feedbacks         PmsFormFeedback[]
   topicRestrictions PmsTopicCountyDistrictRelation[]
   county            SysCounty                        @relation(fields: [countyCode], references: [code])
@@ -88,6 +92,8 @@ model PmsForm {
   isDeleted       String            @map("is_deleted") @db.VarChar(2)
   updTime         DateTime          @map("upd_time") @db.Timestamptz(6)
   creTime         DateTime          @map("cre_time") @db.Timestamptz(6)
+  updId           String?           @map("upd_id") @db.Uuid
+  creId           String            @map("cre_id") @db.Uuid @default(uuid())
   feature         Json?
   feedbacks       PmsFormFeedback[]
   groups          PmsFormGroup[]
@@ -103,6 +109,8 @@ model PmsFormGroup {
   sort    Int
   updTime DateTime       @map("upd_time") @db.Timestamptz(6)
   creTime DateTime       @map("cre_time") @db.Timestamptz(6)
+  updId   String?        @map("upd_id") @db.Uuid
+  creId   String         @map("cre_id") @db.Uuid @default(uuid())
   feature Json?
   form    PmsForm        @relation(fields: [formId], references: [id])
   topics  PmsFormTopic[]
@@ -127,6 +135,8 @@ model PmsFormTopic {
   endDateOffsetDays     Int?                             @map("end_date_offset_days")
   updTime               DateTime                         @map("upd_time") @db.Timestamptz(6)
   creTime               DateTime                         @map("cre_time") @db.Timestamptz(6)
+  updId                 String?                          @map("upd_id") @db.Uuid
+  creId                 String                           @map("cre_id") @db.Uuid @default(uuid())
   feature               Json?
   group                 PmsFormGroup                     @relation(fields: [formGroupId], references: [id])
   form                  PmsForm                          @relation(fields: [formId], references: [id])
@@ -152,6 +162,8 @@ model PmsTopicOption {
   sort               Int
   updTime            DateTime     @map("upd_time") @db.Timestamptz(6)
   creTime            DateTime     @map("cre_time") @db.Timestamptz(6)
+  updId              String?      @map("upd_id") @db.Uuid
+  creId              String       @map("cre_id") @db.Uuid @default(uuid())
   feature            Json?
   topic              PmsFormTopic @relation(fields: [topicId], references: [id])
 
@@ -166,6 +178,8 @@ model PmsTopicMedia {
   sort    Int
   updTime DateTime     @map("upd_time") @db.Timestamptz(6)
   creTime DateTime     @map("cre_time") @db.Timestamptz(6)
+  updId   String?      @map("upd_id") @db.Uuid
+  creId   String       @map("cre_id") @db.Uuid @default(uuid())
   topic   PmsFormTopic @relation(fields: [topicId], references: [id])
 
   @@map("pms_topic_media")
@@ -180,6 +194,8 @@ model PmsTopicCountyDistrictRelation {
   districtCode String       @map("district_code") @db.VarChar(3)
   updTime      DateTime     @map("upd_time") @db.Timestamptz(6)
   creTime      DateTime     @map("cre_time") @db.Timestamptz(6)
+  updId        String?      @map("upd_id") @db.Uuid
+  creId        String       @map("cre_id") @db.Uuid @default(uuid())
   county       SysCounty    @relation(fields: [countyCode], references: [code])
   district     SysDistrict  @relation(fields: [districtCode], references: [code])
   topic        PmsFormTopic @relation(fields: [topicId], references: [id])
@@ -243,17 +259,17 @@ model MmsOrderRecord {
   serviceTime       DateTime? @map("service_time") @db.Timestamptz(6)
   completeTime      DateTime? @map("complete_time") @db.Timestamptz(6)
   cancelTime        DateTime? @map("cancel_time") @db.Timestamptz(6)
-  depositAmount     Decimal   @map("deposit_amount") @db.Decimal(10, 2)
-  originalAmount    Decimal   @map("original_amount") @db.Decimal(10, 2)
-  discountAmount    Decimal   @map("discount_amount") @db.Decimal(10, 2)
-  shippingFeeAmount Decimal   @map("shipping_fee_amount") @db.Decimal(10, 2)
-  finalAmount       Decimal   @map("final_amount") @db.Decimal(10, 2)
-  refundAmount      Decimal   @map("refund_amount") @db.Decimal(10, 2)
-  orderPoints       Decimal   @map("order_points") @db.Decimal(10, 2)
-  usedPoints        Decimal   @map("used_points") @db.Decimal(10, 2)
-  refundPoints      Decimal   @map("refund_points") @db.Decimal(10, 2)
-  earnPoints        Decimal   @map("earn_points") @db.Decimal(10, 2)
-  pointStatus       String    @map("point_status") @db.VarChar(2)
+  depositAmount     Decimal   @default(0) @map("deposit_amount") @db.Decimal(10, 2)
+  originalAmount    Decimal   @default(0) @map("original_amount") @db.Decimal(10, 2)
+  discountAmount    Decimal   @default(0) @map("discount_amount") @db.Decimal(10, 2)
+  shippingFeeAmount Decimal   @default(0) @map("shipping_fee_amount") @db.Decimal(10, 2)
+  finalAmount       Decimal   @default(0) @map("final_amount") @db.Decimal(10, 2)
+  refundAmount      Decimal   @default(0) @map("refund_amount") @db.Decimal(10, 2)
+  orderPoints       Decimal   @default(0) @map("order_points") @db.Decimal(10, 2)
+  usedPoints        Decimal   @default(0) @map("used_points") @db.Decimal(10, 2)
+  refundPoints      Decimal   @default(0) @map("refund_points") @db.Decimal(10, 2)
+  earnPoints        Decimal   @default(0) @map("earn_points") @db.Decimal(10, 2)
+  pointStatus       String    @default("01") @map("point_status") @db.VarChar(2)
   pointGrantTime    DateTime? @map("point_grant_time") @db.Timestamptz(6)
   vendorData        Json?     @map("vendor_data")
   orderItems        Json?     @map("order_items")
@@ -265,12 +281,12 @@ model MmsOrderRecord {
   quoteApprovedBy   String?   @map("quote_approved_by") @db.Uuid
   quoteApprovedTime DateTime? @map("quote_approved_time") @db.Timestamptz(6)
   quoteNo           String?   @map("quote_no") @db.VarChar(64)
-  commentStatus     String    @map("comment_status") @db.VarChar(2)
-  isDeleted         Boolean   @map("is_deleted")
-  creId             String    @map("cre_id") @db.Uuid
-  creTime           DateTime  @map("cre_time") @db.Timestamptz(6)
-  updId             String    @map("upd_id") @db.Uuid
-  updTime           DateTime  @map("upd_time") @db.Timestamptz(6)
+  commentStatus     String    @default("00") @map("comment_status") @db.VarChar(2)
+  isDeleted         Boolean   @default(false) @map("is_deleted")
+  creId             String    @map("cre_id") @db.Uuid @default(uuid())
+  creTime           DateTime  @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updId             String    @map("upd_id") @db.Uuid @default(uuid())
+  updTime           DateTime  @default(now()) @map("upd_time") @db.Timestamptz(6)
 
   @@unique([orderNo, serviceId])
   @@map("mms_order_record")
