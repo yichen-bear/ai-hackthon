@@ -1,5 +1,5 @@
 <script setup lang="ts">
-type ModuleKey = 'food' | 'medical' | 'home' | 'transport' | 'booking' | 'entertainment'
+type ModuleKey = 'food' | 'medical' | 'housing' | 'transport' | 'booking' | 'entertainment'
 
 defineProps<{
   activeTab: ModuleKey

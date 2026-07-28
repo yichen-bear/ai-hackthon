@@ -1,0 +1,256 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 建立 `pages/food/index.vue`，內容從 `pages/food.vue` 完整搬移，並刪除原始檔案": [
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073608567
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073617598
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073689922
+      }
+    ],
+    "1.2 建立 `pages/medical/index.vue`，內容從 `pages/medical.vue` 完整搬移，並刪除原始檔案": [
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073608600
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073618502
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073690983
+      }
+    ],
+    "1.3 建立 `pages/housing/index.vue`，內容從 `pages/housing.vue` 完整搬移，並刪除原始檔案": [
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073608634
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073619453
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073691753
+      }
+    ],
+    "2.1 更新 `components/ui/ModuleTab.vue` 中 `'home'` → `'housing'`": [
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073608669
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073620256
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073692754
+      }
+    ],
+    "2.2 更新 `layouts/default.vue` 中的 `ModuleKey` 型別與 PathMap 邏輯": [
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073608703
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073702726
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073761082
+      }
+    ],
+    "2.3 更新 `components/ui/AppHeader.vue` 中 `ModuleKey` 型別的 `'home'` → `'housing'`": [
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073608758
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073621168
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073693684
+      }
+    ],
+    "3. Checkpoint": [
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073608787
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073927541
+      }
+    ],
+    "4.1 建立 `components/ui/RoleSwitchButton.vue`": [
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073608818
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073703498
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073761845
+      }
+    ],
+    "4.2 建立 `layouts/admin.vue`": [
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073608852
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073771312
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073843066
+      }
+    ],
+    "4.3 在 `layouts/default.vue` 的 header 區域加入 `<UiRoleSwitchButton />`": [
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073608885
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073772036
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073843709
+      }
+    ],
+    "5.1 建立 `pages/food/admin.vue`": [
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073608919
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073848607
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073905046
+      }
+    ],
+    "5.2 建立 `pages/medical/admin.vue`": [
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073608953
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073849331
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073905500
+      }
+    ],
+    "5.3 建立 `pages/housing/admin.vue`": [
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073608986
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073850106
+      },
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073906294
+      }
+    ],
+    "1. 頁面檔案模組化搬移": [
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073691790
+      }
+    ],
+    "2. ModuleTab 與 PathMap 修正": [
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073761117
+      }
+    ],
+    "4. 新增 RoleSwitchButton 與 Admin Layout": [
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073843746
+      }
+    ],
+    "5. 新增 Admin 骨架頁面": [
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073906327
+      }
+    ],
+    "6. Final Checkpoint": [
+      {
+        "executionId": "a34c86ac-956a-4715-abbf-3f7c2068b50c",
+        "chatSessionId": "sess_7b351609-599d-4c96-877f-29ccde487323",
+        "timestamp": 1785073931496
+      }
+    ]
+  }
+}

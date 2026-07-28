@@ -32,32 +32,32 @@ const foodBadges = [
 <template>
   <div class="food-module">
     <main class="food-page" role="main">
-      <FoodBookingCard
-        restaurant-name="鼎泰豐信義店"
-        time="19:00"
-        :party-size="2"
-        @confirm="handleConfirm"
-      />
 
+      <!-- 訂位卡片：內建推薦列表 ↔ 訂位確認雙狀態 -->
+      <FoodBookingCard @confirm="handleConfirm" />
+
+      <!-- Google Maps 周邊餐廳 -->
       <FoodMap
         :latitude="25.0330"
         :longitude="121.5654"
         :zoom="15"
       />
 
+      <!-- 熱量儀表板 -->
       <CalorieDashboard
         :calories="850"
         :goal="2000"
       />
 
-      <FoodPassport
-        :badges="foodBadges"
-      />
+      <!-- 美食護照 -->
+      <FoodPassport :badges="foodBadges" />
+
     </main>
   </div>
 </template>
 
 <style scoped>
+/* 食模組作用域 Token 覆寫 */
 .food-module {
   --color-primary: #ff5252;
   --color-primary-light: #fff1f2;
