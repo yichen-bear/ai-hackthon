@@ -7,7 +7,6 @@
  */
 
 import type { ContextSuggestion } from '~/components/transport/ContextPush.vue'
-import type { TripItem } from '~/components/transport/TripTimeline.vue'
 import type { FavoriteRoute } from '~/components/transport/FavoriteRoutes.vue'
 import type { PurchasedTicket } from '~/components/transport/TicketBooking.vue'
 import type { Ticket } from '~/components/ui/TicketWallet.vue'
@@ -21,6 +20,19 @@ const {
   setRideDestination,
   dismissSuggestion,
 } = useTransportState()
+
+// ─── 跨模組路線規劃：從 query params 讀取目的地 ───
+const route = useRoute()
+onMounted(() => {
+  const dest = route.query.destination as string | undefined
+  if (dest) {
+    setRouteDestination(dest)
+    nextTick(() => {
+      activeNav.value = 'route'
+      scrollToSection('route', sectionRefs)
+    })
+  }
+})
 
 // ─── 跨模組路線規劃：從 query params 讀取目的地 ───
 const route = useRoute()
@@ -87,13 +99,6 @@ const mockSuggestions: ContextSuggestion[] = [
     triggerType: 'weather',
     suggestedMode: 'bus',
   },
-]
-
-// 今日行程
-const mockTrips: TripItem[] = [
-  { id: 'trip-1', time: '09:00', mode: 'metro', origin: '家', destination: '公司', status: 'completed' },
-  { id: 'trip-2', time: '12:30', mode: 'car', origin: '公司', destination: '信義區', status: 'active' },
-  { id: 'trip-3', time: '19:00', mode: 'hsr', origin: '台北', destination: '桃園', status: 'pending', ticketId: 'ticket-1' },
 ]
 
 // 常用路線
@@ -196,11 +201,6 @@ function handleFavDelete(routeId: string) {
   console.log('刪除路線', routeId)
 }
 
-// TripTimeline 事件
-function handleTripAction(trip: TripItem, action: string) {
-  console.log('行程操作', trip.id, action)
-}
-
 // TicketBooking 事件
 function handleTicketPurchased(ticket: PurchasedTicket) {
   const newTicket: Ticket = {
@@ -250,12 +250,6 @@ function handleTicketUse(ticketId: string) {
         @plan-route="handlePlanRoute"
         @call-ride="handleCallRide"
         @dismiss="handleDismiss"
-      />
-
-      <!-- 行程時間軸 -->
-      <TransportTripTimeline
-        :trips="mockTrips"
-        @trip-action="handleTripAction"
       />
 
       <!-- 常用路線收藏 -->

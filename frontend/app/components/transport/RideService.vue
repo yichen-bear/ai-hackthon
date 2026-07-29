@@ -199,25 +199,20 @@ onUnmounted(() => {
         <!-- 上車地點 -->
         <div class="form-field">
           <label class="field-label">上車地點</label>
-          <input
+          <TransportLocationPicker
             v-model="pickupInput"
-            type="text"
-            class="field-input"
-            placeholder="輸入上車地點"
-            aria-label="上車地點"
+            placeholder="選擇上車地點"
+            icon="🟢"
           />
         </div>
 
         <!-- 目的地 -->
         <div class="form-field">
           <label class="field-label">目的地</label>
-          <input
+          <TransportLocationPicker
             v-model="destinationInput"
-            type="text"
-            class="field-input"
-            :class="{ placeholder: !destinationInput }"
-            placeholder="輸入目的地"
-            aria-label="目的地"
+            placeholder="選擇目的地"
+            icon="🔴"
           />
         </div>
 
@@ -311,6 +306,33 @@ onUnmounted(() => {
       <!-- waiting 狀態：等候司機 -->
       <div v-else-if="rideState === 'waiting'" class="ride-waiting" aria-live="polite">
         <h4 class="state-title">司機正在前往中</h4>
+
+        <!-- 叫車資訊卡片 -->
+        <div class="ride-trip-info">
+          <div class="trip-route">
+            <div class="trip-point">
+              <span class="trip-dot start"></span>
+              <div class="trip-point-info">
+                <span class="trip-point-label">上車地點</span>
+                <span class="trip-point-value">{{ pickupInput }}</span>
+              </div>
+            </div>
+            <div class="trip-line"></div>
+            <div class="trip-point">
+              <span class="trip-dot end"></span>
+              <div class="trip-point-info">
+                <span class="trip-point-label">目的地</span>
+                <span class="trip-point-value">{{ destinationInput }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="trip-meta">
+            <span class="trip-meta-item">🚗 {{ carOptions.find(c => c.key === selectedCar)?.label }}</span>
+            <span class="trip-meta-item">💰 ${{ estimate.minCost }}~{{ estimate.maxCost }}</span>
+          </div>
+        </div>
+
+        <!-- 司機資訊 -->
         <div class="driver-card">
           <div class="driver-info">
             <span class="driver-name">{{ driverInfo.name }}</span>
@@ -618,6 +640,79 @@ onUnmounted(() => {
 }
 
 /* waiting 狀態 */
+.ride-trip-info {
+  background: var(--color-primary-light, #fffbeb);
+  border: 1px solid var(--color-primary, #f59e0b);
+  border-radius: var(--radius-md, 12px);
+  padding: var(--space-3, 12px);
+  margin-bottom: var(--space-3, 12px);
+}
+
+.trip-route {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.trip-point {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 8px);
+  padding: 4px 0;
+}
+
+.trip-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.trip-dot.start {
+  background: #22c55e;
+}
+
+.trip-dot.end {
+  background: #ef4444;
+}
+
+.trip-line {
+  width: 2px;
+  height: 16px;
+  background: var(--color-border, #e2e8f0);
+  margin-left: 4px;
+}
+
+.trip-point-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.trip-point-label {
+  font-size: 10px;
+  color: var(--color-text-secondary, #78716c);
+}
+
+.trip-point-value {
+  font-size: var(--text-sm, 13px);
+  font-weight: 600;
+  color: var(--color-text-primary, #1c1917);
+}
+
+.trip-meta {
+  display: flex;
+  gap: var(--space-3, 12px);
+  margin-top: var(--space-2, 8px);
+  padding-top: var(--space-2, 8px);
+  border-top: 1px dashed var(--color-border, #e2e8f0);
+}
+
+.trip-meta-item {
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-secondary, #78716c);
+}
+
 .driver-card {
   background: var(--color-progress-bg, #f1f5f9);
   border-radius: var(--radius-md, 12px);
