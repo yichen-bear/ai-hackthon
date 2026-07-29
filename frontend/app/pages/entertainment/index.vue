@@ -12,14 +12,13 @@ import type {
   MatchedGroup, BoardPost, PrizeType
 } from '~/types/entertainment'
 
-const { scrollToSection, setSectionRef, purchasedTickets, crossModuleTicket, aiRecommendation, dismissRecommendation, triggerCrossModule, userPoints, userInterests } = useEntertainmentState()
+const { purchasedTickets, crossModuleTicket, aiRecommendation, dismissRecommendation, triggerCrossModule, userPoints, userInterests } = useEntertainmentState()
 const { matchIntent } = useEntertainmentAgent()
 
 // ─── 功能區塊導航列 ───
 const navTabs = [
-  { key: 'ticket', label: '票務' },
-  { key: 'recommend', label: '推薦' },
-  { key: 'points', label: '點數' },
+  { key: 'ticket', label: '活動' },
+  { key: 'recommend', label: '興趣聚會' },
   { key: 'community', label: '社區' },
   { key: 'board', label: '社群' },
 ] as const
@@ -29,13 +28,6 @@ const activeNav = ref<NavKey>('ticket')
 
 function handleNavClick(key: NavKey) {
   activeNav.value = key
-  scrollToSection(key)
-}
-
-function setRef(key: string) {
-  return (el: any) => {
-    setSectionRef(key as NavKey, el as HTMLElement | null)
-  }
 }
 
 // ─── Mock Data（暫時放置，Wave 5 會整理） ───
@@ -205,7 +197,7 @@ const mockCoupons: TicketCoupon[] = [
 
 // AI 推薦相關
 function handleAiGoPurchase(payload: { eventId: string; eventType: string }) {
-  scrollToSection('ticket')
+  activeNav.value = 'ticket'
 }
 
 function handleAiRefresh() {
@@ -225,9 +217,54 @@ function handlePointsSpent(amount: number) {
   userPoints.value -= amount
 }
 
-// 社區報名
+// 社區報名 → 生成票券
 function handleRegister(payload: { eventId: string; type: 'community' | 'course' }) {
-  // mock toast
+  let eventName = ''
+  let date = ''
+  let time = ''
+  let venue = ''
+  let venueAddress = ''
+  let fee = 0
+
+  if (payload.type === 'community') {
+    const event = mockCommunityEvents.find(e => e.id === payload.eventId)
+    if (event) {
+      eventName = event.name
+      date = event.date
+      time = event.time
+      venue = event.location
+      venueAddress = event.location
+      fee = event.fee
+    }
+  } else {
+    const course = mockCourses.find(c => c.id === payload.eventId)
+    if (course) {
+      eventName = course.name
+      date = course.schedule
+      time = ''
+      venue = course.location || ''
+      venueAddress = course.location || ''
+      fee = course.fee
+    }
+  }
+
+  const newTicket: EntertainmentTicket = {
+    id: `tkt-${Date.now()}`,
+    eventType: 'experience',
+    eventName,
+    date,
+    time,
+    venue,
+    venueAddress,
+    ticketType: payload.type === 'community' ? '社區活動' : '社大課程',
+    quantity: 1,
+    qrCode: `qr-reg-${Date.now()}`,
+    status: 'unused',
+    purchaseDate: new Date().toISOString().split('T')[0],
+    totalAmount: fee,
+  }
+
+  purchasedTickets.value.unshift(newTicket)
 }
 
 // 興趣更新
@@ -329,87 +366,71 @@ function demoReset() {
     </nav>
 
     <main class="entertainment-page" role="main" aria-label="樂模組">
-      <!-- AI 週末/休閒提案 -->
-      <div :ref="setRef('recommend')">
-        <EntertainmentAiSuggestion
-          :recommendation="aiRecommendation"
-          @go-purchase="handleAiGoPurchase"
-          @dismiss="dismissRecommendation"
-          @refresh="handleAiRefresh"
-        />
-      </div>
+      <!-- AI 週末/休閒提案（活動、興趣聚會、社區、社群頁面顯示） -->
+      <EntertainmentAiSuggestion
+        v-if="activeNav === 'ticket' || activeNav === 'recommend' || activeNav === 'community' || activeNav === 'board'"
+        :recommendation="aiRecommendation"
+        @go-purchase="handleAiGoPurchase"
+        @dismiss="dismissRecommendation"
+        @refresh="handleAiRefresh"
+      />
 
-      <!-- ibon 票務中心 -->
-      <div :ref="setRef('ticket')">
+      <!-- 活動（原票務） -->
+      <template v-if="activeNav === 'ticket'">
         <EntertainmentTicketCenter
           :events="mockEvents"
           :experiences="mockExperiences"
           @ticket-purchased="handleTicketPurchased"
         />
-      </div>
-
-      <!-- 跨模組導流（購票後顯示） -->
-      <EntertainmentCrossModuleLink
-        v-if="crossModuleTicket && crossModuleTicket.status === 'unused'"
-        :ticket="crossModuleTicket"
-        :coupons="mockCoupons"
-      />
-
-      <!-- 我的票券 -->
-      <section v-if="purchasedTickets.length > 0" class="my-tickets">
-        <div class="section-header">
-          <h2 class="section-title">我的票券</h2>
-          <span class="section-count">{{ purchasedTickets.length }} 張</span>
-        </div>
-        <div class="ticket-list">
-          <EntertainmentTicketCard
-            v-for="ticket in purchasedTickets"
-            :key="ticket.id"
-            :ticket="ticket"
-          />
-        </div>
-      </section>
-
-      <!-- OPEN POINT 娛樂化 -->
-      <div :ref="setRef('points')">
-        <EntertainmentPointsGame
-          :user-points="userPoints"
-          :daily-free-used="dailyFreeUsed"
-          :tasks="mockTasks"
-          @prize-won="handlePrizeWon"
-          @points-spent="handlePointsSpent"
+        <EntertainmentCrossModuleLink
+          v-if="crossModuleTicket && crossModuleTicket.status === 'unused'"
+          :ticket="crossModuleTicket"
+          :coupons="mockCoupons"
         />
-      </div>
+        <section v-if="purchasedTickets.length > 0" class="my-tickets">
+          <div class="section-header">
+            <h2 class="section-title">我的票券</h2>
+            <span class="section-count">{{ purchasedTickets.length }} 張</span>
+          </div>
+          <div class="ticket-list">
+            <EntertainmentTicketCard
+              v-for="ticket in purchasedTickets"
+              :key="ticket.id"
+              :ticket="ticket"
+            />
+          </div>
+        </section>
+      </template>
 
-      <!-- 成就徽章牆 -->
-      <EntertainmentAchievementWall :badges="mockBadges" />
+      <!-- 推薦 -->
+      <template v-if="activeNav === 'recommend'">
+        <EntertainmentInterestMatch
+          :user-interests="userInterests"
+          :matched-groups="mockMatchedGroups"
+          @join-group="() => {}"
+          @update-interests="handleUpdateInterests"
+        />
+      </template>
 
-      <!-- 在地社區活動 -->
-      <div :ref="setRef('community')">
+      <!-- 社區 -->
+      <template v-if="activeNav === 'community'">
         <EntertainmentCommunityEvents
           :community-events="mockCommunityEvents"
           :courses="mockCourses"
           @register="handleRegister"
         />
-      </div>
+      </template>
 
-      <!-- 興趣媒合 -->
-      <EntertainmentInterestMatch
-        :user-interests="userInterests"
-        :matched-groups="mockMatchedGroups"
-        @join-group="() => {}"
-        @update-interests="handleUpdateInterests"
-      />
-
-      <!-- 社群留言板 -->
-      <div :ref="setRef('board')">
+      <!-- 社群 -->
+      <template v-if="activeNav === 'board'">
         <EntertainmentCommunityBoard
           :posts="mockPosts"
           @post-created="handlePostCreated"
           @join-team="handleJoinTeam"
           @like-post="handleLikePost"
         />
-      </div>
+      </template>
+
     </main>
 
     <!-- Demo 控制面板 -->
@@ -450,7 +471,7 @@ function demoReset() {
 
 .entertainment-nav-scroll {
   display: flex;
-  gap: var(--space-3, 12px);
+  gap: var(--space-2, 8px);
   overflow-x: auto;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
@@ -461,27 +482,28 @@ function demoReset() {
 .entertainment-nav-btn {
   flex-shrink: 0;
   padding: var(--space-2, 8px) var(--space-4, 16px);
-  min-height: 44px;
-  min-width: 44px;
-  border: none;
+  min-height: 40px;
+  border: 1.5px solid var(--color-border, #e2e8f0);
   border-radius: var(--radius-full, 9999px);
-  background: transparent;
+  background: var(--color-bg-card, #ffffff);
   font-size: var(--text-sm, 13px);
   font-weight: 500;
-  color: var(--color-text-disabled, #cbd5e1);
+  color: var(--color-text-secondary, #78716c);
   cursor: pointer;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .entertainment-nav-btn.active {
-  color: var(--color-primary, #ec4899);
-  background-color: var(--color-primary-light, #fdf2f8);
-  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--color-primary, #ec4899);
+  border-color: var(--color-primary, #ec4899);
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
 }
 
-.entertainment-nav-btn:not(.active):active {
-  background-color: var(--color-primary-light, #fdf2f8);
-  opacity: 0.6;
+.entertainment-nav-btn:not(.active):hover {
+  border-color: var(--color-primary, #ec4899);
+  color: var(--color-primary, #ec4899);
 }
 
 .entertainment-nav-btn:focus-visible {

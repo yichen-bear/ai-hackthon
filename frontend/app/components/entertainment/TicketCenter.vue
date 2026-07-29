@@ -423,6 +423,9 @@ function closeOverlay() {
             <button class="btn-route-plan" @click="navigateToRoute">
               🗺️ 路線規劃
             </button>
+            <button class="btn-route-plan" @click="router.push({ path: '/member', query: { tab: 'tickets' } }); closeTicketSuccess()">
+              📋 查看票券
+            </button>
             <button class="btn-primary" @click="closeTicketSuccess">完成</button>
           </div>
         </div>

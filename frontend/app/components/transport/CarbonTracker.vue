@@ -107,22 +107,6 @@ const breakdownItems = computed(() => [
         </div>
       </div>
 
-      <!-- 減碳成就徽章 -->
-      <div class="badges-section">
-        <h4 class="badges-title">減碳成就</h4>
-        <div class="badges-grid">
-          <div
-            v-for="badge in props.emissions.badges"
-            :key="badge.id"
-            class="badge-item"
-            :class="{ unlocked: badge.unlocked }"
-            :aria-label="`${badge.name} ${badge.unlocked ? '已解鎖' : '未解鎖'}`"
-          >
-            <span class="badge-icon" aria-hidden="true">{{ badge.icon }}</span>
-            <span class="badge-name">{{ badge.name }}</span>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 </template>

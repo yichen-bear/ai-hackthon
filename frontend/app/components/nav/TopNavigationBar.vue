@@ -27,6 +27,11 @@ const currentIndex = computed(() => {
 })
 
 const currentTitle = computed(() => {
+  const path = route.path
+  // 會員中心與個人資料特殊處理
+  if (path === '/member' || path === '/member/') return '會員中心'
+  if (path === '/member/profile') return '個人資料'
+
   if (currentIndex.value !== -1) {
     return pages.value[currentIndex.value].title
   }
@@ -137,15 +142,12 @@ onUnmounted(() => {
         </div>
 
         <div class="top-nav__right">
-          <div class="top-nav__user" v-if="user.isLogin">
-            <div class="user-avatar" v-if="user.avatar">
-              <img :src="user.avatar" alt="使用者頭像" />
-            </div>
-            <div class="user-avatar placeholder" v-else>
+          <button class="top-nav__user-btn" v-if="user.isLogin" @click="navigateTo('/member/profile')" aria-label="個人資料">
+            <div class="user-avatar placeholder">
               <svg
                 viewBox="0 0 24 24"
-                width="16"
-                height="16"
+                width="14"
+                height="14"
                 fill="none"
                 stroke="currentColor"
                 stroke-width="2"
@@ -157,7 +159,7 @@ onUnmounted(() => {
               </svg>
             </div>
             <span class="user-name">{{ user.name }}</span>
-          </div>
+          </button>
           <button v-else class="top-nav__login" @click="() => {}">登入</button>
         </div>
       </div>
@@ -285,13 +287,14 @@ onUnmounted(() => {
 
 /* ---------- 右側登入（縮小） ---------- */
 .top-nav__right { display: flex; align-items: center; }
-.top-nav__user {
+.top-nav__user-btn {
   display: flex; align-items: center; gap: 4px;
   background: rgba(0, 0, 0, 0.04);
   padding: 2px 8px 2px 4px; border-radius: 20px;
   transition: background 0.2s;
+  border: none; cursor: pointer; font: inherit;
 }
-.top-nav__user:hover { background: rgba(0, 0, 0, 0.08); }
+.top-nav__user-btn:hover { background: rgba(0, 0, 0, 0.08); }
 .user-avatar {
   width: 24px; height: 24px; border-radius: 50%; overflow: hidden;
   flex-shrink: 0; background: #e5e7eb;
@@ -397,10 +400,10 @@ onUnmounted(() => {
   .top-nav__arrow:hover:not(:disabled) { background: rgba(255, 255, 255, 0.08); }
   .top-nav__title { color: #f5f5f7; }
   .top-nav__title-btn:hover { background: rgba(255, 255, 255, 0.08); }
-  .top-nav__user {
+  .top-nav__user-btn {
     background: rgba(255, 255, 255, 0.08); color: #f5f5f7;
   }
-  .top-nav__user:hover { background: rgba(255, 255, 255, 0.14); }
+  .top-nav__user-btn:hover { background: rgba(255, 255, 255, 0.14); }
   .user-name { color: #f5f5f7; }
   .user-avatar { background: #3a3a3c; }
   .top-nav__login { color: #f5f5f7; border-color: #555; }

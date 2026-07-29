@@ -13,7 +13,7 @@ import type { PickupItem } from '~/components/booking/PickupReminder.vue'
 import type { WishlistItem } from '~/components/booking/WishlistPanel.vue'
 import type { StoreInfo } from '~/composables/useBookingState'
 
-const { agentRecommendation, currentStore, scrollToSection, dismissRecommendation } = useBookingState()
+const { agentRecommendation, currentStore, dismissRecommendation } = useBookingState()
 
 // ─── 功能區塊導航列 ───
 const navTabs = [
@@ -27,23 +27,8 @@ const navTabs = [
 type NavKey = (typeof navTabs)[number]['key']
 const activeNav = ref<NavKey>('pickup')
 
-const sectionRefs: Record<string, HTMLElement | null> = {
-  preorder: null,
-  groupbuy: null,
-  order: null,
-  pickup: null,
-  wishlist: null,
-}
-
 function handleNavClick(key: NavKey) {
   activeNav.value = key
-  scrollToSection(key, sectionRefs)
-}
-
-function setSectionRef(key: string) {
-  return (el: any) => {
-    sectionRefs[key] = el as HTMLElement
-  }
 }
 
 // ═══════════════════════════════════════════
@@ -288,26 +273,26 @@ function demoReset() {
         </button>
       </nav>
 
-      <!-- 取貨提醒（最上方） -->
-      <section :ref="setSectionRef('pickup')">
+      <!-- 取貨提醒 -->
+      <template v-if="activeNav === 'pickup'">
         <BookingPickupReminder
           :pickups="pickups"
           @navigate-to-store="handleNavigateToStore"
           @confirm-pickup="() => {}"
         />
-      </section>
+      </template>
 
       <!-- i預購 -->
-      <section :ref="setSectionRef('preorder')">
+      <template v-if="activeNav === 'preorder'">
         <BookingPreOrderShelf
           :products="products"
           @add-preorder="handleAddPreorder"
           @add-wishlist="(id) => {}"
         />
-      </section>
+      </template>
 
       <!-- i划算 -->
-      <section :ref="setSectionRef('groupbuy')">
+      <template v-if="activeNav === 'groupbuy'">
         <BookingGroupBuyHub
           :groups="groups"
           :current-store="currentStore"
@@ -315,10 +300,10 @@ function demoReset() {
           @confirm-purchase="handleConfirmPurchase"
           @switch-store="() => {}"
         />
-      </section>
+      </template>
 
       <!-- 訂單追蹤 -->
-      <section :ref="setSectionRef('order')">
+      <template v-if="activeNav === 'order'">
         <BookingOrderTracker
           :orders="orders"
           @go-pickup="handleGoPickup"
@@ -326,16 +311,16 @@ function demoReset() {
           @cancel-order="handleCancelOrder"
           @view-detail="() => {}"
         />
-      </section>
+      </template>
 
       <!-- 收藏清單 -->
-      <section :ref="setSectionRef('wishlist')">
+      <template v-if="activeNav === 'wishlist'">
         <BookingWishlistPanel
           :items="wishlist"
           @buy-now="handleBuyNow"
           @remove-item="handleRemoveWishlistItem"
         />
-      </section>
+      </template>
     </main>
 
     <!-- Demo 控制面板 -->
@@ -455,11 +440,11 @@ function demoReset() {
   top: 50px;
   z-index: 50;
   display: flex;
-  gap: var(--space-1, 4px);
+  gap: var(--space-2, 8px);
   overflow-x: auto;
   background: #fff;
   border-bottom: 1px solid var(--color-border, #e5e7eb);
-  padding: var(--space-2, 8px) 0;
+  padding: var(--space-2, 8px) var(--space-4, 16px);
   scrollbar-width: none;
 }
 
@@ -471,23 +456,27 @@ function demoReset() {
   flex-shrink: 0;
   padding: 8px 16px;
   font-size: var(--text-sm, 13px);
-  border: none;
-  background: none;
+  border: 1.5px solid var(--color-border, #e5e7eb);
+  border-radius: var(--radius-full, 9999px);
+  background: var(--color-bg-card, #ffffff);
   cursor: pointer;
-  color: var(--color-text-disabled, #9ca3af);
-  border-bottom: 2px solid transparent;
-  min-height: 44px;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  color: var(--color-text-secondary, #78716c);
+  font-weight: 500;
+  min-height: 40px;
+  transition: all 0.15s ease;
 }
 
 .booking-nav-tab.active {
-  color: var(--color-primary);
-  border-bottom-color: var(--color-primary);
-  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--color-primary, #10b981);
+  border-color: var(--color-primary, #10b981);
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
 
-.booking-nav-tab:hover {
-  opacity: 0.85;
+.booking-nav-tab:not(.active):hover {
+  border-color: var(--color-primary, #10b981);
+  color: var(--color-primary, #10b981);
 }
 
 .booking-nav-tab:focus-visible {

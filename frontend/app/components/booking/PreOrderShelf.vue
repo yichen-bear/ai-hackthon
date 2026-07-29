@@ -366,6 +366,9 @@ function decrementQty() {
             <button class="btn-route-plan" @click="navigateToRoute">
               🗺️ 路線規劃至取貨門市
             </button>
+            <button class="btn-route-plan" @click="router.push({ path: '/member', query: { tab: 'tickets' } }); closeOrderConfirm()">
+              📋 查看票券
+            </button>
             <button class="btn-preorder" @click="closeOrderConfirm">完成</button>
           </div>
         </div>
