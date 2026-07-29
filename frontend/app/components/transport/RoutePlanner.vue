@@ -6,6 +6,7 @@
 
 import { calculateEmission } from '~/composables/useCarbonCalculator'
 import type { TransportMode } from '~/composables/useCarbonCalculator'
+import type { LocationResult } from '~/components/transport/LocationPicker.vue'
 
 export interface RouteOption {
   id: string
@@ -86,17 +87,24 @@ const trafficBadgeType: Record<string, string> = {
 // 模擬路線結果
 const routes = ref<RouteOption[]>([])
 const isSearching = ref(false)
+const selectedRoute = ref<RouteOption | null>(null)
 
 function handleSearch() {
   if (!originInput.value || !destinationInput.value) return
 
   isSearching.value = true
+  selectedRoute.value = null
 
   // 模擬 API 延遲
   setTimeout(() => {
     routes.value = generateMockRoutes(selectedMode.value)
     isSearching.value = false
   }, 600)
+}
+
+function handleSelectRoute(route: RouteOption) {
+  selectedRoute.value = route
+  emit('route-selected', route)
 }
 
 function generateMockRoutes(mode: TransportMode): RouteOption[] {
@@ -151,10 +159,6 @@ function getMockSummary(mode: TransportMode, variant: number): string {
   }
   return summaries[mode]?.[variant - 1] || '路線規劃中...'
 }
-
-function handleUseCurrentLocation() {
-  originInput.value = '目前位置'
-}
 </script>
 
 <template>
@@ -162,35 +166,18 @@ function handleUseCurrentLocation() {
     <div class="planner-card">
       <h3 class="planner-title">路線規劃</h3>
 
-      <!-- 起迄點輸入 -->
+      <!-- 起迄點選擇（使用 LocationPicker） -->
       <div class="input-group">
-        <div class="input-row">
-          <span class="input-icon" aria-hidden="true">🟢</span>
-          <input
-            v-model="originInput"
-            type="text"
-            class="route-input"
-            placeholder="輸入起點"
-            aria-label="起點"
-          />
-          <button
-            class="location-btn"
-            aria-label="使用目前位置"
-            @click="handleUseCurrentLocation"
-          >
-            📍
-          </button>
-        </div>
-        <div class="input-row">
-          <span class="input-icon" aria-hidden="true">🔴</span>
-          <input
-            v-model="destinationInput"
-            type="text"
-            class="route-input"
-            placeholder="輸入終點"
-            aria-label="終點"
-          />
-        </div>
+        <TransportLocationPicker
+          v-model="originInput"
+          placeholder="選擇起點"
+          icon="🟢"
+        />
+        <TransportLocationPicker
+          v-model="destinationInput"
+          placeholder="選擇終點"
+          icon="🔴"
+        />
       </div>
 
       <!-- 交通方式 Tab -->
@@ -231,7 +218,7 @@ function handleUseCurrentLocation() {
           <button
             class="route-result-btn"
             :aria-label="`${route.isRecommended ? '推薦路線：' : ''}${route.summary}，預估${route.duration}分鐘`"
-            @click="emit('route-selected', route)"
+            @click="handleSelectRoute(route)"
           >
             <!-- 推薦標記 -->
             <div v-if="route.isRecommended" class="recommended-badge">推薦</div>
@@ -259,6 +246,55 @@ function handleUseCurrentLocation() {
               </div>
             </div>
           </button>
+        </div>
+      </div>
+
+      <!-- 路線可視化（選擇路線後顯示） -->
+      <div v-if="selectedRoute" class="route-visual" aria-label="路線資訊">
+        <div class="route-visual-header">
+          <h4 class="route-visual-title">路線詳情</h4>
+          <button class="route-visual-close" @click="selectedRoute = null" aria-label="關閉路線詳情">✕</button>
+        </div>
+
+        <!-- 路線地圖示意 -->
+        <div class="route-map-preview">
+          <div class="route-map-bg">
+            <div class="route-line-path"></div>
+            <div class="route-point start">🟢</div>
+            <div class="route-point end">🔴</div>
+          </div>
+        </div>
+
+        <!-- 路線資訊 -->
+        <div class="route-visual-info">
+          <div class="route-info-row">
+            <span class="info-label">起點</span>
+            <span class="info-value">{{ originInput }}</span>
+          </div>
+          <div class="route-info-row">
+            <span class="info-label">終點</span>
+            <span class="info-value">{{ destinationInput }}</span>
+          </div>
+          <div class="route-info-row">
+            <span class="info-label">路線</span>
+            <span class="info-value">{{ selectedRoute.summary }}</span>
+          </div>
+          <div class="route-info-row">
+            <span class="info-label">預估時間</span>
+            <span class="info-value highlight">{{ selectedRoute.duration }} 分鐘</span>
+          </div>
+          <div v-if="selectedRoute.cost" class="route-info-row">
+            <span class="info-label">預估費用</span>
+            <span class="info-value">${{ selectedRoute.cost }}</span>
+          </div>
+          <div class="route-info-row">
+            <span class="info-label">路況</span>
+            <span class="info-value" :class="`traffic-text-${selectedRoute.trafficStatus}`">{{ trafficLabels[selectedRoute.trafficStatus] }}</span>
+          </div>
+          <div class="route-info-row">
+            <span class="info-label">碳排放</span>
+            <span class="info-value">🌱 {{ selectedRoute.carbonEmission }}g CO₂</span>
+          </div>
         </div>
       </div>
     </div>
@@ -290,49 +326,6 @@ function handleUseCurrentLocation() {
   flex-direction: column;
   gap: var(--space-2, 8px);
   margin-bottom: var(--space-3, 12px);
-}
-
-.input-row {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2, 8px);
-  background: var(--color-progress-bg, #f1f5f9);
-  border-radius: var(--radius-sm, 6px);
-  padding: var(--space-2, 8px) var(--space-3, 12px);
-}
-
-.input-icon {
-  font-size: var(--text-xs, 11px);
-  flex-shrink: 0;
-}
-
-.route-input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  font-size: var(--text-sm, 13px);
-  color: var(--color-text-primary, #1c1917);
-  outline: none;
-  min-height: 28px;
-}
-
-.route-input::placeholder {
-  color: var(--color-text-disabled, #cbd5e1);
-}
-
-.location-btn {
-  min-width: 44px;
-  min-height: 44px;
-  border: none;
-  background: transparent;
-  font-size: var(--text-lg, 17px);
-  cursor: pointer;
-  border-radius: var(--radius-sm, 6px);
-  transition: background-color 0.15s ease;
-}
-
-.location-btn:active {
-  background-color: var(--color-primary-light, #fffbeb);
 }
 
 /* 交通方式 Tab */
@@ -521,4 +514,131 @@ function handleUseCurrentLocation() {
   color: #e11d48;
   font-weight: 500;
 }
+
+/* 路線可視化 */
+.route-visual {
+  margin-top: var(--space-4, 16px);
+  border: 1px solid var(--color-secondary, #0ea5e9);
+  border-radius: var(--radius-lg, 16px);
+  overflow: hidden;
+}
+
+.route-visual-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3, 12px) var(--space-4, 16px);
+  background: var(--color-secondary-light, #e0f2fe);
+}
+
+.route-visual-title {
+  font-size: var(--text-sm, 13px);
+  font-weight: 600;
+  color: var(--color-text-primary, #1c1917);
+  margin: 0;
+}
+
+.route-visual-close {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: var(--color-text-secondary, #78716c);
+  cursor: pointer;
+  min-width: 32px;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.route-map-preview {
+  height: 120px;
+  background: linear-gradient(135deg, #e0f2fe, #dbeafe);
+  position: relative;
+  overflow: hidden;
+}
+
+.route-map-bg {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.route-line-path {
+  position: absolute;
+  top: 50%;
+  left: 15%;
+  right: 15%;
+  height: 3px;
+  background: var(--color-secondary, #0ea5e9);
+  border-radius: 2px;
+  transform: translateY(-50%);
+}
+
+.route-line-path::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 30%;
+  right: 40%;
+  height: 9px;
+  border-radius: 4px;
+  background: repeating-linear-gradient(90deg, var(--color-secondary, #0ea5e9) 0, var(--color-secondary, #0ea5e9) 6px, transparent 6px, transparent 10px);
+  opacity: 0.4;
+}
+
+.route-point {
+  position: absolute;
+  font-size: 18px;
+}
+
+.route-point.start {
+  left: 12%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.route-point.end {
+  right: 12%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.route-visual-info {
+  padding: var(--space-3, 12px) var(--space-4, 16px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.route-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-label {
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-secondary, #78716c);
+}
+
+.info-value {
+  font-size: var(--text-sm, 13px);
+  font-weight: 500;
+  color: var(--color-text-primary, #1c1917);
+  max-width: 60%;
+  text-align: right;
+}
+
+.info-value.highlight {
+  color: var(--color-secondary, #0ea5e9);
+  font-weight: 700;
+}
+
+.traffic-text-smooth { color: #15803d; }
+.traffic-text-moderate { color: var(--color-primary, #f59e0b); }
+.traffic-text-congested { color: #e11d48; }
 </style>
