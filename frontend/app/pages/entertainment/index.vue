@@ -18,7 +18,7 @@ const { matchIntent } = useEntertainmentAgent()
 // ─── 功能區塊導航列 ───
 const navTabs = [
   { key: 'ticket', label: '活動' },
-  { key: 'recommend', label: '推薦' },
+  { key: 'recommend', label: '興趣聚會' },
   { key: 'points', label: '點數' },
   { key: 'community', label: '社區' },
   { key: 'board', label: '社群' },
@@ -219,9 +219,54 @@ function handlePointsSpent(amount: number) {
   userPoints.value -= amount
 }
 
-// 社區報名
+// 社區報名 → 生成票券
 function handleRegister(payload: { eventId: string; type: 'community' | 'course' }) {
-  // mock toast
+  let eventName = ''
+  let date = ''
+  let time = ''
+  let venue = ''
+  let venueAddress = ''
+  let fee = 0
+
+  if (payload.type === 'community') {
+    const event = mockCommunityEvents.find(e => e.id === payload.eventId)
+    if (event) {
+      eventName = event.name
+      date = event.date
+      time = event.time
+      venue = event.location
+      venueAddress = event.location
+      fee = event.fee
+    }
+  } else {
+    const course = mockCourses.find(c => c.id === payload.eventId)
+    if (course) {
+      eventName = course.name
+      date = course.schedule
+      time = ''
+      venue = course.location || ''
+      venueAddress = course.location || ''
+      fee = course.fee
+    }
+  }
+
+  const newTicket: EntertainmentTicket = {
+    id: `tkt-${Date.now()}`,
+    eventType: 'experience',
+    eventName,
+    date,
+    time,
+    venue,
+    venueAddress,
+    ticketType: payload.type === 'community' ? '社區活動' : '社大課程',
+    quantity: 1,
+    qrCode: `qr-reg-${Date.now()}`,
+    status: 'unused',
+    purchaseDate: new Date().toISOString().split('T')[0],
+    totalAmount: fee,
+  }
+
+  purchasedTickets.value.unshift(newTicket)
 }
 
 // 興趣更新
@@ -323,8 +368,9 @@ function demoReset() {
     </nav>
 
     <main class="entertainment-page" role="main" aria-label="樂模組">
-      <!-- AI 週末/休閒提案（所有頁面都顯示） -->
+      <!-- AI 週末/休閒提案（活動、興趣聚會、社區、社群頁面顯示） -->
       <EntertainmentAiSuggestion
+        v-if="activeNav === 'ticket' || activeNav === 'recommend' || activeNav === 'community' || activeNav === 'board'"
         :recommendation="aiRecommendation"
         @go-purchase="handleAiGoPurchase"
         @dismiss="dismissRecommendation"
