@@ -173,7 +173,7 @@ const navigateTo = (route: string) => {
 
 /* ========== 頁面佈局 ========== */
 .home-page {
-  max-width: 1200px;              /* 放寬最大寬度，讓平板與桌面有更好呈現 */
+  max-width: 1200px;
   margin: 0 auto;
   min-height: 100vh;
   background-color: var(--color-bg-page);
@@ -311,90 +311,6 @@ const navigateTo = (route: string) => {
 }
 
 /* ============================================
-   響應式設計 — 平板與桌面
-   ============================================ */
-
-/* 平板（≥640px） */
-@media (min-width: 640px) {
-  .home-page {
-    padding: 32px 40px 80px;
-  }
-
-  .card-grid {
-    grid-template-columns: repeat(3, 1fr);  /* 三欄 */
-    gap: 24px;
-  }
-
-  .module-card {
-    padding: 24px;
-  }
-
-  .card-title {
-    font-size: 20px;
-  }
-
-  .feature-list li {
-    font-size: 12px;
-  }
-
-  .card-description {
-    font-size: 14px;
-  }
-
-  /* 模態框在平板上放大 */
-  .modal-content {
-    max-width: 600px;
-    padding: 32px;
-  }
-
-  .modal-title {
-    font-size: 26px;
-  }
-
-  .modal-subtitle {
-    font-size: 16px;
-  }
-
-  .modal-feature-name {
-    font-size: 16px;
-  }
-
-  .modal-feature-desc {
-    font-size: 14px;
-  }
-
-  .close-btn {
-    font-size: 16px;
-    padding: 0.4em 1.4em;
-  }
-}
-
-/* 桌面（≥1024px） */
-@media (min-width: 1024px) {
-  .card-grid {
-    grid-template-columns: repeat(4, 1fr);  /* 四欄 */
-    gap: 28px;
-  }
-
-  .home-page {
-    padding: 40px 60px 80px;
-  }
-
-  .module-card {
-    padding: 28px;
-  }
-
-  .card-title {
-    font-size: 22px;
-  }
-
-  .modal-content {
-    max-width: 700px;
-    padding: 40px;
-  }
-}
-
-/* ============================================
    模態視窗 — 過渡動畫
    ============================================ */
 .modal-overlay {
@@ -472,7 +388,7 @@ const navigateTo = (route: string) => {
 .modal-content {
   background-color: var(--color-bg-card);
   border-radius: var(--radius-lg);
-  max-width: 430px;          /* 手機預設寬度，平板會由媒體查詢覆蓋 */
+  max-width: 430px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;

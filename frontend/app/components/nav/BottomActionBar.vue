@@ -17,7 +17,7 @@ function goToCalendar() {
 <template>
   <div class="bottom-bar-wrapper">
     <!-- AI 聊天覆蓋層 -->
-    <AiChatOverlay v-model="showAiChat" />
+    <ChatAiChatOverlay v-model="showAiChat" />
 
     <!-- 下方固定功能列 -->
     <nav class="bottom-bar" aria-label="功能列">

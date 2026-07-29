@@ -3,9 +3,9 @@
 
 <template>
   <div class="app-container">
-    <TopNavigationBar />
+    <NavTopNavigationBar />
     <slot />
-    <BottomActionBar />
+    <NavBottomActionBar />
   </div>
 </template>
 
