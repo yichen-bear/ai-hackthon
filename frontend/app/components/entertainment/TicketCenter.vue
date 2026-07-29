@@ -156,6 +156,14 @@ function closeTicketSuccess() {
   selectedExperience.value = null
 }
 
+// 跨模組路線規劃跳轉
+const router = useRouter()
+function navigateToRoute() {
+  const destination = selectedEvent.value?.venue || selectedExperience.value?.storeName || ''
+  closeTicketSuccess()
+  router.push({ path: '/transport', query: { destination } })
+}
+
 function closeOverlay() {
   showOverlay.value = false
 }
@@ -411,7 +419,12 @@ function closeOverlay() {
           </div>
 
           <p class="ticket-success-hint">請於入場時出示 QR Code</p>
-          <button class="btn-primary" @click="closeTicketSuccess">完成</button>
+          <div class="ticket-success-actions">
+            <button class="btn-route-plan" @click="navigateToRoute">
+              🗺️ 路線規劃
+            </button>
+            <button class="btn-primary" @click="closeTicketSuccess">完成</button>
+          </div>
         </div>
       </div>
     </Teleport>
@@ -890,4 +903,27 @@ function closeOverlay() {
   color: #64748b;
   margin: 0;
 }
+
+.ticket-success-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn-route-plan {
+  width: 100%;
+  padding: 12px;
+  min-height: 44px;
+  border: 1px solid var(--color-primary, #ec4899);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-primary, #ec4899);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-route-plan:hover { background: var(--color-primary-light, #fdf2f8); }
+.btn-route-plan:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 </style>

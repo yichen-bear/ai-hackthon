@@ -22,6 +22,20 @@ const {
   dismissSuggestion,
 } = useTransportState()
 
+// ─── 跨模組路線規劃：從 query params 讀取目的地 ───
+const route = useRoute()
+onMounted(() => {
+  const dest = route.query.destination as string | undefined
+  if (dest) {
+    setRouteDestination(dest)
+    // 自動切到路線區塊
+    nextTick(() => {
+      activeNav.value = 'route'
+      scrollToSection('route', sectionRefs)
+    })
+  }
+})
+
 // ─── 功能區塊導航列 ───
 const navTabs = [
   { key: 'route', label: '路線' },

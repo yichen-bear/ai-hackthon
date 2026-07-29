@@ -64,9 +64,24 @@ function closeDetail() {
 
 function handleAddPreorder() {
   if (!selectedProduct.value) return
-  // 開啟付款流程
-  showPaymentFlow.value = true
+  if (paymentType.value === 'online') {
+    // 線上付款：開啟付款流程
+    showPaymentFlow.value = true
+  } else {
+    // 取貨付款：直接確認訂單
+    orderConfirmed.value = true
+    lastPaymentResult.value = null
+    emit('add-preorder', {
+      productId: selectedProduct.value.id,
+      quantity: selectedQuantity.value,
+      spec: selectedSpec.value || undefined,
+    })
+  }
 }
+
+// ─── 付款方式選擇 ───
+type PreorderPaymentType = 'online' | 'pickup'
+const paymentType = ref<PreorderPaymentType>('online')
 
 // ─── 付款流程 ───
 const showPaymentFlow = ref(false)
@@ -114,6 +129,15 @@ function closeOrderConfirm() {
   orderConfirmed.value = false
   lastPaymentResult.value = null
   closeDetail()
+}
+
+// 跨模組路線規劃跳轉
+const router = useRouter()
+function navigateToRoute() {
+  // 導航至行模組路線規劃，目的地為取貨門市（使用 7-11 信義門市作為預設）
+  const destination = '7-11 信義門市'
+  closeOrderConfirm()
+  router.push({ path: '/transport', query: { destination } })
 }
 
 function handleAddWishlist(productId: string) {
@@ -262,10 +286,31 @@ function decrementQty() {
             </div>
           </div>
 
+          <!-- 付款方式選擇 -->
+          <div class="payment-type-section">
+            <p class="spec-label">付款方式</p>
+            <div class="payment-type-options">
+              <button
+                class="payment-type-btn"
+                :class="{ active: paymentType === 'online' }"
+                @click="paymentType = 'online'"
+              >
+                💳 線上付款
+              </button>
+              <button
+                class="payment-type-btn"
+                :class="{ active: paymentType === 'pickup' }"
+                @click="paymentType = 'pickup'"
+              >
+                🏪 取貨付款
+              </button>
+            </div>
+          </div>
+
           <!-- 操作按鈕 -->
           <div class="overlay-actions">
             <button class="btn-preorder" @click="handleAddPreorder">
-              立即預購
+              {{ paymentType === 'online' ? '前往付款' : '確認預購' }}
             </button>
             <button class="btn-wishlist" @click="handleAddWishlist(selectedProduct.id); closeDetail()">
               ❤️ 加入收藏
@@ -299,25 +344,30 @@ function decrementQty() {
             </div>
             <div class="order-confirm-row">
               <span class="order-confirm-label">付款方式</span>
-              <span class="order-confirm-value">{{ lastPaymentResult?.methodLabel }}</span>
+              <span class="order-confirm-value">{{ lastPaymentResult ? lastPaymentResult.methodLabel : '取貨付款' }}</span>
             </div>
             <div class="order-confirm-row total">
-              <span class="order-confirm-label">實付金額</span>
-              <span class="order-confirm-value highlight">${{ lastPaymentResult?.finalAmount.toLocaleString() }}</span>
+              <span class="order-confirm-label">{{ lastPaymentResult ? '實付金額' : '應付金額' }}</span>
+              <span class="order-confirm-value highlight">${{ lastPaymentResult ? lastPaymentResult.finalAmount.toLocaleString() : paymentTotalAmount.toLocaleString() }}</span>
             </div>
-            <div class="order-confirm-row">
+            <div v-if="lastPaymentResult" class="order-confirm-row">
               <span class="order-confirm-label">交易編號</span>
-              <span class="order-confirm-value txn">{{ lastPaymentResult?.transactionId }}</span>
+              <span class="order-confirm-value txn">{{ lastPaymentResult.transactionId }}</span>
             </div>
             <div class="order-confirm-row">
-              <span class="order-confirm-label">預計取貨</span>
-              <span class="order-confirm-value">商品到貨後通知取貨</span>
+              <span class="order-confirm-label">{{ lastPaymentResult ? '預計取貨' : '付款方式' }}</span>
+              <span class="order-confirm-value">{{ lastPaymentResult ? '商品到貨後通知取貨' : '門市取貨時付款' }}</span>
             </div>
           </div>
 
           <p class="order-confirm-hint">訂單成立後將於「訂單追蹤」中顯示進度</p>
 
-          <button class="btn-preorder" @click="closeOrderConfirm">完成</button>
+          <div class="order-confirm-actions">
+            <button class="btn-route-plan" @click="navigateToRoute">
+              🗺️ 路線規劃至取貨門市
+            </button>
+            <button class="btn-preorder" @click="closeOrderConfirm">完成</button>
+          </div>
         </div>
       </div>
     </Teleport>
@@ -800,4 +850,64 @@ function decrementQty() {
   margin: 0;
   text-align: center;
 }
+
+/* ─── 付款方式選擇 ─── */
+.payment-type-section {
+  margin-bottom: var(--space-2, 8px);
+}
+
+.payment-type-options {
+  display: flex;
+  gap: var(--space-2, 8px);
+}
+
+.payment-type-btn {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: var(--radius-md, 12px);
+  background: #fff;
+  font-size: var(--text-sm, 13px);
+  font-weight: 500;
+  color: var(--color-text-secondary, #6b7280);
+  cursor: pointer;
+  min-height: 44px;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+
+.payment-type-btn.active {
+  border-color: var(--color-primary, #10b981);
+  background: var(--color-primary-light, #ecfdf5);
+  color: var(--color-primary, #10b981);
+  font-weight: 600;
+}
+
+.payment-type-btn:hover {
+  opacity: 0.85;
+}
+
+/* ─── 訂單確認操作 ─── */
+.order-confirm-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn-route-plan {
+  width: 100%;
+  padding: 12px;
+  min-height: 44px;
+  border: 1px solid var(--color-primary, #10b981);
+  border-radius: var(--radius-md, 12px);
+  background: transparent;
+  color: var(--color-primary, #10b981);
+  font-size: var(--text-sm, 13px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-route-plan:hover { background: var(--color-primary-light, #ecfdf5); }
+.btn-route-plan:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 </style>

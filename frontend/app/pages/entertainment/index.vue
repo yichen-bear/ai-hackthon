@@ -41,7 +41,7 @@ function setRef(key: string) {
 // ─── Mock Data（暫時放置，Wave 5 會整理） ───
 const mockEvents: EventItem[] = [
   {
-    id: 'evt-1', type: 'baseball', title: '統一獅 vs 中信兄弟',
+    id: 'evt-1', type: 'baseball', title: '中信兄弟 vs 統一獅',
     date: '2026-08-02', time: '18:35', venue: '台南亞太國際棒球訓練中心',
     venueAddress: '台南市安南區安中路六段 505 號', priceRange: '$300 ~ $1,200',
     prices: [
@@ -53,7 +53,7 @@ const mockEvents: EventItem[] = [
     remainingTickets: 345, coverImage: 'linear-gradient(135deg, #f59e0b, #ea580c)', opponent: '中信兄弟',
   },
   {
-    id: 'evt-2', type: 'baseball', title: '統一獅 vs 樂天桃猿',
+    id: 'evt-2', type: 'baseball', title: '樂天桃猿 vs 統一獅',
     date: '2026-08-09', time: '17:05', venue: '台南亞太國際棒球訓練中心',
     venueAddress: '台南市安南區安中路六段 505 號', priceRange: '$300 ~ $1,200',
     prices: [
@@ -155,7 +155,7 @@ const mockMatchedGroups: MatchedGroup[] = [
 
 // ─── Mock: 留言板 ───
 const mockPosts = ref<BoardPost[]>([
-  { id: 'post-1', author: '小明', avatar: 'linear-gradient(135deg, #60a5fa, #3b82f6)', content: '有人這週六要一起去看統一獅比賽嗎？內野 A 區還有位子，想揪 3 個人一起！', tags: ['揪團'], createdAt: '2026-07-28T10:30:00', likes: 12, comments: 5, type: 'team-up', teamInfo: { eventName: '統一獅 vs 中信兄弟', date: '2026-08-02', current: 3, target: 6 } },
+  { id: 'post-1', author: '小明', avatar: 'linear-gradient(135deg, #60a5fa, #3b82f6)', content: '有人這週六要一起去看統一獅比賽嗎？內野 A 區還有位子，想揪 3 個人一起！', tags: ['揪團'], createdAt: '2026-07-28T10:30:00', likes: 12, comments: 5, type: 'team-up', teamInfo: { eventName: '中信兄弟 vs 統一獅', date: '2026-08-02', current: 3, target: 6 } },
   { id: 'post-2', author: '阿花', avatar: 'linear-gradient(135deg, #f472b6, #ec4899)', content: '昨天去看 teamLab 超美的！推薦大家平日去比較不用排隊，互動區小朋友玩得很開心。', tags: ['心得'], createdAt: '2026-07-27T18:45:00', likes: 28, comments: 8, type: 'review' },
   { id: 'post-3', author: '咖啡控', avatar: 'linear-gradient(135deg, #a78bfa, #8b5cf6)', content: '星巴克拉花教室有人去過嗎？想問一下需要自己帶圍裙嗎？', tags: ['討論'], createdAt: '2026-07-27T14:20:00', likes: 5, comments: 3, type: 'discussion' },
   { id: 'post-4', author: '運動咖', avatar: 'linear-gradient(135deg, #34d399, #10b981)', content: '信義社大的瑜伽課真的很讚，張老師教得很仔細，初學者也不用擔心。', tags: ['心得'], createdAt: '2026-07-26T09:15:00', likes: 15, comments: 4, type: 'review' },
@@ -302,7 +302,7 @@ function demoReset() {
   mockPosts.value = mockPosts.value.filter(p => !p.id.startsWith('post-'))
   // 恢復預設貼文
   mockPosts.value = [
-    { id: 'post-1', author: '小明', avatar: 'linear-gradient(135deg, #60a5fa, #3b82f6)', content: '有人這週六要一起去看統一獅比賽嗎？內野 A 區還有位子，想揪 3 個人一起！', tags: ['揪團'], createdAt: '2026-07-28T10:30:00', likes: 12, comments: 5, type: 'team-up', teamInfo: { eventName: '統一獅 vs 中信兄弟', date: '2026-08-02', current: 3, target: 6 } },
+    { id: 'post-1', author: '小明', avatar: 'linear-gradient(135deg, #60a5fa, #3b82f6)', content: '有人這週六要一起去看統一獅比賽嗎？內野 A 區還有位子，想揪 3 個人一起！', tags: ['揪團'], createdAt: '2026-07-28T10:30:00', likes: 12, comments: 5, type: 'team-up', teamInfo: { eventName: '中信兄弟 vs 統一獅', date: '2026-08-02', current: 3, target: 6 } },
     { id: 'post-2', author: '阿花', avatar: 'linear-gradient(135deg, #f472b6, #ec4899)', content: '昨天去看 teamLab 超美的！推薦大家平日去比較不用排隊。', tags: ['心得'], createdAt: '2026-07-27T18:45:00', likes: 28, comments: 8, type: 'review' },
     { id: 'post-3', author: '咖啡控', avatar: 'linear-gradient(135deg, #a78bfa, #8b5cf6)', content: '星巴克拉花教室有人去過嗎？', tags: ['討論'], createdAt: '2026-07-27T14:20:00', likes: 5, comments: 3, type: 'discussion' },
     { id: 'post-4', author: '運動咖', avatar: 'linear-gradient(135deg, #34d399, #10b981)', content: '信義社大的瑜伽課真的很讚。', tags: ['心得'], createdAt: '2026-07-26T09:15:00', likes: 15, comments: 4, type: 'review' },
