@@ -15,6 +15,9 @@ const switchTo = computed(() => isAdmin.value ? '/food' : '/food/admin')
         <NuxtLink to="/food" class="app-header__nav-link">食</NuxtLink>
         <NuxtLink to="/medical" class="app-header__nav-link">醫</NuxtLink>
         <NuxtLink to="/housing" class="app-header__nav-link">住</NuxtLink>
+        <NuxtLink to="/transport" class="app-header__nav-link">行</NuxtLink>
+        <NuxtLink to="/booking" class="app-header__nav-link">預</NuxtLink>
+        <NuxtLink to="/entertainment" class="app-header__nav-link">樂</NuxtLink>
       </nav>
 
       <!-- 中間：切換按鈕 -->
@@ -55,7 +58,7 @@ const switchTo = computed(() => isAdmin.value ? '/food' : '/food/admin')
 .app-header__nav {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 .app-header__nav-link {
