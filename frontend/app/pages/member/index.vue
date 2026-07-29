@@ -9,6 +9,20 @@ const activeTab = ref<'points' | 'barcode' | 'tickets' | 'badges'>('points')
 // ─── OPEN POINT 資料 ───
 const userPoints = ref(2450)
 const walletBalance = ref(1200)
+const showPointsHistory = ref(false)
+
+const pointsHistory = ref([
+  { id: 'ph1', date: '2026-07-29', desc: '每日簽到', amount: 5 },
+  { id: 'ph2', date: '2026-07-28', desc: '購買高鐵票', amount: 10 },
+  { id: 'ph3', date: '2026-07-28', desc: '轉盤抽獎消耗', amount: -10 },
+  { id: 'ph4', date: '2026-07-27', desc: '預購中秋禮盒', amount: 5 },
+  { id: 'ph5', date: '2026-07-27', desc: '兌換咖啡券', amount: -100 },
+  { id: 'ph6', date: '2026-07-26', desc: '報名社區活動', amount: 10 },
+  { id: 'ph7', date: '2026-07-25', desc: '叫車服務', amount: 5 },
+  { id: 'ph8', date: '2026-07-24', desc: '每日簽到', amount: 5 },
+  { id: 'ph9', date: '2026-07-23', desc: '棒球賽購票', amount: 20 },
+  { id: 'ph10', date: '2026-07-22', desc: '完成任務：首次預訂活動', amount: 50 },
+])
 
 // 每日簽到
 const dailyCheckedIn = ref(false)
@@ -120,11 +134,12 @@ const allBadges = ref([
 
     <!-- ═══ 點數專區 ═══ -->
     <div v-if="activeTab === 'points'" class="tab-content">
-      <!-- 點數總覽 -->
-      <div class="card points-overview">
+      <!-- 點數總覽（可點擊查看歷史） -->
+      <button class="card points-overview" @click="showPointsHistory = true">
         <div class="points-big">{{ userPoints.toLocaleString() }}</div>
         <div class="points-label">OPEN POINT</div>
-      </div>
+        <div class="points-history-hint">點擊查看歷史紀錄 ›</div>
+      </button>
 
       <!-- 每日簽到 -->
       <div class="card">
@@ -235,6 +250,29 @@ const allBadges = ref([
         </div>
       </div>
     </div>
+
+    <!-- 點數歷史紀錄懸浮視窗 -->
+    <Teleport to="body">
+      <div v-if="showPointsHistory" class="qr-overlay" @click.self="showPointsHistory = false">
+        <div class="history-modal">
+          <div class="history-header">
+            <h3 class="history-title">點數歷史紀錄</h3>
+            <button class="qr-modal-close" @click="showPointsHistory = false">✕</button>
+          </div>
+          <div class="history-list">
+            <div v-for="h in pointsHistory" :key="h.id" class="history-item">
+              <div class="history-left">
+                <span class="history-desc">{{ h.desc }}</span>
+                <span class="history-date">{{ h.date }}</span>
+              </div>
+              <span class="history-amount" :class="h.amount > 0 ? 'positive' : 'negative'">
+                {{ h.amount > 0 ? '+' : '' }}{{ h.amount }} 點
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Teleport>
 
     <!-- QR Code 懸浮視窗 -->
     <Teleport to="body">
@@ -355,9 +393,25 @@ const allBadges = ref([
 .card-desc { font-size: 12px; color: #78716c; margin: 4px 0; }
 
 /* 點數 */
-.points-overview { text-align: center; background: linear-gradient(135deg, #fffbeb, #fef3c7); }
+.points-overview { text-align: center; background: linear-gradient(135deg, #fffbeb, #fef3c7); cursor: pointer; border: none; width: 100%; transition: transform 0.15s; }
+.points-overview:hover { transform: scale(1.02); }
 .points-big { font-size: 36px; font-weight: 800; color: #f59e0b; }
 .points-label { font-size: 12px; color: #92400e; font-weight: 600; }
+.points-history-hint { font-size: 11px; color: #b45309; margin-top: 4px; }
+
+/* 點數歷史 */
+.history-modal { background: #fff; border-radius: 16px; padding: 20px; width: 320px; max-height: 70vh; overflow-y: auto; position: relative; animation: scale-in 0.2s ease; }
+.history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.history-title { font-size: 16px; font-weight: 700; margin: 0; }
+.history-list { display: flex; flex-direction: column; gap: 0; }
+.history-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+.history-item:last-child { border-bottom: none; }
+.history-left { display: flex; flex-direction: column; }
+.history-desc { font-size: 13px; font-weight: 500; color: #1e293b; }
+.history-date { font-size: 11px; color: #94a3b8; }
+.history-amount { font-size: 14px; font-weight: 700; }
+.history-amount.positive { color: #10b981; }
+.history-amount.negative { color: #ef4444; }
 
 .action-btn {
   width: 100%; padding: 12px; min-height: 44px;

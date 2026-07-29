@@ -154,6 +154,13 @@ function handleClose() {
   emit('close')
 }
 
+const router = useRouter()
+function goToTickets() {
+  resetState()
+  emit('close')
+  router.push({ path: '/member', query: { tab: 'tickets' } })
+}
+
 // 外部可見時重置
 watch(() => props.visible, (val) => {
   if (val) resetState()
@@ -332,7 +339,10 @@ watch(() => props.visible, (val) => {
           <!-- 自訂成功內容 slot -->
           <slot name="success-content" :result="paymentResult"></slot>
 
-          <button class="btn-primary" @click="handleClose">完成</button>
+          <div class="success-actions">
+            <button class="btn-secondary" @click="goToTickets">📋 查看票券</button>
+            <button class="btn-primary" @click="handleClose">完成</button>
+          </div>
         </div>
       </div>
     </div>
@@ -646,6 +656,28 @@ watch(() => props.visible, (val) => {
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.15s ease;
+}
+
+.btn-secondary {
+  width: 100%;
+  padding: 12px;
+  min-height: 44px;
+  border: 1.5px solid var(--payment-accent);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--payment-accent);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-secondary:hover { background: color-mix(in srgb, var(--payment-accent) 8%, white); }
+
+.success-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .btn-primary:hover { opacity: 0.9; }

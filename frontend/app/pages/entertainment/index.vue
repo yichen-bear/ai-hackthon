@@ -21,7 +21,6 @@ const navTabs = [
   { key: 'recommend', label: '興趣聚會' },
   { key: 'community', label: '社區' },
   { key: 'board', label: '社群' },
-  { key: 'badge', label: '獎章' },
 ] as const
 
 type NavKey = typeof navTabs[number]['key']
@@ -432,10 +431,6 @@ function demoReset() {
         />
       </template>
 
-      <!-- 獎章 -->
-      <template v-if="activeNav === 'badge'">
-        <EntertainmentAchievementWall :badges="mockBadges" />
-      </template>
     </main>
 
     <!-- Demo 控制面板 -->

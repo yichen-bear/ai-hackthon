@@ -213,7 +213,10 @@ function getStatusLabel(status: string) {
                 <strong>免費</strong>
               </div>
             </div>
-            <button class="btn-primary" @click="closeRegisterSuccess">確認</button>
+            <div class="register-success-actions">
+              <button class="btn-view-ticket" @click="closeRegisterSuccess(); navigateTo('/member?tab=tickets')">📋 查看活動</button>
+              <button class="btn-primary" @click="closeRegisterSuccess">確認</button>
+            </div>
           </div>
         </div>
       </div>
@@ -318,6 +321,10 @@ function getStatusLabel(status: string) {
 .btn-primary { width: 100%; padding: var(--space-3, 12px); min-height: 44px; border: none; border-radius: var(--radius-md, 8px); background: var(--color-primary, #ec4899); color: #ffffff; font-size: var(--text-sm, 13px); font-weight: 600; cursor: pointer; }
 .btn-primary:hover { opacity: 0.85; }
 .btn-primary:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+.register-success-actions { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+.btn-view-ticket { width: 100%; padding: var(--space-3, 12px); min-height: 44px; border: 1.5px solid var(--color-primary, #ec4899); border-radius: var(--radius-md, 8px); background: transparent; color: var(--color-primary, #ec4899); font-size: var(--text-sm, 13px); font-weight: 600; cursor: pointer; }
+.btn-view-ticket:hover { background: var(--color-primary-light, #fdf2f8); }
 
 /* QR 報到 */
 .qr-display { padding: 16px 0; }

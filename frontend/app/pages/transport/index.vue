@@ -38,7 +38,7 @@ const navTabs = [
   { key: 'ticket', label: '購票' },
   { key: 'sharing', label: '租車' },
   { key: 'parking', label: '停車' },
-  { key: 'badge', label: '獎章' },
+  { key: 'badge', label: '碳足跡' },
 ] as const
 
 type NavKey = typeof navTabs[number]['key']
@@ -114,11 +114,7 @@ const mockEmissions: EmissionData = {
     transit: 8.2,
     green: 5,
   },
-  badges: [
-    { id: 'badge-1', icon: '🌱', name: '綠色通勤', description: '連續7天使用大眾運輸', unlocked: true },
-    { id: 'badge-2', icon: '🚴', name: '單車達人', description: '累計騎乘50km', unlocked: true },
-    { id: 'badge-3', icon: '🌍', name: '減碳先鋒', description: '本月碳排低於目標20%', unlocked: false },
-  ],
+  badges: [],
 }
 
 // ─── 事件處理 ───
