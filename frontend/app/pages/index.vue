@@ -185,7 +185,7 @@ const navigateTo = (route: string) => {
 /* ========== 頭部 ========== */
 .home-header {
   text-align: center;
-  padding: var(--space-6) 0 var(--space-5);
+  padding: var(--space-1) 0 var(--space-5);
   border-bottom: 1px solid var(--color-border);
   margin-bottom: var(--space-6);
 }

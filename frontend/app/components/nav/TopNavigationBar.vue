@@ -246,9 +246,7 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
 
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: #ffffff;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
@@ -388,9 +386,7 @@ onUnmounted(() => {
 /* ---------- 暗色模式 ---------- */
 @media (prefers-color-scheme: dark) {
   .top-nav {
-    background: rgba(28, 28, 30, 0.8);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    background: #1c1c1e;
     border-bottom-color: rgba(255, 255, 255, 0.06);
   }
   .top-nav__location {
