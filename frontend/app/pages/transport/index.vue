@@ -27,10 +27,7 @@ onMounted(() => {
   const dest = currentRoute.query.destination as string | undefined
   if (dest) {
     setRouteDestination(dest)
-    nextTick(() => {
-      activeNav.value = 'route'
-      scrollToSection('route', sectionRefs)
-    })
+    activeNav.value = 'route'
   }
 })
 
@@ -41,28 +38,14 @@ const navTabs = [
   { key: 'ticket', label: '購票' },
   { key: 'sharing', label: '租車' },
   { key: 'parking', label: '停車' },
+  { key: 'badge', label: '獎章' },
 ] as const
 
 type NavKey = typeof navTabs[number]['key']
 const activeNav = ref<NavKey>('route')
 
-const sectionRefs: Record<string, HTMLElement | null> = {
-  route: null,
-  ride: null,
-  ticket: null,
-  sharing: null,
-  parking: null,
-}
-
 function handleNavClick(key: NavKey) {
   activeNav.value = key
-  scrollToSection(key, sectionRefs)
-}
-
-function setSectionRef(key: string) {
-  return (el: any) => {
-    sectionRefs[key] = el as HTMLElement | null
-  }
 }
 
 // ─── Mock Data ───
@@ -146,7 +129,6 @@ function handlePlanRoute(suggestion: ContextSuggestion) {
     setRouteDestination(suggestion.destination)
   }
   activeNav.value = 'route'
-  scrollToSection('route', sectionRefs)
 }
 
 function handleCallRide(suggestion: ContextSuggestion) {
@@ -154,7 +136,6 @@ function handleCallRide(suggestion: ContextSuggestion) {
     setRideDestination(suggestion.destination)
   }
   activeNav.value = 'ride'
-  scrollToSection('ride', sectionRefs)
 }
 
 function handleDismiss(id: string) {
@@ -165,13 +146,11 @@ function handleDismiss(id: string) {
 function handleSelectRoute(route: FavoriteRoute) {
   setRouteDestination(route.destination, route.origin)
   activeNav.value = 'route'
-  scrollToSection('route', sectionRefs)
 }
 
 function handleFavCallRide(route: FavoriteRoute) {
   setRideDestination(route.destination)
   activeNav.value = 'ride'
-  scrollToSection('ride', sectionRefs)
 }
 
 function handleFavAdd() {
@@ -230,7 +209,7 @@ function handleTicketUse(ticketId: string) {
     </nav>
 
     <main class="transport-page" role="main" aria-label="行模組">
-      <!-- 情境智慧推播 -->
+      <!-- 情境智慧推播（所有頁面都顯示） -->
       <TransportContextPush
         :suggestions="mockSuggestions"
         @plan-route="handlePlanRoute"
@@ -238,63 +217,61 @@ function handleTicketUse(ticketId: string) {
         @dismiss="handleDismiss"
       />
 
-      <!-- 常用路線收藏 -->
-      <TransportFavoriteRoutes
-        :routes="mockFavoriteRoutes"
-        @select-route="handleSelectRoute"
-        @call-ride="handleFavCallRide"
-        @add="handleFavAdd"
-        @edit="handleFavEdit"
-        @delete="handleFavDelete"
-      />
-
       <!-- 路線規劃 -->
-      <div :ref="setSectionRef('route')">
+      <template v-if="activeNav === 'route'">
+        <TransportFavoriteRoutes
+          :routes="mockFavoriteRoutes"
+          @select-route="handleSelectRoute"
+          @call-ride="handleFavCallRide"
+          @add="handleFavAdd"
+          @edit="handleFavEdit"
+          @delete="handleFavDelete"
+        />
         <TransportRoutePlanner
           :origin="sharedOrigin"
           :destination="sharedDestination"
         />
-      </div>
+      </template>
 
       <!-- 叫車服務 -->
-      <div :ref="setSectionRef('ride')">
+      <template v-if="activeNav === 'ride'">
         <TransportRideService
           :destination="sharedDestination"
         />
-      </div>
+      </template>
 
       <!-- 模擬購票 -->
-      <div :ref="setSectionRef('ticket')">
+      <template v-if="activeNav === 'ticket'">
         <TransportTicketBooking
           @ticket-purchased="handleTicketPurchased"
         />
-      </div>
-
-      <!-- 票券夾 -->
-      <UiTicketWallet
-        :tickets="tickets"
-        @ticket-use="handleTicketUse"
-      />
+        <UiTicketWallet
+          :tickets="tickets"
+          @ticket-use="handleTicketUse"
+        />
+      </template>
 
       <!-- 共享運具 -->
-      <div :ref="setSectionRef('sharing')">
+      <template v-if="activeNav === 'sharing'">
         <TransportSharingVehicle
           vehicle-type="bike"
           :user-location="{ lat: 25.033, lng: 121.565 }"
         />
-      </div>
+      </template>
 
       <!-- 停車助手 -->
-      <div :ref="setSectionRef('parking')">
+      <template v-if="activeNav === 'parking'">
         <TransportParkingFinder
           :location="{ lat: 25.033, lng: 121.565 }"
         />
-      </div>
+      </template>
 
-      <!-- 碳足跡追蹤 -->
-      <TransportCarbonTracker
-        :emissions="mockEmissions"
-      />
+      <!-- 獎章（碳足跡 + 成就） -->
+      <template v-if="activeNav === 'badge'">
+        <TransportCarbonTracker
+          :emissions="mockEmissions"
+        />
+      </template>
     </main>
   </div>
 </template>
@@ -326,7 +303,7 @@ function handleTicketUse(ticketId: string) {
 
 .transport-nav-scroll {
   display: flex;
-  gap: var(--space-3, 12px);
+  gap: var(--space-2, 8px);
   overflow-x: auto;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
@@ -339,26 +316,27 @@ function handleTicketUse(ticketId: string) {
 .transport-nav-btn {
   flex-shrink: 0;
   padding: var(--space-2, 8px) var(--space-4, 16px);
-  min-height: 44px;
-  min-width: 44px;
-  border: none;
+  min-height: 40px;
+  border: 1.5px solid var(--color-border, #e2e8f0);
   border-radius: var(--radius-full, 9999px);
-  background: transparent;
+  background: var(--color-bg-card, #ffffff);
   font-size: var(--text-sm, 13px);
   font-weight: 500;
-  color: var(--color-text-disabled, #cbd5e1);
+  color: var(--color-text-secondary, #78716c);
   cursor: pointer;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .transport-nav-btn.active {
-  color: var(--color-primary, #f59e0b);
-  background-color: var(--color-primary-light, #fffbeb);
-  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--color-primary, #f59e0b);
+  border-color: var(--color-primary, #f59e0b);
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
 }
 
-.transport-nav-btn:not(.active):active {
-  background-color: var(--color-primary-light, #fffbeb);
-  opacity: 0.6;
+.transport-nav-btn:not(.active):hover {
+  border-color: var(--color-primary, #f59e0b);
+  color: var(--color-primary, #f59e0b);
 }
 </style>

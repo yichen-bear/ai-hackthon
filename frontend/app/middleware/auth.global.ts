@@ -56,6 +56,11 @@ export function getRouteDecision(
 let initialized = false
 
 export default defineNuxtRouteMiddleware(async (to, _from) => {
+  // ─── DEV BYPASS：開發階段跳過認證，方便查看頁面 ───
+  if (import.meta.dev) {
+    return
+  }
+
   const { state, fetchUser } = useAuth()
 
   // 首次載入時透過 fetchUser 檢查 cookie 是否帶有效 token
