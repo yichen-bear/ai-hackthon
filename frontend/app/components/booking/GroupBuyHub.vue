@@ -68,29 +68,38 @@ function decrementQty(itemId: string) {
   quantities.value[itemId] = Math.max((quantities.value[itemId] || 1) - 1, 1)
 }
 
-function handleJoinGroup(item: GroupBuyItem) {
-  if (isGrouped(item)) return
-  joiningId.value = item.id
-
-  emit('join-group', {
-    productId: item.id,
-    groupId: item.id,
-    storeId: item.storeId,
-  })
-
-  // 動畫結束後重置
-  setTimeout(() => {
-    joiningId.value = null
-  }, 300)
-}
-
 function handleConfirmPurchase(item: GroupBuyItem) {
+  // 每位用戶首次購買該商品時，參加人數 +1
+  if (!item.isSoloBuy && !joinedItems.value.has(item.id) && !isGrouped(item)) {
+    joinedItems.value.add(item.id)
+    joiningId.value = item.id
+    emit('join-group', {
+      productId: item.id,
+      groupId: item.id,
+      storeId: item.storeId,
+    })
+    setTimeout(() => { joiningId.value = null }, 300)
+  }
+
   emit('confirm-purchase', {
     productId: item.id,
     quantity: getQuantity(item.id),
     storeId: item.storeId,
   })
+
+  // 顯示購買成功提示
+  purchaseToast.value = item.id
+  setTimeout(() => {
+    if (purchaseToast.value === item.id) {
+      purchaseToast.value = null
+    }
+  }, 2500)
 }
+
+// 已加入團購的商品 ID 集合（每用戶只 +1 一次）
+const joinedItems = ref<Set<string>>(new Set())
+// 購買成功提示
+const purchaseToast = ref<string | null>(null)
 
 function isGrouped(item: GroupBuyItem): boolean {
   return !item.isSoloBuy && item.currentMembers >= item.targetMembers
@@ -169,7 +178,7 @@ function getProgressPercent(item: GroupBuyItem): number {
           </div>
         </div>
 
-        <!-- 底部：進度條 + 跟團按鈕 -->
+        <!-- 底部：進度條 -->
         <div v-if="!item.isSoloBuy" class="group-progress-row">
           <div class="progress-wrapper">
             <div class="progress-bar">
@@ -181,16 +190,7 @@ function getProgressPercent(item: GroupBuyItem): number {
             </div>
             <span class="progress-text">{{ item.currentMembers }}/{{ item.targetMembers }} 人已參加</span>
           </div>
-
-          <button
-            v-if="!isGrouped(item)"
-            class="join-btn"
-            :aria-label="`加入 ${item.productName} 團購`"
-            @click="handleJoinGroup(item)"
-          >
-            +1 跟團
-          </button>
-          <span v-else class="grouped-label">已成團 ✓</span>
+          <span v-if="isGrouped(item)" class="grouped-label">已成團 ✓</span>
         </div>
 
         <!-- 數量選擇 + 確認購買 -->
@@ -207,6 +207,11 @@ function getProgressPercent(item: GroupBuyItem): number {
           >
             確認購買
           </button>
+        </div>
+
+        <!-- 購買成功提示 -->
+        <div v-if="purchaseToast === item.id" class="purchase-toast" aria-live="polite">
+          ✅ 購買成功！已加入團購{{ joinedItems.has(item.id) ? '' : '（+1 參加）' }}
         </div>
 
         <!-- 取貨門市標示 -->
@@ -564,5 +569,24 @@ function getProgressPercent(item: GroupBuyItem): number {
   padding: var(--space-6, 24px);
   color: var(--color-text-secondary, #6b7280);
   font-size: var(--text-sm, 13px);
+}
+
+/* ─── 購買成功提示 ─── */
+.purchase-toast {
+  margin-top: var(--space-2, 8px);
+  padding: 8px 12px;
+  background: #ecfdf5;
+  border: 1px solid #10b981;
+  border-radius: var(--radius-md, 12px);
+  font-size: var(--text-xs, 11px);
+  font-weight: 600;
+  color: #065f46;
+  text-align: center;
+  animation: toast-in 0.3s ease;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 </style>

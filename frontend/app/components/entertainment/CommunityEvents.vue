@@ -1,9 +1,11 @@
 <script setup lang="ts">
 /**
  * 在地社區活動與社大課程
- * 報名 → 付款確認 → QR Code 報到憑證
+ * 報名 → 付款確認（走 PaymentFlow）→ QR Code 報到憑證
+ * 免費活動直接報名成功
  */
 import type { CommunityEvent, CommunityCourse } from '~/types/entertainment'
+import type { PaymentOrderItem, PaymentResult } from '~/components/ui/PaymentFlow.vue'
 
 const props = defineProps<{
   communityEvents: CommunityEvent[]
@@ -22,27 +24,59 @@ const tabs = [
 type TabKey = typeof tabs[number]['key']
 const activeTab = ref<TabKey>('community')
 
-// 報名付款 overlay
-const showPayment = ref(false)
-const paymentTarget = ref<{ id: string; name: string; fee: number; type: 'community' | 'course' } | null>(null)
-const paymentSuccess = ref(false)
+// 報名狀態
 const registeredIds = ref<Set<string>>(new Set())
+const paymentTarget = ref<{ id: string; name: string; fee: number; type: 'community' | 'course'; details?: string } | null>(null)
 
-function openPayment(id: string, name: string, fee: number, type: 'community' | 'course') {
-  paymentTarget.value = { id, name, fee, type }
-  paymentSuccess.value = false
-  showPayment.value = true
+// PaymentFlow 狀態
+const showPaymentFlow = ref(false)
+const showRegisterSuccess = ref(false)
+const lastPaymentResult = ref<PaymentResult | null>(null)
+
+const paymentOrderItems = computed<PaymentOrderItem[]>(() => {
+  if (!paymentTarget.value) return []
+  const items: PaymentOrderItem[] = [
+    { label: '活動名稱', value: paymentTarget.value.name },
+  ]
+  if (paymentTarget.value.details) {
+    items.push({ label: '詳情', value: paymentTarget.value.details })
+  }
+  items.push({ label: '費用', value: `$${paymentTarget.value.fee}` })
+  return items
+})
+
+const paymentTotalAmount = computed(() => paymentTarget.value?.fee || 0)
+
+function openPayment(id: string, name: string, fee: number, type: 'community' | 'course', details?: string) {
+  paymentTarget.value = { id, name, fee, type, details }
+  if (fee === 0) {
+    // 免費活動直接報名
+    registeredIds.value.add(id)
+    emit('register', { eventId: id, type })
+    showRegisterSuccess.value = true
+  } else {
+    // 付費活動走 PaymentFlow
+    showPaymentFlow.value = true
+  }
 }
 
-function confirmPayment() {
-  if (!paymentTarget.value) return
-  paymentSuccess.value = true
-  registeredIds.value.add(paymentTarget.value.id)
-  emit('register', { eventId: paymentTarget.value.id, type: paymentTarget.value.type })
+function handlePaymentComplete(result: PaymentResult) {
+  lastPaymentResult.value = result
+  showPaymentFlow.value = false
+  if (paymentTarget.value) {
+    registeredIds.value.add(paymentTarget.value.id)
+    emit('register', { eventId: paymentTarget.value.id, type: paymentTarget.value.type })
+  }
+  showRegisterSuccess.value = true
 }
 
-function closePayment() {
-  showPayment.value = false
+function handlePaymentClose() {
+  showPaymentFlow.value = false
+}
+
+function closeRegisterSuccess() {
+  showRegisterSuccess.value = false
+  lastPaymentResult.value = null
   paymentTarget.value = null
 }
 
@@ -151,51 +185,50 @@ function getStatusLabel(status: string) {
       </article>
     </div>
 
-    <!-- 付款確認 Overlay -->
+    <!-- 報名成功 Overlay -->
     <Teleport to="body">
-      <div v-if="showPayment" class="overlay-backdrop" @click.self="closePayment">
-        <div class="overlay-panel" role="dialog" aria-modal="true" aria-label="付款確認">
-          <!-- 付款成功 -->
-          <div v-if="paymentSuccess" class="payment-success" aria-live="assertive">
+      <div v-if="showRegisterSuccess" class="overlay-backdrop" @click.self="closeRegisterSuccess">
+        <div class="overlay-panel" role="dialog" aria-modal="true" aria-label="報名成功">
+          <div class="payment-success" aria-live="assertive">
             <span class="success-icon" aria-hidden="true">✓</span>
             <h3>報名成功！</h3>
             <p class="success-hint">已生成 QR Code 報到憑證</p>
-            <button class="btn-primary" @click="closePayment">確認</button>
-          </div>
-          <!-- 付款表單 -->
-          <template v-else-if="paymentTarget">
-            <h3 class="overlay-title">確認報名</h3>
-            <div class="payment-info">
-              <div class="pay-row">
-                <span>活動</span>
-                <strong>{{ paymentTarget.name }}</strong>
+            <div v-if="lastPaymentResult" class="success-details">
+              <div class="success-detail-row">
+                <span>付款方式</span>
+                <span>{{ lastPaymentResult.methodLabel }}</span>
               </div>
-              <div class="pay-row">
+              <div class="success-detail-row">
+                <span>實付金額</span>
+                <strong>${{ lastPaymentResult.finalAmount.toLocaleString() }}</strong>
+              </div>
+              <div class="success-detail-row">
+                <span>交易編號</span>
+                <span class="txn-id">{{ lastPaymentResult.transactionId }}</span>
+              </div>
+            </div>
+            <div v-else class="success-details">
+              <div class="success-detail-row">
                 <span>費用</span>
-                <strong class="pay-amount">{{ paymentTarget.fee === 0 ? '免費' : `$${paymentTarget.fee}` }}</strong>
+                <strong>免費</strong>
               </div>
             </div>
-            <div class="payment-method">
-              <p class="method-label">付款方式</p>
-              <div class="method-options">
-                <label class="method-option active">
-                  <input type="radio" name="pay" checked>
-                  <span>💳 OPEN 錢包</span>
-                </label>
-                <label class="method-option">
-                  <input type="radio" name="pay">
-                  <span>🏧 ATM 轉帳</span>
-                </label>
-              </div>
-            </div>
-            <button class="btn-primary btn-confirm" @click="confirmPayment">
-              {{ paymentTarget.fee === 0 ? '確認報名' : `付款 $${paymentTarget.fee}` }}
-            </button>
-            <button class="btn-cancel" @click="closePayment">取消</button>
-          </template>
+            <button class="btn-primary" @click="closeRegisterSuccess">確認</button>
+          </div>
         </div>
       </div>
     </Teleport>
+
+    <!-- PaymentFlow 付款流程 -->
+    <UiPaymentFlow
+      :visible="showPaymentFlow"
+      :order-items="paymentOrderItems"
+      :total-amount="paymentTotalAmount"
+      accent-color="#ec4899"
+      success-title="付款成功"
+      @payment-complete="handlePaymentComplete"
+      @close="handlePaymentClose"
+    />
 
     <!-- QR 報到 Overlay -->
     <Teleport to="body">
@@ -269,17 +302,6 @@ function getStatusLabel(status: string) {
 .payment-info { margin-bottom: 16px; }
 .pay-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--color-border, #e2e8f0); font-size: var(--text-sm, 13px); }
 .pay-amount { color: var(--color-primary, #ec4899); font-size: var(--text-lg, 17px); }
-.payment-method { margin-bottom: 16px; }
-.method-label { font-size: var(--text-sm, 13px); font-weight: 600; margin: 0 0 8px; }
-.method-options { display: flex; flex-direction: column; gap: 8px; }
-.method-option { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 1px solid var(--color-border, #e2e8f0); border-radius: var(--radius-md, 8px); font-size: var(--text-sm, 13px); cursor: pointer; }
-.method-option.active { border-color: var(--color-primary, #ec4899); background: var(--color-primary-light, #fdf2f8); }
-.method-option input { accent-color: var(--color-primary, #ec4899); }
-
-.btn-primary { width: 100%; padding: var(--space-3, 12px); min-height: 44px; border: none; border-radius: var(--radius-md, 8px); background: var(--color-primary, #ec4899); color: #ffffff; font-size: var(--text-sm, 13px); font-weight: 600; cursor: pointer; }
-.btn-primary:hover { opacity: 0.85; }
-.btn-confirm { margin-bottom: 8px; }
-.btn-cancel { width: 100%; padding: var(--space-3, 12px); min-height: 44px; border: 1px solid var(--color-border, #e2e8f0); border-radius: var(--radius-md, 8px); background: transparent; color: var(--color-text-secondary, #64748b); font-size: var(--text-sm, 13px); cursor: pointer; }
 
 /* 付款成功 */
 .payment-success { text-align: center; padding: 24px 0; }
@@ -287,6 +309,15 @@ function getStatusLabel(status: string) {
 @keyframes bounce-in { 0% { transform: scale(0); } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
 .payment-success h3 { font-size: var(--text-lg, 17px); font-weight: 700; margin: 0 0 4px; }
 .success-hint { font-size: var(--text-sm, 13px); color: var(--color-text-secondary, #64748b); margin: 0 0 16px; }
+
+.success-details { text-align: left; background: #f8fafc; border-radius: 10px; padding: 12px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
+.success-detail-row { display: flex; justify-content: space-between; font-size: var(--text-sm, 13px); color: var(--color-text-secondary, #64748b); }
+.success-detail-row strong { color: var(--color-primary, #ec4899); }
+.txn-id { font-family: monospace; font-size: var(--text-xs, 11px); color: var(--color-text-disabled, #94a3b8); }
+
+.btn-primary { width: 100%; padding: var(--space-3, 12px); min-height: 44px; border: none; border-radius: var(--radius-md, 8px); background: var(--color-primary, #ec4899); color: #ffffff; font-size: var(--text-sm, 13px); font-weight: 600; cursor: pointer; }
+.btn-primary:hover { opacity: 0.85; }
+.btn-primary:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 
 /* QR 報到 */
 .qr-display { padding: 16px 0; }
