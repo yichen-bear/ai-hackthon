@@ -1,0 +1,618 @@
+{
+  "pbtResults": {
+    "2.2 撰寫 Property Test：認證 API 錯誤回應不洩露具體原因": {
+      "status": "passed",
+      "lastRunTimestamp": 1785256431041
+    },
+    "4.5 撰寫 Property Test：已認證用戶存取登入頁一律被導走": {
+      "status": "passed",
+      "lastRunTimestamp": 1785256564779
+    },
+    "4.3 撰寫 Property Test：Route Guard 未認證用戶導向登入頁": {
+      "status": "passed",
+      "lastRunTimestamp": 1785256599909
+    },
+    "4.4 撰寫 Property Test：Route Guard 角色隔離": {
+      "status": "passed",
+      "lastRunTimestamp": 1785256635547
+    },
+    "5.3 撰寫 Property Test：無效密碼長度一律被拒絕": {
+      "status": "passed",
+      "lastRunTimestamp": 1785256854030
+    },
+    "5.2 撰寫 Property Test：無效 email 格式一律被拒絕": {
+      "status": "passed",
+      "lastRunTimestamp": 1785256859817
+    },
+    "7.4 撰寫 Property Test：用戶名稱顯示截斷規則": {
+      "status": "passed",
+      "lastRunTimestamp": 1785257093161
+    },
+    "7.3 撰寫 Property Test：下拉選單空 link 項目不可導航": {
+      "status": "passed",
+      "lastRunTimestamp": 1785257107869
+    }
+  },
+  "executionHistory": {
+    "1.1 建立 `backend/utils/crypto.js` 加密工具模組": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254922673
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254956827
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785255260268
+      }
+    ],
+    "1.2 建立 `backend/services/authService.js` 認證服務": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254922805
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785255265332
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785255457257
+      }
+    ],
+    "1.3 建立 `backend/middleware/verifyToken.js` Token 驗證 middleware": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254922956
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785255463518
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256221203
+      }
+    ],
+    "1.4 建立 `backend/routes/auth.js` 認證路由": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254923071
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785255464411
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256222065
+      }
+    ],
+    "1.5 更新 `backend/index.js` 掛載認證路由與 cookie-parser": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254923226
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256228331
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256460676
+      }
+    ],
+    "2.1 撰寫 authService 單元測試": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254923347
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256229120
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256461721
+      }
+    ],
+    "2.2 撰寫 Property Test：認證 API 錯誤回應不洩露具體原因": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254923457
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256230034
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256463168
+      }
+    ],
+    "3. Checkpoint - 確保後端認證服務所有測試通過": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254923546
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256478472
+      }
+    ],
+    "4.1 建立 `frontend/app/composables/useAuth.ts` 認證狀態管理": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254923630
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785255465377
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256223030
+      }
+    ],
+    "4.2 建立 `frontend/app/middleware/auth.global.ts` 路由守衛": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254923744
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256230952
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256464234
+      }
+    ],
+    "4.3 撰寫 Property Test：Route Guard 未認證用戶導向登入頁": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254923888
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256479248
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256758922
+      }
+    ],
+    "4.4 撰寫 Property Test：Route Guard 角色隔離": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254924006
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256480120
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256759769
+      }
+    ],
+    "4.5 撰寫 Property Test：已認證用戶存取登入頁一律被導走": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254924139
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256480991
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256760640
+      }
+    ],
+    "5.1 建立 `frontend/app/pages/login.vue` 登入頁面": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254924231
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256481928
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256761612
+      }
+    ],
+    "5.2 撰寫 Property Test：無效 email 格式一律被拒絕": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254924378
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256767064
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256997083
+      }
+    ],
+    "5.3 撰寫 Property Test：無效密碼長度一律被拒絕": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254924607
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256767938
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256997711
+      }
+    ],
+    "6. Checkpoint - 確保認證模組端對端測試通過": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254924708
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257005863
+      }
+    ],
+    "7.1 建立 `frontend/app/composables/useGeolocation.ts` 地理定位 composable": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254924815
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785255266264
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785255457678
+      }
+    ],
+    "7.2 建立 `frontend/app/components/TopNavigationBar.vue` 上方導覽列": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254924946
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256768855
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256998874
+      }
+    ],
+    "7.3 撰寫 Property Test：下拉選單空 link 項目不可導航": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254925046
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257006572
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257228851
+      }
+    ],
+    "7.4 撰寫 Property Test：用戶名稱顯示截斷規則": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254925157
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257007425
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257230044
+      }
+    ],
+    "7.5 建立 `frontend/app/components/BottomActionBar.vue` 下方功能列": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254925264
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257009251
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257231038
+      }
+    ],
+    "7.6 建立 `frontend/app/components/AiChatOverlay.vue` AI 聊天覆蓋層": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254925414
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257009442
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257227765
+      }
+    ],
+    "8.1 重構 `frontend/app/layouts/default.vue`": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254925545
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257237002
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257333376
+      }
+    ],
+    "8.2 更新 `frontend/app/layouts/admin.vue`": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254925740
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257237900
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257334255
+      }
+    ],
+    "8.3 建立 `frontend/app/pages/admin/index.vue` 後台管理首頁": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254925926
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257339860
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257770745
+      }
+    ],
+    "8.4 搬移後台管理頁面至 `pages/admin/` 資料夾": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254926182
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257340829
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257771951
+      }
+    ],
+    "9.1 刪除廢棄元件並清理殘留引用": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254926334
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257777970
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257927300
+      }
+    ],
+    "10. Checkpoint - 確保前端建置通過且所有測試通過": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254926570
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257934464
+      }
+    ],
+    "11.1 撰寫後端 API 整合測試": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254926811
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257935395
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785258128094
+      }
+    ],
+    "11.2 撰寫前端 useAuth composable 單元測試": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254927062
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257936236
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785258128772
+      }
+    ],
+    "12. Final Checkpoint - 確保所有測試通過": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785254927312
+      },
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785258134770
+      }
+    ],
+    "1. 後端認證基礎建設": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256460827
+      }
+    ],
+    "2. 後端認證測試": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256463333
+      }
+    ],
+    "4. 前端認證模組": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256760786
+      }
+    ],
+    "5. 前端登入頁面": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785256997866
+      }
+    ],
+    "7. 前端 UI 元件建置": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257231215
+      }
+    ],
+    "8. 前端 Layout 重構與頁面重組": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257772145
+      }
+    ],
+    "9. 元件清理": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785257927445
+      }
+    ],
+    "11. 整合測試與驗收": [
+      {
+        "executionId": "0605ad78-66b5-4a63-b4cb-f43da545bf61",
+        "chatSessionId": "sess_c2ba8424-e491-4eaf-b15a-c2c20a5a209e",
+        "timestamp": 1785258128903
+      }
+    ]
+  }
+}

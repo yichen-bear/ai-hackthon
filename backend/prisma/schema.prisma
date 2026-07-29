@@ -294,11 +294,11 @@ model MmsOrderRecord {
 
 model MemberAccount {
   id           String   @id @default(uuid()) @db.Uuid
-  email        Bytes?   
-  emailHash    String?  @map("email_hash") @db.VarChar(50)
-  phone        Bytes?   
-  phoneHash    String?  @map("phone_hash") @db.VarChar(50)
-  name         Bytes?   
+  email        Bytes?
+  emailHash    String?  @unique @map("email_hash") @db.VarChar(50)
+  phone        Bytes?
+  phoneHash    String?  @unique @map("phone_hash") @db.VarChar(50)
+  name         Bytes?
   nameHash     String?  @map("name_hash") @db.VarChar(50)
   passwordHash String   @map("password_hash") @db.VarChar(255)
   status       String   @default("01") @map("status") @db.VarChar(2)
@@ -308,17 +308,15 @@ model MemberAccount {
   updId        String   @map("upd_id") @db.Uuid
   updTime      DateTime @default(now()) @map("upd_time") @db.Timestamptz(6)
 
-  @@unique([emailHash])
-  @@unique([phoneHash])
   @@map("member_account")
 }
 
 model VendorUser {
   id           String   @id @default(uuid()) @db.Uuid
   vendorId     Int      @map("vendor_id")
-  email        Bytes?   
-  emailHash    String?  @map("email_hash") @db.VarChar(50)
-  name         Bytes?   
+  email        Bytes?
+  emailHash    String?  @unique @map("email_hash") @db.VarChar(50)
+  name         Bytes?
   nameHash     String?  @map("name_hash") @db.VarChar(50)
   passwordHash String   @map("password_hash") @db.VarChar(255)
   role         String   @default("staff") @db.VarChar(20)
@@ -329,6 +327,5 @@ model VendorUser {
   updId        String   @map("upd_id") @db.Uuid
   updTime      DateTime @default(now()) @map("upd_time") @db.Timestamptz(6)
 
-  @@unique([emailHash])
   @@map("vendor_user")
 }

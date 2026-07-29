@@ -1,10 +1,12 @@
 <script setup lang="ts">
 const route = useRoute()
+const { logout } = useAuth()
 
-// 從路由路徑提取模組名稱：/food/admin → 'food'
+// 從路由路徑提取模組名稱：/admin/{module} → 'module'
 const currentModule = computed(() => {
   const segments = route.path.split('/').filter(Boolean)
-  return segments[0] ?? ''
+  // /admin/food → segments = ['admin', 'food'] → return 'food'
+  return segments[1] ?? ''
 })
 
 const moduleLabels: Record<string, string> = {
@@ -15,8 +17,12 @@ const moduleLabels: Record<string, string> = {
 
 const pageTitle = computed(() => {
   const label = moduleLabels[currentModule.value] ?? currentModule.value
-  return `${label} — 廠商管理`
+  return label ? `${label} — 廠商管理` : '廠商管理'
 })
+
+function handleLogout() {
+  logout()
+}
 </script>
 
 <template>
@@ -29,9 +35,14 @@ const pageTitle = computed(() => {
         <span class="admin-header__module">{{ pageTitle }}</span>
       </div>
       <div class="admin-header__right">
-        <UiRoleSwitchButton />
+        <button class="admin-header__logout-btn" @click="handleLogout">登出</button>
       </div>
     </header>
+    <nav class="admin-nav">
+      <NuxtLink to="/admin/food" class="admin-nav__link" :class="{ active: currentModule === 'food' }">食</NuxtLink>
+      <NuxtLink to="/admin/medical" class="admin-nav__link" :class="{ active: currentModule === 'medical' }">醫</NuxtLink>
+      <NuxtLink to="/admin/housing" class="admin-nav__link" :class="{ active: currentModule === 'housing' }">住</NuxtLink>
+    </nav>
     <slot />
   </div>
 </template>
@@ -39,7 +50,7 @@ const pageTitle = computed(() => {
 <style scoped>
 .admin-container {
   position: relative;
-  padding-top: 56px;
+  padding-top: 100px;
 }
 
 .admin-header {
@@ -89,5 +100,65 @@ const pageTitle = computed(() => {
 .admin-header__right {
   display: flex;
   align-items: center;
+}
+
+.admin-header__logout-btn {
+  padding: 6px 14px;
+  font-size: var(--text-sm, 13px);
+  font-weight: 500;
+  color: var(--color-text-secondary, #78716c);
+  background-color: transparent;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-header__logout-btn:hover {
+  color: var(--color-text-primary, #1c1917);
+  border-color: var(--color-text-secondary, #78716c);
+  background-color: var(--color-bg-hover, #f5f5f4);
+}
+
+.admin-nav {
+  position: fixed;
+  top: 56px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  height: 44px;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  background-color: var(--color-bg-card, #ffffff);
+  border-bottom: 1px solid var(--color-border, #e2e8f0);
+}
+
+.admin-nav__link {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: var(--text-sm, 13px);
+  font-weight: 500;
+  color: var(--color-text-secondary, #78716c);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.admin-nav__link:hover {
+  color: var(--color-text-primary, #1c1917);
+  background-color: var(--color-bg-hover, #f5f5f4);
+}
+
+.admin-nav__link.active {
+  color: var(--color-primary, #2563eb);
+  font-weight: 600;
+  border-bottom-color: var(--color-primary, #2563eb);
 }
 </style>
