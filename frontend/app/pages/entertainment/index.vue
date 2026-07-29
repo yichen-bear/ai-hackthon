@@ -19,7 +19,6 @@ const { matchIntent } = useEntertainmentAgent()
 const navTabs = [
   { key: 'ticket', label: '活動' },
   { key: 'recommend', label: '興趣聚會' },
-  { key: 'points', label: '點數' },
   { key: 'community', label: '社區' },
   { key: 'board', label: '社群' },
   { key: 'badge', label: '獎章' },
@@ -411,17 +410,6 @@ function demoReset() {
           :matched-groups="mockMatchedGroups"
           @join-group="() => {}"
           @update-interests="handleUpdateInterests"
-        />
-      </template>
-
-      <!-- 點數 -->
-      <template v-if="activeNav === 'points'">
-        <EntertainmentPointsGame
-          :user-points="userPoints"
-          :daily-free-used="dailyFreeUsed"
-          :tasks="mockTasks"
-          @prize-won="handlePrizeWon"
-          @points-spent="handlePointsSpent"
         />
       </template>
 

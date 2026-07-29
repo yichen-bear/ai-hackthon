@@ -27,6 +27,11 @@ const currentIndex = computed(() => {
 })
 
 const currentTitle = computed(() => {
+  const path = route.path
+  // 會員中心與個人資料特殊處理
+  if (path === '/member' || path === '/member/') return '會員中心'
+  if (path === '/member/profile') return '個人資料'
+
   if (currentIndex.value !== -1) {
     return pages.value[currentIndex.value].title
   }

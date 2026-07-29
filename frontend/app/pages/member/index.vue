@@ -18,11 +18,12 @@ function handleDailyCheckIn() {
   userPoints.value += 5
 }
 
-// 轉盤抽獎
+// 轉盤抽獎（每日限定一次）
 const spinResult = ref<string | null>(null)
 const isSpinning = ref(false)
+const dailySpinUsed = ref(false)
 function handleSpin() {
-  if (isSpinning.value || userPoints.value < 10) return
+  if (isSpinning.value || dailySpinUsed.value || userPoints.value < 10) return
   isSpinning.value = true
   userPoints.value -= 10
   setTimeout(() => {
@@ -33,6 +34,7 @@ function handleSpin() {
       userPoints.value += parseInt(prizes[idx])
     }
     isSpinning.value = false
+    dailySpinUsed.value = true
   }, 1500)
 }
 
@@ -61,12 +63,27 @@ function redeemCoupon(cost: number) {
 
 // ─── 活動票券 ───
 const mockTickets = ref([
-  { id: 'tk1', type: '高鐵', name: '台北→桃園 1309車次', date: '2026-08-02', time: '19:00', venue: '台北車站', status: 'unused', points: 10, link: '/transport' },
-  { id: 'tk2', type: '棒球', name: '中信兄弟 vs 統一獅', date: '2026-08-02', time: '18:35', venue: '台南亞太棒球場', status: 'unused', points: 20, link: '/entertainment' },
-  { id: 'tk3', type: '預購', name: '中秋鳳梨酥禮盒', date: '2026-09-15', time: '', venue: '7-11 信義門市', status: 'pending', points: 5, link: '/booking' },
-  { id: 'tk4', type: '社區', name: '中秋社區烤肉大會', date: '2026-09-21', time: '17:00', venue: '仁愛里活動中心', status: 'unused', points: 10, link: '/entertainment' },
-  { id: 'tk5', type: '叫車', name: 'yoxi 叫車紀錄', date: '2026-07-28', time: '14:30', venue: '信義區→公司', status: 'used', points: 5, link: '/transport' },
+  { id: 'tk1', type: '高鐵', name: '台北→桃園 1309車次', date: '2026-08-02', time: '19:00', venue: '台北車站', status: 'unused', points: 10, link: '/transport', linkLabel: '前往購票', linkQuery: { tab: 'ticket' } },
+  { id: 'tk2', type: '棒球', name: '中信兄弟 vs 統一獅', date: '2026-08-02', time: '18:35', venue: '台南亞太棒球場', status: 'unused', points: 20, link: '/entertainment', linkLabel: '前往活動', linkQuery: { tab: 'ticket' } },
+  { id: 'tk3', type: '預購', name: '中秋鳳梨酥禮盒', date: '2026-09-15', time: '', venue: '7-11 信義門市', status: 'pending', points: 5, link: '/booking', linkLabel: '前往取貨', linkQuery: { tab: 'pickup' } },
+  { id: 'tk4', type: '社區', name: '中秋社區烤肉大會', date: '2026-09-21', time: '17:00', venue: '仁愛里活動中心', status: 'unused', points: 10, link: '/entertainment', linkLabel: '前往活動', linkQuery: { tab: 'community' } },
+  { id: 'tk5', type: '叫車', name: 'yoxi 叫車紀錄', date: '2026-07-28', time: '14:30', venue: '信義區→公司', status: 'used', points: 5, link: '/transport', linkLabel: '前往叫車', linkQuery: { tab: 'ride' } },
 ])
+
+// QR 碼展開狀態
+const expandedQrId = ref<string | null>(null)
+function toggleQr(ticketId: string) {
+  expandedQrId.value = expandedQrId.value === ticketId ? null : ticketId
+}
+
+// 獎章詳情彈窗
+const selectedBadge = ref<typeof allBadges.value[0] | null>(null)
+function openBadgeDetail(badge: typeof allBadges.value[0]) {
+  selectedBadge.value = badge
+}
+function closeBadgeDetail() {
+  selectedBadge.value = null
+}
 
 // ─── 獎章 ───
 const allBadges = ref([
@@ -119,10 +136,10 @@ const allBadges = ref([
 
       <!-- 轉盤小遊戲 -->
       <div class="card">
-        <h3 class="card-title">🎰 幸運轉盤</h3>
+        <h3 class="card-title">🎰 幸運轉盤 <span class="daily-limit">每日限定 1 次</span></h3>
         <p class="card-desc">消耗 10 點抽獎，有機會獲得更多點數！</p>
-        <button class="action-btn spin" :disabled="isSpinning || userPoints < 10" @click="handleSpin">
-          {{ isSpinning ? '轉動中...' : '花 10 點轉一次' }}
+        <button class="action-btn spin" :disabled="isSpinning || dailySpinUsed || userPoints < 10" @click="handleSpin">
+          {{ dailySpinUsed ? '✓ 今日已抽過' : isSpinning ? '轉動中...' : '花 10 點轉一次' }}
         </button>
         <p v-if="spinResult" class="spin-result">🎉 結果：{{ spinResult }}</p>
       </div>
@@ -208,28 +225,65 @@ const allBadges = ref([
             <p v-if="tk.venue">📍 {{ tk.venue }}</p>
             <p class="ticket-points">🪙 獲得 {{ tk.points }} 點</p>
           </div>
-          <div class="ticket-qr-mini">
-            <div class="qr-box-mini">📱 QR</div>
-          </div>
+          <!-- QR 按鈕（收合狀態） -->
+          <button class="qr-toggle-btn" @click="toggleQr(tk.id)">
+            📱 {{ expandedQrId === tk.id ? '收合 QR Code' : '顯示 QR Code' }}
+          </button>
           <div class="ticket-actions">
-            <NuxtLink :to="tk.link" class="ticket-link-btn">前往模組</NuxtLink>
+            <NuxtLink :to="{ path: tk.link, query: tk.linkQuery }" class="ticket-link-btn">{{ tk.linkLabel || '前往' }}</NuxtLink>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- QR Code 懸浮視窗 -->
+    <Teleport to="body">
+      <div v-if="expandedQrId" class="qr-overlay" @click.self="expandedQrId = null">
+        <div class="qr-modal">
+          <button class="qr-modal-close" @click="expandedQrId = null">✕</button>
+          <div class="qr-modal-content">
+            <div class="qr-large-box">
+              <div class="qr-pattern-large"></div>
+            </div>
+            <p class="qr-modal-label">掃描此 QR Code</p>
+            <p class="qr-modal-id">{{ expandedQrId }}</p>
+          </div>
+        </div>
+      </div>
+    </Teleport>
+
     <!-- ═══ 獎章 ═══ -->
     <div v-if="activeTab === 'badges'" class="tab-content">
       <div class="badges-grid">
-        <div v-for="b in allBadges" :key="b.id" class="badge-item" :class="{ locked: !b.unlocked }">
+        <button
+          v-for="b in allBadges"
+          :key="b.id"
+          class="badge-item"
+          :class="{ locked: !b.unlocked }"
+          @click="openBadgeDetail(b)"
+        >
           <span class="badge-icon">{{ b.icon }}</span>
           <span class="badge-name">{{ b.name }}</span>
-          <span class="badge-module">{{ b.module }}</span>
-          <span class="badge-desc">{{ b.desc }}</span>
           <span v-if="!b.unlocked" class="badge-lock">🔒</span>
-        </div>
+        </button>
       </div>
     </div>
+
+    <!-- 獎章詳情懸浮視窗 -->
+    <Teleport to="body">
+      <div v-if="selectedBadge" class="badge-overlay" @click.self="closeBadgeDetail">
+        <div class="badge-modal">
+          <button class="badge-modal-close" @click="closeBadgeDetail">✕</button>
+          <div class="badge-modal-icon">{{ selectedBadge.icon }}</div>
+          <h3 class="badge-modal-name">{{ selectedBadge.name }}</h3>
+          <span class="badge-modal-module">{{ selectedBadge.module }}模組</span>
+          <p class="badge-modal-desc">{{ selectedBadge.desc }}</p>
+          <span class="badge-modal-status" :class="{ unlocked: selectedBadge.unlocked }">
+            {{ selectedBadge.unlocked ? '✓ 已解鎖' : '🔒 未解鎖' }}
+          </span>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
@@ -358,19 +412,42 @@ const allBadges = ref([
 .ticket-name { font-size: 14px; font-weight: 600; margin: 0 0 6px; }
 .ticket-details p { font-size: 12px; color: #64748b; margin: 2px 0; }
 .ticket-points { color: #f59e0b !important; font-weight: 600; }
-.ticket-qr-mini { display: flex; justify-content: center; margin: 10px 0; }
-.qr-box-mini { width: 60px; height: 60px; border: 2px dashed #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #94a3b8; }
+.qr-toggle-btn { width: 100%; padding: 8px; margin: 8px 0; border: 1px dashed #e2e8f0; border-radius: 8px; background: transparent; font-size: 12px; color: #64748b; cursor: pointer; min-height: 36px; transition: all 0.15s; }
+.qr-toggle-btn:hover { border-color: #f59e0b; color: #f59e0b; }
 .ticket-actions { display: flex; gap: 8px; }
 .ticket-link-btn { flex: 1; text-align: center; padding: 8px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 12px; font-weight: 500; color: #64748b; text-decoration: none; min-height: 36px; display: flex; align-items: center; justify-content: center; }
 .ticket-link-btn:hover { border-color: #f59e0b; color: #f59e0b; }
 
+/* QR 懸浮視窗 */
+.qr-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1200; display: flex; align-items: center; justify-content: center; }
+.qr-modal { background: #fff; border-radius: 16px; padding: 24px; width: 280px; text-align: center; position: relative; animation: scale-in 0.2s ease; }
+@keyframes scale-in { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.qr-modal-close { position: absolute; top: 8px; right: 8px; background: none; border: none; font-size: 18px; color: #94a3b8; cursor: pointer; width: 32px; height: 32px; }
+.qr-modal-content { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.qr-large-box { width: 180px; height: 180px; border: 3px solid #f59e0b; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: #fff; }
+.qr-pattern-large { width: 140px; height: 140px; background: repeating-conic-gradient(#1e293b 0% 25%, transparent 0% 50%) 0 0 / 14px 14px; border-radius: 4px; }
+.qr-modal-label { font-size: 14px; font-weight: 600; color: #1e293b; margin: 0; }
+.qr-modal-id { font-size: 11px; color: #94a3b8; font-family: monospace; margin: 0; }
+
+.daily-limit { font-size: 11px; color: #94a3b8; font-weight: 400; }
+
 /* 獎章 */
 .badges-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.badge-item { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 12px 8px; background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); position: relative; text-align: center; }
+.badge-item { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 14px 8px; background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); position: relative; text-align: center; border: none; cursor: pointer; transition: transform 0.15s; }
+.badge-item:hover { transform: scale(1.03); }
 .badge-item.locked { opacity: 0.4; filter: grayscale(0.8); }
-.badge-icon { font-size: 28px; }
+.badge-icon { font-size: 32px; }
 .badge-name { font-size: 11px; font-weight: 600; color: #1e293b; }
-.badge-module { font-size: 10px; color: #94a3b8; }
-.badge-desc { font-size: 9px; color: #94a3b8; line-height: 1.3; }
 .badge-lock { position: absolute; top: 4px; right: 4px; font-size: 12px; }
+
+/* 獎章懸浮視窗 */
+.badge-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1200; display: flex; align-items: center; justify-content: center; }
+.badge-modal { background: #fff; border-radius: 16px; padding: 28px 24px; width: 280px; text-align: center; position: relative; animation: scale-in 0.2s ease; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.badge-modal-close { position: absolute; top: 8px; right: 8px; background: none; border: none; font-size: 18px; color: #94a3b8; cursor: pointer; width: 32px; height: 32px; }
+.badge-modal-icon { font-size: 48px; }
+.badge-modal-name { font-size: 18px; font-weight: 700; color: #1e293b; margin: 0; }
+.badge-modal-module { font-size: 12px; color: #94a3b8; background: #f1f5f9; padding: 2px 10px; border-radius: 10px; }
+.badge-modal-desc { font-size: 14px; color: #64748b; margin: 4px 0 0; line-height: 1.5; }
+.badge-modal-status { font-size: 13px; font-weight: 600; margin-top: 8px; }
+.badge-modal-status.unlocked { color: #10b981; }
 </style>
