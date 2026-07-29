@@ -13,6 +13,7 @@ Object.assign(globalThis, {
   computed: vue.computed,
   watch: vue.watch,
   reactive: vue.reactive,
+  readonly: vue.readonly,
   toRef: vue.toRef,
   toRefs: vue.toRefs,
   unref: vue.unref,
@@ -26,6 +27,12 @@ Object.assign(globalThis, {
   withDefaults: vue.withDefaults,
 })
 
+// Stub Nuxt navigation
+;(globalThis as any).navigateTo = vi.fn()
+
+// Stub Nuxt route middleware helper
+;(globalThis as any).defineNuxtRouteMiddleware = (handler: any) => handler
+
 // Stub Nuxt composables
 const mockState: Record<string, vue.Ref> = {}
 
@@ -35,6 +42,19 @@ const mockState: Record<string, vue.Ref> = {}
   }
   return mockState[key] as vue.Ref<T>
 }
+
+// Stub useAuth for middleware/composable tests
+;(globalThis as any).useAuth = () => ({
+  state: vue.ref({
+    isAuthenticated: false,
+    user: null,
+    isLoading: false,
+    error: null,
+  }),
+  login: vi.fn(),
+  logout: vi.fn(),
+  fetchUser: vi.fn(),
+})
 
 // Stub useTransportState for component tests
 ;(globalThis as any).useTransportState = () => ({

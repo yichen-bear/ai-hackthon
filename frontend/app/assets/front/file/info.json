@@ -78,17 +78,17 @@
       {
         "name": "智能家居控制",
         "description": "遠端操控燈光、空調與家電，打造舒適居家環境。",
-        "link": "/home/control"
+        "link": "/housing/control"
       },
       {
         "name": "物業報修",
         "description": "拍照上傳，即時通報社區管理處處理修繕需求。",
-        "link": "/home/repair"
+        "link": "/housing/repair"
       },
       {
         "name": "訪客管理",
         "description": "提前登記訪客，並發送臨時門禁碼，安全便利。",
-        "link": "/home/visitor"
+        "link": "/housing/visitor"
       },
       {
         "name": "社區互動",
@@ -97,7 +97,7 @@
       }
     ],
     "description": "打造安全、便捷的智慧居家體驗",
-    "route": "/home"
+    "route": "/housing"
   },
   {
     "key": "transport",
