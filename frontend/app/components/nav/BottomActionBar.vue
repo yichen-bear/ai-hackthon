@@ -5,8 +5,8 @@ function openAiChat() {
   showAiChat.value = true
 }
 
-function goToProfile() {
-  navigateTo('/profile')
+function goToMember() {
+  navigateTo('/member')
 }
 
 function goToCalendar() {
@@ -21,15 +21,15 @@ function goToCalendar() {
 
     <!-- 下方固定功能列 -->
     <nav class="bottom-bar" aria-label="功能列">
-      <!-- 個人資料按鈕 -->
+      <!-- 會員中心按鈕 -->
       <button
         class="bottom-bar__btn"
         type="button"
-        aria-label="個人資料"
-        @click="goToProfile"
+        aria-label="會員中心"
+        @click="goToMember"
       >
-        <span class="bottom-bar__btn-icon" aria-hidden="true">👤</span>
-        <span class="bottom-bar__btn-label">個人資料</span>
+        <span class="bottom-bar__btn-icon" aria-hidden="true">🏠</span>
+        <span class="bottom-bar__btn-label">會員中心</span>
       </button>
 
       <!-- AI 聊天按鈕（圓形突出） -->
