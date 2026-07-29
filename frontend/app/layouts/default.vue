@@ -12,7 +12,7 @@
 <style scoped>
 .app-container {
   position: relative;
-  padding-top: 56px;
+  padding-top: 69px; 
   padding-bottom: 80px;
 }
 </style>
