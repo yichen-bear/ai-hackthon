@@ -3,7 +3,10 @@
  * PreOrderShelf - i預購虛擬貨架
  * 展示節慶禮盒、名店美食、限量預購與獨家商品
  * 支援分類 Tab、商品詳情 overlay、加入預購/收藏
+ * 預購需線上付款（OPEN錢包/OPEN POINT/優惠券/線上支付）
  */
+
+import type { PaymentOrderItem, PaymentResult } from '~/components/ui/PaymentFlow.vue'
 
 export interface PreOrderProduct {
   id: string
@@ -61,11 +64,55 @@ function closeDetail() {
 
 function handleAddPreorder() {
   if (!selectedProduct.value) return
+  // 開啟付款流程
+  showPaymentFlow.value = true
+}
+
+// ─── 付款流程 ───
+const showPaymentFlow = ref(false)
+const orderConfirmed = ref(false)
+const lastPaymentResult = ref<PaymentResult | null>(null)
+
+const paymentOrderItems = computed<PaymentOrderItem[]>(() => {
+  if (!selectedProduct.value) return []
+  const items: PaymentOrderItem[] = [
+    { label: '商品名稱', value: selectedProduct.value.name },
+  ]
+  if (selectedSpec.value) {
+    items.push({ label: '規格', value: selectedSpec.value })
+  }
+  items.push(
+    { label: '數量', value: `${selectedQuantity.value} 件` },
+    { label: '單價', value: `$${selectedProduct.value.preorderPrice}` },
+  )
+  return items
+})
+
+const paymentTotalAmount = computed(() => {
+  if (!selectedProduct.value) return 0
+  return selectedProduct.value.preorderPrice * selectedQuantity.value
+})
+
+function handlePaymentComplete(result: PaymentResult) {
+  lastPaymentResult.value = result
+  showPaymentFlow.value = false
+  orderConfirmed.value = true
+
+  // 通知父組件新增預購訂單
   emit('add-preorder', {
-    productId: selectedProduct.value.id,
+    productId: selectedProduct.value!.id,
     quantity: selectedQuantity.value,
     spec: selectedSpec.value || undefined,
   })
+}
+
+function handlePaymentClose() {
+  showPaymentFlow.value = false
+}
+
+function closeOrderConfirm() {
+  orderConfirmed.value = false
+  lastPaymentResult.value = null
   closeDetail()
 }
 
@@ -175,7 +222,7 @@ function decrementQty() {
 
     <!-- 商品詳情 Overlay -->
     <Teleport to="body">
-      <div v-if="selectedProduct" class="overlay-backdrop" @click.self="closeDetail">
+      <div v-if="selectedProduct && !orderConfirmed" class="overlay-backdrop" @click.self="closeDetail">
         <div class="overlay-content" role="dialog" aria-modal="true" :aria-label="`${selectedProduct.name} 商品詳情`">
           <button class="overlay-close" aria-label="關閉商品詳情" @click="closeDetail">✕</button>
 
@@ -218,7 +265,7 @@ function decrementQty() {
           <!-- 操作按鈕 -->
           <div class="overlay-actions">
             <button class="btn-preorder" @click="handleAddPreorder">
-              加入預購
+              立即預購
             </button>
             <button class="btn-wishlist" @click="handleAddWishlist(selectedProduct.id); closeDetail()">
               ❤️ 加入收藏
@@ -227,6 +274,64 @@ function decrementQty() {
         </div>
       </div>
     </Teleport>
+
+    <!-- 訂單確認 Overlay（付款成功後） -->
+    <Teleport to="body">
+      <div v-if="orderConfirmed && selectedProduct" class="overlay-backdrop" @click.self="closeOrderConfirm">
+        <div class="overlay-content order-confirm-panel" role="dialog" aria-modal="true" aria-label="預購訂單確認">
+          <div class="order-success-header">
+            <span class="order-success-icon">✓</span>
+            <h3 class="order-success-title">預購成功</h3>
+          </div>
+
+          <div class="order-confirm-card">
+            <div class="order-confirm-row">
+              <span class="order-confirm-label">商品</span>
+              <span class="order-confirm-value">{{ selectedProduct.name }}</span>
+            </div>
+            <div v-if="selectedSpec" class="order-confirm-row">
+              <span class="order-confirm-label">規格</span>
+              <span class="order-confirm-value">{{ selectedSpec }}</span>
+            </div>
+            <div class="order-confirm-row">
+              <span class="order-confirm-label">數量</span>
+              <span class="order-confirm-value">{{ selectedQuantity }} 件</span>
+            </div>
+            <div class="order-confirm-row">
+              <span class="order-confirm-label">付款方式</span>
+              <span class="order-confirm-value">{{ lastPaymentResult?.methodLabel }}</span>
+            </div>
+            <div class="order-confirm-row total">
+              <span class="order-confirm-label">實付金額</span>
+              <span class="order-confirm-value highlight">${{ lastPaymentResult?.finalAmount.toLocaleString() }}</span>
+            </div>
+            <div class="order-confirm-row">
+              <span class="order-confirm-label">交易編號</span>
+              <span class="order-confirm-value txn">{{ lastPaymentResult?.transactionId }}</span>
+            </div>
+            <div class="order-confirm-row">
+              <span class="order-confirm-label">預計取貨</span>
+              <span class="order-confirm-value">商品到貨後通知取貨</span>
+            </div>
+          </div>
+
+          <p class="order-confirm-hint">訂單成立後將於「訂單追蹤」中顯示進度</p>
+
+          <button class="btn-preorder" @click="closeOrderConfirm">完成</button>
+        </div>
+      </div>
+    </Teleport>
+
+    <!-- 付款流程 -->
+    <UiPaymentFlow
+      :visible="showPaymentFlow"
+      :order-items="paymentOrderItems"
+      :total-amount="paymentTotalAmount"
+      accent-color="#10b981"
+      success-title="付款成功"
+      @payment-complete="handlePaymentComplete"
+      @close="handlePaymentClose"
+    />
   </UiDashboardCard>
 </template>
 
@@ -596,5 +701,103 @@ function decrementQty() {
 
 .btn-wishlist:hover {
   opacity: 0.85;
+}
+
+/* ─── 訂單確認 Overlay ─── */
+.order-confirm-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3, 12px);
+}
+
+.order-success-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2, 8px);
+  margin-bottom: var(--space-2, 8px);
+}
+
+.order-success-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-primary, #10b981);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: bounce-in 0.4s ease;
+}
+
+@keyframes bounce-in {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.order-success-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.order-confirm-card {
+  width: 100%;
+  background: var(--color-primary-light, #ecfdf5);
+  border: 1px solid var(--color-primary, #10b981);
+  border-radius: var(--radius-md, 12px);
+  padding: var(--space-3, 12px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.order-confirm-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-confirm-row.total {
+  border-top: 1px solid var(--color-border, #e5e7eb);
+  padding-top: 8px;
+  margin-top: 4px;
+}
+
+.order-confirm-label {
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-secondary, #6b7280);
+}
+
+.order-confirm-value {
+  font-size: var(--text-sm, 13px);
+  font-weight: 500;
+  color: #1e293b;
+  max-width: 60%;
+  text-align: right;
+}
+
+.order-confirm-value.highlight {
+  color: var(--color-primary, #10b981);
+  font-weight: 700;
+  font-size: var(--text-base, 15px);
+}
+
+.order-confirm-value.txn {
+  font-family: monospace;
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-secondary, #6b7280);
+}
+
+.order-confirm-hint {
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-secondary, #6b7280);
+  margin: 0;
+  text-align: center;
 }
 </style>

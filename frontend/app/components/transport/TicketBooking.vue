@@ -1,13 +1,15 @@
 <script setup lang="ts">
 /**
  * 模擬購票元件
- * 步驟式狀態機：form → select-train → confirm
+ * 步驟式狀態機：form → select-train → confirm → payment → success
  * 支援高鐵/台鐵切換
  */
 
+import type { PaymentOrderItem, PaymentResult } from '~/components/ui/PaymentFlow.vue'
+
 export type TicketType = 'hsr' | 'train'
 export type TicketCategory = 'adult' | 'child' | 'senior' | 'disabled'
-export type BookingStep = 'form' | 'select-train' | 'confirm'
+export type BookingStep = 'form' | 'select-train' | 'confirm' | 'success'
 export type SeatStatus = 'available' | 'standing' | 'full'
 
 export interface Station {
@@ -153,6 +155,36 @@ function handleSelectConfirm() {
 // Step 3 → 購票完成
 function handlePurchase() {
   if (!selectedSchedule.value) return
+  showPaymentFlow.value = true
+}
+
+// 付款流程狀態
+const showPaymentFlow = ref(false)
+const lastPaymentResult = ref<PaymentResult | null>(null)
+const purchasedTicketInfo = ref<PurchasedTicket | null>(null)
+
+// 付款摘要項目
+const paymentOrderItems = computed<PaymentOrderItem[]>(() => {
+  if (!selectedSchedule.value) return []
+  const originName = stations.value.find(s => s.id === originId.value)?.name || ''
+  const destName = stations.value.find(s => s.id === destinationId.value)?.name || ''
+  return [
+    { label: '路線', value: `${originName} → ${destName}` },
+    { label: '日期', value: departureDate.value },
+    { label: '車次', value: selectedSchedule.value.trainNo },
+    { label: '時間', value: `${selectedSchedule.value.departureTime} → ${selectedSchedule.value.arrivalTime}` },
+    { label: '票種', value: categoryOptions.find(o => o.key === category.value)?.label || '' },
+    { label: '張數', value: `${quantity.value} 張` },
+  ]
+})
+
+const paymentTotalAmount = computed(() => {
+  return (selectedSchedule.value?.price || 0) * quantity.value
+})
+
+// 付款完成回調
+function handlePaymentComplete(result: PaymentResult) {
+  lastPaymentResult.value = result
 
   const originName = stations.value.find(s => s.id === originId.value)?.name || ''
   const destName = stations.value.find(s => s.id === destinationId.value)?.name || ''
@@ -160,17 +192,23 @@ function handlePurchase() {
   const ticket: PurchasedTicket = {
     id: `ticket-${Date.now()}`,
     type: ticketType.value,
-    trainNo: selectedSchedule.value.trainNo,
+    trainNo: selectedSchedule.value!.trainNo,
     origin: originName,
     destination: destName,
     date: departureDate.value,
-    time: selectedSchedule.value.departureTime,
+    time: selectedSchedule.value!.departureTime,
     category: category.value,
-    price: selectedSchedule.value.price * quantity.value,
+    price: result.finalAmount,
   }
 
+  purchasedTicketInfo.value = ticket
   emit('ticket-purchased', ticket)
-  handleReset()
+  showPaymentFlow.value = false
+  currentStep.value = 'success'
+}
+
+function handlePaymentClose() {
+  showPaymentFlow.value = false
 }
 
 // 重置表單
@@ -185,6 +223,9 @@ function handleReset() {
   schedules.value = []
   selectedScheduleId.value = null
   formError.value = ''
+  showPaymentFlow.value = false
+  lastPaymentResult.value = null
+  purchasedTicketInfo.value = null
 }
 
 // 切換票種時重置
@@ -257,6 +298,8 @@ function generateMockSchedules(): TrainSchedule[] {
         <span class="step" :class="{ active: currentStep === 'select-train' }">2 選擇</span>
         <span class="step-divider" aria-hidden="true">›</span>
         <span class="step" :class="{ active: currentStep === 'confirm' }">3 確認</span>
+        <span class="step-divider" aria-hidden="true">›</span>
+        <span class="step" :class="{ active: currentStep === 'success' }">4 完成</span>
       </div>
 
       <!-- Step 1: 填寫資訊 -->
@@ -424,11 +467,70 @@ function generateMockSchedules(): TrainSchedule[] {
         </div>
 
         <div class="step-actions">
-          <button class="primary-btn" @click="handlePurchase">確認付款</button>
+          <button class="primary-btn" @click="handlePurchase">前往付款</button>
           <button class="text-btn" @click="handleReset">重新購票</button>
         </div>
       </div>
+
+      <!-- Step 4: 購票成功 -->
+      <div v-else-if="currentStep === 'success'" class="step-success" aria-live="polite">
+        <div class="success-header">
+          <span class="success-icon-inline">🎉</span>
+          <h4 class="success-title-inline">購票成功</h4>
+        </div>
+
+        <div class="ticket-result-card">
+          <div class="ticket-qr">
+            <div class="qr-placeholder" aria-label="車票 QR Code">
+              <span class="qr-icon">📱</span>
+              <span class="qr-label">QR Code</span>
+              <span class="qr-id">{{ purchasedTicketInfo?.id }}</span>
+            </div>
+          </div>
+          <div class="ticket-info-list">
+            <div class="ticket-info-row">
+              <span class="ticket-info-label">{{ purchasedTicketInfo?.type === 'hsr' ? '高鐵' : '台鐵' }}</span>
+              <span class="ticket-info-value">車次 {{ purchasedTicketInfo?.trainNo }}</span>
+            </div>
+            <div class="ticket-info-row">
+              <span class="ticket-info-label">路線</span>
+              <span class="ticket-info-value">{{ purchasedTicketInfo?.origin }} → {{ purchasedTicketInfo?.destination }}</span>
+            </div>
+            <div class="ticket-info-row">
+              <span class="ticket-info-label">日期</span>
+              <span class="ticket-info-value">{{ purchasedTicketInfo?.date }}</span>
+            </div>
+            <div class="ticket-info-row">
+              <span class="ticket-info-label">時間</span>
+              <span class="ticket-info-value">{{ purchasedTicketInfo?.time }}</span>
+            </div>
+            <div class="ticket-info-row">
+              <span class="ticket-info-label">實付金額</span>
+              <span class="ticket-info-value highlight">${{ lastPaymentResult?.finalAmount.toLocaleString() }}</span>
+            </div>
+            <div class="ticket-info-row">
+              <span class="ticket-info-label">交易編號</span>
+              <span class="ticket-info-value txn">{{ lastPaymentResult?.transactionId }}</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="success-hint">請於搭乘時出示 QR Code 進站</p>
+
+        <button class="primary-btn" @click="handleReset">完成</button>
+      </div>
     </div>
+
+    <!-- 付款流程 Overlay -->
+    <UiPaymentFlow
+      :visible="showPaymentFlow"
+      :order-items="paymentOrderItems"
+      :total-amount="paymentTotalAmount"
+      accent-color="#f59e0b"
+      success-title="購票成功"
+      @payment-complete="handlePaymentComplete"
+      @close="handlePaymentClose"
+    />
   </section>
 </template>
 
@@ -774,5 +876,114 @@ function generateMockSchedules(): TrainSchedule[] {
 
 .text-btn:active {
   opacity: 0.6;
+}
+
+/* 購票成功 */
+.step-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3, 12px);
+}
+
+.success-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 8px);
+  margin-bottom: var(--space-2, 8px);
+}
+
+.success-icon-inline {
+  font-size: 24px;
+}
+
+.success-title-inline {
+  font-size: var(--text-base, 15px);
+  font-weight: 700;
+  color: var(--color-text-primary, #1c1917);
+  margin: 0;
+}
+
+.ticket-result-card {
+  width: 100%;
+  background: var(--color-primary-light, #fffbeb);
+  border: 1px solid var(--color-primary, #f59e0b);
+  border-radius: var(--radius-md, 12px);
+  padding: var(--space-4, 16px);
+}
+
+.ticket-qr {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-3, 12px);
+}
+
+.qr-placeholder {
+  width: 120px;
+  height: 120px;
+  background: #ffffff;
+  border: 2px dashed var(--color-primary, #f59e0b);
+  border-radius: var(--radius-md, 12px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.qr-icon {
+  font-size: 32px;
+}
+
+.qr-label {
+  font-size: var(--text-xs, 11px);
+  font-weight: 600;
+  color: var(--color-primary, #f59e0b);
+}
+
+.qr-id {
+  font-size: 9px;
+  color: var(--color-text-disabled, #cbd5e1);
+  font-family: monospace;
+}
+
+.ticket-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ticket-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ticket-info-label {
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-secondary, #78716c);
+}
+
+.ticket-info-value {
+  font-size: var(--text-sm, 13px);
+  font-weight: 500;
+  color: var(--color-text-primary, #1c1917);
+}
+
+.ticket-info-value.highlight {
+  color: var(--color-primary, #f59e0b);
+  font-weight: 700;
+}
+
+.ticket-info-value.txn {
+  font-family: monospace;
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-secondary, #78716c);
+}
+
+.success-hint {
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-secondary, #78716c);
+  margin: 0;
 }
 </style>

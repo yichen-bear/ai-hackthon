@@ -2,8 +2,10 @@
 /**
  * ibon 票務中心
  * 整合統一獅球賽門票、展演門票與門市體驗活動購票
+ * 購票流程：選擇票種/數量 → 付款方式 → 付款成功 → 顯示票券 QR Code
  */
 import type { EventItem, StoreExperience, EventType } from '~/types/entertainment'
+import type { PaymentOrderItem, PaymentResult } from '~/components/ui/PaymentFlow.vue'
 
 const props = defineProps<{
   events: EventItem[]
@@ -44,7 +46,6 @@ const selectedEvent = ref<EventItem | null>(null)
 const selectedExperience = ref<StoreExperience | null>(null)
 const selectedTicketType = ref('')
 const selectedQuantity = ref(1)
-const purchaseSuccess = ref(false)
 
 const selectedPrice = computed(() => {
   if (!selectedEvent.value) return 0
@@ -59,7 +60,6 @@ function openPurchase(event: EventItem) {
   selectedExperience.value = null
   selectedTicketType.value = event.prices[0]?.id ?? ''
   selectedQuantity.value = 1
-  purchaseSuccess.value = false
   showOverlay.value = true
 }
 
@@ -67,48 +67,97 @@ function openExperiencePurchase(exp: StoreExperience) {
   selectedExperience.value = exp
   selectedEvent.value = null
   selectedQuantity.value = 1
-  purchaseSuccess.value = false
   showOverlay.value = true
 }
 
 function confirmPurchase() {
-  purchaseSuccess.value = true
+  // 關閉購票 overlay，開啟付款流程
+  showOverlay.value = false
+  showPaymentFlow.value = true
+}
 
-  setTimeout(() => {
-    if (selectedEvent.value) {
-      const price = selectedEvent.value.prices.find(p => p.id === selectedTicketType.value)
-      emit('ticket-purchased', {
-        eventId: selectedEvent.value.id,
-        eventType: selectedEvent.value.type,
-        ticketType: price?.name ?? '',
-        quantity: selectedQuantity.value,
-        totalAmount: totalAmount.value,
-        venue: selectedEvent.value.venue,
-        venueAddress: selectedEvent.value.venueAddress,
-        date: selectedEvent.value.date,
-        time: selectedEvent.value.time,
-      })
-    } else if (selectedExperience.value) {
-      emit('ticket-purchased', {
-        eventId: selectedExperience.value.id,
-        eventType: 'experience',
-        ticketType: '體驗票',
-        quantity: selectedQuantity.value,
-        totalAmount: selectedExperience.value.fee * selectedQuantity.value,
-        venue: selectedExperience.value.storeName,
-        venueAddress: selectedExperience.value.storeAddress,
-        date: selectedExperience.value.timeSlot.split(' ')[0] ?? '',
-        time: selectedExperience.value.timeSlot.split(' ')[1] ?? '',
-      })
-    }
-    showOverlay.value = false
-  }, 1500)
+// ─── 付款流程 ───
+const showPaymentFlow = ref(false)
+const ticketSuccess = ref(false)
+const lastPaymentResult = ref<PaymentResult | null>(null)
+
+const paymentOrderItems = computed<PaymentOrderItem[]>(() => {
+  if (selectedEvent.value) {
+    const price = selectedEvent.value.prices.find(p => p.id === selectedTicketType.value)
+    return [
+      { label: '活動', value: selectedEvent.value.title },
+      { label: '日期', value: `${selectedEvent.value.date} ${selectedEvent.value.time}` },
+      { label: '地點', value: selectedEvent.value.venue },
+      { label: '票種', value: price?.name ?? '' },
+      { label: '數量', value: `${selectedQuantity.value} 張` },
+    ]
+  } else if (selectedExperience.value) {
+    return [
+      { label: '體驗活動', value: selectedExperience.value.name },
+      { label: '時間', value: selectedExperience.value.timeSlot },
+      { label: '地點', value: selectedExperience.value.storeName },
+      { label: '人數', value: `${selectedQuantity.value} 人` },
+    ]
+  }
+  return []
+})
+
+const paymentTotalAmount = computed(() => {
+  if (selectedEvent.value) {
+    return totalAmount.value
+  } else if (selectedExperience.value) {
+    return selectedExperience.value.fee * selectedQuantity.value
+  }
+  return 0
+})
+
+function handlePaymentComplete(result: PaymentResult) {
+  lastPaymentResult.value = result
+  showPaymentFlow.value = false
+  ticketSuccess.value = true
+
+  // 通知父組件
+  if (selectedEvent.value) {
+    const price = selectedEvent.value.prices.find(p => p.id === selectedTicketType.value)
+    emit('ticket-purchased', {
+      eventId: selectedEvent.value.id,
+      eventType: selectedEvent.value.type,
+      ticketType: price?.name ?? '',
+      quantity: selectedQuantity.value,
+      totalAmount: result.finalAmount,
+      venue: selectedEvent.value.venue,
+      venueAddress: selectedEvent.value.venueAddress,
+      date: selectedEvent.value.date,
+      time: selectedEvent.value.time,
+    })
+  } else if (selectedExperience.value) {
+    emit('ticket-purchased', {
+      eventId: selectedExperience.value.id,
+      eventType: 'experience',
+      ticketType: '體驗票',
+      quantity: selectedQuantity.value,
+      totalAmount: result.finalAmount,
+      venue: selectedExperience.value.storeName,
+      venueAddress: selectedExperience.value.storeAddress,
+      date: selectedExperience.value.timeSlot.split(' ')[0] ?? '',
+      time: selectedExperience.value.timeSlot.split(' ')[1] ?? '',
+    })
+  }
+}
+
+function handlePaymentClose() {
+  showPaymentFlow.value = false
+}
+
+function closeTicketSuccess() {
+  ticketSuccess.value = false
+  lastPaymentResult.value = null
+  selectedEvent.value = null
+  selectedExperience.value = null
 }
 
 function closeOverlay() {
-  if (!purchaseSuccess.value) {
-    showOverlay.value = false
-  }
+  showOverlay.value = false
 }
 </script>
 
@@ -248,14 +297,8 @@ function closeOverlay() {
     <Teleport to="body">
       <div v-if="showOverlay" class="overlay-backdrop" @click.self="closeOverlay">
         <div class="overlay-panel" role="dialog" aria-modal="true" aria-label="購票確認">
-          <!-- 成功狀態 -->
-          <div v-if="purchaseSuccess" class="purchase-success" aria-live="assertive">
-            <span class="success-icon" aria-hidden="true">✓</span>
-            <p>購票成功！</p>
-          </div>
-
           <!-- 購票表單 - 活動 -->
-          <template v-else-if="selectedEvent">
+          <template v-if="selectedEvent">
             <h3 class="overlay-title">{{ selectedEvent.title }}</h3>
             <p class="overlay-meta">{{ selectedEvent.date }} {{ selectedEvent.time }} · {{ selectedEvent.venue }}</p>
 
@@ -283,7 +326,7 @@ function closeOverlay() {
               <strong>${{ totalAmount.toLocaleString() }}</strong>
             </div>
 
-            <button class="btn-primary btn-confirm" @click="confirmPurchase">確認購票</button>
+            <button class="btn-primary btn-confirm" @click="confirmPurchase">前往付款</button>
             <button class="btn-cancel" @click="closeOverlay">取消</button>
           </template>
 
@@ -304,12 +347,85 @@ function closeOverlay() {
               <strong>${{ (selectedExperience.fee * selectedQuantity).toLocaleString() }}</strong>
             </div>
 
-            <button class="btn-primary btn-confirm" @click="confirmPurchase">確認報名</button>
+            <button class="btn-primary btn-confirm" @click="confirmPurchase">前往付款</button>
             <button class="btn-cancel" @click="closeOverlay">取消</button>
           </template>
         </div>
       </div>
     </Teleport>
+
+    <!-- 付款成功 - 票券 QR Code -->
+    <Teleport to="body">
+      <div v-if="ticketSuccess" class="overlay-backdrop" @click.self="closeTicketSuccess">
+        <div class="overlay-panel ticket-success-panel" role="dialog" aria-modal="true" aria-label="購票成功">
+          <div class="ticket-success-header">
+            <span class="ticket-success-icon">✓</span>
+            <h3 class="ticket-success-title">購票成功</h3>
+          </div>
+
+          <div class="ticket-qr-section">
+            <div class="ticket-qr-box" aria-label="票券 QR Code">
+              <span class="ticket-qr-emoji">🎫</span>
+              <span class="ticket-qr-label">入場 QR Code</span>
+              <span class="ticket-qr-id">TKT-{{ Date.now().toString(36).toUpperCase() }}</span>
+            </div>
+          </div>
+
+          <div class="ticket-success-details">
+            <div class="ticket-detail-row" v-if="selectedEvent">
+              <span class="ticket-detail-label">活動</span>
+              <span class="ticket-detail-value">{{ selectedEvent.title }}</span>
+            </div>
+            <div class="ticket-detail-row" v-if="selectedExperience">
+              <span class="ticket-detail-label">體驗</span>
+              <span class="ticket-detail-value">{{ selectedExperience.name }}</span>
+            </div>
+            <div class="ticket-detail-row">
+              <span class="ticket-detail-label">日期</span>
+              <span class="ticket-detail-value">{{ selectedEvent?.date || selectedExperience?.timeSlot.split(' ')[0] }}</span>
+            </div>
+            <div class="ticket-detail-row">
+              <span class="ticket-detail-label">時間</span>
+              <span class="ticket-detail-value">{{ selectedEvent?.time || selectedExperience?.timeSlot.split(' ')[1] }}</span>
+            </div>
+            <div class="ticket-detail-row">
+              <span class="ticket-detail-label">地點</span>
+              <span class="ticket-detail-value">{{ selectedEvent?.venue || selectedExperience?.storeName }}</span>
+            </div>
+            <div class="ticket-detail-row">
+              <span class="ticket-detail-label">數量</span>
+              <span class="ticket-detail-value">{{ selectedQuantity }} {{ selectedEvent ? '張' : '人' }}</span>
+            </div>
+            <div class="ticket-detail-row">
+              <span class="ticket-detail-label">付款方式</span>
+              <span class="ticket-detail-value">{{ lastPaymentResult?.methodLabel }}</span>
+            </div>
+            <div class="ticket-detail-row total">
+              <span class="ticket-detail-label">實付金額</span>
+              <span class="ticket-detail-value highlight">${{ lastPaymentResult?.finalAmount.toLocaleString() }}</span>
+            </div>
+            <div class="ticket-detail-row">
+              <span class="ticket-detail-label">交易編號</span>
+              <span class="ticket-detail-value txn">{{ lastPaymentResult?.transactionId }}</span>
+            </div>
+          </div>
+
+          <p class="ticket-success-hint">請於入場時出示 QR Code</p>
+          <button class="btn-primary" @click="closeTicketSuccess">完成</button>
+        </div>
+      </div>
+    </Teleport>
+
+    <!-- 付款流程 -->
+    <UiPaymentFlow
+      :visible="showPaymentFlow"
+      :order-items="paymentOrderItems"
+      :total-amount="paymentTotalAmount"
+      accent-color="#ec4899"
+      success-title="付款成功"
+      @payment-complete="handlePaymentComplete"
+      @close="handlePaymentClose"
+    />
   </section>
 </template>
 
@@ -648,5 +764,130 @@ function closeOverlay() {
   font-size: var(--text-lg, 17px);
   font-weight: 600;
   color: var(--color-text-primary, #1e293b);
+}
+
+/* ─── 票券成功面板 ─── */
+.ticket-success-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.ticket-success-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.ticket-success-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-primary, #ec4899);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: bounce-in 0.4s ease;
+}
+
+.ticket-success-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.ticket-qr-section {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.ticket-qr-box {
+  width: 140px;
+  height: 140px;
+  background: #ffffff;
+  border: 2px dashed var(--color-primary, #ec4899);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.ticket-qr-emoji {
+  font-size: 36px;
+}
+
+.ticket-qr-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary, #ec4899);
+}
+
+.ticket-qr-id {
+  font-size: 9px;
+  color: #94a3b8;
+  font-family: monospace;
+}
+
+.ticket-success-details {
+  width: 100%;
+  background: var(--color-primary-light, #fdf2f8);
+  border: 1px solid var(--color-primary, #ec4899);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ticket-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ticket-detail-row.total {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 8px;
+  margin-top: 4px;
+}
+
+.ticket-detail-label {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.ticket-detail-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1e293b;
+  max-width: 60%;
+  text-align: right;
+}
+
+.ticket-detail-value.highlight {
+  color: var(--color-primary, #ec4899);
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.ticket-detail-value.txn {
+  font-family: monospace;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.ticket-success-hint {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
 }
 </style>
