@@ -2,10 +2,9 @@
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('../generated/prisma');
-const { hashEmail } = require('../utils/crypto');
-
-const prisma = new PrismaClient();
+const crypto = require('crypto');
+const prisma = require('../utils/prismaClient');
+const { hashEmail, encryptField } = require('../utils/crypto');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -131,9 +130,92 @@ async function loginVendor(email, password) {
   return { token, userId: vendor.id, vendorId: vendor.vendorId };
 }
 
+/**
+ * 一般會員註冊
+ * @param {object} data - { email, password, name, phone }
+ * @returns {Promise<{token: string, userId: string}>} 註冊成功回傳 token 與 userId
+ * @throws {Error} Email 已被註冊時拋出含 statusCode 的錯誤
+ */
+async function registerMember({ email, password, name, phone }) {
+  const emailHashed = hashEmail(email);
+
+  const existing = await prisma.memberAccount.findUnique({
+    where: { emailHash: emailHashed },
+  });
+  if (existing) {
+    const error = new Error('此 Email 已被註冊');
+    error.statusCode = 409;
+    throw error;
+  }
+
+  const passwordHash = await bcrypt.hash(password, 10);
+  const newId = crypto.randomUUID();
+
+  const account = await prisma.memberAccount.create({
+    data: {
+      id: newId,
+      email: encryptField(email),
+      emailHash: emailHashed,
+      phone: phone ? encryptField(phone) : undefined,
+      name: name ? encryptField(name) : undefined,
+      passwordHash,
+      // 自行註冊：audit 欄位帶入自身 id
+      creId: newId,
+      updId: newId,
+    },
+  });
+
+  const token = signToken({ sub: account.id, role: 'member' }, '24h');
+  return { token, userId: account.id };
+}
+
+/**
+ * 廠商用戶註冊（自行申請帳號，尚無 vendorId）
+ * @param {object} data - { email, password, companyName, name }
+ * @returns {Promise<{token: string, userId: string}>} 註冊成功回傳 token 與 userId
+ * @throws {Error} Email 已被註冊時拋出含 statusCode 的錯誤
+ */
+async function registerVendor({ email, password, companyName, name }) {
+  const emailHashed = hashEmail(email);
+
+  const existing = await prisma.vendorUser.findUnique({
+    where: { emailHash: emailHashed },
+  });
+  if (existing) {
+    const error = new Error('此 Email 已被註冊');
+    error.statusCode = 409;
+    throw error;
+  }
+
+  const passwordHash = await bcrypt.hash(password, 10);
+  const newId = crypto.randomUUID();
+
+  const vendor = await prisma.vendorUser.create({
+    data: {
+      id: newId,
+      companyName,
+      email: encryptField(email),
+      emailHash: emailHashed,
+      name: name ? encryptField(name) : undefined,
+      passwordHash,
+      role: 'owner',
+      creId: newId,
+      updId: newId,
+    },
+  });
+
+  const token = signToken(
+    { sub: vendor.id, role: 'vendor', vendorId: vendor.vendorId },
+    '8h'
+  );
+  return { token, userId: vendor.id, vendorId: vendor.vendorId };
+}
+
 module.exports = {
   signToken,
   verifyToken,
   loginMember,
   loginVendor,
+  registerMember,
+  registerVendor,
 };

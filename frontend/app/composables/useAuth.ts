@@ -11,6 +11,16 @@ export interface AuthUser {
   name?: string
 }
 
+export interface RegisterPayload {
+  role: 'member' | 'vendor'
+  email: string
+  password: string
+  name?: string
+  phone?: string
+  /** role === 'vendor' 時必填：廠商名稱 */
+  companyName?: string
+}
+
 export interface AuthState {
   isAuthenticated: boolean
   user: AuthUser | null
@@ -66,6 +76,42 @@ export function useAuth() {
   }
 
   /**
+   * 註冊
+   * POST /api/auth/register → 成功時更新狀態（等同直接登入），失敗時設定 error
+   */
+  async function register(payload: RegisterPayload): Promise<void> {
+    state.value.isLoading = true
+    state.value.error = null
+
+    try {
+      const response = await $fetch<{
+        success: boolean
+        user: AuthUser
+        message?: string
+      }>('/api/auth/register', {
+        method: 'POST',
+        body: payload,
+        credentials: 'include',
+      })
+
+      if (response.success && response.user) {
+        state.value.isAuthenticated = true
+        state.value.user = response.user
+        state.value.error = null
+      }
+    } catch (err: any) {
+      state.value.isAuthenticated = false
+      state.value.user = null
+
+      const message = err?.data?.message || err?.message || '網路連線失敗，請稍後再試'
+      state.value.error = message
+      throw err
+    } finally {
+      state.value.isLoading = false
+    }
+  }
+
+  /**
    * 登出
    * POST /api/auth/logout → 清除狀態 → 導向 /login
    */
@@ -111,6 +157,7 @@ export function useAuth() {
   return {
     state: readonly(state) as Readonly<Ref<AuthState>>,
     login,
+    register,
     logout,
     fetchUser,
   }

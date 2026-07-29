@@ -18,6 +18,34 @@ function hashEmail(email) {
 }
 
 /**
+ * 加密欄位為 AES-256-GCM Buffer（與 decryptField 對稱）
+ * 加密格式：IV (12 bytes) + authTag (16 bytes) + ciphertext (剩餘 bytes)
+ * @param {string} plainText - 待加密的明文字串
+ * @returns {Buffer} 加密後的 Buffer 資料
+ */
+function encryptField(plainText) {
+  const key = process.env.ENCRYPTION_KEY;
+  if (!key) {
+    throw new Error('ENCRYPTION_KEY environment variable is not set');
+  }
+  if (typeof plainText !== 'string') {
+    throw new Error('plainText must be a string');
+  }
+
+  const keyBuffer = Buffer.from(key, 'hex');
+  const iv = crypto.randomBytes(12);
+  const cipher = crypto.createCipheriv('aes-256-gcm', keyBuffer, iv);
+
+  const ciphertext = Buffer.concat([
+    cipher.update(plainText, 'utf8'),
+    cipher.final(),
+  ]);
+  const authTag = cipher.getAuthTag();
+
+  return Buffer.concat([iv, authTag, ciphertext]);
+}
+
+/**
  * 解密 AES-256-GCM 加密的 Buffer 欄位
  * 加密格式：IV (12 bytes) + authTag (16 bytes) + ciphertext (剩餘 bytes)
  * @param {Buffer} encryptedBuffer - 加密後的 Buffer 資料
@@ -50,5 +78,6 @@ function decryptField(encryptedBuffer) {
 
 module.exports = {
   hashEmail,
+  encryptField,
   decryptField,
 };

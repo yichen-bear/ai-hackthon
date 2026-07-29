@@ -4,7 +4,25 @@
       <!-- 標題 -->
       <div class="login-header">
         <h1 class="login-title">AI 生活管家</h1>
-        <p class="login-subtitle">登入您的帳號</p>
+        <p class="login-subtitle">{{ mode === 'login' ? '登入您的帳號' : '建立新帳號' }}</p>
+      </div>
+
+      <!-- 登入 / 註冊 切換 -->
+      <div class="mode-tabs">
+        <button
+          class="mode-btn"
+          :class="{ active: mode === 'login' }"
+          @click="switchMode('login')"
+        >
+          登入
+        </button>
+        <button
+          class="mode-btn"
+          :class="{ active: mode === 'register' }"
+          @click="switchMode('register')"
+        >
+          註冊
+        </button>
       </div>
 
       <!-- 角色 Tab 切換 -->
@@ -12,16 +30,16 @@
         <button
           class="tab-btn"
           :class="{ active: activeRole === 'member' }"
-          @click="activeRole = 'member'"
+          @click="switchRole('member')"
         >
-          一般登入
+          一般{{ mode === 'login' ? '登入' : '註冊' }}
         </button>
         <button
           class="tab-btn"
           :class="{ active: activeRole === 'vendor' }"
-          @click="activeRole = 'vendor'"
+          @click="switchRole('vendor')"
         >
-          廠商登入
+          廠商{{ mode === 'login' ? '登入' : '註冊' }}
         </button>
       </div>
 
@@ -31,8 +49,7 @@
       </div>
 
       <!-- 登入表單 -->
-      <form class="login-form" @submit.prevent="handleSubmit">
-        <!-- Email 欄位 -->
+      <form v-if="mode === 'login'" class="login-form" @submit.prevent="handleLoginSubmit">
         <div class="form-group">
           <label for="email" class="form-label">Email</label>
           <input
@@ -49,7 +66,6 @@
           <p v-if="errors.email" class="field-error">{{ errors.email }}</p>
         </div>
 
-        <!-- 密碼欄位 -->
         <div class="form-group">
           <label for="password" class="form-label">密碼</label>
           <input
@@ -66,18 +82,108 @@
           <p v-if="errors.password" class="field-error">{{ errors.password }}</p>
         </div>
 
-        <!-- 登入按鈕 -->
-        <button
-          type="submit"
-          class="submit-btn"
-          :disabled="isLoading"
-        >
+        <button type="submit" class="submit-btn" :disabled="isLoading">
           {{ isLoading ? '登入中...' : '登入' }}
         </button>
       </form>
 
-      <!-- 測試帳號資訊 -->
-      <div class="test-accounts">
+      <!-- 註冊表單 -->
+      <form v-else class="login-form" @submit.prevent="handleRegisterSubmit">
+        <!-- 廠商專屬欄位 -->
+        <div v-if="activeRole === 'vendor'" class="form-group">
+          <label for="companyName" class="form-label">廠商名稱</label>
+          <input
+            id="companyName"
+            v-model="companyName"
+            type="text"
+            class="form-input"
+            :class="{ 'has-error': errors.companyName }"
+            placeholder="請輸入廠商名稱"
+            maxlength="100"
+            @input="clearFieldError('companyName')"
+          />
+          <p v-if="errors.companyName" class="field-error">{{ errors.companyName }}</p>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-name" class="form-label">{{ activeRole === 'member' ? '姓名' : '聯絡人姓名' }}</label>
+          <input
+            id="reg-name"
+            v-model="name"
+            type="text"
+            class="form-input"
+            placeholder="請輸入姓名"
+            maxlength="100"
+          />
+        </div>
+
+        <div v-if="activeRole !== 'vendor'" class="form-group">
+          <label for="reg-phone" class="form-label">聯絡電話</label>
+          <input
+            id="reg-phone"
+            v-model="phone"
+            type="tel"
+            class="form-input"
+            placeholder="請輸入聯絡電話"
+            maxlength="20"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="reg-email" class="form-label">Email</label>
+          <input
+            id="reg-email"
+            v-model="email"
+            type="email"
+            class="form-input"
+            :class="{ 'has-error': errors.email }"
+            placeholder="請輸入 Email"
+            maxlength="254"
+            autocomplete="email"
+            @input="clearFieldError('email')"
+          />
+          <p v-if="errors.email" class="field-error">{{ errors.email }}</p>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-password" class="form-label">密碼</label>
+          <input
+            id="reg-password"
+            v-model="password"
+            type="password"
+            class="form-input"
+            :class="{ 'has-error': errors.password }"
+            placeholder="請輸入密碼（8-72 字元）"
+            maxlength="72"
+            autocomplete="new-password"
+            @input="clearFieldError('password')"
+          />
+          <p v-if="errors.password" class="field-error">{{ errors.password }}</p>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-password-confirm" class="form-label">確認密碼</label>
+          <input
+            id="reg-password-confirm"
+            v-model="passwordConfirm"
+            type="password"
+            class="form-input"
+            :class="{ 'has-error': errors.passwordConfirm }"
+            placeholder="請再次輸入密碼"
+            maxlength="72"
+            autocomplete="new-password"
+            @input="clearFieldError('passwordConfirm')"
+          />
+          <p v-if="errors.passwordConfirm" class="field-error">{{ errors.passwordConfirm }}</p>
+        </div>
+
+        <button type="submit" class="submit-btn" :disabled="isLoading">
+          {{ isLoading ? '註冊中...' : '註冊' }}
+        </button>
+      </form>
+
+      <!-- 測試帳號資訊（僅登入模式顯示） -->
+      <div v-if="mode === 'login'" class="test-accounts">
         <p class="test-accounts-title">測試帳號</p>
         <div class="test-account-item">
           <span class="test-role">一般會員：</span>
@@ -97,23 +203,62 @@ import { validateEmail, validatePassword } from '~/utils/validators'
 
 definePageMeta({ layout: false })
 
-const { login, state: authState } = useAuth()
+const { login, register, state: authState } = useAuth()
 const route = useRoute()
 
-const activeRole = ref<'member' | 'vendor'>('member')
+type Role = 'member' | 'vendor'
+
+const mode = ref<'login' | 'register'>('login')
+const activeRole = ref<Role>('member')
+
+// 表單欄位
 const email = ref('')
 const password = ref('')
+const passwordConfirm = ref('')
+const name = ref('')
+const phone = ref('')
+const companyName = ref('')
+
 const serverError = ref('')
 const isLoading = ref(false)
 
-const errors = ref<{ email?: string; password?: string }>({})
+const errors = ref<{
+  email?: string
+  password?: string
+  passwordConfirm?: string
+  companyName?: string
+}>({})
 
-function clearFieldError(field: 'email' | 'password') {
+function resetForm() {
+  email.value = ''
+  password.value = ''
+  passwordConfirm.value = ''
+  name.value = ''
+  phone.value = ''
+  companyName.value = ''
+  errors.value = {}
+  serverError.value = ''
+}
+
+function switchMode(next: 'login' | 'register') {
+  if (mode.value === next) return
+  mode.value = next
+  resetForm()
+}
+
+function switchRole(next: Role) {
+  if (activeRole.value === next) return
+  activeRole.value = next
+  errors.value = {}
+  serverError.value = ''
+}
+
+function clearFieldError(field: keyof typeof errors.value) {
   errors.value[field] = undefined
 }
 
-function validateForm(): boolean {
-  const newErrors: { email?: string; password?: string } = {}
+function validateLoginForm(): boolean {
+  const newErrors: typeof errors.value = {}
 
   if (!email.value.trim()) {
     newErrors.email = '請輸入 Email'
@@ -131,10 +276,51 @@ function validateForm(): boolean {
   return Object.keys(newErrors).length === 0
 }
 
-async function handleSubmit() {
+function validateRegisterForm(): boolean {
+  const newErrors: typeof errors.value = {}
+
+  if (!email.value.trim()) {
+    newErrors.email = '請輸入 Email'
+  } else if (!validateEmail(email.value.trim())) {
+    newErrors.email = '請輸入有效的 Email 格式'
+  }
+
+  if (!password.value) {
+    newErrors.password = '請輸入密碼'
+  } else if (!validatePassword(password.value)) {
+    newErrors.password = '密碼長度需介於 8 至 72 字元'
+  }
+
+  if (!passwordConfirm.value) {
+    newErrors.passwordConfirm = '請再次輸入密碼'
+  } else if (passwordConfirm.value !== password.value) {
+    newErrors.passwordConfirm = '密碼與確認密碼不一致'
+  }
+
+  if (activeRole.value === 'vendor' && !companyName.value.trim()) {
+    newErrors.companyName = '請輸入廠商名稱'
+  }
+
+  errors.value = newErrors
+  return Object.keys(newErrors).length === 0
+}
+
+function redirectAfterAuth() {
+  const redirect = route.query.redirect as string | undefined
+  if (redirect) {
+    return navigateTo(redirect)
+  }
+  if (activeRole.value === 'vendor') {
+    // 廠商登入/註冊後導向後台管理介面，而非一般頁面
+    return navigateTo('/admin')
+  }
+  return navigateTo('/')
+}
+
+async function handleLoginSubmit() {
   serverError.value = ''
 
-  if (!validateForm()) {
+  if (!validateLoginForm()) {
     return
   }
 
@@ -142,25 +328,37 @@ async function handleSubmit() {
 
   try {
     await login(email.value.trim(), password.value, activeRole.value)
-
-    // 登入成功後導向
-    const redirect = route.query.redirect as string | undefined
-    if (redirect) {
-      await navigateTo(redirect)
-    } else if (activeRole.value === 'vendor') {
-      await navigateTo('/admin')
-    } else {
-      await navigateTo('/')
-    }
+    await redirectAfterAuth()
   } catch (err: any) {
-    // 從 authState 取得錯誤訊息（useAuth 已處理），或使用 fallback
     const message = authState.value.error || err?.data?.message || err?.message
-    if (message) {
-      serverError.value = message
-    } else {
-      serverError.value = '網路連線失敗，請稍後再試'
-    }
-    // 保留已填 email（不清除）
+    serverError.value = message || '網路連線失敗，請稍後再試'
+  } finally {
+    isLoading.value = false
+  }
+}
+
+async function handleRegisterSubmit() {
+  serverError.value = ''
+
+  if (!validateRegisterForm()) {
+    return
+  }
+
+  isLoading.value = true
+
+  try {
+    await register({
+      role: activeRole.value,
+      email: email.value.trim(),
+      password: password.value,
+      name: name.value.trim() || undefined,
+      phone: phone.value.trim() || undefined,
+      companyName: activeRole.value === 'vendor' ? companyName.value.trim() : undefined,
+    })
+    await redirectAfterAuth()
+  } catch (err: any) {
+    const message = authState.value.error || err?.data?.message || err?.message
+    serverError.value = message || '網路連線失敗，請稍後再試'
   } finally {
     isLoading.value = false
   }
@@ -205,6 +403,34 @@ async function handleSubmit() {
   margin: 0;
 }
 
+/* 登入/註冊 模式切換 */
+.mode-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-secondary, #78716c);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+
+.mode-btn.active {
+  color: var(--color-primary, #f97316);
+  border-bottom-color: var(--color-primary, #f97316);
+}
+
 /* 角色 Tab 切換 */
 .role-tabs {
   display: flex;
@@ -217,10 +443,10 @@ async function handleSubmit() {
 
 .tab-btn {
   flex: 1;
-  padding: 10px 16px;
+  padding: 10px 8px;
   border: none;
   background: transparent;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--color-text-secondary, #78716c);
   cursor: pointer;

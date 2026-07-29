@@ -71,13 +71,12 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { useRouter } from 'vue-router'
 
 definePageMeta({
   layout: 'blank'
 })
 
-const router = useRouter()
+const { logout } = useAuth()
 
 // 模擬個人資訊（實際可從 store 或 API 取得）
 const profile = reactive({
@@ -94,7 +93,7 @@ const password = reactive({
 
 // 方法
 const goHome = () => {
-  router.push('/')
+  navigateTo('/')
 }
 
 const saveProfile = () => {
@@ -112,10 +111,9 @@ const changePassword = () => {
   password.confirm = ''
 }
 
-const handleLogout = () => {
+const handleLogout = async () => {
   if (confirm('確定要登出嗎？')) {
-    // 執行登出邏輯（清除 token、store 等）
-    router.push('/login')
+    await logout()
   }
 }
 </script>

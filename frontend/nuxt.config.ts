@@ -7,4 +7,9 @@ export default defineNuxtConfig({
 	tailwindcss: {
 		configPath: "tailwind.config.ts",
 	},
+	// 開發環境將 /api/** 轉發至 Express 後端 (http://localhost:3001)
+	// 讓前端 $fetch('/api/...') 實際打到後端，而不是 Nuxt 自身的 server route
+	routeRules: {
+		"/api/**": { proxy: "http://localhost:3001/api/**" },
+	},
 });

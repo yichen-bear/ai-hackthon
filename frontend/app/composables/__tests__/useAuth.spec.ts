@@ -142,6 +142,68 @@ describe('useAuth', () => {
     })
   })
 
+  describe('register', () => {
+    it('廠商註冊成功時應更新狀態為已認證', async () => {
+      const mockUser: AuthUser = {
+        userId: 'vendor-123',
+        role: 'vendor',
+      }
+
+      mockFetch.mockResolvedValueOnce({
+        success: true,
+        user: mockUser,
+      })
+
+      const { state, register } = useAuth()
+      await register({
+        role: 'vendor',
+        email: 'vendor@example.com',
+        password: 'password123',
+        companyName: '測試廠商',
+      })
+
+      expect(state.value.isAuthenticated).toBe(true)
+      expect(state.value.user).toEqual(mockUser)
+      expect(state.value.error).toBeNull()
+    })
+
+    it('註冊時應呼叫正確的 API 端點', async () => {
+      mockFetch.mockResolvedValueOnce({
+        success: true,
+        user: { userId: '1', role: 'vendor' },
+      })
+
+      const { register } = useAuth()
+      const payload = {
+        role: 'vendor' as const,
+        email: 'vendor@example.com',
+        password: 'password123',
+        companyName: '測試廠商',
+      }
+      await register(payload)
+
+      expect(mockFetch).toHaveBeenCalledWith('/api/auth/register', {
+        method: 'POST',
+        body: payload,
+        credentials: 'include',
+      })
+    })
+
+    it('Email 已被註冊時應設定 error 並保持未認證', async () => {
+      const error = { data: { message: '此 Email 已被註冊' } }
+      mockFetch.mockRejectedValueOnce(error)
+
+      const { state, register } = useAuth()
+
+      await expect(
+        register({ role: 'member', email: 'dup@example.com', password: 'password123' })
+      ).rejects.toEqual(error)
+
+      expect(state.value.isAuthenticated).toBe(false)
+      expect(state.value.error).toBe('此 Email 已被註冊')
+    })
+  })
+
   describe('logout', () => {
     it('登出後應清除狀態並導向 /login', async () => {
       // Set up as logged in first
