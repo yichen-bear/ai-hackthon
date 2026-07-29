@@ -22,25 +22,11 @@ const {
 } = useTransportState()
 
 // ─── 跨模組路線規劃：從 query params 讀取目的地 ───
-const route = useRoute()
+const currentRoute = useRoute()
 onMounted(() => {
-  const dest = route.query.destination as string | undefined
+  const dest = currentRoute.query.destination as string | undefined
   if (dest) {
     setRouteDestination(dest)
-    nextTick(() => {
-      activeNav.value = 'route'
-      scrollToSection('route', sectionRefs)
-    })
-  }
-})
-
-// ─── 跨模組路線規劃：從 query params 讀取目的地 ───
-const route = useRoute()
-onMounted(() => {
-  const dest = route.query.destination as string | undefined
-  if (dest) {
-    setRouteDestination(dest)
-    // 自動切到路線區塊
     nextTick(() => {
       activeNav.value = 'route'
       scrollToSection('route', sectionRefs)
