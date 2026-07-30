@@ -67,7 +67,7 @@ interface Driver {
 
 // ─── Tab 狀態 ───
 const activeTab = ref<number>(0)
-const tabs = ['諮詢單', '訂單管理', '車隊狀態']
+const tabs = ['叫車訂單', '訂單管理', '車隊狀態']
 
 // ─── Toast 系統 ───
 const toastMessage = ref('')
@@ -100,7 +100,7 @@ function getOrderStatusLabel(status: OrderStatus): string {
   }[status]
 }
 
-// ─── Mock 資料：諮詢單（客戶叫車後自動產生） ───
+// ─── Mock 資料：叫車訂單（客戶叫車後自動產生） ───
 const consultations = ref<ConsultationForm[]>([
   {
     id: 'c-1',
@@ -169,7 +169,7 @@ const consultations = ref<ConsultationForm[]>([
   },
 ])
 
-// ─── Mock 資料：訂單（諮詢單轉化而來） ───
+// ─── Mock 資料：訂單（叫車訂單接受派車後） ───
 const orders = ref<Order[]>([
   {
     id: 'o-1',
@@ -228,7 +228,7 @@ const idleDriverCount = computed(() =>
 
 let orderCounter = 3
 
-// ─── Actions：諮詢單 → 轉化為訂單 ───
+// ─── Actions：叫車訂單 → 接受派車 ───
 function convertToOrder(consultation: ConsultationForm) {
   // 找到閒置司機
   const available = drivers.value.find(d => d.status === 'idle')
@@ -237,7 +237,7 @@ function convertToOrder(consultation: ConsultationForm) {
     return
   }
 
-  // 轉化為訂單
+  // 接受派車，建立訂單
   const newOrder: Order = {
     id: `o-${orderCounter}`,
     orderNo: `TR-2024-${String(orderCounter).padStart(4, '0')}`,
@@ -260,12 +260,12 @@ function convertToOrder(consultation: ConsultationForm) {
   consultation.status = 'converted'
   available.status = 'on_trip'
 
-  showToast(`✅ 已轉單並派車：${available.name}（${available.plate}）→ ${consultation.contactName}`)
+  showToast(`✅ 已派車：${available.name}（${available.plate}）→ ${consultation.contactName}`)
 }
 
 function rejectConsultation(consultation: ConsultationForm) {
   consultation.status = 'rejected'
-  showToast(`❌ 已婉拒：${consultation.contactName} 的叫車需求`)
+  showToast(`❌ 已婉拒：${consultation.contactName} 的叫車訂單`)
 }
 
 // ─── Actions：訂單管理 ───
@@ -363,13 +363,13 @@ function resetDemo() {
       <!-- ═══ 頂部數據 Badge 列 ═══ -->
       <section class="ta__stats" aria-label="統計概覽">
         <div class="ta__stat-badge ta__stat-badge--red">
-          <span>📋 諮詢單 ({{ pendingConsultCount }})</span>
+          <span>🔴 待派遣 ({{ pendingConsultCount }})</span>
         </div>
         <div class="ta__stat-badge ta__stat-badge--blue">
-          <span>🚗 進行中 ({{ activeOrderCount }})</span>
+          <span>🚗 服務中 ({{ activeOrderCount }})</span>
         </div>
         <div class="ta__stat-badge ta__stat-badge--green">
-          <span>🟢 待命 ({{ idleDriverCount }})</span>
+          <span>🟢 可派司機 ({{ idleDriverCount }})</span>
         </div>
       </section>
 
@@ -385,14 +385,14 @@ function resetDemo() {
           :class="{ 'ta__tab--active': activeTab === idx }"
           @click="activeTab = idx"
         >
-          {{ ['📋', '📦', '👥'][idx] }} {{ tab }}
+          {{ ['🚕', '📦', '👥'][idx] }} {{ tab }}
         </button>
       </nav>
 
-      <!-- ═══ Tab 1：諮詢單（客戶叫車產生） ═══ -->
-      <section v-show="activeTab === 0" id="panel-0" role="tabpanel" aria-label="客戶叫車諮詢單">
+      <!-- ═══ Tab 1：叫車訂單（客戶叫車產生） ═══ -->
+      <section v-show="activeTab === 0" id="panel-0" role="tabpanel" aria-label="客戶叫車訂單">
         <div v-if="consultations.filter(c => c.status === 'pending').length === 0" class="ta__empty">
-          <p>🎉 目前沒有待處理的諮詢單</p>
+          <p>🎉 目前沒有待派遣的叫車訂單</p>
         </div>
         <div v-for="consultation in consultations" :key="consultation.id" class="ta__card">
           <!-- 狀態 Badge + 編號 -->
@@ -406,7 +406,7 @@ function resetDemo() {
                 'ta__badge--gray': consultation.status === 'rejected',
               }"
             >
-              {{ consultation.status === 'pending' ? '⏳ 待處理' : consultation.status === 'converted' ? '✅ 已轉單' : '❌ 已婉拒' }}
+              {{ consultation.status === 'pending' ? '⏳ 待派遣' : consultation.status === 'converted' ? '✅ 已派車' : '❌ 已婉拒' }}
             </span>
           </div>
 
@@ -453,7 +453,7 @@ function resetDemo() {
               @click="convertToOrder(consultation)"
               aria-label="接受並轉為訂單"
             >
-              ✅ 接受轉單＋派車
+              ✅ 接受派車
             </button>
             <button
               class="ta__action-btn ta__action-btn--outline-red"
@@ -464,7 +464,7 @@ function resetDemo() {
             </button>
           </div>
           <div v-else-if="consultation.status === 'converted'" class="ta__status-msg ta__status-msg--success">
-            ✅ 已轉為訂單 — 派車處理中
+            ✅ 已派車 — 司機前往中
           </div>
           <div v-else class="ta__status-msg ta__status-msg--warn">
             ❌ 已婉拒此需求
@@ -475,7 +475,7 @@ function resetDemo() {
       <!-- ═══ Tab 2：訂單管理 ═══ -->
       <section v-show="activeTab === 1" id="panel-1" role="tabpanel" aria-label="訂單管理">
         <div v-if="orders.length === 0" class="ta__empty">
-          <p>📦 尚無訂單，請先從諮詢單轉單</p>
+          <p>📦 尚無進行中訂單</p>
         </div>
         <div v-for="order in orders" :key="order.id" class="ta__card">
           <!-- 訂單編號 + 狀態 -->
