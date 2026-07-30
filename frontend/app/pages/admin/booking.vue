@@ -65,10 +65,14 @@ interface RoleOption {
   desc: string
 }
 const roleOptions: RoleOption[] = [
-  { key: 'store', label: '🏪 7-11 信義門市', desc: '門市店長 — 可查看個資、操作接單叫貨' },
+  { key: 'store', label: '🏪 門市店長', desc: '可查看個資、操作接單叫貨' },
   { key: 'region', label: '🏢 台北信義區 區域總部', desc: '區經理 — 去個資化、批准調撥物流' },
 ]
 const currentRole = ref<ViewRole>('store')
+
+// ─── 門市選擇 ───
+const allStores = ['7-11 信義門市', '7-11 松山門市', '7-11 大安門市', '7-11 公館門市']
+const selectedStore = ref('7-11 信義門市')
 
 // ─── Toast ───
 const toastMessage = ref('')
@@ -93,17 +97,12 @@ const storeOrders = ref<StoreOrder[]>([
     spec: '100抽 x 72包',
     totalQuantity: 10,
     groupBuy: {
-      id: 'gb-1',
-      productName: '舒潔衛生紙箱購',
-      spec: '100抽 x 72包',
-      targetMembers: 5,
-      currentMembers: 3,
+      id: 'gb-1', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', targetMembers: 5, currentMembers: 3, isForceGrouped: false,
       members: [
         { id: 'c-1', source: 'groupbuy', contactName: '王小姐', contactPhone: '0912-345-678', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 4, unitPrice: 599, totalAmount: 2396, paymentMethod: '🏪 取貨付款', aiNote: '🤖 社區團購常客', createdAt: '07/28 10:15' },
         { id: 'c-2', source: 'groupbuy', contactName: '林先生', contactPhone: '0933-456-789', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 3, unitPrice: 599, totalAmount: 1797, paymentMethod: '🏪 取貨付款', aiNote: '🤖 首次參團', createdAt: '07/28 14:30' },
         { id: 'c-3', source: 'groupbuy', contactName: '陳媽媽', contactPhone: '0922-567-890', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 3, unitPrice: 599, totalAmount: 1797, paymentMethod: '🏪 取貨付款', aiNote: '🤖 家庭大量購買', createdAt: '07/29 09:00' },
       ],
-      isForceGrouped: false,
     },
     customers: [],
     status: 'pending',
@@ -116,11 +115,7 @@ const storeOrders = ref<StoreOrder[]>([
     spec: '1858ml x 6瓶',
     totalQuantity: 5,
     groupBuy: {
-      id: 'gb-2',
-      productName: '光泉鮮乳量販組',
-      spec: '1858ml x 6瓶',
-      targetMembers: 5,
-      currentMembers: 5,
+      id: 'gb-2', productName: '光泉鮮乳量販組', spec: '1858ml x 6瓶', targetMembers: 5, currentMembers: 5, isForceGrouped: false,
       members: [
         { id: 'c-4', source: 'groupbuy', contactName: '張同學', contactPhone: '0955-678-901', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '🤖 學生優惠', createdAt: '07/27 16:00' },
         { id: 'c-5', source: 'groupbuy', contactName: '李太太', contactPhone: '0966-789-012', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/27 18:00' },
@@ -128,7 +123,6 @@ const storeOrders = ref<StoreOrder[]>([
         { id: 'c-7', source: 'groupbuy', contactName: '孫小姐', contactPhone: '0988-901-234', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/28 10:00' },
         { id: 'c-8', source: 'groupbuy', contactName: '周媽媽', contactPhone: '0911-012-345', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '🤖 冷藏品需快速通知', createdAt: '07/28 12:00' },
       ],
-      isForceGrouped: false,
     },
     customers: [],
     status: 'pending',
@@ -143,6 +137,98 @@ const storeOrders = ref<StoreOrder[]>([
     customers: [
       { id: 'c-9', source: 'preorder', contactName: '黃經理', contactPhone: '0912-111-222', productName: '中秋限定月餅禮盒', spec: '經典蛋黃酥 x6入', quantity: 2, unitPrice: 680, totalAmount: 1360, paymentMethod: '💳 線上付款（OPEN錢包）', aiNote: '🤖 VIP 企業訂單 / 送禮需求', createdAt: '07/29 15:30' },
       { id: 'c-10', source: 'preorder', contactName: '吳小姐', contactPhone: '0933-222-333', productName: '中秋限定月餅禮盒', spec: '經典蛋黃酥 x6入', quantity: 1, unitPrice: 680, totalAmount: 680, paymentMethod: '💳 線上付款（信用卡）', aiNote: '🤖 自用', createdAt: '07/30 09:00' },
+    ],
+    status: 'pending',
+  },
+  // ─── 松山門市 ───
+  {
+    id: 'so-4',
+    storeName: '7-11 松山門市',
+    source: 'groupbuy',
+    productName: '舒潔衛生紙箱購',
+    spec: '100抽 x 72包',
+    totalQuantity: 15,
+    groupBuy: {
+      id: 'gb-3', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', targetMembers: 8, currentMembers: 6, isForceGrouped: false,
+      members: [
+        { id: 'c-40', source: 'groupbuy', contactName: '鄭太太', contactPhone: '0912-100-200', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 3, unitPrice: 599, totalAmount: 1797, paymentMethod: '🏪 取貨付款', aiNote: '🤖 社區主婦團', createdAt: '07/28 11:00' },
+        { id: 'c-41', source: 'groupbuy', contactName: '曾先生', contactPhone: '0922-200-300', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 2, unitPrice: 599, totalAmount: 1198, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/28 13:00' },
+        { id: 'c-42', source: 'groupbuy', contactName: '謝小姐', contactPhone: '0933-300-400', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 3, unitPrice: 599, totalAmount: 1797, paymentMethod: '💳 線上付款', aiNote: '', createdAt: '07/28 15:00' },
+        { id: 'c-43', source: 'groupbuy', contactName: '何媽媽', contactPhone: '0955-400-500', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 2, unitPrice: 599, totalAmount: 1198, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/29 08:00' },
+        { id: 'c-44', source: 'groupbuy', contactName: '宋先生', contactPhone: '0966-500-600', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 3, unitPrice: 599, totalAmount: 1797, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/29 10:00' },
+        { id: 'c-45', source: 'groupbuy', contactName: '蕭太太', contactPhone: '0977-600-700', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 2, unitPrice: 599, totalAmount: 1198, paymentMethod: '🏪 取貨付款', aiNote: '🤖 固定每月團購', createdAt: '07/29 14:00' },
+      ],
+    },
+    customers: [],
+    status: 'pending',
+  },
+  {
+    id: 'so-5',
+    storeName: '7-11 松山門市',
+    source: 'preorder',
+    productName: '日本A5和牛禮盒',
+    spec: '300g 霜降片',
+    totalQuantity: 4,
+    customers: [
+      { id: 'c-46', source: 'preorder', contactName: '方經理', contactPhone: '0988-700-800', productName: '日本A5和牛禮盒', spec: '300g 霜降片', quantity: 2, unitPrice: 1980, totalAmount: 3960, paymentMethod: '💳 線上付款', aiNote: '🤖 公司中秋贈禮', createdAt: '07/29 11:00' },
+      { id: 'c-47', source: 'preorder', contactName: '邱小姐', contactPhone: '0911-800-900', productName: '日本A5和牛禮盒', spec: '300g 霜降片', quantity: 2, unitPrice: 1980, totalAmount: 3960, paymentMethod: '💳 線上付款（OPEN錢包）', aiNote: '🤖 冷凍宅配需求', createdAt: '07/30 08:30' },
+    ],
+    status: 'pending',
+  },
+  // ─── 大安門市 ───
+  {
+    id: 'so-6',
+    storeName: '7-11 大安門市',
+    source: 'groupbuy',
+    productName: '光泉鮮乳量販組',
+    spec: '1858ml x 6瓶',
+    totalQuantity: 8,
+    groupBuy: {
+      id: 'gb-4', productName: '光泉鮮乳量販組', spec: '1858ml x 6瓶', targetMembers: 8, currentMembers: 8, isForceGrouped: false,
+      members: [
+        { id: 'c-50', source: 'groupbuy', contactName: '游太太', contactPhone: '0912-001-002', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/27 09:00' },
+        { id: 'c-51', source: 'groupbuy', contactName: '呂先生', contactPhone: '0922-002-003', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/27 10:00' },
+        { id: 'c-52', source: 'groupbuy', contactName: '施小姐', contactPhone: '0933-003-004', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '💳 線上付款', aiNote: '', createdAt: '07/27 11:00' },
+        { id: 'c-53', source: 'groupbuy', contactName: '廖媽媽', contactPhone: '0955-004-005', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/27 14:00' },
+        { id: 'c-54', source: 'groupbuy', contactName: '鍾先生', contactPhone: '0966-005-006', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/28 08:00' },
+        { id: 'c-55', source: 'groupbuy', contactName: '葉小姐', contactPhone: '0977-006-007', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/28 09:00' },
+        { id: 'c-56', source: 'groupbuy', contactName: '蘇先生', contactPhone: '0988-007-008', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '💳 線上付款', aiNote: '', createdAt: '07/28 12:00' },
+        { id: 'c-57', source: 'groupbuy', contactName: '盧太太', contactPhone: '0911-008-009', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '🤖 每週固定訂購', createdAt: '07/28 15:00' },
+      ],
+    },
+    customers: [],
+    status: 'pending',
+  },
+  // ─── 公館門市 ───
+  {
+    id: 'so-7',
+    storeName: '7-11 公館門市',
+    source: 'groupbuy',
+    productName: '可口可樂量販箱',
+    spec: '330ml x 24罐',
+    totalQuantity: 10,
+    groupBuy: {
+      id: 'gb-5', productName: '可口可樂量販箱', spec: '330ml x 24罐', targetMembers: 6, currentMembers: 4, isForceGrouped: false,
+      members: [
+        { id: 'c-60', source: 'groupbuy', contactName: '洪同學', contactPhone: '0912-010-020', productName: '可口可樂量販箱', quantity: 3, unitPrice: 249, totalAmount: 747, paymentMethod: '🏪 取貨付款', aiNote: '🤖 宿舍團購', createdAt: '07/29 16:00' },
+        { id: 'c-61', source: 'groupbuy', contactName: '余同學', contactPhone: '0922-020-030', productName: '可口可樂量販箱', quantity: 2, unitPrice: 249, totalAmount: 498, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/29 17:00' },
+        { id: 'c-62', source: 'groupbuy', contactName: '潘同學', contactPhone: '0933-030-040', productName: '可口可樂量販箱', quantity: 3, unitPrice: 249, totalAmount: 747, paymentMethod: '💳 線上付款', aiNote: '', createdAt: '07/29 18:00' },
+        { id: 'c-63', source: 'groupbuy', contactName: '范同學', contactPhone: '0955-040-050', productName: '可口可樂量販箱', quantity: 2, unitPrice: 249, totalAmount: 498, paymentMethod: '🏪 取貨付款', aiNote: '🤖 學生固定補貨', createdAt: '07/30 10:00' },
+      ],
+    },
+    customers: [],
+    status: 'pending',
+  },
+  {
+    id: 'so-8',
+    storeName: '7-11 公館門市',
+    source: 'preorder',
+    productName: '法式甜點禮盒',
+    spec: '馬卡龍 12入',
+    totalQuantity: 2,
+    customers: [
+      { id: 'c-64', source: 'preorder', contactName: '楊教授', contactPhone: '0966-050-060', productName: '法式甜點禮盒', spec: '馬卡龍 12入', quantity: 1, unitPrice: 880, totalAmount: 880, paymentMethod: '💳 線上付款', aiNote: '🤖 教師節禮品', createdAt: '07/30 11:00' },
+      { id: 'c-65', source: 'preorder', contactName: '江同學', contactPhone: '0977-060-070', productName: '法式甜點禮盒', spec: '馬卡龍 12入', quantity: 1, unitPrice: 880, totalAmount: 880, paymentMethod: '💳 線上付款（OPEN錢包）', aiNote: '', createdAt: '07/30 12:00' },
     ],
     status: 'pending',
   },
@@ -199,6 +285,39 @@ const arrivedOrders = ref<StoreOrder[]>([
     shippingAt: '07/25 08:00',
     arrivedAt: '07/27 14:00',
   },
+  {
+    id: 'so-arr-2',
+    storeName: '7-11 松山門市',
+    source: 'preorder',
+    productName: '中秋限定月餅禮盒',
+    spec: '經典蛋黃酥 x6入',
+    totalQuantity: 5,
+    customers: [
+      { id: 'c-33', source: 'preorder', contactName: '楊先生', contactPhone: '0955-111-000', productName: '中秋限定月餅禮盒', quantity: 3, unitPrice: 680, totalAmount: 2040, paymentMethod: '💳 線上付款', aiNote: '', createdAt: '07/20' },
+      { id: 'c-34', source: 'preorder', contactName: '韓太太', contactPhone: '0966-222-111', productName: '中秋限定月餅禮盒', quantity: 2, unitPrice: 680, totalAmount: 1360, paymentMethod: '💳 線上付款（OPEN錢包）', aiNote: '', createdAt: '07/21' },
+    ],
+    status: 'arrived',
+    submittedAt: '07/22 09:00',
+    shippingAt: '07/23 10:00',
+    arrivedAt: '07/26 11:00',
+  },
+  {
+    id: 'so-arr-3',
+    storeName: '7-11 大安門市',
+    source: 'groupbuy',
+    productName: '舒潔衛生紙箱購',
+    spec: '100抽 x 72包',
+    totalQuantity: 6,
+    customers: [
+      { id: 'c-35', source: 'groupbuy', contactName: '魏先生', contactPhone: '0977-333-222', productName: '舒潔衛生紙箱購', quantity: 2, unitPrice: 599, totalAmount: 1198, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/20' },
+      { id: 'c-36', source: 'groupbuy', contactName: '沈小姐', contactPhone: '0988-444-333', productName: '舒潔衛生紙箱購', quantity: 2, unitPrice: 599, totalAmount: 1198, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/20' },
+      { id: 'c-37', source: 'groupbuy', contactName: '田太太', contactPhone: '0911-555-444', productName: '舒潔衛生紙箱購', quantity: 2, unitPrice: 599, totalAmount: 1198, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/21' },
+    ],
+    status: 'arrived',
+    submittedAt: '07/23 14:00',
+    shippingAt: '07/24 09:00',
+    arrivedAt: '07/27 10:00',
+  },
 ])
 
 // ─── Mock：區域總部收到的叫貨請求 ───
@@ -247,10 +366,23 @@ const regionRequests = ref<RegionRequest[]>([
   },
 ])
 
+// ─── Computed：依門市篩選 ───
+const filteredStoreOrders = computed(() => storeOrders.value.filter(o => o.storeName === selectedStore.value))
+const filteredShipping = computed(() => shippingOrders.value.filter(o => o.storeName === selectedStore.value))
+const filteredArrived = computed(() => arrivedOrders.value.filter(o => o.storeName === selectedStore.value))
+
 // ─── Computed：門市 Tab 計數 ───
-const pendingCount = computed(() => storeOrders.value.filter(o => o.status === 'pending').length)
-const shippingCount = computed(() => shippingOrders.value.length)
-const arrivedCount = computed(() => arrivedOrders.value.reduce((sum, o) => sum + o.customers.length, 0))
+const pendingCount = computed(() => filteredStoreOrders.value.filter(o => o.status === 'pending').length)
+const shippingCount = computed(() => filteredShipping.value.length)
+const arrivedCount = computed(() => filteredArrived.value.reduce((sum, o) => sum + o.customers.length, 0))
+
+// ─── 計算訂單總金額 ───
+function getOrderTotalAmount(order: StoreOrder): number {
+  if (order.groupBuy) {
+    return order.groupBuy.members.reduce((sum, m) => sum + m.totalAmount, 0)
+  }
+  return order.customers.reduce((sum, c) => sum + c.totalAmount, 0)
+}
 
 // ─── Computed：區域 Tab 計數 ───
 const regionPendingCount = computed(() => regionRequests.value.filter(r => r.status === 'pending_approval').length)
@@ -365,6 +497,14 @@ function resetDemo() {
       <!-- ════════════════════════════════════════════ -->
       <template v-if="currentRole === 'store'">
 
+        <!-- 門市選擇 Dropdown -->
+        <div class="bk__store-select">
+          <label class="bk__store-select-label" for="store-picker">📍 操作門市</label>
+          <select id="store-picker" v-model="selectedStore" class="bk__store-select-input" aria-label="選擇操作門市">
+            <option v-for="store in allStores" :key="store" :value="store">{{ store }}</option>
+          </select>
+        </div>
+
         <!-- 門市 Tab -->
         <nav class="bk__tabs" role="tablist" aria-label="門市管理">
           <button class="bk__tab" :class="{ 'bk__tab--active': storeTab === 0 }" @click="storeTab = 0">
@@ -380,10 +520,10 @@ function resetDemo() {
 
         <!-- ═══ 門市 Tab 1：待彙整叫貨 ═══ -->
         <section v-show="storeTab === 0" aria-label="待彙整叫貨">
-          <div v-if="storeOrders.filter(o => o.status === 'pending').length === 0" class="bk__empty">
+          <div v-if="filteredStoreOrders.filter(o => o.status === 'pending').length === 0" class="bk__empty">
             <p>🎉 所有訂單已彙整送出</p>
           </div>
-          <div v-for="order in storeOrders.filter(o => o.status === 'pending')" :key="order.id" class="bk__card">
+          <div v-for="order in filteredStoreOrders.filter(o => o.status === 'pending')" :key="order.id" class="bk__card">
 
             <!-- 來源 + 商品 -->
             <div class="bk__card-top">
@@ -392,6 +532,7 @@ function resetDemo() {
             </div>
             <h4 class="bk__card-title">{{ order.productName }}</h4>
             <p v-if="order.spec" class="bk__card-meta">規格：{{ order.spec }} · 需求量：{{ order.totalQuantity }} 件</p>
+            <p class="bk__card-total">💰 本批叫貨總金額：<strong>${{ getOrderTotalAmount(order).toLocaleString() }}</strong></p>
 
             <!-- 團購進度（i划算） -->
             <div v-if="order.groupBuy" class="bk__group-progress">
@@ -440,10 +581,10 @@ function resetDemo() {
 
         <!-- ═══ 門市 Tab 2：總部配送中 ═══ -->
         <section v-show="storeTab === 1" aria-label="總部配送中">
-          <div v-if="shippingOrders.length === 0" class="bk__empty">
+          <div v-if="filteredShipping.length === 0" class="bk__empty">
             <p>🚚 目前沒有配送中的商品</p>
           </div>
-          <div v-for="order in shippingOrders" :key="order.id" class="bk__card">
+          <div v-for="order in filteredShipping" :key="order.id" class="bk__card">
             <div class="bk__card-top">
               <span class="bk__source">{{ getSourceIcon(order.source) }} {{ getSourceLabel(order.source) }}</span>
               <span class="bk__badge bk__badge--blue">🚚 配送中</span>
@@ -460,12 +601,12 @@ function resetDemo() {
           </div>
         </section>
 
-        <!-- ═══ 門市 Tab 3：已到店可取貨 ═══ -->
+        <!-- ═══ 門市 Tab 3：已到店可取貨（依門市分組） ═══ -->
         <section v-show="storeTab === 2" aria-label="已到店可取貨">
-          <div v-if="arrivedOrders.length === 0" class="bk__empty">
+          <div v-if="filteredArrived.length === 0" class="bk__empty">
             <p>📦 目前沒有待取貨的商品</p>
           </div>
-          <div v-for="order in arrivedOrders" :key="order.id" class="bk__card">
+          <div v-for="order in filteredArrived" :key="order.id" class="bk__card">
             <div class="bk__card-top">
               <span class="bk__source">{{ getSourceIcon(order.source) }} {{ getSourceLabel(order.source) }}</span>
               <span class="bk__badge bk__badge--green">🏪 可取貨</span>
@@ -635,6 +776,17 @@ function resetDemo() {
 /* ═══ Content ═══ */
 .bk__content { display: flex; flex-direction: column; gap: 16px; padding: 16px; flex: 1; }
 
+/* ═══ Store Select ═══ */
+.bk__store-select { display: flex; align-items: center; gap: 8px; }
+.bk__store-select-label { font-size: 13px; font-weight: 600; color: #1c1917; white-space: nowrap; }
+.bk__store-select-input {
+  flex: 1; padding: 8px 12px;
+  border: 1px solid #e2e8f0; border-radius: 10px;
+  font-size: 13px; font-weight: 600; font-family: inherit;
+  color: #1c1917; background: #fff; cursor: pointer;
+}
+.bk__store-select-input:focus { outline: 2px solid #10b981; outline-offset: 2px; }
+
 /* ═══ Tabs ═══ */
 .bk__tabs {
   display: flex; gap: 0; background: #fff;
@@ -661,6 +813,8 @@ function resetDemo() {
 .bk__card-top { display: flex; align-items: center; justify-content: space-between; }
 .bk__card-title { margin: 0; font-size: 15px; font-weight: 700; color: #1c1917; }
 .bk__card-meta { margin: 0; font-size: 13px; color: #78716c; }
+.bk__card-total { margin: 0; font-size: 13px; color: #10b981; background: #ecfdf5; border-radius: 8px; padding: 6px 10px; }
+.bk__card-total strong { font-size: 15px; }
 
 /* ═══ Source / Store label ═══ */
 .bk__source {
