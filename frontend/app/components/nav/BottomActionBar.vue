@@ -1,8 +1,6 @@
 <script setup lang="ts">
-const showAiChat = ref(false)
-
 function openAiChat() {
-  showAiChat.value = true
+  navigateTo('/ai-chat')
 }
 
 function goToMember() {
@@ -16,9 +14,6 @@ function goToCalendar() {
 
 <template>
   <div class="bottom-bar-wrapper">
-    <!-- AI 聊天覆蓋層 -->
-    <ChatAiChatOverlay v-model="showAiChat" />
-
     <!-- 下方固定功能列 -->
     <nav class="bottom-bar" aria-label="功能列">
       <!-- 會員中心按鈕 -->
