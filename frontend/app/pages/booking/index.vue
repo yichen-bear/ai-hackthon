@@ -59,9 +59,9 @@ const initialGroups: GroupBuyItem[] = [
 
 // ─── 訂單 ───
 const initialOrders: BookingOrder[] = [
-  { id: 'ord-1', type: 'groupbuy', productName: '舒潔衛生紙 72包/箱', spec: '72包/箱', status: 'pending-group', currentStep: 0, totalSteps: 4, groupProgress: { current: 3, target: 5 }, createdAt: '2026-07-25' },
-  { id: 'ord-2', type: 'preorder', productName: '中秋限定鳳梨酥禮盒', spec: '12入裝', status: 'shipping', currentStep: 2, totalSteps: 4, estimatedDate: '08/01', createdAt: '2026-07-20' },
-  { id: 'ord-3', type: 'groupbuy', productName: '可口可樂 24罐裝', spec: '330ml × 24', status: 'ready', currentStep: 3, totalSteps: 4, createdAt: '2026-07-22' },
+  { id: 'ord-1', type: 'groupbuy', productName: '舒潔衛生紙 72包/箱', spec: '72包/箱', status: 'pending-group', currentStep: 0, totalSteps: 4, groupProgress: { current: 3, target: 5 }, pickupStore: '7-11 信義門市', createdAt: '2026-07-25' },
+  { id: 'ord-2', type: 'preorder', productName: '中秋限定鳳梨酥禮盒', spec: '12入裝', status: 'shipping', currentStep: 2, totalSteps: 4, estimatedDate: '08/01', pickupStore: '7-11 松山門市', createdAt: '2026-07-20' },
+  { id: 'ord-3', type: 'groupbuy', productName: '可口可樂 24罐裝', spec: '330ml × 24', status: 'ready', currentStep: 3, totalSteps: 4, pickupStore: '7-11 大安門市', createdAt: '2026-07-22' },
 ]
 
 // ─── 取貨提醒 ───
@@ -91,7 +91,8 @@ const wishlist = ref<WishlistItem[]>([...initialWishlist])
 function handleAddPreorder(payload: { productId: string; quantity: number; spec?: string }) {
   const product = products.value.find((p) => p.id === payload.productId)
   if (!product) return
-  // 新增訂單
+  // 新增訂單（取貨門市從共享狀態取得）
+  const { selectedPickupStore } = useBookingState()
   const newOrder: BookingOrder = {
     id: `ord-${Date.now()}`,
     type: 'preorder',
@@ -101,6 +102,7 @@ function handleAddPreorder(payload: { productId: string; quantity: number; spec?
     currentStep: 0,
     totalSteps: 4,
     estimatedDate: '08/15',
+    pickupStore: selectedPickupStore.value.name,
     createdAt: new Date().toISOString().split('T')[0],
   }
   orders.value.unshift(newOrder)
@@ -111,6 +113,7 @@ function handleJoinGroup(payload: { productId: string; groupId: string; storeId:
   if (!group || group.isSoloBuy) {
     // 一人即享：直接新增訂單
     if (group) {
+      const { selectedPickupStore } = useBookingState()
       const newOrder: BookingOrder = {
         id: `ord-${Date.now()}`,
         type: 'groupbuy',
@@ -119,6 +122,7 @@ function handleJoinGroup(payload: { productId: string; groupId: string; storeId:
         status: 'preparing',
         currentStep: 2,
         totalSteps: 4,
+        pickupStore: selectedPickupStore.value.name,
         createdAt: new Date().toISOString().split('T')[0],
       }
       orders.value.unshift(newOrder)
