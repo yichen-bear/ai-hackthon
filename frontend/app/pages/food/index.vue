@@ -15,19 +15,134 @@ const tabs: { key: TabKey; label: string }[] = [
 ]
 
 /* ─── Tab 1: 想吃什麼 ─── */
-type DineMode = 'dine-in' | 'takeout' | 'delivery'
-const dineMode = ref<DineMode>('dine-in')
+const eatMode = ref<'dine_in' | 'takeout' | 'delivery'>('dine_in')
 
-interface BookingData {
-  userName: string
-  phone: string
-  restaurantName: string
-  time: string
-  partySize: number
+/* Sub-view 狀態 */
+const currentView = ref<'list' | 'reserve' | 'queue' | 'menu'>('list')
+
+interface Restaurant {
+  id: string
+  name: string
+  tag: string
+  priceMin: number
+  priceMax: number
+  priceAvg: number
+  rating: number
+  distance: string
+  image: string
+  badge?: 'popular' | 'delivery' | 'available'
+  badgeLabel?: string
+  timeSlots: { time: string; available: boolean }[]
 }
 
-function handleConfirm(data: BookingData) {
-  console.log('訂位確認：', data)
+const selectedRestaurant = ref<Restaurant | null>(null)
+
+function goBack() {
+  currentView.value = 'list'
+  selectedRestaurant.value = null
+}
+
+function handleGoReserve(restaurant: Restaurant) {
+  selectedRestaurant.value = restaurant
+  reserveSelectedTime.value = ''
+  reservePartySize.value = 2
+  currentView.value = 'reserve'
+}
+
+function handleGoQueue(restaurant: Restaurant) {
+  selectedRestaurant.value = restaurant
+  queuePartySize.value = 2
+  queueNote.value = ''
+  currentView.value = 'queue'
+}
+
+function handleGoMenu(restaurant: Restaurant) {
+  selectedRestaurant.value = restaurant
+  menuItems.value.forEach(item => (item.qty = 0))
+  currentView.value = 'menu'
+}
+
+/* ─── 訂位 Sub-view 狀態 ─── */
+const userName = '陳小明'
+const userPhone = '0912-345-678'
+const reservePartySize = ref(2)
+const reserveSelectedTime = ref('')
+
+const reserveEstimatedTotal = computed(() => {
+  if (!selectedRestaurant.value) return 0
+  return selectedRestaurant.value.priceAvg * reservePartySize.value
+})
+
+const canConfirmReserve = computed(() =>
+  !!selectedRestaurant.value && !!reserveSelectedTime.value
+)
+
+function submitReserve() {
+  if (!canConfirmReserve.value || !selectedRestaurant.value) return
+  console.log('訂位確認：', {
+    userName,
+    phone: userPhone,
+    restaurantName: selectedRestaurant.value.name,
+    time: reserveSelectedTime.value,
+    partySize: reservePartySize.value,
+  })
+  goBack()
+}
+
+/* ─── 候位 Sub-view 狀態 ─── */
+const queuePartySize = ref(2)
+const queueNote = ref('')
+const queueData = {
+  waitingGroups: 3,
+  estimatedMinutes: 15,
+  emptyTables: 2,
+}
+
+function submitQueue() {
+  console.log('候位抽號：', {
+    restaurant: selectedRestaurant.value?.name,
+    partySize: queuePartySize.value,
+    note: queueNote.value,
+  })
+  goBack()
+}
+
+/* ─── 點餐 Sub-view 狀態 ─── */
+interface MenuItem {
+  name: string
+  price: number
+  calories: number
+  qty: number
+}
+
+const menuItems = ref<MenuItem[]>([
+  { name: '招牌小籠包', price: 220, calories: 380, qty: 0 },
+  { name: '酸辣湯', price: 80, calories: 150, qty: 0 },
+  { name: '蝦仁炒飯', price: 180, calories: 520, qty: 0 },
+])
+
+const deliveryAddress = '台北市信義區松仁路 100 號'
+const deliveryFee = 30
+
+const menuSubtotal = computed(() =>
+  menuItems.value.reduce((sum, item) => sum + item.price * item.qty, 0)
+)
+
+const menuTotal = computed(() => {
+  if (eatMode.value === 'delivery') return menuSubtotal.value + deliveryFee
+  return menuSubtotal.value
+})
+
+function submitOrder() {
+  console.log('訂單送出：', {
+    mode: eatMode.value,
+    restaurant: selectedRestaurant.value?.name,
+    items: menuItems.value.filter(i => i.qty > 0),
+    subtotal: menuSubtotal.value,
+    total: menuTotal.value,
+    ...(eatMode.value === 'delivery' ? { address: deliveryAddress, deliveryFee } : {}),
+  })
+  goBack()
 }
 
 /* ─── Tab 2: 聚餐企劃 ─── */
@@ -64,16 +179,113 @@ function removeLocation(index: number) {
 }
 
 /* ─── Tab 3: 熱量儀表板 ─── */
-const calorieIntake = 1450
-const calorieGoal = 2000
-const caloriePercent = computed(() => Math.min(100, (calorieIntake / calorieGoal) * 100))
 
-const nutrients = [
+// AI 飲食紀錄輸入狀態
+const foodLogInput = ref('')
+const foodImageFile = ref<File | null>(null)
+const foodImagePreview = ref<string | null>(null)
+const isAnalyzing = ref(false)
+const showAnalysisResult = ref(false)
+const showToast = ref(false)
+
+// 模擬分析結果（假資料）
+const analysisResult = ref({
+  mealName: '舒肥雞胸肉藜麥餐盒',
+  totalCalories: 520,
+  protein: 35,
+  carbs: 48,
+  fiber: 8,
+  fat: 12,
+})
+
+// 動態熱量數據
+const calorieIntake = ref(1450)
+const calorieGoal = 2000
+const caloriePercent = computed(() => Math.min(100, (calorieIntake.value / calorieGoal) * 100))
+
+const nutrients = ref([
   { name: '蛋白質', value: 65, unit: 'g', color: '#3b82f6', percent: 25 },
   { name: '碳水', value: 180, unit: 'g', color: '#f97316', percent: 40 },
   { name: '膳食纖維', value: 18, unit: 'g', color: '#22c55e', percent: 15 },
   { name: '脂肪', value: 45, unit: 'g', color: '#ef4444', percent: 20 },
-]
+])
+
+// Donut chart computed offsets
+const donutSegments = computed(() => {
+  const circumference = 2 * Math.PI * 50 // ~314.16
+  const total = nutrients.value.reduce((s, n) => s + n.percent, 0)
+  let offset = 0
+  return nutrients.value.map((n) => {
+    const dash = (n.percent / total) * circumference
+    const gap = circumference - dash
+    const seg = { color: n.color, dasharray: `${dash.toFixed(1)} ${gap.toFixed(1)}`, dashoffset: (-offset).toFixed(1) }
+    offset += dash
+    return seg
+  })
+})
+
+// 圖片上傳處理
+function handleImageUpload(event: Event) {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (file) {
+    foodImageFile.value = file
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      foodImagePreview.value = e.target?.result as string
+    }
+    reader.readAsDataURL(file)
+  }
+}
+
+function removeImage() {
+  foodImageFile.value = null
+  foodImagePreview.value = null
+}
+
+// 分析餐點
+function analyzeMeal() {
+  if (!foodLogInput.value.trim() && !foodImageFile.value) return
+  isAnalyzing.value = true
+  // 模擬 API 延遲
+  setTimeout(() => {
+    isAnalyzing.value = false
+    showAnalysisResult.value = true
+  }, 1200)
+}
+
+// 記錄至今日儀表板
+function recordToDashboard() {
+  calorieIntake.value += analysisResult.value.totalCalories
+
+  // 動態增加營養素
+  const nutrientMap: Record<string, number> = {
+    '蛋白質': analysisResult.value.protein,
+    '碳水': analysisResult.value.carbs,
+    '膳食纖維': analysisResult.value.fiber,
+    '脂肪': analysisResult.value.fat,
+  }
+  nutrients.value = nutrients.value.map((n) => ({
+    ...n,
+    value: n.value + (nutrientMap[n.name] || 0),
+  }))
+
+  // 重新計算百分比
+  const totalGrams = nutrients.value.reduce((s, n) => s + n.value, 0)
+  nutrients.value = nutrients.value.map((n) => ({
+    ...n,
+    percent: Math.round((n.value / totalGrams) * 100),
+  }))
+
+  // 顯示 Toast
+  showToast.value = true
+  setTimeout(() => { showToast.value = false }, 2500)
+
+  // 重置分析卡片
+  showAnalysisResult.value = false
+  foodLogInput.value = ''
+  removeImage()
+}
 
 /* ─── Tab 4: 美食護照 ─── */
 type RegionLevel = 'area' | 'city' | 'district'
@@ -133,27 +345,225 @@ const passportBadges = [
 
       <!-- ═══ Tab 1: 想吃什麼 ═══ -->
       <section v-if="activeTab === 'eat'" class="tab-content">
-        <!-- 內用 / 外帶 / 外送 切換鈕 -->
-        <div class="dine-mode-bar">
+        <!-- 內用 / 外帶 / 外送 切換鈕（僅列表頁顯示） -->
+        <div v-if="currentView === 'list'" class="dine-mode-bar">
           <button
             class="dine-mode-btn"
-            :class="{ 'dine-mode-btn--active': dineMode === 'dine-in' }"
-            @click="dineMode = 'dine-in'"
-          >內用</button>
+            :class="{ 'dine-mode-btn--active': eatMode === 'dine_in' }"
+            @click="eatMode = 'dine_in'"
+          >🪑 內用</button>
           <button
             class="dine-mode-btn"
-            :class="{ 'dine-mode-btn--active': dineMode === 'takeout' }"
-            @click="dineMode = 'takeout'"
-          >外帶</button>
+            :class="{ 'dine-mode-btn--active': eatMode === 'takeout' }"
+            @click="eatMode = 'takeout'"
+          >🥡 外帶</button>
           <button
             class="dine-mode-btn"
-            :class="{ 'dine-mode-btn--active': dineMode === 'delivery' }"
-            @click="dineMode = 'delivery'"
-          >外送</button>
+            :class="{ 'dine-mode-btn--active': eatMode === 'delivery' }"
+            @click="eatMode = 'delivery'"
+          >🛵 外送</button>
         </div>
 
-        <!-- 保留現有餐廳卡片 -->
-        <FoodBookingCard @confirm="handleConfirm" />
+        <!-- ─── 列表頁視圖 ─── -->
+        <FoodBookingCard
+          v-if="currentView === 'list'"
+          :eat-mode="eatMode"
+          @go-reserve="handleGoReserve"
+          @go-queue="handleGoQueue"
+          @go-menu="handleGoMenu"
+        />
+
+        <!-- ═══ Sub-view: 訂位表單頁 ═══ -->
+        <div v-if="currentView === 'reserve' && selectedRestaurant" class="subview">
+          <!-- 頂部導覽 -->
+          <div class="subview__header">
+            <button class="subview__back-btn" @click="goBack">← 返回</button>
+            <div class="subview__title-row">
+              <span class="subview__emoji">{{ selectedRestaurant.image }}</span>
+              <span class="subview__name">{{ selectedRestaurant.name }}</span>
+            </div>
+          </div>
+
+          <!-- AI 提示列 -->
+          <div class="subview__ai-hint">
+            ✨ AI 已為你預填訂位資料
+          </div>
+
+          <!-- 個人資訊 -->
+          <div class="subview__info-grid">
+            <div class="subview__info-item">
+              <span class="subview__info-label">👤 姓名</span>
+              <span class="subview__info-value">{{ userName }}</span>
+            </div>
+            <div class="subview__info-item">
+              <span class="subview__info-label">📞 電話</span>
+              <span class="subview__info-value">{{ userPhone }}</span>
+            </div>
+          </div>
+
+          <!-- 人數選擇器 + 費用估算 -->
+          <div class="subview__party-row">
+            <div class="subview__party-controls">
+              <span class="subview__info-label">🍴 用餐人數</span>
+              <div class="subview__stepper">
+                <button class="subview__stepper-btn" :disabled="reservePartySize <= 1" @click="reservePartySize--">−</button>
+                <span class="subview__stepper-val">{{ reservePartySize }} 人</span>
+                <button class="subview__stepper-btn" :disabled="reservePartySize >= 10" @click="reservePartySize++">＋</button>
+              </div>
+            </div>
+            <div class="subview__price-estimate">
+              <span class="subview__price-unit">人均 ${{ selectedRestaurant.priceAvg }}</span>
+              <span class="subview__price-total">總計約 ${{ reserveEstimatedTotal.toLocaleString() }}</span>
+            </div>
+          </div>
+
+          <!-- 時段選擇 -->
+          <div class="subview__section">
+            <span class="subview__info-label">🕐 選擇時段</span>
+            <div class="subview__slots">
+              <button
+                v-for="slot in selectedRestaurant.timeSlots"
+                :key="slot.time"
+                class="subview__slot-btn"
+                :class="{
+                  'subview__slot-btn--selected': slot.time === reserveSelectedTime,
+                  'subview__slot-btn--full': !slot.available,
+                }"
+                :disabled="!slot.available"
+                @click="reserveSelectedTime = slot.time"
+              >{{ slot.time }}</button>
+            </div>
+          </div>
+
+          <!-- 底部按鈕 -->
+          <button
+            class="subview__submit-btn"
+            :disabled="!canConfirmReserve"
+            @click="submitReserve"
+          >確認訂位</button>
+          <p v-if="!reserveSelectedTime" class="subview__hint">請先選擇用餐時段</p>
+        </div>
+
+        <!-- ═══ Sub-view: 現場候位頁 ═══ -->
+        <div v-if="currentView === 'queue' && selectedRestaurant" class="subview">
+          <!-- 頂部導覽 -->
+          <div class="subview__header">
+            <button class="subview__back-btn" @click="goBack">← 返回</button>
+            <div class="subview__title-row">
+              <span class="subview__emoji">{{ selectedRestaurant.image }}</span>
+              <span class="subview__name">{{ selectedRestaurant.name }}</span>
+            </div>
+          </div>
+
+          <!-- AI 提示列 -->
+          <div class="subview__ai-hint">
+            ✨ AI 已為你預估現場等候時間
+          </div>
+
+          <!-- 實時候位看板 -->
+          <div class="subview__queue-board">
+            <div class="subview__queue-item">
+              <span class="subview__queue-value">{{ queueData.waitingGroups }} 組</span>
+              <span class="subview__queue-label">目前候位</span>
+            </div>
+            <div class="subview__queue-item">
+              <span class="subview__queue-value">約 {{ queueData.estimatedMinutes }} 分鐘</span>
+              <span class="subview__queue-label">預估等候</span>
+            </div>
+            <div class="subview__queue-item">
+              <span class="subview__queue-value">{{ queueData.emptyTables }} 桌</span>
+              <span class="subview__queue-label">現場空桌</span>
+            </div>
+          </div>
+
+          <!-- 表單區：用餐人數 -->
+          <div class="subview__section">
+            <span class="subview__info-label">🍴 用餐人數</span>
+            <div class="subview__stepper">
+              <button class="subview__stepper-btn" :disabled="queuePartySize <= 1" @click="queuePartySize--">−</button>
+              <span class="subview__stepper-val">{{ queuePartySize }} 人</span>
+              <button class="subview__stepper-btn" :disabled="queuePartySize >= 10" @click="queuePartySize++">＋</button>
+            </div>
+          </div>
+
+          <!-- 表單區：特殊備註 -->
+          <div class="subview__section">
+            <span class="subview__info-label">📝 特殊備註</span>
+            <textarea
+              v-model="queueNote"
+              class="subview__textarea"
+              placeholder="例如：需要嬰兒椅 / 輪椅空間"
+              rows="3"
+            />
+          </div>
+
+          <!-- 底部按鈕 -->
+          <button class="subview__submit-btn subview__submit-btn--orange" @click="submitQueue">
+            抽取線上候位號碼牌
+          </button>
+        </div>
+
+        <!-- ═══ Sub-view: 外帶/外送點餐頁 ═══ -->
+        <div v-if="currentView === 'menu' && selectedRestaurant" class="subview">
+          <!-- 頂部導覽 -->
+          <div class="subview__header">
+            <button class="subview__back-btn" @click="goBack">← 返回</button>
+            <div class="subview__title-row">
+              <span class="subview__emoji">{{ selectedRestaurant.image }}</span>
+              <span class="subview__name">{{ selectedRestaurant.name }}</span>
+              <span class="subview__mode-tag">{{ eatMode === 'delivery' ? '外送' : '外帶' }}</span>
+            </div>
+          </div>
+
+          <!-- AI 提示列 -->
+          <div class="subview__ai-hint">
+            ✨ AI 已根據你的飲食偏好推薦品項
+          </div>
+
+          <!-- 外送地址（外送模式才顯示） -->
+          <div v-if="eatMode === 'delivery'" class="subview__delivery-address">
+            <span class="subview__delivery-address-label">📍 外送地址</span>
+            <span class="subview__delivery-address-value">{{ deliveryAddress }}</span>
+          </div>
+
+          <!-- 菜單列表 -->
+          <div class="subview__menu-list">
+            <div v-for="item in menuItems" :key="item.name" class="subview__menu-item">
+              <div class="subview__menu-item-info">
+                <span class="subview__menu-item-name">{{ item.name }}</span>
+                <span class="subview__menu-item-meta">${{ item.price }} · {{ item.calories }} kcal</span>
+              </div>
+              <div class="subview__menu-item-controls">
+                <button class="subview__stepper-btn" :disabled="item.qty <= 0" @click="item.qty--">−</button>
+                <span class="subview__stepper-val">{{ item.qty }}</span>
+                <button class="subview__stepper-btn" @click="item.qty++">＋</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 金額匯總 -->
+          <div class="subview__summary">
+            <div class="subview__summary-row">
+              <span>小計</span>
+              <span>${{ menuSubtotal }}</span>
+            </div>
+            <div v-if="eatMode === 'delivery'" class="subview__summary-row">
+              <span>外送費</span>
+              <span>${{ deliveryFee }}</span>
+            </div>
+            <div class="subview__summary-row subview__summary-row--total">
+              <span>總金額</span>
+              <strong>${{ menuTotal }}</strong>
+            </div>
+          </div>
+
+          <!-- 底部按鈕 -->
+          <button
+            class="subview__submit-btn"
+            :disabled="menuSubtotal === 0"
+            @click="submitOrder"
+          >確認送出訂單</button>
+        </div>
       </section>
 
       <!-- ═══ Tab 2: 聚餐企劃 ═══ -->
@@ -241,6 +651,97 @@ const passportBadges = [
       <!-- ═══ Tab 3: 熱量儀表板 ═══ -->
       <section v-else-if="activeTab === 'calorie'" class="tab-content">
 
+        <!-- Toast 提示 -->
+        <Transition name="toast-fade">
+          <div v-if="showToast" class="food-toast">
+            已將本餐數據累加至今日健康總計！
+          </div>
+        </Transition>
+
+        <!-- ═══ AI 飲食紀錄輸入卡片 ═══ -->
+        <div class="ai-logger-card">
+          <div class="ai-logger-card__header">
+            <h3 class="ai-logger-card__title">AI 飲食紀錄</h3>
+            <p class="ai-logger-card__desc">上傳照片或描述餐點，AI 自動計算熱量</p>
+          </div>
+
+          <!-- 輸入框與相機按鈕組合區 -->
+          <div class="ai-logger-card__input-row">
+            <!-- 相機按鈕 -->
+            <label class="ai-logger-card__camera-btn" aria-label="上傳餐點照片">
+              <span>📷</span>
+              <input
+                type="file"
+                accept="image/*"
+                class="ai-logger-card__file-input"
+                @change="handleImageUpload"
+              />
+            </label>
+
+            <!-- 文字輸入框 -->
+            <input
+              v-model="foodLogInput"
+              type="text"
+              class="ai-logger-card__text-input"
+              placeholder="例如：中午吃了一碗排骨飯與無糖綠茶..."
+              @keyup.enter="analyzeMeal"
+            />
+
+            <!-- 分析按鈕 -->
+            <button
+              class="ai-logger-card__submit-btn"
+              :disabled="(!foodLogInput.trim() && !foodImageFile) || isAnalyzing"
+              @click="analyzeMeal"
+            >
+              {{ isAnalyzing ? '分析中...' : '分析' }}
+            </button>
+          </div>
+
+          <!-- 圖片預覽區 -->
+          <div v-if="foodImagePreview" class="ai-logger-card__preview">
+            <img :src="foodImagePreview" alt="餐點預覽" class="ai-logger-card__preview-img" />
+            <button class="ai-logger-card__remove-btn" @click="removeImage">❌ 移除照片</button>
+          </div>
+        </div>
+
+        <!-- ═══ 本餐營養分析結果卡片 ═══ -->
+        <Transition name="result-slide">
+          <div v-if="showAnalysisResult" class="meal-result-card">
+            <!-- 餐點摘要與總熱量 -->
+            <div class="meal-result-card__header">
+              <span class="meal-result-card__meal-name">🍱 {{ analysisResult.mealName }}</span>
+              <p class="meal-result-card__calories">
+                本餐熱量：<strong>{{ analysisResult.totalCalories }} kcal</strong>
+              </p>
+            </div>
+
+            <!-- 四大營養素數據網格 -->
+            <div class="meal-result-card__nutrients">
+              <div class="nutrient-badge nutrient-badge--blue">
+                <span class="nutrient-badge__label">蛋白質</span>
+                <span class="nutrient-badge__value">{{ analysisResult.protein }} g</span>
+              </div>
+              <div class="nutrient-badge nutrient-badge--orange">
+                <span class="nutrient-badge__label">碳水化合物</span>
+                <span class="nutrient-badge__value">{{ analysisResult.carbs }} g</span>
+              </div>
+              <div class="nutrient-badge nutrient-badge--green">
+                <span class="nutrient-badge__label">膳食纖維</span>
+                <span class="nutrient-badge__value">{{ analysisResult.fiber }} g</span>
+              </div>
+              <div class="nutrient-badge nutrient-badge--red">
+                <span class="nutrient-badge__label">脂質/脂肪</span>
+                <span class="nutrient-badge__value">{{ analysisResult.fat }} g</span>
+              </div>
+            </div>
+
+            <!-- 確認紀錄按鈕 -->
+            <button class="meal-result-card__record-btn" @click="recordToDashboard">
+              記錄至今日儀表板
+            </button>
+          </div>
+        </Transition>
+
         <!-- 區塊 1：總熱量進度條 -->
         <div class="calorie-card">
           <h3 class="calorie-card__title">🔥 今日熱量攝取</h3>
@@ -260,30 +761,17 @@ const passportBadges = [
             <svg viewBox="0 0 120 120" class="donut-svg" aria-label="營養素比例環形圖">
               <!-- 背景環 -->
               <circle cx="60" cy="60" r="50" fill="none" stroke="#f1f5f9" stroke-width="16" />
-              <!-- 蛋白質 (25%) -->
-              <circle cx="60" cy="60" r="50" fill="none"
-                stroke="#3b82f6" stroke-width="16"
-                stroke-dasharray="78.5 235.6"
-                stroke-dashoffset="0"
-                transform="rotate(-90 60 60)" />
-              <!-- 碳水 (40%) -->
-              <circle cx="60" cy="60" r="50" fill="none"
-                stroke="#f97316" stroke-width="16"
-                stroke-dasharray="125.7 188.5"
-                stroke-dashoffset="-78.5"
-                transform="rotate(-90 60 60)" />
-              <!-- 膳食纖維 (15%) -->
-              <circle cx="60" cy="60" r="50" fill="none"
-                stroke="#22c55e" stroke-width="16"
-                stroke-dasharray="47.1 267"
-                stroke-dashoffset="-204.2"
-                transform="rotate(-90 60 60)" />
-              <!-- 脂肪 (20%) -->
-              <circle cx="60" cy="60" r="50" fill="none"
-                stroke="#ef4444" stroke-width="16"
-                stroke-dasharray="62.8 251.3"
-                stroke-dashoffset="-251.3"
-                transform="rotate(-90 60 60)" />
+              <!-- 動態營養素環 -->
+              <circle
+                v-for="(seg, idx) in donutSegments"
+                :key="idx"
+                cx="60" cy="60" r="50" fill="none"
+                :stroke="seg.color"
+                stroke-width="16"
+                :stroke-dasharray="seg.dasharray"
+                :stroke-dashoffset="seg.dashoffset"
+                transform="rotate(-90 60 60)"
+              />
             </svg>
 
             <!-- 圖例 -->
@@ -913,5 +1401,646 @@ const passportBadges = [
 
 .badge-item--locked .badge-item__name {
   color: #cbd5e1;
+}
+
+/* ═══ Sub-view 通用樣式 ═══ */
+.subview {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.subview__header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.subview__back-btn {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: #78716c;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  transition: color 0.15s;
+}
+.subview__back-btn:hover {
+  color: var(--color-primary, #ff5252);
+}
+
+.subview__title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.subview__emoji {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.subview__name {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1c1917;
+}
+
+.subview__mode-tag {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+/* AI 提示列 */
+.subview__ai-hint {
+  font-size: 12px;
+  color: #065f46;
+  background: #d1fae5;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 500;
+}
+
+/* 個人資訊 */
+.subview__info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.subview__info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.subview__info-label {
+  font-size: 11px;
+  color: #78716c;
+}
+
+.subview__info-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1c1917;
+}
+
+/* 人數 + 費用估算 */
+.subview__party-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #fafaf9;
+  border-radius: 10px;
+}
+
+.subview__party-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.subview__stepper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.subview__stepper-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid #e2e8f0;
+  background: #fff;
+  color: #1c1917;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+.subview__stepper-btn:hover:not(:disabled) {
+  border-color: var(--color-primary, #ff5252);
+  color: var(--color-primary, #ff5252);
+}
+.subview__stepper-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.subview__stepper-val {
+  font-size: 15px;
+  font-weight: 700;
+  min-width: 36px;
+  text-align: center;
+  color: #1c1917;
+}
+
+.subview__price-estimate {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.subview__price-unit {
+  font-size: 11px;
+  color: #78716c;
+}
+
+.subview__price-total {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-primary, #ff5252);
+}
+
+/* 區段 */
+.subview__section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 時段膠囊 */
+.subview__slots {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.subview__slots::-webkit-scrollbar { display: none; }
+
+.subview__slot-btn {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  border: 1.5px solid #e2e8f0;
+  background: #fff;
+  color: #1c1917;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.subview__slot-btn--selected {
+  background: var(--color-secondary, #00a86b);
+  border-color: var(--color-secondary, #00a86b);
+  color: #fff;
+}
+
+.subview__slot-btn--full {
+  background: #f1f5f9;
+  border-color: #f1f5f9;
+  color: #cbd5e1;
+  cursor: not-allowed;
+}
+
+/* 底部送出按鈕 */
+.subview__submit-btn {
+  width: 100%;
+  height: 46px;
+  border: none;
+  border-radius: 12px;
+  background: var(--color-primary, #ff5252);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  letter-spacing: 0.04em;
+}
+.subview__submit-btn:hover:not(:disabled) { opacity: 0.88; }
+.subview__submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.subview__submit-btn--orange {
+  background: #f97316;
+}
+
+.subview__hint {
+  margin: -6px 0 0;
+  font-size: 11px;
+  color: #78716c;
+  text-align: center;
+}
+
+/* Textarea */
+.subview__textarea {
+  padding: 10px 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 13px;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.subview__textarea:focus {
+  border-color: var(--color-primary, #ff5252);
+}
+
+/* ─── 候位看板 ─── */
+.subview__queue-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.subview__queue-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 6px;
+  background: #fafaf9;
+  border-radius: 12px;
+}
+
+.subview__queue-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1c1917;
+}
+
+.subview__queue-label {
+  font-size: 11px;
+  color: #78716c;
+}
+
+/* ─── 點餐菜單列表 ─── */
+.subview__menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.subview__menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: #fafaf9;
+  border-radius: 10px;
+}
+
+.subview__menu-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.subview__menu-item-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1c1917;
+}
+
+.subview__menu-item-meta {
+  font-size: 12px;
+  color: #78716c;
+}
+
+.subview__menu-item-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ─── 外送地址 ─── */
+.subview__delivery-address {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  background: #e0f2fe;
+  border-radius: 10px;
+}
+
+.subview__delivery-address-label {
+  font-size: 11px;
+  color: #0369a1;
+  font-weight: 500;
+}
+
+.subview__delivery-address-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0c4a6e;
+}
+
+/* ─── 金額匯總 ─── */
+.subview__summary {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 4px;
+}
+
+.subview__summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #78716c;
+}
+
+.subview__summary-row--total {
+  border-top: 1px solid #f1f5f9;
+  padding-top: 10px;
+  margin-top: 2px;
+  color: #1c1917;
+  font-size: 15px;
+}
+
+/* ═══ AI 飲食紀錄輸入卡片 ═══ */
+.ai-logger-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ai-logger-card__header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ai-logger-card__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1c1917;
+}
+
+.ai-logger-card__desc {
+  margin: 0;
+  font-size: 12px;
+  color: #78716c;
+}
+
+.ai-logger-card__input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-logger-card__camera-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 18px;
+  transition: background 0.15s;
+}
+.ai-logger-card__camera-btn:hover {
+  background: #e2e8f0;
+}
+
+.ai-logger-card__file-input {
+  display: none;
+}
+
+.ai-logger-card__text-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.ai-logger-card__text-input:focus {
+  border-color: var(--color-primary, #ff5252);
+}
+
+.ai-logger-card__submit-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  background: var(--color-primary, #ff5252);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+}
+.ai-logger-card__submit-btn:hover:not(:disabled) {
+  opacity: 0.88;
+}
+.ai-logger-card__submit-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ai-logger-card__preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  background: #fafaf9;
+  border-radius: 10px;
+}
+
+.ai-logger-card__preview-img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.ai-logger-card__remove-btn {
+  border: none;
+  background: none;
+  font-size: 12px;
+  color: #ef4444;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.ai-logger-card__remove-btn:hover {
+  background: #fef2f2;
+}
+
+/* ═══ 本餐營養分析結果卡片 ═══ */
+.meal-result-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border: 1.5px solid #e0f2fe;
+}
+
+.meal-result-card__header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.meal-result-card__meal-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1c1917;
+}
+
+.meal-result-card__calories {
+  margin: 0;
+  font-size: 20px;
+  color: var(--color-primary, #ff5252);
+  font-weight: 700;
+}
+.meal-result-card__calories strong {
+  font-size: 22px;
+}
+
+/* 營養素 2x2 網格 */
+.meal-result-card__nutrients {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.nutrient-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 8px;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.nutrient-badge__label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.nutrient-badge__value {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.nutrient-badge--blue {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+.nutrient-badge--blue .nutrient-badge__value {
+  color: #2563eb;
+}
+
+.nutrient-badge--orange {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+}
+.nutrient-badge--orange .nutrient-badge__value {
+  color: #ea580c;
+}
+
+.nutrient-badge--green {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+.nutrient-badge--green .nutrient-badge__value {
+  color: #16a34a;
+}
+
+.nutrient-badge--red {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+.nutrient-badge--red .nutrient-badge__value {
+  color: #dc2626;
+}
+
+.meal-result-card__record-btn {
+  width: 100%;
+  height: 44px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  letter-spacing: 0.02em;
+}
+.meal-result-card__record-btn:hover {
+  opacity: 0.9;
+}
+
+/* ═══ Toast 提示 ═══ */
+.food-toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1c1917;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  z-index: 1000;
+  white-space: nowrap;
+}
+
+/* Toast 動畫 */
+.toast-fade-enter-active,
+.toast-fade-leave-active {
+  transition: all 0.3s ease;
+}
+.toast-fade-enter-from,
+.toast-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-50%) translateY(10px);
+}
+
+/* 分析結果卡片動畫 */
+.result-slide-enter-active,
+.result-slide-leave-active {
+  transition: all 0.35s ease;
+}
+.result-slide-enter-from,
+.result-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 </style>

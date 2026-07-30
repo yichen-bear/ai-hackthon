@@ -1,34 +1,31 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-
 /* ─── 型別定義 ─── */
 
-interface Restaurant {
+export interface Restaurant {
   id: string
   name: string
-  tag: string            // 料理類型
-  priceMin: number       // 人均最低
-  priceMax: number       // 人均最高
-  priceAvg: number       // 預估人均（訂位確認用）
+  tag: string
+  priceMin: number
+  priceMax: number
+  priceAvg: number
   rating: number
   distance: string
-  image: string          // emoji 作為封面
+  image: string
   badge?: 'popular' | 'delivery' | 'available'
   badgeLabel?: string
   timeSlots: { time: string; available: boolean }[]
 }
 
-interface BookingData {
-  userName: string
-  phone: string
-  restaurantName: string
-  time: string
-  partySize: number
-}
+/* ─── Props ─── */
+const props = defineProps<{
+  eatMode: 'dine_in' | 'takeout' | 'delivery'
+}>()
 
 /* ─── Emits ─── */
 const emit = defineEmits<{
-  confirm: [data: BookingData]
+  'go-reserve': [restaurant: Restaurant]
+  'go-queue': [restaurant: Restaurant]
+  'go-menu': [restaurant: Restaurant]
 }>()
 
 /* ─── Mock 餐廳資料 ─── */
@@ -95,54 +92,6 @@ const restaurants: Restaurant[] = [
   },
 ]
 
-/* ─── 狀態 ─── */
-const isBookingMode = ref(false)
-const selectedRestaurant = ref<Restaurant | null>(null)
-const selectedTime = ref('')
-const partySize = ref(2)
-
-// 預填用戶資料（模擬 AI 帶入）
-const userName = ref('陳小明')
-const phone = ref('0912-345-678')
-
-/* ─── 計算屬性 ─── */
-const estimatedTotal = computed(() => {
-  if (!selectedRestaurant.value) return 0
-  return selectedRestaurant.value.priceAvg * partySize.value
-})
-
-const canConfirm = computed(() =>
-  !!selectedRestaurant.value && !!selectedTime.value
-)
-
-/* ─── 行為 ─── */
-
-/** 點擊餐廳卡片的「預訂」→ 進入訂位確認模式 */
-function enterBooking(restaurant: Restaurant) {
-  selectedRestaurant.value = restaurant
-  selectedTime.value = ''
-  isBookingMode.value = true
-}
-
-/** 返回推薦列表 */
-function exitBooking() {
-  isBookingMode.value = false
-  selectedRestaurant.value = null
-  selectedTime.value = ''
-}
-
-/** 確認訂位 */
-function handleConfirm() {
-  if (!canConfirm.value || !selectedRestaurant.value) return
-  emit('confirm', {
-    userName: userName.value,
-    phone: phone.value,
-    restaurantName: selectedRestaurant.value.name,
-    time: selectedTime.value,
-    partySize: partySize.value,
-  })
-}
-
 /* ─── 輔助 ─── */
 function badgeStyle(type?: string) {
   if (type === 'popular')  return { background: '#ffe4e6', color: '#e11d48' }
@@ -154,161 +103,76 @@ function badgeStyle(type?: string) {
 
 <template>
   <div class="bc">
+    <!-- 標題列 -->
+    <div class="bc__header">
+      <span class="bc__title">🍽️ 想吃什麼？</span>
+      <span class="bc__subtitle">為你推薦附近熱門餐廳</span>
+    </div>
 
-    <!-- ════════════════════════════════
-         狀態 A：推薦列表
-         ════════════════════════════════ -->
-    <template v-if="!isBookingMode">
-      <!-- 標題列 -->
-      <div class="bc__header">
-        <span class="bc__title">🍽️ 想吃什麼？</span>
-        <span class="bc__subtitle">為你推薦附近熱門餐廳</span>
-      </div>
-
-      <!-- 餐廳推薦卡片列表 -->
-      <div class="bc__list">
-        <div
-          v-for="r in restaurants"
-          :key="r.id"
-          class="bc__restaurant-card"
-        >
-          <!-- 卡片封面 -->
-          <div class="bc__card-cover">
-            <span class="bc__card-emoji">{{ r.image }}</span>
-          </div>
-
-          <!-- 卡片內容 -->
-          <div class="bc__card-body">
-            <!-- 名稱 + 價格 同一行 -->
-            <div class="bc__card-name-row">
-              <span class="bc__card-name">{{ r.name }}</span>
-              <span class="bc__card-price">NT$ {{ r.priceMin }}–{{ r.priceMax }}&thinsp;/&thinsp;人</span>
-            </div>
-
-            <!-- 標籤 + 評分 -->
-            <div class="bc__card-meta">
-              <span class="bc__card-tag">{{ r.tag }}</span>
-              <span class="bc__card-rating">⭐ {{ r.rating }}</span>
-              <span class="bc__card-distance">📍 {{ r.distance }}</span>
-            </div>
-
-            <!-- 狀態徽章 + 預訂按鈕 -->
-            <div class="bc__card-footer">
-              <span
-                v-if="r.badge"
-                class="bc__badge"
-                :style="badgeStyle(r.badge)"
-              >{{ r.badgeLabel }}</span>
-              <button
-                class="bc__reserve-btn"
-                @click="enterBooking(r)"
-              >
-                預訂
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </template>
-
-    <!-- ════════════════════════════════
-         狀態 B：訂位確認（AI 預填）
-         ════════════════════════════════ -->
-    <template v-else-if="selectedRestaurant">
-      <!-- 頂部：返回 + 餐廳名稱 -->
-      <div class="bc__booking-header">
-        <button class="bc__back-btn" aria-label="返回推薦列表" @click="exitBooking">
-          ← 返回
-        </button>
-        <div class="bc__booking-title-row">
-          <span class="bc__booking-emoji">{{ selectedRestaurant.image }}</span>
-          <span class="bc__booking-name">{{ selectedRestaurant.name }}</span>
-        </div>
-      </div>
-
-      <!-- AI 預填提示 -->
-      <div class="bc__ai-hint">
-        ✨ AI 已為你預填訂位資料
-      </div>
-
-      <!-- 用戶資訊 -->
-      <div class="bc__info-grid">
-        <div class="bc__info-item">
-          <span class="bc__info-label">👤 姓名</span>
-          <span class="bc__info-value">{{ userName }}</span>
-        </div>
-        <div class="bc__info-item">
-          <span class="bc__info-label">📞 電話</span>
-          <span class="bc__info-value">{{ phone }}</span>
-        </div>
-      </div>
-
-      <!-- 用餐人數 + 即時費用估算（同一行） -->
-      <div class="bc__party-row">
-        <div class="bc__party-controls">
-          <span class="bc__info-label">🍴 用餐人數</span>
-          <div class="bc__stepper">
-            <button
-              class="bc__stepper-btn"
-              :disabled="partySize <= 1"
-              @click="partySize = Math.max(1, partySize - 1)"
-            >−</button>
-            <span class="bc__stepper-val">{{ partySize }} 人</span>
-            <button
-              class="bc__stepper-btn"
-              :disabled="partySize >= 10"
-              @click="partySize = Math.min(10, partySize + 1)"
-            >＋</button>
-          </div>
-        </div>
-        <div class="bc__price-estimate">
-          <span class="bc__price-unit">人均 ${{ selectedRestaurant.priceAvg }}</span>
-          <span class="bc__price-total">總計約 ${{ estimatedTotal.toLocaleString() }}</span>
-        </div>
-      </div>
-
-      <!-- 時段選擇 -->
-      <div class="bc__section">
-        <span class="bc__info-label">🕐 選擇時段</span>
-        <div class="bc__slots">
-          <button
-            v-for="slot in selectedRestaurant.timeSlots"
-            :key="slot.time"
-            class="bc__slot-btn"
-            :class="{
-              'bc__slot-btn--selected': slot.time === selectedTime,
-              'bc__slot-btn--full': !slot.available,
-            }"
-            :disabled="!slot.available"
-            :aria-pressed="slot.time === selectedTime ? 'true' : 'false'"
-            @click="selectedTime = slot.time"
-          >
-            {{ slot.time }}
-          </button>
-        </div>
-      </div>
-
-      <!-- 外送標籤 -->
-      <div class="bc__badges-row">
-        <span
-          v-if="selectedRestaurant.badge"
-          class="bc__badge"
-          :style="badgeStyle(selectedRestaurant.badge)"
-        >{{ selectedRestaurant.badgeLabel }}</span>
-      </div>
-
-      <!-- 確認訂位按鈕 -->
-      <button
-        class="bc__confirm-btn"
-        :disabled="!canConfirm"
-        @click="handleConfirm"
+    <!-- 餐廳推薦卡片列表 -->
+    <div class="bc__list">
+      <div
+        v-for="r in restaurants"
+        :key="r.id"
+        class="bc__restaurant-card"
       >
-        確認訂位
-      </button>
+        <!-- 卡片封面 -->
+        <div class="bc__card-cover">
+          <span class="bc__card-emoji">{{ r.image }}</span>
+        </div>
 
-      <p v-if="!selectedTime" class="bc__hint-text">請先選擇用餐時段</p>
-    </template>
+        <!-- 卡片內容 -->
+        <div class="bc__card-body">
+          <!-- 名稱 + 價格 同一行 -->
+          <div class="bc__card-name-row">
+            <span class="bc__card-name">{{ r.name }}</span>
+            <span class="bc__card-price">NT$ {{ r.priceMin }}–{{ r.priceMax }}&thinsp;/&thinsp;人</span>
+          </div>
 
+          <!-- 標籤 + 評分 -->
+          <div class="bc__card-meta">
+            <span class="bc__card-tag">{{ r.tag }}</span>
+            <span class="bc__card-rating">⭐ {{ r.rating }}</span>
+            <span class="bc__card-distance">📍 {{ r.distance }}</span>
+          </div>
+
+          <!-- 狀態徽章 + 動態按鈕 -->
+          <div class="bc__card-footer">
+            <span
+              v-if="r.badge"
+              class="bc__badge"
+              :style="badgeStyle(r.badge)"
+            >{{ r.badgeLabel }}</span>
+
+            <!-- 內用模式：兩個按鈕 -->
+            <div v-if="props.eatMode === 'dine_in'" class="bc__footer-btns">
+              <button
+                class="bc__action-btn bc__action-btn--sm"
+                @click="emit('go-queue', r)"
+              >現場候位</button>
+              <button
+                class="bc__action-btn bc__action-btn--sm bc__action-btn--outline"
+                @click="emit('go-reserve', r)"
+              >訂位</button>
+            </div>
+
+            <!-- 外帶模式 -->
+            <button
+              v-else-if="props.eatMode === 'takeout'"
+              class="bc__action-btn"
+              @click="emit('go-menu', r)"
+            >點餐</button>
+
+            <!-- 外送模式 -->
+            <button
+              v-else
+              class="bc__action-btn"
+              @click="emit('go-menu', r)"
+            >點餐</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -327,10 +191,6 @@ function badgeStyle(type?: string) {
   flex-direction: column;
   gap: 14px;
 }
-
-/* ══════════════════════
-   狀態 A：推薦列表
-══════════════════════ */
 
 .bc__header {
   display: flex;
@@ -452,15 +312,16 @@ function badgeStyle(type?: string) {
   color: var(--color-text-secondary, #78716c);
 }
 
-/* 徽章 + 預訂按鈕 */
+/* 徽章 + 按鈕 footer */
 .bc__card-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: 2px;
+  gap: 6px;
 }
 
-/* 通用徽章（inline style 控制顏色） */
+/* 通用徽章 */
 .bc__badge {
   display: inline-block;
   border-radius: 9999px;
@@ -472,297 +333,49 @@ function badgeStyle(type?: string) {
   white-space: nowrap;
 }
 
-/* 預訂按鈕（小） */
-.bc__reserve-btn {
-  padding: 5px 16px;
+/* 右下角按鈕容器（內用雙按鈕） */
+.bc__footer-btns {
+  display: flex;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+/* 動態按鈕（取代舊的 reserve-btn） */
+.bc__action-btn {
+  padding: 5px 14px;
   border-radius: 9999px;
   border: 1.5px solid #ff5252;
   border-color: var(--color-primary, #ff5252);
-  color: #ff5252;
-  color: var(--color-primary, #ff5252);
-  background: transparent;
-  font-size: 13px;
-  font-size: var(--text-sm, 13px);
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-  white-space: nowrap;
-}
-
-.bc__reserve-btn:hover {
   background: #ff5252;
   background: var(--color-primary, #ff5252);
   color: #ffffff;
-}
-
-/* ══════════════════════
-   狀態 B：訂位確認
-══════════════════════ */
-
-/* 頂部：返回 + 餐廳 */
-.bc__booking-header {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.bc__back-btn {
-  align-self: flex-start;
-  background: none;
-  border: none;
-  font-size: 13px;
-  font-size: var(--text-sm, 13px);
-  color: #78716c;
-  color: var(--color-text-secondary, #78716c);
-  cursor: pointer;
-  padding: 0;
-  font-family: inherit;
-  transition: color 0.15s;
-}
-
-.bc__back-btn:hover {
-  color: #ff5252;
-  color: var(--color-primary, #ff5252);
-}
-
-.bc__booking-title-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.bc__booking-emoji {
-  font-size: 22px;
-  line-height: 1;
-}
-
-.bc__booking-name {
-  font-size: 17px;
-  font-size: var(--text-lg, 17px);
-  font-weight: 700;
-  color: #1c1917;
-  color: var(--color-text-primary, #1c1917);
-}
-
-/* AI 提示條 */
-.bc__ai-hint {
   font-size: 12px;
-  color: #00a86b;
-  color: var(--color-secondary, #00a86b);
-  background: #d1fae5;
-  background: var(--color-secondary-light, #d1fae5);
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-weight: 500;
-}
-
-/* 用戶資訊網格 */
-.bc__info-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.bc__info-item {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.bc__info-label {
-  font-size: 11px;
-  font-size: var(--text-xs, 11px);
-  color: #78716c;
-  color: var(--color-text-secondary, #78716c);
-}
-
-.bc__info-value {
-  font-size: 13px;
-  font-size: var(--text-sm, 13px);
+  font-size: var(--text-xs, 12px);
   font-weight: 600;
-  color: #1c1917;
-  color: var(--color-text-primary, #1c1917);
-}
-
-/* 人數 + 費用估算 同一行 */
-.bc__party-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 10px 12px;
-  background: #fafaf9;
-  background: var(--color-bg-page, #fafaf9);
-  border-radius: 10px;
-}
-
-.bc__party-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-/* 加減按鈕 */
-.bc__stepper {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.bc__stepper-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 1.5px solid #e2e8f0;
-  border-color: var(--color-border, #e2e8f0);
-  background: #ffffff;
-  color: #1c1917;
-  color: var(--color-text-primary, #1c1917);
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: inherit;
-  transition: border-color 0.15s, background 0.15s;
-}
-
-.bc__stepper-btn:hover:not(:disabled) {
-  border-color: #ff5252;
-  border-color: var(--color-primary, #ff5252);
-  color: #ff5252;
-  color: var(--color-primary, #ff5252);
-}
-
-.bc__stepper-btn:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-.bc__stepper-val {
-  font-size: 15px;
-  font-size: var(--text-base, 15px);
-  font-weight: 700;
-  color: #1c1917;
-  color: var(--color-text-primary, #1c1917);
-  min-width: 36px;
-  text-align: center;
-}
-
-/* 費用估算 */
-.bc__price-estimate {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-}
-
-.bc__price-unit {
-  font-size: 11px;
-  font-size: var(--text-xs, 11px);
-  color: #78716c;
-  color: var(--color-text-secondary, #78716c);
-}
-
-.bc__price-total {
-  font-size: 14px;
-  font-weight: 700;
-  color: #ff5252;
-  color: var(--color-primary, #ff5252);
-}
-
-/* 時段選擇 */
-.bc__section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.bc__slots {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  white-space: nowrap;
-  scrollbar-width: none;
-  padding-bottom: 2px;
-}
-
-.bc__slots::-webkit-scrollbar { display: none; }
-
-.bc__slot-btn {
-  flex-shrink: 0;
-  padding: 6px 14px;
-  border-radius: 9999px;
-  border: 1.5px solid #e2e8f0;
-  border-color: var(--color-border, #e2e8f0);
-  background: #ffffff;
-  background: var(--color-bg-card, #ffffff);
-  color: #1c1917;
-  color: var(--color-text-primary, #1c1917);
-  font-size: 13px;
-  font-size: var(--text-sm, 13px);
-  font-weight: 500;
-  font-family: inherit;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.bc__slot-btn--selected {
-  background: #00a86b;
-  background: var(--color-secondary, #00a86b);
-  border-color: #00a86b;
-  border-color: var(--color-secondary, #00a86b);
-  color: #ffffff;
-}
-
-.bc__slot-btn--full {
-  background: #f1f5f9;
-  background: var(--color-progress-bg, #f1f5f9);
-  border-color: #f1f5f9;
-  color: #cbd5e1;
-  color: var(--color-text-disabled, #cbd5e1);
-  cursor: not-allowed;
-}
-
-/* 徽章列 */
-.bc__badges-row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-/* 確認訂位按鈕 */
-.bc__confirm-btn {
-  width: 100%;
-  height: 46px;
-  border: none;
-  border-radius: 12px;
-  border-radius: var(--radius-md, 12px);
-  background-color: #ff5252;
-  background-color: var(--color-primary, #ff5252);
-  color: #ffffff;
-  font-size: 15px;
-  font-size: var(--text-base, 15px);
-  font-weight: 700;
   font-family: inherit;
   cursor: pointer;
   transition: opacity 0.15s;
-  letter-spacing: 0.04em;
+  white-space: nowrap;
 }
 
-.bc__confirm-btn:hover:not(:disabled) { opacity: 0.88; }
-.bc__confirm-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.bc__action-btn:hover {
+  opacity: 0.88;
+}
 
-/* 提示文字 */
-.bc__hint-text {
-  margin: -6px 0 0;
+.bc__action-btn--sm {
+  padding: 4px 10px;
   font-size: 11px;
-  font-size: var(--text-xs, 11px);
-  color: #78716c;
-  color: var(--color-text-secondary, #78716c);
-  text-align: center;
+}
+
+.bc__action-btn--outline {
+  background: transparent;
+  color: #ff5252;
+  color: var(--color-primary, #ff5252);
+}
+
+.bc__action-btn--outline:hover {
+  background: #fff1f2;
+  background: var(--color-primary-light, #fff1f2);
+  opacity: 1;
 }
 </style>
