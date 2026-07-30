@@ -13,6 +13,7 @@ export interface BookingOrder {
   currentStep: number
   totalSteps: number
   estimatedDate?: string
+  pickupStore?: string
   groupProgress?: { current: number; target: number }
   createdAt: string
 }
@@ -50,10 +51,10 @@ const filteredOrders = computed(() => {
   return props.orders.filter((o) => o.status === 'completed')
 })
 
-// ─── 步驟條邏輯 ───
+// ─── 步驟條邏輯（對齊廠商端流程） ───
 function getStepLabels(type: 'preorder' | 'groupbuy'): string[] {
-  if (type === 'groupbuy') return ['待成團', '已成團', '備貨中', '可取貨']
-  return ['已預購', '生產中', '配送中', '可取貨']
+  if (type === 'groupbuy') return ['待成團', '門市彙整', '區域配送', '已到店']
+  return ['已下單', '門市彙整', '區域配送', '已到店']
 }
 
 function getStepStatus(stepIndex: number, currentStep: number): 'completed' | 'current' | 'pending' {
@@ -119,6 +120,7 @@ function getGroupPercent(order: BookingOrder): number {
         <!-- 商品資訊 -->
         <p class="order-product-name">{{ order.productName }}</p>
         <p class="order-spec">{{ order.spec }}</p>
+        <p v-if="order.pickupStore" class="order-pickup-store">📍 取貨門市：{{ order.pickupStore }}</p>
 
         <!-- 步驟條 -->
         <div class="step-indicator" :aria-label="`訂單進度：第 ${order.currentStep + 1} 步，共 ${order.totalSteps} 步`">
@@ -305,6 +307,13 @@ function getGroupPercent(order: BookingOrder): number {
 .order-spec {
   font-size: var(--text-xs, 11px);
   color: var(--color-text-secondary, #6b7280);
+  margin: 0 0 var(--space-3, 12px);
+}
+
+.order-pickup-store {
+  font-size: var(--text-xs, 11px);
+  color: var(--color-primary);
+  font-weight: 500;
   margin: 0 0 var(--space-3, 12px);
 }
 

@@ -83,6 +83,10 @@ function handleAddPreorder() {
 type PreorderPaymentType = 'online' | 'pickup'
 const paymentType = ref<PreorderPaymentType>('online')
 
+// ─── 取貨門市選擇（使用共享狀態） ───
+const { allStores, favoriteStores, selectedPickupStore, setPickupStore } = useBookingState()
+const showStorePicker = ref(false)
+
 // ─── 付款流程 ───
 const showPaymentFlow = ref(false)
 const orderConfirmed = ref(false)
@@ -134,8 +138,7 @@ function closeOrderConfirm() {
 // 跨模組路線規劃跳轉
 const router = useRouter()
 function navigateToRoute() {
-  // 導航至行模組路線規劃，目的地為取貨門市（使用 7-11 信義門市作為預設）
-  const destination = '7-11 信義門市'
+  const destination = selectedPickupStore.value.name
   closeOrderConfirm()
   router.push({ path: '/transport', query: { destination } })
 }
@@ -307,6 +310,28 @@ function decrementQty() {
             </div>
           </div>
 
+          <!-- 取貨門市選擇 -->
+          <div class="pickup-store-section">
+            <p class="spec-label">取貨門市</p>
+            <button class="pickup-store-btn" @click="showStorePicker = true">
+              📍 {{ selectedPickupStore.name }}
+              <span class="pickup-store-change">變更</span>
+            </button>
+            <!-- 常用門市快捷 -->
+            <div v-if="favoriteStores.length > 1" class="favorite-stores">
+              <span class="favorite-label">常用：</span>
+              <button
+                v-for="store in favoriteStores"
+                :key="store.id"
+                class="favorite-chip"
+                :class="{ active: selectedPickupStore.id === store.id }"
+                @click="setPickupStore(store)"
+              >
+                {{ store.name.replace('7-11 ', '') }}
+              </button>
+            </div>
+          </div>
+
           <!-- 操作按鈕 -->
           <div class="overlay-actions">
             <button class="btn-preorder" @click="handleAddPreorder">
@@ -358,6 +383,10 @@ function decrementQty() {
               <span class="order-confirm-label">{{ lastPaymentResult ? '預計取貨' : '付款方式' }}</span>
               <span class="order-confirm-value">{{ lastPaymentResult ? '商品到貨後通知取貨' : '門市取貨時付款' }}</span>
             </div>
+            <div class="order-confirm-row">
+              <span class="order-confirm-label">取貨門市</span>
+              <span class="order-confirm-value">{{ selectedPickupStore.name }}</span>
+            </div>
           </div>
 
           <p class="order-confirm-hint">訂單成立後將於「訂單追蹤」中顯示進度</p>
@@ -370,6 +399,47 @@ function decrementQty() {
               📋 查看票券
             </button>
             <button class="btn-preorder" @click="closeOrderConfirm">完成</button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
+
+    <!-- 門市選擇 Overlay -->
+    <Teleport to="body">
+      <div v-if="showStorePicker" class="overlay-backdrop" @click.self="showStorePicker = false">
+        <div class="overlay-content store-picker-panel" role="dialog" aria-modal="true" aria-label="選擇取貨門市">
+          <button class="overlay-close" aria-label="關閉門市選擇" @click="showStorePicker = false">✕</button>
+          <h3 class="store-picker-title">📍 選擇取貨門市</h3>
+
+          <!-- 常用門市 -->
+          <div v-if="favoriteStores.length > 0" class="store-picker-group">
+            <p class="store-picker-group-label">⭐ 常用門市</p>
+            <button
+              v-for="store in favoriteStores"
+              :key="store.id"
+              class="store-picker-item"
+              :class="{ active: selectedPickupStore.id === store.id }"
+              @click="setPickupStore(store); showStorePicker = false"
+            >
+              <span class="store-picker-name">{{ store.name }}</span>
+              <span class="store-picker-addr">{{ store.address }}</span>
+            </button>
+          </div>
+
+          <!-- 全部門市 -->
+          <div class="store-picker-group">
+            <p class="store-picker-group-label">🏪 全部門市</p>
+            <button
+              v-for="store in allStores"
+              :key="store.id"
+              class="store-picker-item"
+              :class="{ active: selectedPickupStore.id === store.id }"
+              @click="setPickupStore(store); showStorePicker = false"
+            >
+              <span class="store-picker-name">{{ store.name }}</span>
+              <span class="store-picker-addr">{{ store.address }}</span>
+              <span v-if="store.hours" class="store-picker-hours">{{ store.hours }}</span>
+            </button>
           </div>
         </div>
       </div>
@@ -913,4 +983,137 @@ function decrementQty() {
 }
 .btn-route-plan:hover { background: var(--color-primary-light, #ecfdf5); }
 .btn-route-plan:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+/* ─── 取貨門市選擇 ─── */
+.pickup-store-section {
+  margin-bottom: var(--space-2, 8px);
+}
+
+.pickup-store-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: var(--radius-md, 12px);
+  background: var(--color-bg-card, #fff);
+  font-size: var(--text-sm, 13px);
+  font-weight: 600;
+  color: var(--color-text, #1f2937);
+  cursor: pointer;
+  min-height: 44px;
+  transition: all 0.15s ease;
+}
+
+.pickup-store-btn:hover {
+  border-color: var(--color-primary);
+}
+
+.pickup-store-change {
+  font-size: var(--text-xs, 11px);
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.favorite-stores {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.favorite-label {
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-secondary, #6b7280);
+}
+
+.favorite-chip {
+  padding: 4px 10px;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: var(--radius-full, 9999px);
+  background: var(--color-bg-card, #fff);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-text-secondary, #6b7280);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.favorite-chip.active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.favorite-chip:hover {
+  opacity: 0.85;
+}
+
+/* ─── 門市選擇 Overlay ─── */
+.store-picker-panel {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.store-picker-title {
+  font-size: var(--text-base, 15px);
+  font-weight: 700;
+  margin: 0 0 var(--space-3, 12px);
+}
+
+.store-picker-group {
+  margin-bottom: var(--space-3, 12px);
+}
+
+.store-picker-group-label {
+  font-size: var(--text-xs, 11px);
+  font-weight: 600;
+  color: var(--color-text-secondary, #6b7280);
+  margin: 0 0 8px;
+}
+
+.store-picker-item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 12px;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: var(--radius-md, 12px);
+  background: var(--color-bg-card, #fff);
+  cursor: pointer;
+  margin-bottom: 8px;
+  min-height: 44px;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.store-picker-item:hover {
+  border-color: var(--color-primary);
+}
+
+.store-picker-item.active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.store-picker-name {
+  font-size: var(--text-sm, 13px);
+  font-weight: 600;
+  color: var(--color-text, #1f2937);
+}
+
+.store-picker-addr {
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-secondary, #6b7280);
+}
+
+.store-picker-hours {
+  font-size: 10px;
+  color: var(--color-primary);
+}
 </style>
