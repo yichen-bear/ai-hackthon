@@ -84,3 +84,45 @@ body {
   background: var(--color-bg-card, #ffffff);
   position: relative;
 }
+
+/* ============================================================
+   chat-fill 頁面轉場效果
+   由畫面下緣往上擴張的色塊填滿轉場（Requirement 10.3, 10.4）
+   搭配 definePageMeta({ pageTransition: { name: 'chat-fill', mode: 'out-in' } })
+   ============================================================ */
+
+/* 進場：色塊由下緣擴張至完全覆蓋，再顯示新頁面內容 */
+.chat-fill-enter-active {
+  transition: clip-path 0.5s ease-in-out;
+}
+
+.chat-fill-enter-from {
+  clip-path: circle(0% at 50% 100%);
+}
+
+.chat-fill-enter-to {
+  clip-path: circle(150% at 50% 100%);
+}
+
+/* 離場：維持在原畫面直到進場動畫覆蓋完成，避免中間出現空白 */
+.chat-fill-leave-active {
+  transition: none;
+}
+
+.chat-fill-leave-from,
+.chat-fill-leave-to {
+  opacity: 1;
+}
+
+/* 使用者開啟「減少動態效果」偏好時，直接跳過填滿動畫並導覽至新頁面 */
+@media (prefers-reduced-motion: reduce) {
+  .chat-fill-enter-active,
+  .chat-fill-leave-active {
+    transition: none;
+  }
+
+  .chat-fill-enter-from,
+  .chat-fill-enter-to {
+    clip-path: none;
+  }
+}

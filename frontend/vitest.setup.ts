@@ -21,6 +21,7 @@ Object.assign(globalThis, {
   shallowRef: vue.shallowRef,
   onMounted: vue.onMounted,
   onUnmounted: vue.onUnmounted,
+  onBeforeUnmount: vue.onBeforeUnmount,
   nextTick: vue.nextTick,
   defineProps: vue.defineProps,
   defineEmits: vue.defineEmits,
