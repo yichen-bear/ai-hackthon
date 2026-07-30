@@ -50,11 +50,13 @@ interface StoreOrder {
 interface RegionRequest {
   id: string
   storeName: string
-  items: { productName: string; spec?: string; quantity: number }[]
+  items: { productName: string; spec?: string; quantity: number; unitPrice?: number }[]
+  totalAmount?: number
   submittedAt: string
   status: RegionRequestStatus
   approvedAt?: string
   deliveredAt?: string
+  eta?: string
 }
 
 // ─── RBAC 角色切換（Dropdown） ───
@@ -326,10 +328,11 @@ const regionRequests = ref<RegionRequest[]>([
     id: 'rr-1',
     storeName: '7-11 信義門市',
     items: [
-      { productName: '舒潔衛生紙箱購', spec: '100抽x72包', quantity: 10 },
-      { productName: '光泉鮮乳量販組', spec: '1858ml x 6瓶', quantity: 5 },
-      { productName: '中秋限定月餅禮盒', spec: '經典蛋黃酥 x6入', quantity: 3 },
+      { productName: '舒潔衛生紙箱購', spec: '100抽x72包', quantity: 10, unitPrice: 599 },
+      { productName: '光泉鮮乳量販組', spec: '1858ml x 6瓶', quantity: 5, unitPrice: 399 },
+      { productName: '中秋限定月餅禮盒', spec: '經典蛋黃酥 x6入', quantity: 3, unitPrice: 680 },
     ],
+    totalAmount: 9025,
     submittedAt: '07/30 11:00',
     status: 'pending_approval',
   },
@@ -337,9 +340,10 @@ const regionRequests = ref<RegionRequest[]>([
     id: 'rr-2',
     storeName: '7-11 松山門市',
     items: [
-      { productName: '舒潔衛生紙箱購', spec: '100抽x72包', quantity: 15 },
-      { productName: '可口可樂量販箱', spec: '330ml x 24罐', quantity: 6 },
+      { productName: '舒潔衛生紙箱購', spec: '100抽x72包', quantity: 15, unitPrice: 599 },
+      { productName: '可口可樂量販箱', spec: '330ml x 24罐', quantity: 6, unitPrice: 249 },
     ],
+    totalAmount: 10479,
     submittedAt: '07/30 10:30',
     status: 'pending_approval',
   },
@@ -347,18 +351,21 @@ const regionRequests = ref<RegionRequest[]>([
     id: 'rr-3',
     storeName: '7-11 大安門市',
     items: [
-      { productName: '光泉鮮乳量販組', spec: '1858ml x 6瓶', quantity: 8 },
+      { productName: '光泉鮮乳量販組', spec: '1858ml x 6瓶', quantity: 8, unitPrice: 399 },
     ],
+    totalAmount: 3192,
     submittedAt: '07/29 16:00',
     status: 'delivering',
     approvedAt: '07/29 17:00',
+    eta: '07/31 14:00',
   },
   {
     id: 'rr-4',
     storeName: '7-11 公館門市',
     items: [
-      { productName: '花王洗衣精超值組', spec: '2.4kg x 3瓶', quantity: 12 },
+      { productName: '花王洗衣精超值組', spec: '2.4kg x 3瓶', quantity: 12, unitPrice: 469 },
     ],
+    totalAmount: 5628,
     submittedAt: '07/27 09:00',
     status: 'delivered',
     approvedAt: '07/27 10:00',
@@ -382,6 +389,73 @@ function getOrderTotalAmount(order: StoreOrder): number {
     return order.groupBuy.members.reduce((sum, m) => sum + m.totalAmount, 0)
   }
   return order.customers.reduce((sum, c) => sum + c.totalAmount, 0)
+}
+
+// ─── 取貨倒數（7 天期限）───
+function getDaysLeft(arrivedAt?: string): number {
+  if (!arrivedAt) return 7
+  // 簡化：用 mock 日期算差距，以 07/30 為今天
+  const today = new Date('2024-07-30')
+  const parts = arrivedAt.split(' ')[0].split('/')
+  const arrived = new Date(`2024/${parts[0]}/${parts[1]}`)
+  const diff = 7 - Math.floor((today.getTime() - arrived.getTime()) / (1000 * 60 * 60 * 24))
+  return Math.max(0, diff)
+}
+
+function getDaysLeftClass(days: number): string {
+  if (days <= 3) return 'bk__countdown--danger'
+  if (days <= 5) return 'bk__countdown--warn'
+  return 'bk__countdown--ok'
+}
+
+// ─── 配送 ETA（預計到貨）───
+function getShippingEta(order: StoreOrder): string {
+  // 模擬：發車後 2 天到貨
+  if (!order.shippingAt) return '待區域發車'
+  const parts = order.shippingAt.split(' ')[0].split('/')
+  const ship = new Date(`2024/${parts[0]}/${parts[1]}`)
+  ship.setDate(ship.getDate() + 2)
+  return `${String(ship.getMonth() + 1).padStart(2, '0')}/${String(ship.getDate()).padStart(2, '0')} 預計到貨`
+}
+
+// ─── 一鍵全部叫貨 ───
+function submitAllToRegion() {
+  const pending = filteredStoreOrders.value.filter(o => o.status === 'pending')
+  if (pending.length === 0) return
+
+  const items = pending.map(o => ({
+    productName: o.productName,
+    spec: o.spec,
+    quantity: o.totalQuantity,
+    unitPrice: o.groupBuy ? o.groupBuy.members[0]?.unitPrice : o.customers[0]?.unitPrice,
+  }))
+  const total = pending.reduce((sum, o) => sum + getOrderTotalAmount(o), 0)
+
+  regionRequests.value.unshift({
+    id: `rr-batch-${Date.now()}`,
+    storeName: selectedStore.value,
+    items,
+    totalAmount: total,
+    submittedAt: new Date().toLocaleString('zh-TW', { hour12: false, month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+    status: 'pending_approval',
+  })
+
+  pending.forEach(o => {
+    o.status = 'submitted'
+    o.submittedAt = new Date().toLocaleString('zh-TW', { hour12: false, month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
+    shippingOrders.value.unshift({ ...o, status: 'shipping' })
+  })
+  storeOrders.value = storeOrders.value.filter(o => o.status === 'pending' && o.storeName !== selectedStore.value || o.status !== 'pending')
+
+  showToast(`📤 一鍵送出 ${pending.length} 筆補貨單（總額 $${total.toLocaleString()}）至區域總部`)
+}
+
+// ─── 自動通知邏輯提示 ───
+function getAutoNotifyStatus(order: StoreOrder): string {
+  const days = getDaysLeft(order.arrivedAt)
+  if (days === 7) return '✅ 到貨已自動通知客戶取貨'
+  if (days <= 3) return `⚠️ 剩 ${days} 天！系統已自動發送催取通知`
+  return `✅ 到貨已自動通知（剩 ${days} 天取貨）`
 }
 
 // ─── Computed：區域 Tab 計數 ───
@@ -420,6 +494,7 @@ function submitToRegion(order: StoreOrder) {
     id: `rr-new-${Date.now()}`,
     storeName: order.storeName,
     items: [{ productName: order.productName, spec: order.spec, quantity: order.totalQuantity }],
+    totalAmount: getOrderTotalAmount(order),
     submittedAt: order.submittedAt,
     status: 'pending_approval',
   })
@@ -523,6 +598,14 @@ function resetDemo() {
           <div v-if="filteredStoreOrders.filter(o => o.status === 'pending').length === 0" class="bk__empty">
             <p>🎉 所有訂單已彙整送出</p>
           </div>
+          <!-- 一鍵全部叫貨 -->
+          <button
+            v-if="filteredStoreOrders.filter(o => o.status === 'pending').length > 1"
+            class="bk__btn bk__btn--batch"
+            @click="submitAllToRegion"
+          >
+            📤 一鍵全部叫貨（{{ filteredStoreOrders.filter(o => o.status === 'pending').length }} 筆）
+          </button>
           <div v-for="order in filteredStoreOrders.filter(o => o.status === 'pending')" :key="order.id" class="bk__card">
 
             <!-- 來源 + 商品 -->
@@ -594,6 +677,7 @@ function resetDemo() {
             <div class="bk__timeline">
               <span>📤 送出：{{ order.submittedAt }}</span>
               <span v-if="order.shippingAt">🚚 發車：{{ order.shippingAt }}</span>
+              <span>📦 {{ getShippingEta(order) }}</span>
             </div>
             <div class="bk__status-msg bk__status-msg--info">
               等待區域總部配送至門市...
@@ -613,6 +697,14 @@ function resetDemo() {
             </div>
             <h4 class="bk__card-title">{{ order.productName }}</h4>
             <p class="bk__card-meta">到貨時間：{{ order.arrivedAt }}</p>
+
+            <!-- 取貨倒數 + 自動通知狀態 -->
+            <div class="bk__countdown-row">
+              <span class="bk__countdown" :class="getDaysLeftClass(getDaysLeft(order.arrivedAt))">
+                ⏱️ 取貨期限剩 {{ getDaysLeft(order.arrivedAt) }} 天
+              </span>
+            </div>
+            <p class="bk__auto-notify">{{ getAutoNotifyStatus(order) }}</p>
 
             <!-- 逐位客戶通知 + 核銷 -->
             <div v-for="c in order.customers" :key="c.id" class="bk__pickup-row">
@@ -660,6 +752,9 @@ function resetDemo() {
               <span class="bk__badge bk__badge--amber">⏳ 待批准</span>
             </div>
             <p class="bk__card-meta">送出時間：{{ req.submittedAt }}</p>
+
+            <!-- 叫貨總金額 -->
+            <p v-if="req.totalAmount" class="bk__card-total">💰 本批調撥總金額：<strong>${{ req.totalAmount.toLocaleString() }}</strong></p>
 
             <!-- 叫貨明細 -->
             <div class="bk__region-items">
@@ -862,6 +957,15 @@ function resetDemo() {
   border-radius: 10px; padding: 8px 12px; line-height: 1.5;
 }
 
+/* ═══ Countdown & Auto Notify ═══ */
+.bk__countdown-row { display: flex; align-items: center; }
+.bk__countdown { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 8px; }
+.bk__countdown--ok { background: #dcfce7; color: #16a34a; }
+.bk__countdown--warn { background: #fef3c7; color: #d97706; }
+.bk__countdown--danger { background: #ffe4e6; color: #e11d48; animation: pulse-danger 1s infinite; }
+@keyframes pulse-danger { 0%,100% { opacity: 1; } 50% { opacity: .7; } }
+.bk__auto-notify { margin: 0; font-size: 11px; color: #78716c; font-style: italic; }
+
 /* ═══ Pickup Row (已到店核銷) ═══ */
 .bk__pickup-row {
   display: flex; align-items: center; justify-content: space-between;
@@ -897,6 +1001,7 @@ function resetDemo() {
 .bk__btn--primary { background: #10b981; color: #fff; }
 .bk__btn--green { background: #16a34a; color: #fff; }
 .bk__btn--outline { background: transparent; border: 1.5px solid #10b981; color: #10b981; margin-bottom: 8px; }
+.bk__btn--batch { background: linear-gradient(135deg, #10b981, #0d9488); color: #fff; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(16,185,129,.3); }
 
 .bk__btn-sm {
   padding: 6px 10px; border-radius: 8px; font-size: 11px;
