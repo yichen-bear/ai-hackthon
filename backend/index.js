@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const authRouter = require('./routes/auth');
+const aiChatRouter = require('./routes/aiChat');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -22,6 +23,9 @@ app.use(cookieParser());
 
 // 掛載認證路由
 app.use('/api/auth', authRouter);
+
+// 掛載 AI 聊天表單助手路由
+app.use('/api/ai-chat', aiChatRouter);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Hello from backend!' });
