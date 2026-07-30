@@ -1,21 +1,14 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+useHead({ htmlAttrs: { lang: 'zh-TW' } })
 
-useHead({
-  htmlAttrs: { lang: 'zh-TW' },
-})
-
-// ─── Types（對齊客戶端 PreOrderShelf / GroupBuyHub） ───
-type ProductCategory = 'festival' | 'famous' | 'limited' | 'exclusive'
-type GroupCategory = 'daily' | 'fresh' | 'beverage' | 'solo'
+// ─── Types ───
 type OrderSource = 'preorder' | 'groupbuy'
-type ConsultStatus = 'pending' | 'accepted' | 'rejected'
-type OrderStatus = 'confirmed' | 'preparing' | 'ready' | 'shipped' | 'completed' | 'cancelled'
-type GroupBuyStatus = 'open' | 'reached' | 'closed'
+type StoreOrderStatus = 'pending' | 'submitted' | 'shipping' | 'arrived' | 'notified' | 'completed'
+type RegionRequestStatus = 'pending_approval' | 'approved' | 'delivering' | 'delivered'
 
-interface IncomingOrder {
+interface CustomerOrder {
   id: string
-  feedbackNo: string
   source: OrderSource
   contactName: string
   contactPhone: string
@@ -25,53 +18,61 @@ interface IncomingOrder {
   unitPrice: number
   totalAmount: number
   paymentMethod: string
-  pickupStore: string
   aiNote: string
-  status: ConsultStatus
   createdAt: string
 }
 
-interface ManagedOrder {
-  id: string
-  orderNo: string
-  source: OrderSource
-  contactName: string
-  contactPhone: string
-  productName: string
-  spec?: string
-  quantity: number
-  totalAmount: number
-  paymentMethod: string
-  pickupStore: string
-  status: OrderStatus
-  orderTime: string
-  shipTime?: string
-  completeTime?: string
-}
-
-interface GroupBuyCampaign {
+interface GroupBuyOrder {
   id: string
   productName: string
   spec: string
-  soloPrice: number
-  groupPrice: number
-  originalPrice: number
-  currentMembers: number
   targetMembers: number
-  category: GroupCategory
-  storeName: string
-  deadline: string
-  status: GroupBuyStatus
+  currentMembers: number
+  members: CustomerOrder[]
+  isForceGrouped: boolean
 }
 
-// ─── Tab 狀態 ───
-const activeTab = ref<number>(0)
-const tabs = ['叫貨訂單', '出貨管理', '團購進度']
+interface StoreOrder {
+  id: string
+  storeName: string
+  source: OrderSource
+  productName: string
+  spec?: string
+  totalQuantity: number
+  customers: CustomerOrder[]
+  groupBuy?: GroupBuyOrder
+  status: StoreOrderStatus
+  submittedAt?: string
+  shippingAt?: string
+  arrivedAt?: string
+}
 
-// ─── Toast 系統 ───
+interface RegionRequest {
+  id: string
+  storeName: string
+  items: { productName: string; spec?: string; quantity: number }[]
+  submittedAt: string
+  status: RegionRequestStatus
+  approvedAt?: string
+  deliveredAt?: string
+}
+
+// ─── RBAC 角色切換（Dropdown） ───
+type ViewRole = 'store' | 'region'
+interface RoleOption {
+  key: ViewRole
+  label: string
+  desc: string
+}
+const roleOptions: RoleOption[] = [
+  { key: 'store', label: '🏪 7-11 信義門市', desc: '門市店長 — 可查看個資、操作接單叫貨' },
+  { key: 'region', label: '🏢 台北信義區 區域總部', desc: '區經理 — 去個資化、批准調撥物流' },
+]
+const currentRole = ref<ViewRole>('store')
+
+// ─── Toast ───
 const toastMessage = ref('')
 let toastTimer: ReturnType<typeof setTimeout> | null = null
-
 function showToast(msg: string) {
   toastMessage.value = msg
   if (toastTimer) clearTimeout(toastTimer)
@@ -79,228 +80,262 @@ function showToast(msg: string) {
 }
 
 // ─── 工具函數 ───
-function getSourceLabel(source: OrderSource): string {
-  return { preorder: 'i預購', groupbuy: 'i划算' }[source]
-}
-function getSourceIcon(source: OrderSource): string {
-  return { preorder: '🏪', groupbuy: '🛒' }[source]
-}
-function getOrderStatusLabel(status: OrderStatus): string {
-  return {
-    confirmed: '已確認',
-    preparing: '備貨中',
-    ready: '可取貨',
-    shipped: '已出貨',
-    completed: '已完成',
-    cancelled: '已取消',
-  }[status]
-}
-function getGroupStatusLabel(status: GroupBuyStatus): string {
-  return { open: '開團中', reached: '已成團', closed: '已結團' }[status]
-}
+function getSourceLabel(s: OrderSource) { return s === 'preorder' ? 'i預購' : 'i划算' }
+function getSourceIcon(s: OrderSource) { return s === 'preorder' ? '🏪' : '🛒' }
 
-// ─── Mock 資料：叫貨訂單（客戶下單/預購後產生） ───
-const incomingOrders = ref<IncomingOrder[]>([
+// ─── Mock：門市訂單（客戶下單/團購後門市收到） ───
+const storeOrders = ref<StoreOrder[]>([
   {
-    id: 'ic-1',
-    feedbackNo: 'FB202407300010',
-    source: 'preorder',
-    contactName: '王小姐',
-    contactPhone: '0912-***-456',
-    productName: '中秋限定月餅禮盒',
-    spec: '經典蛋黃酥 x6 入',
-    quantity: 2,
-    unitPrice: 680,
-    totalAmount: 1360,
-    paymentMethod: '💳 線上付款（OPEN錢包）',
-    pickupStore: '7-11 信義門市',
-    aiNote: '🤖 AI 標註：中秋送禮需求 / VIP 會員 / 建議優先備貨',
-    status: 'pending',
-    createdAt: '2024-07-30 10:15',
-  },
-  {
-    id: 'ic-2',
-    feedbackNo: 'FB202407300011',
+    id: 'so-1',
+    storeName: '7-11 信義門市',
     source: 'groupbuy',
-    contactName: '林先生',
-    contactPhone: '0933-***-789',
     productName: '舒潔衛生紙箱購',
-    spec: '100 抽 x 72 包',
-    quantity: 1,
-    unitPrice: 599,
-    totalAmount: 599,
-    paymentMethod: '🏪 取貨付款',
-    pickupStore: '7-11 松山門市',
-    aiNote: '🤖 AI 標註：團購訂單 / 已達成團門檻 / 大型包裹注意取貨空間',
+    spec: '100抽 x 72包',
+    totalQuantity: 10,
+    groupBuy: {
+      id: 'gb-1',
+      productName: '舒潔衛生紙箱購',
+      spec: '100抽 x 72包',
+      targetMembers: 5,
+      currentMembers: 3,
+      members: [
+        { id: 'c-1', source: 'groupbuy', contactName: '王小姐', contactPhone: '0912-345-678', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 4, unitPrice: 599, totalAmount: 2396, paymentMethod: '🏪 取貨付款', aiNote: '🤖 社區團購常客', createdAt: '07/28 10:15' },
+        { id: 'c-2', source: 'groupbuy', contactName: '林先生', contactPhone: '0933-456-789', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 3, unitPrice: 599, totalAmount: 1797, paymentMethod: '🏪 取貨付款', aiNote: '🤖 首次參團', createdAt: '07/28 14:30' },
+        { id: 'c-3', source: 'groupbuy', contactName: '陳媽媽', contactPhone: '0922-567-890', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 3, unitPrice: 599, totalAmount: 1797, paymentMethod: '🏪 取貨付款', aiNote: '🤖 家庭大量購買', createdAt: '07/29 09:00' },
+      ],
+      isForceGrouped: false,
+    },
+    customers: [],
     status: 'pending',
-    createdAt: '2024-07-30 11:30',
   },
   {
-    id: 'ic-3',
-    feedbackNo: 'FB202407300012',
+    id: 'so-2',
+    storeName: '7-11 信義門市',
+    source: 'groupbuy',
+    productName: '光泉鮮乳量販組',
+    spec: '1858ml x 6瓶',
+    totalQuantity: 5,
+    groupBuy: {
+      id: 'gb-2',
+      productName: '光泉鮮乳量販組',
+      spec: '1858ml x 6瓶',
+      targetMembers: 5,
+      currentMembers: 5,
+      members: [
+        { id: 'c-4', source: 'groupbuy', contactName: '張同學', contactPhone: '0955-678-901', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '🤖 學生優惠', createdAt: '07/27 16:00' },
+        { id: 'c-5', source: 'groupbuy', contactName: '李太太', contactPhone: '0966-789-012', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/27 18:00' },
+        { id: 'c-6', source: 'groupbuy', contactName: '趙先生', contactPhone: '0977-890-123', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '💳 線上付款', aiNote: '', createdAt: '07/28 08:00' },
+        { id: 'c-7', source: 'groupbuy', contactName: '孫小姐', contactPhone: '0988-901-234', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/28 10:00' },
+        { id: 'c-8', source: 'groupbuy', contactName: '周媽媽', contactPhone: '0911-012-345', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '🤖 冷藏品需快速通知', createdAt: '07/28 12:00' },
+      ],
+      isForceGrouped: false,
+    },
+    customers: [],
+    status: 'pending',
+  },
+  {
+    id: 'so-3',
+    storeName: '7-11 信義門市',
     source: 'preorder',
-    contactName: '陳媽媽',
-    contactPhone: '0922-***-012',
+    productName: '中秋限定月餅禮盒',
+    spec: '經典蛋黃酥 x6入',
+    totalQuantity: 3,
+    customers: [
+      { id: 'c-9', source: 'preorder', contactName: '黃經理', contactPhone: '0912-111-222', productName: '中秋限定月餅禮盒', spec: '經典蛋黃酥 x6入', quantity: 2, unitPrice: 680, totalAmount: 1360, paymentMethod: '💳 線上付款（OPEN錢包）', aiNote: '🤖 VIP 企業訂單 / 送禮需求', createdAt: '07/29 15:30' },
+      { id: 'c-10', source: 'preorder', contactName: '吳小姐', contactPhone: '0933-222-333', productName: '中秋限定月餅禮盒', spec: '經典蛋黃酥 x6入', quantity: 1, unitPrice: 680, totalAmount: 680, paymentMethod: '💳 線上付款（信用卡）', aiNote: '🤖 自用', createdAt: '07/30 09:00' },
+    ],
+    status: 'pending',
+  },
+])
+
+// ─── Mock：已提交至區域 / 配送中 / 已到店 ───
+const shippingOrders = ref<StoreOrder[]>([
+  {
+    id: 'so-ship-1',
+    storeName: '7-11 信義門市',
+    source: 'groupbuy',
+    productName: '可口可樂量販箱',
+    spec: '330ml x 24罐',
+    totalQuantity: 8,
+    customers: [
+      { id: 'c-20', source: 'groupbuy', contactName: '鄭先生', contactPhone: '0955-333-444', productName: '可口可樂量販箱', quantity: 3, unitPrice: 249, totalAmount: 747, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/26' },
+      { id: 'c-21', source: 'groupbuy', contactName: '馬太太', contactPhone: '0966-444-555', productName: '可口可樂量販箱', quantity: 5, unitPrice: 249, totalAmount: 1245, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/26' },
+    ],
+    status: 'shipping',
+    submittedAt: '07/27 14:00',
+    shippingAt: '07/28 09:00',
+  },
+  {
+    id: 'so-ship-2',
+    storeName: '7-11 信義門市',
+    source: 'preorder',
     productName: '日本A5和牛禮盒',
     spec: '300g 霜降片',
-    quantity: 1,
-    unitPrice: 1980,
-    totalAmount: 1980,
-    paymentMethod: '💳 線上付款（信用卡）',
-    pickupStore: '7-11 大安門市',
-    aiNote: '🤖 AI 標註：限量商品 / 冷凍配送 / 預計到貨 8/5',
-    status: 'pending',
-    createdAt: '2024-07-30 14:20',
+    totalQuantity: 2,
+    customers: [
+      { id: 'c-22', source: 'preorder', contactName: '高先生', contactPhone: '0977-555-666', productName: '日本A5和牛禮盒', spec: '300g 霜降片', quantity: 2, unitPrice: 1980, totalAmount: 3960, paymentMethod: '💳 線上付款', aiNote: '🤖 冷凍配送', createdAt: '07/25' },
+    ],
+    status: 'shipping',
+    submittedAt: '07/26 10:00',
+    shippingAt: '07/27 15:00',
   },
+])
+
+const arrivedOrders = ref<StoreOrder[]>([
   {
-    id: 'ic-4',
-    feedbackNo: 'FB202407300013',
+    id: 'so-arr-1',
+    storeName: '7-11 信義門市',
     source: 'groupbuy',
-    contactName: '張同學',
-    contactPhone: '0955-***-321',
-    productName: '光泉鮮乳量販組',
-    spec: '1858ml x 6 瓶',
-    quantity: 1,
-    unitPrice: 399,
-    totalAmount: 399,
-    paymentMethod: '🏪 取貨付款',
-    pickupStore: '7-11 公館門市',
-    aiNote: '🤖 AI 標註：冷藏商品 / 保存期限短 / 建議到貨即通知',
-    status: 'pending',
-    createdAt: '2024-07-30 16:45',
+    productName: '花王洗衣精超值組',
+    spec: '2.4kg x 3瓶',
+    totalQuantity: 12,
+    customers: [
+      { id: 'c-30', source: 'groupbuy', contactName: '劉媽媽', contactPhone: '0911-666-777', productName: '花王洗衣精超值組', quantity: 2, unitPrice: 469, totalAmount: 938, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/22' },
+      { id: 'c-31', source: 'groupbuy', contactName: '許先生', contactPhone: '0922-777-888', productName: '花王洗衣精超值組', quantity: 3, unitPrice: 469, totalAmount: 1407, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/22' },
+      { id: 'c-32', source: 'groupbuy', contactName: '蔡小姐', contactPhone: '0933-888-999', productName: '花王洗衣精超值組', quantity: 2, unitPrice: 469, totalAmount: 938, paymentMethod: '💳 線上付款', aiNote: '', createdAt: '07/23' },
+    ],
+    status: 'arrived',
+    submittedAt: '07/24 10:00',
+    shippingAt: '07/25 08:00',
+    arrivedAt: '07/27 14:00',
   },
 ])
 
-// ─── Mock 資料：出貨管理（已接受的訂單） ───
-const managedOrders = ref<ManagedOrder[]>([
+// ─── Mock：區域總部收到的叫貨請求 ───
+const regionRequests = ref<RegionRequest[]>([
   {
-    id: 'mo-1',
-    orderNo: 'BK-2024-0001',
-    source: 'preorder',
-    contactName: '趙先生',
-    contactPhone: '0966-***-888',
-    productName: '法式甜點禮盒',
-    spec: '馬卡龍 12 入',
-    quantity: 1,
-    totalAmount: 880,
-    paymentMethod: '💳 線上付款',
-    pickupStore: '7-11 忠孝門市',
-    status: 'preparing',
-    orderTime: '2024-07-29 18:00',
+    id: 'rr-1',
+    storeName: '7-11 信義門市',
+    items: [
+      { productName: '舒潔衛生紙箱購', spec: '100抽x72包', quantity: 10 },
+      { productName: '光泉鮮乳量販組', spec: '1858ml x 6瓶', quantity: 5 },
+      { productName: '中秋限定月餅禮盒', spec: '經典蛋黃酥 x6入', quantity: 3 },
+    ],
+    submittedAt: '07/30 11:00',
+    status: 'pending_approval',
   },
   {
-    id: 'mo-2',
-    orderNo: 'BK-2024-0002',
-    source: 'groupbuy',
-    contactName: '孫太太',
-    contactPhone: '0911-***-555',
-    productName: '有機蔬菜箱',
-    spec: '綜合時蔬 5kg',
-    quantity: 1,
-    totalAmount: 450,
-    paymentMethod: '🏪 取貨付款',
-    pickupStore: '7-11 內湖門市',
-    status: 'ready',
-    orderTime: '2024-07-29 09:30',
-    shipTime: '2024-07-30 08:00',
+    id: 'rr-2',
+    storeName: '7-11 松山門市',
+    items: [
+      { productName: '舒潔衛生紙箱購', spec: '100抽x72包', quantity: 15 },
+      { productName: '可口可樂量販箱', spec: '330ml x 24罐', quantity: 6 },
+    ],
+    submittedAt: '07/30 10:30',
+    status: 'pending_approval',
+  },
+  {
+    id: 'rr-3',
+    storeName: '7-11 大安門市',
+    items: [
+      { productName: '光泉鮮乳量販組', spec: '1858ml x 6瓶', quantity: 8 },
+    ],
+    submittedAt: '07/29 16:00',
+    status: 'delivering',
+    approvedAt: '07/29 17:00',
+  },
+  {
+    id: 'rr-4',
+    storeName: '7-11 公館門市',
+    items: [
+      { productName: '花王洗衣精超值組', spec: '2.4kg x 3瓶', quantity: 12 },
+    ],
+    submittedAt: '07/27 09:00',
+    status: 'delivered',
+    approvedAt: '07/27 10:00',
+    deliveredAt: '07/28 14:00',
   },
 ])
 
-// ─── Mock 資料：團購進度 ───
-const groupBuyCampaigns = ref<GroupBuyCampaign[]>([
-  { id: 'g-1', productName: '舒潔衛生紙箱購', spec: '100抽x72包', soloPrice: 699, groupPrice: 599, originalPrice: 799, currentMembers: 18, targetMembers: 20, category: 'daily', storeName: '7-11 松山門市', deadline: '2024-08-05', status: 'open' },
-  { id: 'g-2', productName: '光泉鮮乳量販組', spec: '1858ml x 6瓶', soloPrice: 459, groupPrice: 399, originalPrice: 520, currentMembers: 10, targetMembers: 10, category: 'fresh', storeName: '7-11 公館門市', deadline: '2024-08-03', status: 'reached' },
-  { id: 'g-3', productName: '可口可樂量販箱', spec: '330ml x 24罐', soloPrice: 299, groupPrice: 249, originalPrice: 360, currentMembers: 5, targetMembers: 15, category: 'beverage', storeName: '7-11 信義門市', deadline: '2024-08-10', status: 'open' },
-  { id: 'g-4', productName: '花王洗衣精超值組', spec: '2.4kg x 3瓶', soloPrice: 549, groupPrice: 469, originalPrice: 650, currentMembers: 12, targetMembers: 12, category: 'daily', storeName: '7-11 大安門市', deadline: '2024-08-01', status: 'reached' },
-])
+// ─── Computed：門市 Tab 計數 ───
+const pendingCount = computed(() => storeOrders.value.filter(o => o.status === 'pending').length)
+const shippingCount = computed(() => shippingOrders.value.length)
+const arrivedCount = computed(() => arrivedOrders.value.reduce((sum, o) => sum + o.customers.length, 0))
 
-// ─── Computed Stats ───
-const pendingOrderCount = computed(() =>
-  incomingOrders.value.filter(o => o.status === 'pending').length
-)
-const activeShipCount = computed(() =>
-  managedOrders.value.filter(o => !['completed', 'cancelled'].includes(o.status)).length
-)
-const reachedGroupCount = computed(() =>
-  groupBuyCampaigns.value.filter(g => g.status === 'reached').length
-)
+// ─── Computed：區域 Tab 計數 ───
+const regionPendingCount = computed(() => regionRequests.value.filter(r => r.status === 'pending_approval').length)
+const regionDeliveringCount = computed(() => regionRequests.value.filter(r => r.status === 'delivering').length)
+const regionDeliveredCount = computed(() => regionRequests.value.filter(r => r.status === 'delivered').length)
 
-let orderCounter = 3
+// ─── Tab 狀態 ───
+const storeTab = ref(0)
+const regionTab = ref(0)
 
-// ─── Actions：叫貨訂單 → 接受 ───
-function acceptOrder(incoming: IncomingOrder) {
-  const newOrder: ManagedOrder = {
-    id: `mo-${orderCounter}`,
-    orderNo: `BK-2024-${String(orderCounter).padStart(4, '0')}`,
-    source: incoming.source,
-    contactName: incoming.contactName,
-    contactPhone: incoming.contactPhone,
-    productName: incoming.productName,
-    spec: incoming.spec,
-    quantity: incoming.quantity,
-    totalAmount: incoming.totalAmount,
-    paymentMethod: incoming.paymentMethod,
-    pickupStore: incoming.pickupStore,
-    status: 'confirmed',
-    orderTime: new Date().toLocaleString('zh-TW', { hour12: false }),
-  }
-  orderCounter++
-  managedOrders.value.unshift(newOrder)
-  incoming.status = 'accepted'
-  showToast(`✅ 已接受訂單：${incoming.contactName} — ${incoming.productName}`)
+// ─── 個資遮蔽（區域模式不顯示） ───
+function maskName(name: string): string {
+  if (currentRole.value === 'store') return name
+  return name[0] + '○'.repeat(name.length - 1)
+}
+function maskPhone(phone: string): string {
+  if (currentRole.value === 'store') return phone
+  return '****-***-***'
 }
 
-function rejectOrder(incoming: IncomingOrder) {
-  incoming.status = 'rejected'
-  showToast(`❌ 已拒絕：${incoming.contactName} 的訂單`)
-}
-
-// ─── Actions：出貨管理 ───
-function advanceOrderStatus(order: ManagedOrder) {
-  const flow: OrderStatus[] = ['confirmed', 'preparing', 'ready', 'shipped', 'completed']
-  const idx = flow.indexOf(order.status)
-  if (idx >= 0 && idx < flow.length - 1) {
-    order.status = flow[idx + 1]
-    if (order.status === 'shipped') {
-      order.shipTime = new Date().toLocaleString('zh-TW', { hour12: false })
-    }
-    if (order.status === 'completed') {
-      order.completeTime = new Date().toLocaleString('zh-TW', { hour12: false })
-      showToast(`🎉 訂單完成：${order.contactName} 已取貨`)
-    } else {
-      showToast(`📦 狀態更新：${getOrderStatusLabel(order.status)}`)
-    }
+// ─── 門市 Actions ───
+function forceGroup(order: StoreOrder) {
+  if (order.groupBuy) {
+    order.groupBuy.isForceGrouped = true
+    order.groupBuy.currentMembers = order.groupBuy.targetMembers
+    showToast(`⚡ 已手動成團：${order.productName}`)
   }
 }
 
-function cancelManagedOrder(order: ManagedOrder) {
-  order.status = 'cancelled'
-  showToast(`🚫 已取消：${order.orderNo}`)
+function submitToRegion(order: StoreOrder) {
+  order.status = 'submitted'
+  order.submittedAt = new Date().toLocaleString('zh-TW', { hour12: false, month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
+  // 同步推送到區域端
+  regionRequests.value.unshift({
+    id: `rr-new-${Date.now()}`,
+    storeName: order.storeName,
+    items: [{ productName: order.productName, spec: order.spec, quantity: order.totalQuantity }],
+    submittedAt: order.submittedAt,
+    status: 'pending_approval',
+  })
+  // 移入配送中列表
+  shippingOrders.value.unshift({ ...order, status: 'shipping' })
+  storeOrders.value = storeOrders.value.filter(o => o.id !== order.id)
+  showToast(`📤 已彙整送出補貨單至區域總部：${order.productName} x ${order.totalQuantity}`)
 }
 
-// ─── Actions：團購管理 ───
-function closeGroup(campaign: GroupBuyCampaign) {
-  campaign.status = 'closed'
-  showToast(`🔒 已結團：${campaign.productName}`)
+function notifyCustomer(order: StoreOrder, customer: CustomerOrder) {
+  showToast(`📱 已通知 ${customer.contactName} 前來取貨：${customer.productName}`)
 }
 
-function getProgressPercent(campaign: GroupBuyCampaign): number {
-  if (campaign.targetMembers <= 0) return 100
-  return Math.min((campaign.currentMembers / campaign.targetMembers) * 100, 100)
+function confirmPickup(order: StoreOrder, customer: CustomerOrder) {
+  order.customers = order.customers.filter(c => c.id !== customer.id)
+  if (order.customers.length === 0) {
+    arrivedOrders.value = arrivedOrders.value.filter(o => o.id !== order.id)
+  }
+  showToast(`✅ 核銷完成：${customer.contactName} — ${customer.productName}`)
+}
+
+// ─── 區域 Actions ───
+function approveRequest(request: RegionRequest) {
+  request.status = 'delivering'
+  request.approvedAt = new Date().toLocaleString('zh-TW', { hour12: false, month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
+  // 同步門市狀態
+  const matchShip = shippingOrders.value.find(o => o.storeName === request.storeName && request.items.some(i => i.productName === o.productName))
+  if (matchShip) matchShip.shippingAt = request.approvedAt
+  showToast(`🚚 已批准調撥並通知物流：${request.storeName}`)
+}
+
+function markDelivered(request: RegionRequest) {
+  request.status = 'delivered'
+  request.deliveredAt = new Date().toLocaleString('zh-TW', { hour12: false, month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
+  // 門市端移入已到店
+  const matchShip = shippingOrders.value.find(o => o.storeName === request.storeName && request.items.some(i => i.productName === o.productName))
+  if (matchShip) {
+    matchShip.status = 'arrived'
+    matchShip.arrivedAt = request.deliveredAt
+    arrivedOrders.value.unshift(matchShip)
+    shippingOrders.value = shippingOrders.value.filter(o => o.id !== matchShip.id)
+  }
+  showToast(`✅ 已送達門市：${request.storeName}`)
 }
 
 // ─── Demo 重設 ───
 function resetDemo() {
-  incomingOrders.value.forEach(o => { o.status = 'pending' })
-  managedOrders.value = [
-    { id: 'mo-1', orderNo: 'BK-2024-0001', source: 'preorder', contactName: '趙先生', contactPhone: '0966-***-888', productName: '法式甜點禮盒', spec: '馬卡龍 12 入', quantity: 1, totalAmount: 880, paymentMethod: '💳 線上付款', pickupStore: '7-11 忠孝門市', status: 'preparing', orderTime: '2024-07-29 18:00' },
-    { id: 'mo-2', orderNo: 'BK-2024-0002', source: 'groupbuy', contactName: '孫太太', contactPhone: '0911-***-555', productName: '有機蔬菜箱', spec: '綜合時蔬 5kg', quantity: 1, totalAmount: 450, paymentMethod: '🏪 取貨付款', pickupStore: '7-11 內湖門市', status: 'ready', orderTime: '2024-07-29 09:30', shipTime: '2024-07-30 08:00' },
-  ]
-  groupBuyCampaigns.value.forEach(g => {
-    g.status = g.currentMembers >= g.targetMembers ? 'reached' : 'open'
-  })
-  orderCounter = 3
-  showToast('🔄 已重設所有資料')
+  location.reload()
 }
 </script>
 
@@ -308,260 +343,261 @@ function resetDemo() {
   <div class="w-full max-w-[430px] mx-auto min-h-screen bg-[#fafaf9] relative flex flex-col pb-20 shadow-xl border-x border-[#e2e8f0]">
 
     <!-- ═══ Header ═══ -->
-    <header class="ba__header">
-      <div class="ba__header-left">
-        <span>🛒 i預購 / i划算 賣家端</span>
-      </div>
-      <div class="ba__header-center">
-        <NuxtLink
-          class="px-3 py-1 bg-[#ecfdf5] text-[#10b981] border border-[#10b981]/20 rounded-full text-xs font-bold inline-flex items-center gap-1 no-underline"
-          to="/booking"
-        >
-          📱 切換至用戶端
-        </NuxtLink>
-      </div>
-      <div class="ba__header-right">
-        <span>👤 賣家中心</span>
-      </div>
+    <header class="bk__header">
+      <span class="bk__header-title">🛒 i預購 / i划算 賣家端</span>
+      <NuxtLink class="bk__header-link" to="/booking">📱 用戶端</NuxtLink>
     </header>
 
-    <main class="ba__content" role="main">
+    <!-- ═══ RBAC 角色 Dropdown ═══ -->
+    <div class="bk__rbac">
+      <select v-model="currentRole" class="bk__rbac-select" aria-label="角色切換">
+        <option v-for="role in roleOptions" :key="role.key" :value="role.key">
+          {{ role.label }}
+        </option>
+      </select>
+      <p class="bk__rbac-desc">{{ roleOptions.find(r => r.key === currentRole)?.desc }}</p>
+    </div>
 
-      <!-- ═══ 頂部統計 ═══ -->
-      <section class="ba__stats" aria-label="統計概覽">
-        <div class="ba__stat-badge ba__stat-badge--red">
-          <span>🔴 待處理 ({{ pendingOrderCount }})</span>
-        </div>
-        <div class="ba__stat-badge ba__stat-badge--blue">
-          <span>📦 出貨中 ({{ activeShipCount }})</span>
-        </div>
-        <div class="ba__stat-badge ba__stat-badge--green">
-          <span>✅ 已成團 ({{ reachedGroupCount }})</span>
-        </div>
-      </section>
+    <main class="bk__content" role="main">
 
-      <!-- ═══ Tab ═══ -->
-      <nav class="ba__tabs" role="tablist" aria-label="賣家管理功能切換">
-        <button
-          v-for="(tab, idx) in tabs"
-          :key="tab"
-          role="tab"
-          :aria-selected="activeTab === idx"
-          :aria-controls="`panel-${idx}`"
-          class="ba__tab"
-          :class="{ 'ba__tab--active': activeTab === idx }"
-          @click="activeTab = idx"
-        >
-          {{ ['🛒', '📦', '👥'][idx] }} {{ tab }}
-        </button>
-      </nav>
+      <!-- ════════════════════════════════════════════ -->
+      <!-- ═══ 門市視角 ═══ -->
+      <!-- ════════════════════════════════════════════ -->
+      <template v-if="currentRole === 'store'">
 
-      <!-- ═══ Tab 1：叫貨訂單 ═══ -->
-      <section v-show="activeTab === 0" id="panel-0" role="tabpanel" aria-label="客戶下單/預購訂單">
-        <div v-if="incomingOrders.filter(o => o.status === 'pending').length === 0" class="ba__empty">
-          <p>🎉 目前沒有待處理的訂單</p>
-        </div>
-        <div v-for="order in incomingOrders" :key="order.id" class="ba__card">
-          <div class="ba__card-row">
-            <span class="ba__card-feedbackno">{{ order.feedbackNo }}</span>
-            <span
-              class="ba__badge"
-              :class="{
-                'ba__badge--amber': order.status === 'pending',
-                'ba__badge--green': order.status === 'accepted',
-                'ba__badge--gray': order.status === 'rejected',
-              }"
-            >
-              {{ order.status === 'pending' ? '⏳ 待處理' : order.status === 'accepted' ? '✅ 已接受' : '❌ 已拒絕' }}
-            </span>
-          </div>
-
-          <!-- 來源標籤 -->
-          <div class="ba__source-tag">
-            {{ getSourceIcon(order.source) }} {{ getSourceLabel(order.source) }}
-          </div>
-
-          <!-- 客戶資訊 -->
-          <div class="ba__customer-info">
-            <span class="ba__customer-name">👤 {{ order.contactName }}</span>
-            <span class="ba__customer-phone">📞 {{ order.contactPhone }}</span>
-          </div>
-
-          <!-- 商品明細 -->
-          <div class="ba__product-detail">
-            <p class="ba__product-name">{{ order.productName }}</p>
-            <p v-if="order.spec" class="ba__product-spec">規格：{{ order.spec }}</p>
-            <div class="ba__product-row">
-              <span>數量：{{ order.quantity }} 件</span>
-              <span>單價：${{ order.unitPrice }}</span>
-              <span class="ba__product-total">合計 ${{ order.totalAmount }}</span>
-            </div>
-          </div>
-
-          <!-- 付款與取貨 -->
-          <div class="ba__card-details">
-            <span>{{ order.paymentMethod }}</span>
-            <span>🏪 {{ order.pickupStore }}</span>
-          </div>
-          <div class="ba__card-details">
-            <span>🕐 {{ order.createdAt }}</span>
-          </div>
-
-          <!-- AI 標註 -->
-          <p class="ba__card-ai-note">{{ order.aiNote }}</p>
-
-          <!-- 操作 -->
-          <div v-if="order.status === 'pending'" class="ba__btn-group">
-            <button class="ba__action-btn" @click="acceptOrder(order)">
-              ✅ 接受訂單
-            </button>
-            <button class="ba__action-btn ba__action-btn--outline-red" @click="rejectOrder(order)">
-              ❌ 拒絕
-            </button>
-          </div>
-          <div v-else-if="order.status === 'accepted'" class="ba__status-msg ba__status-msg--success">
-            ✅ 已接受 — 進入出貨流程
-          </div>
-          <div v-else class="ba__status-msg ba__status-msg--warn">
-            ❌ 已拒絕此訂單
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══ Tab 2：出貨管理 ═══ -->
-      <section v-show="activeTab === 1" id="panel-1" role="tabpanel" aria-label="出貨管理">
-        <div v-if="managedOrders.length === 0" class="ba__empty">
-          <p>📦 尚無進行中訂單</p>
-        </div>
-        <div v-for="order in managedOrders" :key="order.id" class="ba__card">
-          <div class="ba__card-row">
-            <span class="ba__card-orderno">{{ order.orderNo }}</span>
-            <span
-              class="ba__badge"
-              :class="{
-                'ba__badge--blue': ['confirmed', 'preparing'].includes(order.status),
-                'ba__badge--amber': order.status === 'ready',
-                'ba__badge--green': ['shipped', 'completed'].includes(order.status),
-                'ba__badge--gray': order.status === 'cancelled',
-              }"
-            >
-              {{ getOrderStatusLabel(order.status) }}
-            </span>
-          </div>
-
-          <div class="ba__source-tag">
-            {{ getSourceIcon(order.source) }} {{ getSourceLabel(order.source) }}
-          </div>
-
-          <div class="ba__customer-info">
-            <span class="ba__customer-name">👤 {{ order.contactName }}</span>
-            <span class="ba__customer-phone">📞 {{ order.contactPhone }}</span>
-          </div>
-
-          <div class="ba__product-detail">
-            <p class="ba__product-name">{{ order.productName }}</p>
-            <p v-if="order.spec" class="ba__product-spec">規格：{{ order.spec }}</p>
-            <div class="ba__product-row">
-              <span>數量：{{ order.quantity }} 件</span>
-              <span class="ba__product-total">${{ order.totalAmount }}</span>
-            </div>
-          </div>
-
-          <div class="ba__card-details">
-            <span>{{ order.paymentMethod }}</span>
-            <span>🏪 {{ order.pickupStore }}</span>
-          </div>
-
-          <div class="ba__card-details ba__card-details--small">
-            <span>📝 下單 {{ order.orderTime }}</span>
-            <span v-if="order.shipTime">🚚 出貨 {{ order.shipTime }}</span>
-            <span v-if="order.completeTime">✅ 完成 {{ order.completeTime }}</span>
-          </div>
-
-          <!-- 狀態推進 -->
-          <div v-if="!['completed', 'cancelled'].includes(order.status)" class="ba__btn-group">
-            <button class="ba__action-btn" @click="advanceOrderStatus(order)">
-              ▶️ {{ order.status === 'confirmed' ? '開始備貨' : order.status === 'preparing' ? '備貨完成' : order.status === 'ready' ? '通知取貨' : '確認完成' }}
-            </button>
-            <button class="ba__action-btn ba__action-btn--outline-red" @click="cancelManagedOrder(order)">
-              取消
-            </button>
-          </div>
-          <div v-else-if="order.status === 'completed'" class="ba__status-msg ba__status-msg--success">
-            🎉 訂單完成
-          </div>
-          <div v-else class="ba__status-msg ba__status-msg--warn">
-            🚫 訂單已取消
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══ Tab 3：團購進度 ═══ -->
-      <section v-show="activeTab === 2" id="panel-2" role="tabpanel" aria-label="團購成團進度">
-        <div v-for="campaign in groupBuyCampaigns" :key="campaign.id" class="ba__card">
-          <div class="ba__card-row">
-            <span class="ba__card-title" style="margin:0">{{ campaign.productName }}</span>
-            <span
-              class="ba__badge"
-              :class="{
-                'ba__badge--amber': campaign.status === 'open',
-                'ba__badge--green': campaign.status === 'reached',
-                'ba__badge--gray': campaign.status === 'closed',
-              }"
-            >
-              {{ getGroupStatusLabel(campaign.status) }}
-            </span>
-          </div>
-
-          <p class="ba__card-meta">{{ campaign.spec }} · 🏪 {{ campaign.storeName }}</p>
-
-          <!-- 價格 -->
-          <div class="ba__price-row">
-            <span class="ba__price-solo">一人享 ${{ campaign.soloPrice }}</span>
-            <span class="ba__price-group">揪團 ${{ campaign.groupPrice }}</span>
-            <span class="ba__price-original">${{ campaign.originalPrice }}</span>
-          </div>
-
-          <!-- 進度條 -->
-          <div class="ba__progress-section">
-            <div class="ba__progress-bar">
-              <div
-                class="ba__progress-fill"
-                :style="{ width: `${getProgressPercent(campaign)}%` }"
-                :class="{ 'ba__progress-fill--full': campaign.currentMembers >= campaign.targetMembers }"
-              ></div>
-            </div>
-            <div class="ba__progress-info">
-              <span>👥 {{ campaign.currentMembers }} / {{ campaign.targetMembers }} 人</span>
-              <span>📅 截止 {{ campaign.deadline }}</span>
-            </div>
-          </div>
-
-          <!-- 操作 -->
-          <button
-            v-if="campaign.status !== 'closed'"
-            class="ba__action-btn"
-            :class="campaign.status === 'reached' ? '' : 'ba__action-btn--outline'"
-            @click="closeGroup(campaign)"
-          >
-            {{ campaign.status === 'reached' ? '🔒 結團出貨' : '⏹️ 提前結團' }}
+        <!-- 門市 Tab -->
+        <nav class="bk__tabs" role="tablist" aria-label="門市管理">
+          <button class="bk__tab" :class="{ 'bk__tab--active': storeTab === 0 }" @click="storeTab = 0">
+            📋 待彙整叫貨 ({{ pendingCount }})
           </button>
-          <div v-else class="ba__status-msg ba__status-msg--info">
-            🔒 已結團 — 進入出貨流程
+          <button class="bk__tab" :class="{ 'bk__tab--active': storeTab === 1 }" @click="storeTab = 1">
+            🚚 總部配送中 ({{ shippingCount }})
+          </button>
+          <button class="bk__tab" :class="{ 'bk__tab--active': storeTab === 2 }" @click="storeTab = 2">
+            🏪 已到店可取貨 ({{ arrivedCount }})
+          </button>
+        </nav>
+
+        <!-- ═══ 門市 Tab 1：待彙整叫貨 ═══ -->
+        <section v-show="storeTab === 0" aria-label="待彙整叫貨">
+          <div v-if="storeOrders.filter(o => o.status === 'pending').length === 0" class="bk__empty">
+            <p>🎉 所有訂單已彙整送出</p>
           </div>
-        </div>
-      </section>
+          <div v-for="order in storeOrders.filter(o => o.status === 'pending')" :key="order.id" class="bk__card">
+
+            <!-- 來源 + 商品 -->
+            <div class="bk__card-top">
+              <span class="bk__source">{{ getSourceIcon(order.source) }} {{ getSourceLabel(order.source) }}</span>
+              <span class="bk__badge bk__badge--amber">⏳ 待彙整</span>
+            </div>
+            <h4 class="bk__card-title">{{ order.productName }}</h4>
+            <p v-if="order.spec" class="bk__card-meta">規格：{{ order.spec }} · 需求量：{{ order.totalQuantity }} 件</p>
+
+            <!-- 團購進度（i划算） -->
+            <div v-if="order.groupBuy" class="bk__group-progress">
+              <div class="bk__progress-bar">
+                <div class="bk__progress-fill" :style="{ width: `${(order.groupBuy.currentMembers / order.groupBuy.targetMembers) * 100}%` }"></div>
+              </div>
+              <span class="bk__progress-text">
+                👥 {{ order.groupBuy.currentMembers }} / {{ order.groupBuy.targetMembers }} 人
+                <span v-if="order.groupBuy.isForceGrouped || order.groupBuy.currentMembers >= order.groupBuy.targetMembers" class="bk__grouped-label">✓ 已成團</span>
+              </span>
+            </div>
+
+            <!-- 消費者明細 -->
+            <details class="bk__details">
+              <summary class="bk__details-summary">👤 查看消費者明細 ({{ order.groupBuy ? order.groupBuy.members.length : order.customers.length }} 人)</summary>
+              <div class="bk__customer-list">
+                <div v-for="c in (order.groupBuy ? order.groupBuy.members : order.customers)" :key="c.id" class="bk__customer-row">
+                  <span class="bk__customer-name">{{ maskName(c.contactName) }}</span>
+                  <span class="bk__customer-phone">{{ maskPhone(c.contactPhone) }}</span>
+                  <span class="bk__customer-qty">x{{ c.quantity }}</span>
+                  <span class="bk__customer-amount">${{ c.totalAmount }}</span>
+                </div>
+              </div>
+            </details>
+
+            <!-- AI 標註（第一筆有的話顯示） -->
+            <p v-if="(order.groupBuy?.members[0]?.aiNote || order.customers[0]?.aiNote)" class="bk__ai-note">
+              {{ order.groupBuy?.members[0]?.aiNote || order.customers[0]?.aiNote }}
+            </p>
+
+            <!-- 門市操作按鈕 -->
+            <div class="bk__actions">
+              <button
+                v-if="order.groupBuy && !order.groupBuy.isForceGrouped && order.groupBuy.currentMembers < order.groupBuy.targetMembers"
+                class="bk__btn bk__btn--outline"
+                @click="forceGroup(order)"
+              >
+                ⚡ 手動提前成團
+              </button>
+              <button class="bk__btn bk__btn--primary" @click="submitToRegion(order)">
+                📤 彙整並送出補貨單至區域總部
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ 門市 Tab 2：總部配送中 ═══ -->
+        <section v-show="storeTab === 1" aria-label="總部配送中">
+          <div v-if="shippingOrders.length === 0" class="bk__empty">
+            <p>🚚 目前沒有配送中的商品</p>
+          </div>
+          <div v-for="order in shippingOrders" :key="order.id" class="bk__card">
+            <div class="bk__card-top">
+              <span class="bk__source">{{ getSourceIcon(order.source) }} {{ getSourceLabel(order.source) }}</span>
+              <span class="bk__badge bk__badge--blue">🚚 配送中</span>
+            </div>
+            <h4 class="bk__card-title">{{ order.productName }}</h4>
+            <p class="bk__card-meta">規格：{{ order.spec }} · 數量：{{ order.totalQuantity }} 件</p>
+            <div class="bk__timeline">
+              <span>📤 送出：{{ order.submittedAt }}</span>
+              <span v-if="order.shippingAt">🚚 發車：{{ order.shippingAt }}</span>
+            </div>
+            <div class="bk__status-msg bk__status-msg--info">
+              等待區域總部配送至門市...
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ 門市 Tab 3：已到店可取貨 ═══ -->
+        <section v-show="storeTab === 2" aria-label="已到店可取貨">
+          <div v-if="arrivedOrders.length === 0" class="bk__empty">
+            <p>📦 目前沒有待取貨的商品</p>
+          </div>
+          <div v-for="order in arrivedOrders" :key="order.id" class="bk__card">
+            <div class="bk__card-top">
+              <span class="bk__source">{{ getSourceIcon(order.source) }} {{ getSourceLabel(order.source) }}</span>
+              <span class="bk__badge bk__badge--green">🏪 可取貨</span>
+            </div>
+            <h4 class="bk__card-title">{{ order.productName }}</h4>
+            <p class="bk__card-meta">到貨時間：{{ order.arrivedAt }}</p>
+
+            <!-- 逐位客戶通知 + 核銷 -->
+            <div v-for="c in order.customers" :key="c.id" class="bk__pickup-row">
+              <div class="bk__pickup-info">
+                <span class="bk__customer-name">{{ c.contactName }}</span>
+                <span class="bk__customer-phone">{{ c.contactPhone }}</span>
+                <span class="bk__customer-qty">x{{ c.quantity }} · ${{ c.totalAmount }}</span>
+              </div>
+              <div class="bk__pickup-actions">
+                <button class="bk__btn-sm bk__btn-sm--outline" @click="notifyCustomer(order, c)">📱 通知</button>
+                <button class="bk__btn-sm bk__btn-sm--green" @click="confirmPickup(order, c)">✅ 核銷</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </template>
+
+      <!-- ════════════════════════════════════════════ -->
+      <!-- ═══ 區域總部視角 ═══ -->
+      <!-- ════════════════════════════════════════════ -->
+      <template v-else>
+
+        <!-- 區域 Tab -->
+        <nav class="bk__tabs" role="tablist" aria-label="區域總部管理">
+          <button class="bk__tab" :class="{ 'bk__tab--active': regionTab === 0 }" @click="regionTab = 0">
+            📋 待批准 ({{ regionPendingCount }})
+          </button>
+          <button class="bk__tab" :class="{ 'bk__tab--active': regionTab === 1 }" @click="regionTab = 1">
+            🚚 配送中 ({{ regionDeliveringCount }})
+          </button>
+          <button class="bk__tab" :class="{ 'bk__tab--active': regionTab === 2 }" @click="regionTab = 2">
+            ✅ 已送達 ({{ regionDeliveredCount }})
+          </button>
+        </nav>
+
+        <!-- ═══ 區域 Tab 1：待批准叫貨 ═══ -->
+        <section v-show="regionTab === 0" aria-label="待批准叫貨需求">
+          <div v-if="regionRequests.filter(r => r.status === 'pending_approval').length === 0" class="bk__empty">
+            <p>🎉 所有叫貨需求已處理</p>
+          </div>
+          <div v-for="req in regionRequests.filter(r => r.status === 'pending_approval')" :key="req.id" class="bk__card">
+            <div class="bk__card-top">
+              <span class="bk__store-label">🏪 {{ req.storeName }}</span>
+              <span class="bk__badge bk__badge--amber">⏳ 待批准</span>
+            </div>
+            <p class="bk__card-meta">送出時間：{{ req.submittedAt }}</p>
+
+            <!-- 叫貨明細 -->
+            <div class="bk__region-items">
+              <div v-for="(item, idx) in req.items" :key="idx" class="bk__region-item">
+                <span class="bk__region-product">{{ item.productName }}</span>
+                <span v-if="item.spec" class="bk__region-spec">{{ item.spec }}</span>
+                <span class="bk__region-qty">x {{ item.quantity }}</span>
+              </div>
+            </div>
+
+            <button class="bk__btn bk__btn--primary" @click="approveRequest(req)">
+              🚚 批准調撥並通知物流派送
+            </button>
+          </div>
+        </section>
+
+        <!-- ═══ 區域 Tab 2：物流配送中 ═══ -->
+        <section v-show="regionTab === 1" aria-label="物流配送中">
+          <div v-if="regionRequests.filter(r => r.status === 'delivering').length === 0" class="bk__empty">
+            <p>🚚 目前沒有配送中的調撥單</p>
+          </div>
+          <div v-for="req in regionRequests.filter(r => r.status === 'delivering')" :key="req.id" class="bk__card">
+            <div class="bk__card-top">
+              <span class="bk__store-label">🏪 {{ req.storeName }}</span>
+              <span class="bk__badge bk__badge--blue">🚚 配送中</span>
+            </div>
+            <div class="bk__region-items">
+              <div v-for="(item, idx) in req.items" :key="idx" class="bk__region-item">
+                <span class="bk__region-product">{{ item.productName }}</span>
+                <span class="bk__region-qty">x {{ item.quantity }}</span>
+              </div>
+            </div>
+            <div class="bk__timeline">
+              <span>📤 送出：{{ req.submittedAt }}</span>
+              <span>✅ 批准：{{ req.approvedAt }}</span>
+            </div>
+            <button class="bk__btn bk__btn--green" @click="markDelivered(req)">
+              📦 確認已送達門市
+            </button>
+          </div>
+        </section>
+
+        <!-- ═══ 區域 Tab 3：已送達門市 ═══ -->
+        <section v-show="regionTab === 2" aria-label="已送達門市">
+          <div v-if="regionRequests.filter(r => r.status === 'delivered').length === 0" class="bk__empty">
+            <p>📦 尚無已送達的調撥單</p>
+          </div>
+          <div v-for="req in regionRequests.filter(r => r.status === 'delivered')" :key="req.id" class="bk__card">
+            <div class="bk__card-top">
+              <span class="bk__store-label">🏪 {{ req.storeName }}</span>
+              <span class="bk__badge bk__badge--green">✅ 已送達</span>
+            </div>
+            <div class="bk__region-items">
+              <div v-for="(item, idx) in req.items" :key="idx" class="bk__region-item">
+                <span class="bk__region-product">{{ item.productName }}</span>
+                <span class="bk__region-qty">x {{ item.quantity }}</span>
+              </div>
+            </div>
+            <div class="bk__timeline">
+              <span>📤 {{ req.submittedAt }}</span>
+              <span>✅ {{ req.approvedAt }}</span>
+              <span>📦 {{ req.deliveredAt }}</span>
+            </div>
+            <div class="bk__status-msg bk__status-msg--success">已完成配送</div>
+          </div>
+        </section>
+
+      </template>
 
     </main>
 
     <!-- Toast -->
     <Transition name="toast-fade">
-      <div v-if="toastMessage" class="ba__toast">{{ toastMessage }}</div>
+      <div v-if="toastMessage" class="bk__toast">{{ toastMessage }}</div>
     </Transition>
 
     <!-- Demo -->
-    <div class="ba__demo-panel">
-      <button class="ba__demo-btn" @click="resetDemo">🔄 重設</button>
+    <div class="bk__demo-panel">
+      <button class="bk__demo-btn" @click="resetDemo">🔄 重設</button>
     </div>
 
   </div>
@@ -569,117 +605,184 @@ function resetDemo() {
 
 <style scoped>
 /* ═══ Header ═══ */
-.ba__header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 50px;
-  padding: 0 var(--space-4, 16px);
-  background: var(--color-bg-card, #ffffff);
-  border-bottom: 1px solid var(--color-border, #e2e8f0);
+.bk__header {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 50px; padding: 0 16px;
+  background: #fff; border-bottom: 1px solid #e2e8f0;
 }
-.ba__header-left { font-size: var(--text-sm, 13px); font-weight: 600; color: var(--color-text-primary, #1c1917); white-space: nowrap; }
-.ba__header-center { display: flex; align-items: center; justify-content: center; }
-.ba__header-right { font-size: var(--text-sm, 13px); font-weight: 600; color: var(--color-text-primary, #1c1917); white-space: nowrap; }
+.bk__header-title { font-size: 13px; font-weight: 600; color: #1c1917; }
+.bk__header-link {
+  padding: 4px 10px; font-size: 11px; font-weight: 700;
+  color: #10b981; background: #ecfdf5; border: 1px solid rgba(16,185,129,.2);
+  border-radius: 9999px; text-decoration: none;
+}
+
+/* ═══ RBAC Dropdown ═══ */
+.bk__rbac { padding: 12px 16px 0; }
+.bk__rbac-select {
+  width: 100%; padding: 10px 12px;
+  border: 1.5px solid #e2e8f0; border-radius: 12px;
+  font-size: 13px; font-weight: 600; font-family: inherit;
+  color: #1c1917; background: #fff; cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2378716c' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+}
+.bk__rbac-select:focus { outline: 2px solid #10b981; outline-offset: 2px; border-color: #10b981; }
+.bk__rbac-desc { margin: 6px 0 0; font-size: 11px; color: #78716c; }
 
 /* ═══ Content ═══ */
-.ba__content { display: flex; flex-direction: column; gap: var(--space-4, 16px); padding: var(--space-4, 16px); flex: 1; }
-
-/* ═══ Stats ═══ */
-.ba__stats { display: flex; justify-content: center; gap: var(--space-2, 8px); }
-.ba__stat-badge { display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 9999px; font-size: var(--text-xs, 11px); font-weight: 600; white-space: nowrap; }
-.ba__stat-badge--red { background: #ffe4e6; color: #e11d48; }
-.ba__stat-badge--blue { background: #e0f2fe; color: #0369a1; }
-.ba__stat-badge--green { background: #dcfce7; color: #16a34a; }
+.bk__content { display: flex; flex-direction: column; gap: 16px; padding: 16px; flex: 1; }
 
 /* ═══ Tabs ═══ */
-.ba__tabs { display: flex; gap: 0; background: var(--color-bg-card, #ffffff); border-radius: 16px; border: 1px solid var(--color-border, #e2e8f0); overflow: hidden; }
-.ba__tab { flex: 1; padding: 12px 8px; border: none; background: transparent; font-size: var(--text-sm, 13px); font-weight: 600; font-family: inherit; color: var(--color-text-secondary, #78716c); cursor: pointer; transition: all 0.15s ease; text-align: center; white-space: nowrap; }
-.ba__tab:not(:last-child) { border-right: 1px solid var(--color-border, #e2e8f0); }
-.ba__tab:focus { outline: 2px solid #10b981; outline-offset: -2px; }
-.ba__tab--active { background: #10b981; color: #ffffff; }
+.bk__tabs {
+  display: flex; gap: 0; background: #fff;
+  border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden;
+}
+.bk__tab {
+  flex: 1; padding: 10px 4px; border: none; background: transparent;
+  font-size: 11px; font-weight: 600; font-family: inherit;
+  color: #78716c; cursor: pointer; text-align: center;
+  white-space: nowrap; transition: all .15s ease;
+}
+.bk__tab:not(:last-child) { border-right: 1px solid #e2e8f0; }
+.bk__tab--active { background: #10b981; color: #fff; }
+.bk__tab:focus { outline: 2px solid #10b981; outline-offset: -2px; }
 
 /* ═══ Card ═══ */
-.ba__card { background: var(--color-bg-card, #ffffff); border-radius: 16px; border: 1px solid var(--color-border, #e2e8f0); padding: var(--space-4, 16px); display: flex; flex-direction: column; gap: var(--space-3, 12px); margin-bottom: var(--space-3, 12px); }
-.ba__card:last-child { margin-bottom: 0; }
+.bk__card {
+  background: #fff; border-radius: 16px; border: 1px solid #e2e8f0;
+  padding: 16px; display: flex; flex-direction: column; gap: 12px;
+  margin-bottom: 12px;
+}
+.bk__card:last-child { margin-bottom: 0; }
 
-.ba__card-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2, 8px); }
-.ba__card-title { margin: 0; font-size: var(--text-base, 15px); font-weight: 600; color: var(--color-text-primary, #1c1917); }
-.ba__card-meta { margin: 0; font-size: var(--text-sm, 13px); color: var(--color-text-secondary, #78716c); }
-.ba__card-feedbackno, .ba__card-orderno { font-size: var(--text-sm, 13px); font-weight: 700; color: #10b981; font-family: monospace; }
+.bk__card-top { display: flex; align-items: center; justify-content: space-between; }
+.bk__card-title { margin: 0; font-size: 15px; font-weight: 700; color: #1c1917; }
+.bk__card-meta { margin: 0; font-size: 13px; color: #78716c; }
 
-/* ═══ Source tag ═══ */
-.ba__source-tag { display: inline-flex; align-items: center; gap: 4px; font-size: var(--text-xs, 11px); font-weight: 600; color: #7c3aed; background: #f3e8ff; padding: 2px 10px; border-radius: 9999px; width: fit-content; }
-
-/* ═══ Customer info ═══ */
-.ba__customer-info { display: flex; align-items: center; gap: var(--space-3, 12px); }
-.ba__customer-name { font-size: var(--text-base, 15px); font-weight: 600; color: var(--color-text-primary, #1c1917); }
-.ba__customer-phone { font-size: var(--text-sm, 13px); color: var(--color-text-secondary, #78716c); }
-
-/* ═══ Product detail ═══ */
-.ba__product-detail { background: #f8fafc; border-radius: 12px; padding: var(--space-3, 12px); }
-.ba__product-name { margin: 0 0 4px; font-size: var(--text-base, 15px); font-weight: 600; color: var(--color-text-primary, #1c1917); }
-.ba__product-spec { margin: 0 0 8px; font-size: var(--text-sm, 13px); color: var(--color-text-secondary, #78716c); }
-.ba__product-row { display: flex; align-items: center; gap: var(--space-3, 12px); font-size: var(--text-sm, 13px); color: var(--color-text-secondary, #78716c); }
-.ba__product-total { font-weight: 700; color: #10b981; }
-
-/* ═══ Card details ═══ */
-.ba__card-details { display: flex; flex-wrap: wrap; gap: var(--space-2, 8px); font-size: var(--text-sm, 13px); color: var(--color-text-secondary, #78716c); }
-.ba__card-details--small { font-size: var(--text-xs, 11px); }
-.ba__card-ai-note { margin: 0; font-size: var(--text-sm, 13px); color: #92400e; background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 8px 12px; line-height: 1.5; }
-
-/* ═══ Price row ═══ */
-.ba__price-row { display: flex; align-items: center; gap: var(--space-2, 8px); }
-.ba__price-solo { font-size: var(--text-sm, 13px); font-weight: 700; color: #10b981; }
-.ba__price-group { font-size: var(--text-sm, 13px); font-weight: 700; color: #7c3aed; }
-.ba__price-original { font-size: var(--text-xs, 11px); color: #9ca3af; text-decoration: line-through; }
-
-/* ═══ Progress ═══ */
-.ba__progress-section { display: flex; flex-direction: column; gap: 6px; }
-.ba__progress-bar { height: 8px; background: #e0f2fe; border-radius: 9999px; overflow: hidden; }
-.ba__progress-fill { height: 100%; background: #10b981; border-radius: 9999px; transition: width 0.3s ease; }
-.ba__progress-fill--full { background: #7c3aed; }
-.ba__progress-info { display: flex; justify-content: space-between; font-size: var(--text-xs, 11px); color: var(--color-text-secondary, #78716c); }
+/* ═══ Source / Store label ═══ */
+.bk__source {
+  font-size: 11px; font-weight: 600; color: #7c3aed;
+  background: #f3e8ff; padding: 2px 10px; border-radius: 9999px;
+}
+.bk__store-label {
+  font-size: 13px; font-weight: 700; color: #1c1917;
+}
 
 /* ═══ Badge ═══ */
-.ba__badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 9999px; font-size: var(--text-xs, 11px); font-weight: 600; white-space: nowrap; }
-.ba__badge--green { background: #dcfce7; color: #16a34a; }
-.ba__badge--blue { background: #e0f2fe; color: #0369a1; }
-.ba__badge--amber { background: #fef3c7; color: #d97706; }
-.ba__badge--gray { background: #f1f5f9; color: #64748b; }
+.bk__badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600; }
+.bk__badge--amber { background: #fef3c7; color: #d97706; }
+.bk__badge--blue { background: #e0f2fe; color: #0369a1; }
+.bk__badge--green { background: #dcfce7; color: #16a34a; }
+.bk__badge--gray { background: #f1f5f9; color: #64748b; }
+
+/* ═══ Group Progress ═══ */
+.bk__group-progress { display: flex; flex-direction: column; gap: 4px; }
+.bk__progress-bar { height: 8px; background: #e0f2fe; border-radius: 9999px; overflow: hidden; }
+.bk__progress-fill { height: 100%; background: #10b981; border-radius: 9999px; transition: width .3s ease; }
+.bk__progress-text { font-size: 11px; color: #78716c; }
+.bk__grouped-label { color: #16a34a; font-weight: 700; margin-left: 6px; }
+
+/* ═══ Details (消費者明細) ═══ */
+.bk__details { border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
+.bk__details-summary {
+  padding: 10px 12px; font-size: 13px; font-weight: 600;
+  color: #1c1917; cursor: pointer; background: #f8fafc;
+  list-style: none;
+}
+.bk__details-summary::-webkit-details-marker { display: none; }
+.bk__details[open] .bk__details-summary { border-bottom: 1px solid #e2e8f0; }
+.bk__customer-list { padding: 8px 12px; display: flex; flex-direction: column; gap: 6px; }
+.bk__customer-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.bk__customer-name { font-weight: 600; color: #1c1917; min-width: 56px; }
+.bk__customer-phone { color: #78716c; flex: 1; }
+.bk__customer-qty { color: #78716c; }
+.bk__customer-amount { font-weight: 700; color: #10b981; }
+
+/* ═══ AI Note ═══ */
+.bk__ai-note {
+  margin: 0; font-size: 12px; color: #92400e;
+  background: #fffbeb; border: 1px solid #fde68a;
+  border-radius: 10px; padding: 8px 12px; line-height: 1.5;
+}
+
+/* ═══ Pickup Row (已到店核銷) ═══ */
+.bk__pickup-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0; border-bottom: 1px solid #f1f5f9;
+}
+.bk__pickup-row:last-child { border-bottom: none; }
+.bk__pickup-info { display: flex; flex-direction: column; gap: 2px; }
+.bk__pickup-info .bk__customer-name { font-size: 13px; }
+.bk__pickup-info .bk__customer-phone { font-size: 11px; }
+.bk__pickup-info .bk__customer-qty { font-size: 11px; color: #10b981; font-weight: 600; }
+.bk__pickup-actions { display: flex; gap: 6px; }
+
+/* ═══ Region Items (區域叫貨明細) ═══ */
+.bk__region-items { display: flex; flex-direction: column; gap: 6px; background: #f8fafc; border-radius: 10px; padding: 10px 12px; }
+.bk__region-item { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.bk__region-product { font-weight: 600; color: #1c1917; flex: 1; }
+.bk__region-spec { font-size: 11px; color: #78716c; }
+.bk__region-qty { font-weight: 700; color: #10b981; white-space: nowrap; }
+
+/* ═══ Timeline ═══ */
+.bk__timeline { display: flex; flex-wrap: wrap; gap: 8px; font-size: 11px; color: #78716c; }
 
 /* ═══ Buttons ═══ */
-.ba__action-btn { display: flex; align-items: center; justify-content: center; width: 100%; padding: 12px 16px; background-color: #10b981; color: #ffffff; border: none; border-radius: 12px; font-size: var(--text-base, 15px); font-weight: 700; font-family: inherit; cursor: pointer; transition: opacity 0.15s ease, transform 0.1s ease; }
-.ba__action-btn:hover:not(:disabled) { opacity: 0.85; }
-.ba__action-btn:active:not(:disabled) { transform: scale(0.97); }
-.ba__action-btn:focus { outline: 2px solid #10b981; outline-offset: 2px; }
-.ba__action-btn--outline { background: transparent; border: 1.5px solid #10b981; color: #10b981; }
-.ba__action-btn--outline-red { background: transparent; border: 1.5px solid #e11d48; color: #e11d48; }
-.ba__btn-group { display: flex; gap: var(--space-2, 8px); }
-.ba__btn-group .ba__action-btn { flex: 1; }
+.bk__btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; padding: 12px 16px; border: none; border-radius: 12px;
+  font-size: 14px; font-weight: 700; font-family: inherit;
+  cursor: pointer; transition: opacity .15s ease, transform .1s ease;
+}
+.bk__btn:hover { opacity: .85; }
+.bk__btn:active { transform: scale(.97); }
+.bk__btn:focus { outline: 2px solid #10b981; outline-offset: 2px; }
+.bk__btn--primary { background: #10b981; color: #fff; }
+.bk__btn--green { background: #16a34a; color: #fff; }
+.bk__btn--outline { background: transparent; border: 1.5px solid #10b981; color: #10b981; margin-bottom: 8px; }
 
-/* ═══ Status msg ═══ */
-.ba__status-msg { font-size: var(--text-sm, 13px); font-weight: 600; padding: 8px 12px; border-radius: 12px; text-align: center; }
-.ba__status-msg--success { background: #dcfce7; color: #16a34a; }
-.ba__status-msg--info { background: #e0f2fe; color: #0369a1; }
-.ba__status-msg--warn { background: #fef3c7; color: #d97706; }
+.bk__btn-sm {
+  padding: 6px 10px; border-radius: 8px; font-size: 11px;
+  font-weight: 600; font-family: inherit; cursor: pointer;
+  border: none; transition: opacity .15s ease;
+}
+.bk__btn-sm:hover { opacity: .85; }
+.bk__btn-sm--outline { background: transparent; border: 1px solid #2563eb; color: #2563eb; }
+.bk__btn-sm--green { background: #16a34a; color: #fff; }
 
-/* ═══ Empty ═══ */
-.ba__empty { text-align: center; padding: 32px 16px; color: var(--color-text-secondary, #78716c); font-size: var(--text-base, 15px); }
+.bk__actions { display: flex; flex-direction: column; gap: 0; }
+
+/* ═══ Status Messages ═══ */
+.bk__status-msg { font-size: 12px; font-weight: 600; padding: 8px 12px; border-radius: 10px; text-align: center; }
+.bk__status-msg--success { background: #dcfce7; color: #16a34a; }
+.bk__status-msg--info { background: #e0f2fe; color: #0369a1; }
+
+/* ═══ Empty State ═══ */
+.bk__empty { text-align: center; padding: 32px 16px; color: #78716c; font-size: 14px; }
 
 /* ═══ Toast ═══ */
-.ba__toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 200; padding: 12px 20px; background: #1e293b; color: #ffffff; font-size: var(--text-sm, 13px); font-weight: 600; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); white-space: nowrap; }
+.bk__toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 200; padding: 12px 20px; background: #1e293b; color: #fff;
+  font-size: 13px; font-weight: 600; border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.15); white-space: nowrap;
+}
 
 /* ═══ Demo ═══ */
-.ba__demo-panel { position: fixed; bottom: 20px; right: 20px; z-index: 999; }
-.ba__demo-btn { display: flex; align-items: center; justify-content: center; padding: 8px 14px; border: none; border-radius: 20px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: opacity 0.15s, transform 0.1s; white-space: nowrap; background: #78716c; color: #ffffff; }
-.ba__demo-btn:active { transform: scale(0.95); }
+.bk__demo-panel { position: fixed; bottom: 20px; right: 20px; z-index: 999; }
+.bk__demo-btn {
+  padding: 8px 14px; border: none; border-radius: 20px;
+  font-size: 13px; font-weight: 600; font-family: inherit;
+  cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  background: #78716c; color: #fff;
+}
+.bk__demo-btn:active { transform: scale(.95); }
 
-/* ═══ Toast animation ═══ */
-.toast-fade-enter-active, .toast-fade-leave-active { transition: all 0.3s ease; }
+/* ═══ Toast Animation ═══ */
+.toast-fade-enter-active, .toast-fade-leave-active { transition: all .3s ease; }
 .toast-fade-enter-from, .toast-fade-leave-to { opacity: 0; transform: translateX(-50%) translateY(16px); }
 .toast-fade-enter-to, .toast-fade-leave-from { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
