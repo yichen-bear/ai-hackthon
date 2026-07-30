@@ -18,6 +18,22 @@ function hashEmail(email) {
 }
 
 /**
+ * 計算聯絡欄位（手機、市話、地址等）的 SHA-256 hex string（用於雜湊查詢）
+ * 與 hashEmail 相同的正規化規則：trim 後取 SHA-256 hex，但不進行大小寫轉換
+ * @param {string} value - 聯絡欄位原始值
+ * @returns {string} SHA-256 hex string
+ */
+function hashContactField(value) {
+  if (!value || typeof value !== 'string') {
+    throw new Error('Value must be a non-empty string');
+  }
+  return crypto
+    .createHash('sha256')
+    .update(value.trim())
+    .digest('hex');
+}
+
+/**
  * 加密欄位為 AES-256-GCM Buffer（與 decryptField 對稱）
  * 加密格式：IV (12 bytes) + authTag (16 bytes) + ciphertext (剩餘 bytes)
  * @param {string} plainText - 待加密的明文字串
@@ -78,6 +94,7 @@ function decryptField(encryptedBuffer) {
 
 module.exports = {
   hashEmail,
+  hashContactField,
   encryptField,
   decryptField,
 };

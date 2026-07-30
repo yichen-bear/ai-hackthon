@@ -315,7 +315,6 @@ model MemberAccount {
 model VendorUser {
   id           String   @id @default(uuid()) @db.Uuid
   vendorId     Int?     @map("vendor_id")
-  companyName  String?  @map("company_name") @db.VarChar(100)
   email        Bytes?
   emailHash    String?  @unique @map("email_hash") @db.VarChar(64)
   name         Bytes?
@@ -328,6 +327,7 @@ model VendorUser {
   creTime      DateTime @default(now()) @map("cre_time") @db.Timestamptz(6)
   updId        String   @map("upd_id") @db.Uuid
   updTime      DateTime @default(now()) @map("upd_time") @db.Timestamptz(6)
+  companyName  String?  @map("company_name") @db.VarChar(100)
 
   @@map("vendor_user")
 }
