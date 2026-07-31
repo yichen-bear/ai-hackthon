@@ -967,9 +967,11 @@ async function handleFormMatchingOrQA(session, formMatchingService, llmGateway) 
       };
       const replyText =
         structured.reply_text && structured.reply_text.trim() !== ''
-          ? structured.reply_text
+          ? nextTopic
+            ? `${structured.reply_text}\n\n首先請回答：${buildTopicQuestionText(nextTopic)}`
+            : structured.reply_text
           : nextTopic
-            ? `好的，我來協助您填寫表單。請問您的${buildTopicQuestionText(nextTopic)}`
+            ? `好的，我來協助您填寫表單。\n\n首先請回答：${buildTopicQuestionText(nextTopic)}`
             : '所有題目皆已完成，感謝您的填寫。';
       return appendAssistantMessage(updated, replyText);
     }
@@ -1060,6 +1062,16 @@ async function handleFieldExtractionOrOffTopic(session, formMatchingService, llm
           : '好的，已跳過此題。所有題目皆已完成。';
 
     return appendAssistantMessage(updated, replyText);
+  }
+
+  // 若使用者只是簡短的確認/應答語，重新提問目前題目（不視為答案）
+  const ackKeywords = ['好', '好啊', '好的', 'ok', 'OK', '嗯', '是', '可以', '沒問題', '了解', '知道了', '繼續'];
+  const isAckOnly = lastUserMsg && typeof lastUserMsg.text === 'string'
+    && ackKeywords.includes(lastUserMsg.text.trim());
+
+  if (isAckOnly) {
+    const replyText = `請回答：${buildTopicQuestionText(currentTopic)}`;
+    return appendAssistantMessage(session, replyText);
   }
 
   const systemPrompt = buildExtractionSystemPrompt(currentTopic);
@@ -1153,8 +1165,36 @@ function buildConfirmingSystemPrompt(topics, collectedFields) {
     .map((topic) => {
       const field = (collectedFields || {})[String(topic.id)];
       if (!field) return null;
-      const value = field.value !== undefined ? field.value : field;
-      const displayValue = Array.isArray(value) ? value.join('、') : value;
+
+      // 安全取出值
+      let rawValue;
+      if (field !== null && typeof field === 'object' && !Array.isArray(field) && 'value' in field) {
+        rawValue = field.value;
+      } else {
+        rawValue = field;
+      }
+
+      // 將選項 ID 轉名稱
+      const options = Array.isArray(topic.options) ? topic.options : [];
+      let displayValue;
+      if (rawValue === null || rawValue === undefined) {
+        displayValue = '跳過';
+      } else if (options.length > 0) {
+        if (Array.isArray(rawValue)) {
+          displayValue = rawValue.map((v) => {
+            const opt = options.find((o) => o.id === v || o.id === Number(v));
+            return opt ? opt.optionName : String(v);
+          }).join('、');
+        } else {
+          const opt = options.find((o) => o.id === rawValue || o.id === Number(rawValue));
+          displayValue = opt ? opt.optionName : String(rawValue);
+        }
+      } else if (typeof rawValue === 'object') {
+        displayValue = JSON.stringify(rawValue);
+      } else {
+        displayValue = Array.isArray(rawValue) ? rawValue.join('、') : String(rawValue);
+      }
+
       return `- id: ${topic.id}, 題目: ${topic.title}, 目前答案: ${displayValue}`;
     })
     .filter(Boolean)
@@ -1194,6 +1234,19 @@ async function handleConfirmingStage(session, formMatchingService, llmGateway) {
   }
 
   const topics = flattenTopics(form);
+
+  // 若使用者直接說「確認送出」，標記 session 為待送出狀態（前端會觸發 submitFeedback）
+  const lastUserMsg = (session.messages || []).filter((m) => m.role === 'user').pop();
+  const confirmKeywords = ['確認送出', '確認', '送出', '沒問題', '確定', '都對了', '正確'];
+  const isDirectConfirm = lastUserMsg && typeof lastUserMsg.text === 'string'
+    && confirmKeywords.includes(lastUserMsg.text.trim());
+
+  if (isDirectConfirm) {
+    // 保持 stage 為 confirming，讓前端顯示確認按鈕並自動觸發送出
+    const updated = { ...session, awaitingSubmitConfirmation: true };
+    return appendAssistantMessage(updated, '好的，正在為您送出表單...');
+  }
+
   const systemPrompt = buildConfirmingSystemPrompt(topics, session.collectedFields);
   const messages = toLlmMessages(session, systemPrompt);
   const structured = await llmGateway.requestStructuredResponse({ messages });
@@ -1214,9 +1267,8 @@ async function handleConfirmingStage(session, formMatchingService, llmGateway) {
         stage: 'filling',
       };
 
-      const replyText = structured.reply_text && structured.reply_text.trim() !== ''
-        ? structured.reply_text
-        : `好的，請重新回答：${buildTopicQuestionText(targetTopic)}`;
+      // 固定格式提問，不使用 LLM 的 reply_text（避免 LLM 亂說）
+      const replyText = `好的，請重新選擇：${buildTopicQuestionText(targetTopic)}`;
       return appendAssistantMessage(updated, replyText);
     }
 
@@ -1226,14 +1278,16 @@ async function handleConfirmingStage(session, formMatchingService, llmGateway) {
   }
 
   if (structured.action === 'confirm_submit') {
-    const replyText = structured.reply_text || '好的，請點擊下方的「確認送出」按鈕完成提交。';
-    return appendAssistantMessage(session, replyText);
+    // 標記為待送出，前端會自動觸發
+    const updated = { ...session, awaitingSubmitConfirmation: true };
+    const replyText = structured.reply_text || '好的，正在為您送出表單...';
+    return appendAssistantMessage(updated, replyText);
   }
 
   // answer_question 或其他
   const replyText = structured.reply_text && structured.reply_text.trim() !== ''
     ? structured.reply_text
-    : '如果需要修改任何項目請告訴我，或點擊「確認送出」完成提交。';
+    : '如果需要修改任何項目請告訴我，或回覆「確認送出」完成提交。';
   return appendAssistantMessage(session, replyText);
 }
 

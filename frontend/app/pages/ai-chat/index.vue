@@ -53,6 +53,40 @@ const examplePrompts = [
 
 const messages = computed(() => session.value.messages)
 
+/** 是否顯示「回到底部」按鈕 */
+const showScrollButton = ref(false)
+
+/** 監聽滾動位置 */
+function handleScroll() {
+  if (!messagesContainer.value) return
+  const { scrollTop, scrollHeight, clientHeight } = messagesContainer.value
+  // 如果距離底部超過 100px，顯示按鈕
+  showScrollButton.value = scrollHeight - scrollTop - clientHeight > 100
+}
+
+/** 監聽訊息變化，自動捲到底部 */
+watch(messages, () => {
+  scrollToBottom()
+}, { deep: true })
+
+/** 當 awaitingSubmitConfirmation 為 true 時，自動觸發表單送出 */
+watch(() => session.value.awaitingSubmitConfirmation, async (awaiting) => {
+  if (awaiting) {
+    try {
+      await submitFeedback()
+      // 送出成功後，加一則成功訊息
+      session.value = {
+        ...session.value,
+        awaitingSubmitConfirmation: false,
+        stage: 'submitted',
+      }
+    } catch {
+      // 錯誤由 sessionError 處理
+      session.value = { ...session.value, awaitingSubmitConfirmation: false }
+    }
+  }
+})
+
 /** 語音辨識完成後，驗證文字後自動送出（不需手動按傳送） */
 watch(transcript, (text) => {
   if (!text) {
@@ -232,7 +266,7 @@ function goBack() {
     </header>
 
     <!-- 聊天訊息區域 -->
-    <div ref="messagesContainer" class="chat-page__messages">
+    <div ref="messagesContainer" class="chat-page__messages" @scroll="handleScroll">
       <div v-if="messages.length === 0" class="chat-page__welcome">
         <p class="chat-page__placeholder">
           有什麼我可以幫忙的嗎？可以直接描述您想辦理的服務，或用語音輸入。
@@ -311,6 +345,17 @@ function goBack() {
       </div>
     </div>
 
+    <!-- 回到底部按鈕 -->
+    <button
+      v-if="showScrollButton"
+      class="chat-page__scroll-btn"
+      type="button"
+      aria-label="捲動到最新訊息"
+      @click="scrollToBottom"
+    >
+      ↓
+    </button>
+
     <!-- 送出確認（stage 為 confirming 時顯示） -->
     <div v-if="session.stage === 'confirming'" class="chat-page__confirm-bar">
       <button
@@ -369,6 +414,7 @@ function goBack() {
   flex-direction: column;
   height: 100vh;
   background-color: var(--color-bg-page, #fafaf9);
+  position: relative;
 }
 
 /* ── Header ── */
@@ -527,6 +573,31 @@ function goBack() {
 
 .chat-message__play:hover {
   background-color: #e7e5e4;
+}
+
+/* ── 回到底部按鈕 ── */
+.chat-page__scroll-btn {
+  position: absolute;
+  bottom: 140px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--color-bg-card, #ffffff);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-size: 18px;
+  color: var(--color-text-secondary, #78716c);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: background-color 0.15s;
+}
+
+.chat-page__scroll-btn:hover {
+  background-color: #f5f5f4;
 }
 
 /* ── 送出確認列 ── */
