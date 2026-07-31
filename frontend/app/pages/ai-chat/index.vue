@@ -44,6 +44,9 @@ const currentTopicRequired = ref(true)
 /** 多選模式下已勾選的選項 id */
 const multiSelectIds = ref<Set<number>>(new Set())
 
+/** 是否顯示「是否繼續」快捷按鈕（用於確認/繼續選購情境） */
+const showConfirmButtons = ref(false)
+
 /** 已儲存的常用地址（地址題目時由後端回傳） */
 interface SavedAddress {
   id: number
@@ -66,6 +69,64 @@ const examplePrompts = [
 
 const messages = computed(() => session.value.messages)
 
+/** 去除 HTML 標籤，保留純文字 */
+function stripHtml(text: string): string {
+  return text.replace(/<[^>]*>/g, '').trim()
+}
+
+/** 偵測訊息是否含有確認/繼續選購相關的詢問 */
+function isConfirmationQuestion(text: string): boolean {
+  const patterns = [
+    '是否確認',
+    '是否繼續',
+    '要繼續',
+    '還要',
+    '繼續選購',
+    '還需要',
+    '是否還要',
+    '是否要繼續',
+    '確認嗎',
+    '對嗎',
+  ]
+  return patterns.some(p => text.includes(p))
+}
+
+/** 格式化摘要文字為 HTML（用於更好的視覺呈現） */
+function formatSummaryHtml(text: string): string {
+  const stripped = stripHtml(text)
+  const lines = stripped.split('\n').filter(l => l.trim())
+  let html = ''
+  let inList = false
+
+  for (const line of lines) {
+    const trimmed = line.trim()
+    if (trimmed.startsWith('・') || trimmed.startsWith('▸')) {
+      if (!inList) {
+        html += '<ul class="chat-summary-list">'
+        inList = true
+      }
+      const content = trimmed.replace(/^[・▸]\s*/, '')
+      const [label, ...valueParts] = content.split('：')
+      const value = valueParts.join('：')
+      html += `<li><span class="chat-summary-label">${label}</span><span class="chat-summary-value">${value || '—'}</span></li>`
+    } else {
+      if (inList) {
+        html += '</ul>'
+        inList = false
+      }
+      if (trimmed.includes('以下是您') || trimmed.includes('填寫的內容')) {
+        html += `<p class="chat-summary-title">📋 您填寫的內容</p>`
+      } else if (trimmed.includes('如果都沒問題') || trimmed.includes('確認送出')) {
+        // 隱藏提示文字（由 UI 按鈕取代）
+      } else if (trimmed) {
+        html += `<p>${trimmed}</p>`
+      }
+    }
+  }
+  if (inList) html += '</ul>'
+  return html
+}
+
 /** 是否顯示「回到底部」按鈕 */
 const showScrollButton = ref(false)
 
@@ -87,14 +148,12 @@ watch(() => session.value.awaitingSubmitConfirmation, async (awaiting) => {
   if (awaiting) {
     try {
       await submitFeedback()
-      // 送出成功後，加一則成功訊息
       session.value = {
         ...session.value,
         awaitingSubmitConfirmation: false,
         stage: 'submitted',
       }
     } catch {
-      // 錯誤由 sessionError 處理
       session.value = { ...session.value, awaitingSubmitConfirmation: false }
     }
   }
@@ -155,6 +214,7 @@ async function doSend(text: string, mode: 'text' | 'voice') {
   savedAddresses.value = []
   isAddressTopic.value = false
   isImageTopic.value = false
+  showConfirmButtons.value = false
 
   try {
     const response = await sendMessage(text.trim(), mode)
@@ -179,6 +239,13 @@ async function doSend(text: string, mode: 'text' | 'voice') {
     const title = (response?.replyMeta?.topicTitle as string) || ''
     isAddressTopic.value = title.includes('地址')
     isImageTopic.value = title.includes('照片') || title.includes('圖片') || title.includes('上傳')
+
+    // 偵測最後一則助手訊息是否為確認類問題（如繼續選購），顯示快捷按鈕
+    const latestAssistantMsg = session.value.messages.filter(m => m.role === 'assistant').pop()
+    if (latestAssistantMsg && isConfirmationQuestion(latestAssistantMsg.text)) {
+      showConfirmButtons.value = true
+      await scrollToBottom()
+    }
 
     // 語音輸入時自動播放 AI 回應語音
     if (mode === 'voice' && ttsSupported && response) {
@@ -347,6 +414,7 @@ function confirmNewChat() {
   currentTopicRequired.value = true
   multiSelectIds.value = new Set()
   savedAddresses.value = []
+  showConfirmButtons.value = false
   inlineError.value = null
 }
 
@@ -410,7 +478,10 @@ function goBack() {
         :class="`chat-message--${message.role}`"
       >
         <div class="chat-message__bubble">
-          <p class="chat-message__text">{{ message.text }}</p>
+          <template v-if="message.role === 'assistant' && session.stage === 'confirming' && message.text.includes('以下是您')">
+            <div class="chat-message__summary" v-html="formatSummaryHtml(message.text)"></div>
+          </template>
+          <p v-else class="chat-message__text">{{ stripHtml(message.text) }}</p>
         </div>
         <ClientOnly>
           <button
@@ -463,6 +534,24 @@ function goBack() {
         </button>
       </div>
 
+      <!-- 是否繼續/確認 快捷按鈕 -->
+      <div v-if="showConfirmButtons && !isLoading" class="chat-page__quick-actions">
+        <button
+          class="chat-page__quick-btn chat-page__quick-btn--yes"
+          type="button"
+          @click="doSend('是', 'text')"
+        >
+          是，繼續選購
+        </button>
+        <button
+          class="chat-page__quick-btn chat-page__quick-btn--no"
+          type="button"
+          @click="doSend('確認', 'text')"
+        >
+          不用了，確認送出
+        </button>
+      </div>
+
       <!-- 已儲存的常用地址快速填入按鈕 -->
       <div v-if="savedAddresses.length > 0 && !isLoading" class="chat-page__addresses">
         <p class="chat-page__addresses-label">快速填入常用地址：</p>
@@ -509,14 +598,25 @@ function goBack() {
 
     <!-- 送出確認（stage 為 confirming 時顯示） -->
     <div v-if="session.stage === 'confirming'" class="chat-page__confirm-bar">
-      <button
-        class="chat-page__confirm-btn"
-        type="button"
-        :disabled="isLoading"
-        @click="handleSubmit"
-      >
-        確認送出
-      </button>
+      <p class="chat-page__confirm-hint">確認資料無誤後，按下方按鈕送出</p>
+      <div class="chat-page__confirm-actions">
+        <button
+          class="chat-page__confirm-btn chat-page__confirm-btn--edit"
+          type="button"
+          :disabled="isLoading"
+          @click="doSend('我想修改', 'text')"
+        >
+          修改內容
+        </button>
+        <button
+          class="chat-page__confirm-btn chat-page__confirm-btn--submit"
+          type="button"
+          :disabled="isLoading"
+          @click="handleSubmit"
+        >
+          確認送出
+        </button>
+      </div>
     </div>
 
     <!-- 錯誤訊息 -->
@@ -863,21 +963,56 @@ function goBack() {
 
 /* ── 送出確認列 ── */
 .chat-page__confirm-bar {
-  padding: 8px 20px;
+  padding: 12px 20px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
   flex-shrink: 0;
+  background-color: var(--color-bg-card, #ffffff);
+  border-top: 1px solid var(--color-border, #e7e5e4);
+}
+
+.chat-page__confirm-hint {
+  font-size: 12px;
+  color: var(--color-text-secondary, #78716c);
+  margin: 0;
+}
+
+.chat-page__confirm-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
 }
 
 .chat-page__confirm-btn {
-  padding: 0.6em 2em;
+  flex: 1;
+  padding: 12px 16px;
   border: none;
-  border-radius: 50em;
-  background-color: var(--color-secondary, #22c55e);
-  color: #ffffff;
-  font-weight: bold;
+  border-radius: 10px;
+  font-weight: 600;
   font-size: 14px;
   cursor: pointer;
+  transition: background-color 0.15s, opacity 0.15s;
+}
+
+.chat-page__confirm-btn--edit {
+  background-color: #f5f5f4;
+  color: var(--color-text-secondary, #78716c);
+  border: 1px solid var(--color-border, #e7e5e4);
+}
+
+.chat-page__confirm-btn--edit:hover:not(:disabled) {
+  background-color: #e7e5e4;
+}
+
+.chat-page__confirm-btn--submit {
+  background-color: var(--color-secondary, #22c55e);
+  color: #ffffff;
+}
+
+.chat-page__confirm-btn--submit:hover:not(:disabled) {
+  background-color: #16a34a;
 }
 
 .chat-page__confirm-btn:disabled {
@@ -1044,6 +1179,90 @@ function goBack() {
 .chat-page__option-confirm:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* ── 是否繼續/確認 快捷按鈕 ── */
+.chat-page__quick-actions {
+  display: flex;
+  gap: 8px;
+  padding: 4px 0;
+  align-self: flex-start;
+}
+
+.chat-page__quick-btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s, transform 0.1s;
+}
+
+.chat-page__quick-btn:active {
+  transform: scale(0.96);
+}
+
+.chat-page__quick-btn--yes {
+  background-color: var(--color-primary, #3b82f6);
+  color: #ffffff;
+}
+
+.chat-page__quick-btn--yes:hover {
+  background-color: #2563eb;
+}
+
+.chat-page__quick-btn--no {
+  background-color: var(--color-secondary, #22c55e);
+  color: #ffffff;
+}
+
+.chat-page__quick-btn--no:hover {
+  background-color: #16a34a;
+}
+
+/* ── 摘要文字格式化 ── */
+.chat-message__summary {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.chat-message__summary :deep(.chat-summary-title) {
+  font-weight: 600;
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--color-text-primary, #1c1917);
+}
+
+.chat-message__summary :deep(.chat-summary-list) {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chat-message__summary :deep(.chat-summary-list li) {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 6px 10px;
+  background-color: #fafaf9;
+  border-radius: 6px;
+  border-left: 3px solid var(--color-primary, #3b82f6);
+}
+
+.chat-message__summary :deep(.chat-summary-label) {
+  font-size: 11px;
+  color: var(--color-text-secondary, #78716c);
+  font-weight: 500;
+}
+
+.chat-message__summary :deep(.chat-summary-value) {
+  font-size: 14px;
+  color: var(--color-text-primary, #1c1917);
+  font-weight: 500;
 }
 
 /* ── 常用地址快速填入 ── */
