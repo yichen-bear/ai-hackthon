@@ -874,6 +874,7 @@ function buildExtractionSystemPrompt(topic) {
     `題目內容：${topic.title}`,
     topic.remark ? `補充說明：${topic.remark}` : '',
     `題目類型代碼：${topic.type}`,
+    `此題目是否必填：${topic.isRequired === '1' ? '是' : '否（使用者可以跳過）'}`,
   ];
 
   // 對單選/多選題目，附上選項清單讓 LLM 可以回傳正確的選項 id
@@ -887,9 +888,13 @@ function buildExtractionSystemPrompt(topic) {
   lines.push(
     '請以 JSON 格式回覆，且只回覆 JSON，不要包含其他文字，格式為：',
     `{"action":"extract_field"|"answer_question"|"match_form"|"error","reply_text":"要回覆給使用者的文字","collected_fields":{"${topic.id}":擷取到的答案},"confidence":0到1之間的數字}`,
-    '若使用者的訊息是在回答此題目，請將 action 設為 extract_field 並將擷取到的答案放入 collected_fields；',
-    '若使用者提出與此題目無關的問題，請將 action 設為 answer_question 並在 reply_text 回答；',
-    '若使用者的訊息顯示想改填另一份表單，請將 action 設為 match_form 並提供 matched_form_id。',
+    '重要規則：',
+    '1. 只要使用者的訊息可以合理視為此題目的答案，就必須將 action 設為 extract_field，即使答案很簡短或只有一兩個字。',
+    '2. 若使用者的訊息是在回答此題目，請將 action 設為 extract_field 並將擷取到的答案放入 collected_fields。',
+    '3. 若使用者提出明確與此題目完全無關的「問題」（以問號結尾的疑問句），請將 action 設為 answer_question 並在 reply_text 回答。',
+    '4. 若使用者的訊息顯示想改填另一份表單，請將 action 設為 match_form 並提供 matched_form_id。',
+    '5. 不要自行產生「感謝」或「完成」等結語，只需擷取答案即可，後續流程由系統處理。',
+    '6. 對於文字型題目，使用者的任何非空白回覆都應視為有效答案（action: extract_field）。',
   );
 
   return lines.filter(Boolean).join('\n');
@@ -1033,9 +1038,43 @@ async function handleFieldExtractionOrOffTopic(session, formMatchingService, llm
     return applyCompletionCheck(session, topics);
   }
 
-  // 若使用者輸入為「跳過」/「都不用」且題目非必填，直接跳過此題不呼叫 LLM
+  // 若使用者表示要結帳/送出，跳過所有剩餘非必填題目直接進入確認階段
   const lastUserMsg = (session.messages || []).filter((m) => m.role === 'user').pop();
-  const skipKeywords = ['跳過', '都不用', '不用', '不需要', '沒有'];
+  const checkoutKeywords = ['結帳', '我要結帳', '不用了，我要結帳', '直接送出', '送出', '結帳送出'];
+  const isCheckoutRequest = lastUserMsg && typeof lastUserMsg.text === 'string'
+    && checkoutKeywords.some(kw => lastUserMsg.text.trim().includes(kw));
+
+  if (isCheckoutRequest) {
+    // 檢查是否有未填的必填題目
+    const unansweredRequired = topics.filter((t) =>
+      t.isRequired === '1' && !session.collectedFields[String(t.id)]
+    );
+
+    if (unansweredRequired.length === 0) {
+      // 所有必填已完成，跳過剩餘選填題目，直接進入確認
+      let updated = { ...session };
+      const unansweredOptional = topics.filter((t) =>
+        t.isRequired !== '1' && !updated.collectedFields[String(t.id)]
+      );
+      for (const t of unansweredOptional) {
+        updated = applyFieldExtraction(updated, {
+          success: true,
+          fields: { [String(t.id)]: { topicId: t.id, value: null } },
+        });
+      }
+      updated = { ...updated, currentTopicId: null, stage: 'confirming' };
+      return appendAssistantMessage(updated, buildSummaryText(topics, updated.collectedFields));
+    }
+    // 還有必填未完成，引導填寫下一個必填題目
+    const nextRequired = formMatchingService.selectNextTopic(unansweredRequired, session.collectedFields);
+    if (nextRequired) {
+      const updated = { ...session, currentTopicId: nextRequired.id };
+      return appendAssistantMessage(updated, `還有必填項目需要完成喔！\n\n請回答：${buildTopicQuestionText(nextRequired)}`);
+    }
+  }
+
+  // 若使用者輸入為「跳過」/「都不用」/「無」且題目非必填，直接跳過此題不呼叫 LLM
+  const skipKeywords = ['跳過', '都不用', '不用', '不需要', '沒有', '無', '沒'];
   const isSkipRequest = lastUserMsg && typeof lastUserMsg.text === 'string'
     && skipKeywords.includes(lastUserMsg.text.trim());
 
@@ -1065,7 +1104,8 @@ async function handleFieldExtractionOrOffTopic(session, formMatchingService, llm
   }
 
   // 若使用者只是簡短的確認/應答語，重新提問目前題目（不視為答案）
-  const ackKeywords = ['好', '好啊', '好的', 'ok', 'OK', '嗯', '是', '可以', '沒問題', '了解', '知道了', '繼續'];
+  // 注意：「是」不列入 ackKeywords，因為「是」可能是在回覆助手的是/否問題（如「是否繼續選購」）
+  const ackKeywords = ['好', '好啊', '好的', 'ok', 'OK', '嗯', '可以', '沒問題', '了解', '知道了', '繼續'];
   const isAckOnly = lastUserMsg && typeof lastUserMsg.text === 'string'
     && ackKeywords.includes(lastUserMsg.text.trim());
 
@@ -1269,7 +1309,7 @@ async function handleConfirmingStage(session, formMatchingService, llmGateway) {
 
   // 若使用者直接說「確認送出」，標記 session 為待送出狀態（前端會觸發 submitFeedback）
   const lastUserMsg = (session.messages || []).filter((m) => m.role === 'user').pop();
-  const confirmKeywords = ['確認送出', '確認', '送出', '沒問題', '確定', '都對了', '正確'];
+  const confirmKeywords = ['確認送出', '沒問題', '確定', '都對了', '正確', '對', '都正確'];
   const isDirectConfirm = lastUserMsg && typeof lastUserMsg.text === 'string'
     && confirmKeywords.includes(lastUserMsg.text.trim());
 
@@ -1277,6 +1317,23 @@ async function handleConfirmingStage(session, formMatchingService, llmGateway) {
     // 保持 stage 為 confirming，讓前端顯示確認按鈕並自動觸發送出
     const updated = { ...session, awaitingSubmitConfirmation: true };
     return appendAssistantMessage(updated, '好的，正在為您送出表單...');
+  }
+
+  // 若使用者表示要修改但未指定項目，直接回覆詢問要修改哪一項
+  const editKeywords = ['修改', '改', '我想修改', '我要修改', '更改', '變更'];
+  const isEditRequest = lastUserMsg && typeof lastUserMsg.text === 'string'
+    && editKeywords.some(kw => lastUserMsg.text.trim().includes(kw));
+  // 但不是指明具體項目的情況（如「修改數量」），那種交給 LLM 判斷
+  const mentionsSpecificField = lastUserMsg && topics.some(t =>
+    lastUserMsg.text.includes(t.title)
+  );
+
+  if (isEditRequest && !mentionsSpecificField) {
+    const fieldList = topics
+      .filter(t => (session.collectedFields || {})[String(t.id)])
+      .map(t => `・${t.title}`)
+      .join('\n');
+    return appendAssistantMessage(session, `好的，請告訴我您要修改哪一個項目：\n${fieldList}`);
   }
 
   const systemPrompt = buildConfirmingSystemPrompt(topics, session.collectedFields);

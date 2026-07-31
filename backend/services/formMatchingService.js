@@ -118,6 +118,12 @@ function isSkippedAnswer(rawAnswer) {
   if (typeof rawAnswer === 'string' && rawAnswer.trim() === '都不用') {
     return true;
   }
+  if (typeof rawAnswer === 'string' && rawAnswer.trim() === '無') {
+    return true;
+  }
+  if (typeof rawAnswer === 'string' && rawAnswer.trim() === '沒') {
+    return true;
+  }
   if (Array.isArray(rawAnswer) && rawAnswer.length === 0) {
     return true;
   }

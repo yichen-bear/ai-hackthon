@@ -82,11 +82,14 @@ function isConfirmationQuestion(text: string): boolean {
     '要繼續',
     '還要',
     '繼續選購',
+    '繼續購物',
     '還需要',
     '是否還要',
     '是否要繼續',
     '確認嗎',
     '對嗎',
+    '或結帳',
+    '還是結帳',
   ]
   return patterns.some(p => text.includes(p))
 }
@@ -147,11 +150,24 @@ watch(messages, () => {
 watch(() => session.value.awaitingSubmitConfirmation, async (awaiting) => {
   if (awaiting) {
     try {
-      await submitFeedback()
-      session.value = {
-        ...session.value,
-        awaitingSubmitConfirmation: false,
-        stage: 'submitted',
+      const response = await submitFeedback()
+      if (response?.success) {
+        session.value = {
+          ...session.value,
+          awaitingSubmitConfirmation: false,
+          stage: 'submitted',
+          messages: [
+            ...session.value.messages,
+            {
+              id: crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+              role: 'assistant' as const,
+              text: '已成功送出表單！感謝您的填寫，我們會盡快為您處理。',
+              createdAt: new Date().toISOString(),
+            },
+          ],
+        }
+      } else {
+        session.value = { ...session.value, awaitingSubmitConfirmation: false }
       }
     } catch {
       session.value = { ...session.value, awaitingSubmitConfirmation: false }
@@ -325,7 +341,24 @@ function handlePlayback(messageId: string, text: string) {
 
 async function handleSubmit() {
   try {
-    await submitFeedback()
+    const response = await submitFeedback()
+    if (response?.success) {
+      // 送出成功：更新 stage 並顯示成功訊息
+      session.value = {
+        ...session.value,
+        stage: 'submitted',
+        awaitingSubmitConfirmation: false,
+        messages: [
+          ...session.value.messages,
+          {
+            id: crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+            role: 'assistant' as const,
+            text: '已成功送出表單！感謝您的填寫，我們會盡快為您處理。',
+            createdAt: new Date().toISOString(),
+          },
+        ],
+      }
+    }
   } catch {
     // sessionError 已由 useChatSession 設定，於畫面顯示即可
   }
@@ -539,16 +572,16 @@ function goBack() {
         <button
           class="chat-page__quick-btn chat-page__quick-btn--yes"
           type="button"
-          @click="doSend('是', 'text')"
+          @click="doSend('是，我要繼續選購', 'text')"
         >
-          是，繼續選購
+          繼續選購
         </button>
         <button
           class="chat-page__quick-btn chat-page__quick-btn--no"
           type="button"
-          @click="doSend('確認', 'text')"
+          @click="doSend('不用了，我要結帳', 'text')"
         >
-          不用了，確認送出
+          結帳送出
         </button>
       </div>
 
