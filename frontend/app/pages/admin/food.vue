@@ -6,13 +6,12 @@ useHead({
 })
 
 // ─── Types ───
-interface Order {
+interface TimeSlot {
   id: string
-  customerName: string
-  items: { name: string; qty: number; price: number }[]
-  totalAmount: number
-  aiNote: string
-  status: 'pending' | 'accepted'
+  time: string
+  remainingTables: number
+  capacity: number
+  status: 'open' | 'full' | 'low'
 }
 
 interface MenuItem {
@@ -23,13 +22,17 @@ interface MenuItem {
   available: boolean
 }
 
-interface DeliveryOrder {
+interface TakeoutOrder {
   id: string
-  orderRef: string
-  driverName: string
-  eta: number
-  destination: string
-  status: 'picking' | 'delivering' | 'delivered'
+  customerName: string
+  phone: string
+  type: 'takeout' | 'delivery'
+  address?: string
+  pickupTime?: string
+  items: { name: string; qty: number; price: number }[]
+  total: number
+  note: string
+  status: 'preparing' | 'ready' | 'delivering' | 'completed'
 }
 
 // ─── Header 狀態 ───
@@ -66,51 +69,147 @@ function syncToClient() {
   showToast('✅ 已同步空位資訊至客戶端')
 }
 
-// ─── Mock 資料：訂單 ───
-const orders = ref<Order[]>([
-  {
-    id: 'o-1',
-    customerName: '王小姐 (4人)',
-    items: [
-      { name: '舒肥雞胸肉餐盒', qty: 2, price: 180 },
-      { name: '日式鮭魚丼飯', qty: 1, price: 220 },
-      { name: '有機沙拉碗', qty: 1, price: 150 },
-    ],
-    totalAmount: 730,
-    aiNote: '🤖 AI 標註：慶生桌 / 需要嬰兒椅',
-    status: 'pending',
-  },
-  {
-    id: 'o-2',
-    customerName: '李先生 (2人)',
-    items: [
-      { name: '松露燉飯', qty: 1, price: 320 },
-      { name: '日式鮭魚丼飯', qty: 1, price: 220 },
-    ],
-    totalAmount: 540,
-    aiNote: '🤖 AI 標註：素食需求 / 靠窗座位',
-    status: 'pending',
-  },
-  {
-    id: 'o-3',
-    customerName: '張太太 (6人)',
-    items: [
-      { name: '舒肥雞胸肉餐盒', qty: 3, price: 180 },
-      { name: '有機沙拉碗', qty: 2, price: 150 },
-      { name: '手作甜點拼盤', qty: 1, price: 280 },
-    ],
-    totalAmount: 1120,
-    aiNote: '🤖 AI 標註：商務聚餐 / 需要投影設備',
-    status: 'pending',
-  },
+// ─── 日曆與時段管理 ───
+const weekdays = ['日', '一', '二', '三', '四', '五', '六']
+
+const selectedDateOffset = ref(0) // 0 = today
+
+const selectedDate = computed(() => {
+  const d = new Date()
+  d.setDate(d.getDate() + selectedDateOffset.value)
+  return d
+})
+
+const selectedDateLabel = computed(() => {
+  const d = selectedDate.value
+  const y = d.getFullYear()
+  const m = d.getMonth() + 1
+  const day = d.getDate()
+  const wd = weekdays[d.getDay()]
+  const isToday = selectedDateOffset.value === 0
+  return `${y} 年 ${m} 月 ${day} 日 (${wd})${isToday ? ' [今日]' : ''}`
+})
+
+const selectedDateStatus = computed(() => {
+  const slots = timeSlots.value
+  const allFull = slots.every(s => s.status === 'full')
+  return allFull ? 'full' : 'available'
+})
+
+function prevDate() {
+  selectedDateOffset.value--
+}
+
+function nextDate() {
+  selectedDateOffset.value++
+}
+
+// Mock time slots for the selected date
+const timeSlots = ref<TimeSlot[]>([
+  { id: 'ts-1', time: '18:00', remainingTables: 2, capacity: 4, status: 'open' },
+  { id: 'ts-2', time: '18:30', remainingTables: 0, capacity: 0, status: 'full' },
+  { id: 'ts-3', time: '19:00', remainingTables: 4, capacity: 8, status: 'open' },
+  { id: 'ts-4', time: '19:30', remainingTables: 1, capacity: 2, status: 'low' },
 ])
 
-function acceptOrder(order: Order) {
-  order.status = 'accepted'
-  if (availableTables.value > 0) {
-    availableTables.value--
+function closeSlot(slot: TimeSlot) {
+  slot.remainingTables = 0
+  slot.capacity = 0
+  slot.status = 'full'
+  showToast(`🔴 已關閉 ${slot.time} 時段`)
+}
+
+function addTable(slot: TimeSlot) {
+  slot.remainingTables++
+  slot.capacity += 4
+  if (slot.status === 'full') {
+    slot.status = slot.remainingTables <= 1 ? 'low' : 'open'
   }
-  showToast(`✅ 已接單：${order.customerName}`)
+  showToast(`➕ ${slot.time} 時段已加開 1 桌`)
+}
+
+function editSlotTables(slot: TimeSlot) {
+  // Simplified: toggle between adding/removing a table
+  if (slot.remainingTables > 0) {
+    slot.remainingTables++
+    slot.capacity += 4
+  }
+  showToast(`✏️ 已修改 ${slot.time} 時段桌數`)
+}
+
+function getSlotStatusLabel(status: TimeSlot['status']) {
+  switch (status) {
+    case 'open': return '🟢 開放預約'
+    case 'full': return '🔴 已額滿'
+    case 'low': return '🟡 剩餘少量'
+  }
+}
+
+function getSlotStatusClass(status: TimeSlot['status']) {
+  switch (status) {
+    case 'open': return 'bg-green-100 text-green-700'
+    case 'full': return 'bg-red-100 text-red-600'
+    case 'low': return 'bg-yellow-100 text-yellow-700'
+  }
+}
+
+// ─── AI 菜單熱量試算 ───
+const aiDishDescription = ref('')
+const aiAnalysisLoading = ref(false)
+const aiAnalysisComplete = ref(false)
+const aiAnalysisResult = ref({
+  name: '',
+  calories: 680,
+  protein: 38,
+  carbs: 65,
+  fiber: 5,
+  fat: 18,
+  price: 250,
+})
+
+function triggerAiAnalysis() {
+  if (!aiDishDescription.value.trim()) {
+    showToast('⚠️ 請先輸入菜色描述或上傳照片')
+    return
+  }
+  aiAnalysisLoading.value = true
+  aiAnalysisComplete.value = false
+  // Simulate API call
+  setTimeout(() => {
+    aiAnalysisResult.value = {
+      name: aiDishDescription.value.split('（')[0].split('(')[0].trim() || '新菜色',
+      calories: 680,
+      protein: 38,
+      carbs: 65,
+      fiber: 5,
+      fat: 18,
+      price: 250,
+    }
+    aiAnalysisLoading.value = false
+    aiAnalysisComplete.value = true
+    showToast('✅ 已完成熱量與營養素分析')
+  }, 1500)
+}
+
+function uploadPhoto() {
+  // Simulate photo upload
+  showToast('📷 已選取照片（模擬）')
+  aiDishDescription.value = '招牌牛肉麵（牛腱肉、手工粗麵、青江菜、紅燒高湯）'
+}
+
+function publishToMenu() {
+  const newId = `m-${Date.now()}`
+  menuItems.value.unshift({
+    id: newId,
+    name: aiAnalysisResult.value.name,
+    calories: aiAnalysisResult.value.calories,
+    price: aiAnalysisResult.value.price,
+    available: true,
+  })
+  // Reset state
+  aiDishDescription.value = ''
+  aiAnalysisComplete.value = false
+  showToast('✅ 已上架至菜單並公開至客戶端')
 }
 
 // ─── Mock 資料：菜單 ───
@@ -127,15 +226,107 @@ function toggleAvailability(item: MenuItem) {
   item.available = !item.available
 }
 
-// ─── Mock 資料：外送 ───
-const deliveryOrders = ref<DeliveryOrder[]>([
-  { id: 'd-1', orderRef: '#F-2024-001', driverName: '張外送員', eta: 8, destination: '台北市大安區忠孝東路 100 號', status: 'delivering' },
-  { id: 'd-2', orderRef: '#F-2024-002', driverName: '林外送員', eta: 15, destination: '台北市信義區松仁路 55 號', status: 'picking' },
-  { id: 'd-3', orderRef: '#F-2024-003', driverName: '陳外送員', eta: 3, destination: '台北市中山區南京東路 200 號', status: 'delivering' },
+function deleteMenuItem(item: MenuItem) {
+  menuItems.value = menuItems.value.filter(m => m.id !== item.id)
+  showToast(`🗑️ 已刪除：${item.name}`)
+}
+
+function editMenuItem(item: MenuItem) {
+  showToast(`✏️ 編輯模式：${item.name}（功能開發中）`)
+}
+
+// ─── Mock 資料：外帶外送 ───
+const takeoutOrders = ref<TakeoutOrder[]>([
+  {
+    id: 't-1',
+    customerName: '陳小明',
+    phone: '0912-345-678',
+    type: 'delivery',
+    address: '台北市信義區忠孝東路五段 100 號 8 樓',
+    items: [
+      { name: '招牌牛肉麵', qty: 1, price: 220 },
+      { name: '燙青菜 (高麗菜)', qty: 1, price: 50 },
+      { name: '無糖綠茶', qty: 1, price: 35 },
+    ],
+    total: 305,
+    note: '不要加蔥，謝謝！',
+    status: 'preparing',
+  },
+  {
+    id: 't-2',
+    customerName: '林美玲',
+    phone: '0923-456-789',
+    type: 'takeout',
+    pickupTime: '18:30',
+    items: [
+      { name: '舒肥雞胸肉餐盒', qty: 2, price: 180 },
+      { name: '冷壓果汁（綜合莓果）', qty: 2, price: 90 },
+    ],
+    total: 540,
+    note: '需要餐具',
+    status: 'preparing',
+  },
+  {
+    id: 't-3',
+    customerName: '王大維',
+    phone: '0934-567-890',
+    type: 'delivery',
+    address: '台北市大安區復興南路二段 68 號 3 樓',
+    items: [
+      { name: '松露燉飯', qty: 1, price: 320 },
+      { name: '有機沙拉碗', qty: 1, price: 150 },
+    ],
+    total: 470,
+    note: '',
+    status: 'delivering',
+  },
 ])
 
-function pushEta(delivery: DeliveryOrder) {
-  showToast(`📲 已推送 ETA（${delivery.eta} 分鐘）給客戶`)
+const orderStatusFlow: TakeoutOrder['status'][] = ['preparing', 'ready', 'delivering', 'completed']
+
+function getOrderStatusLabel(order: TakeoutOrder) {
+  switch (order.status) {
+    case 'preparing': return '🟡 製作中'
+    case 'ready': return order.type === 'takeout' ? '🔵 取餐中' : '🔵 待取餐'
+    case 'delivering': return '🟢 外送中'
+    case 'completed': return '⚪ 已完成'
+  }
+}
+
+function getOrderStatusClass(status: TakeoutOrder['status']) {
+  switch (status) {
+    case 'preparing': return 'bg-yellow-100 text-yellow-700 border-yellow-200'
+    case 'ready': return 'bg-blue-100 text-blue-700 border-blue-200'
+    case 'delivering': return 'bg-green-100 text-green-700 border-green-200'
+    case 'completed': return 'bg-slate-100 text-slate-600 border-slate-200'
+  }
+}
+
+function cycleOrderStatus(order: TakeoutOrder) {
+  const currentIdx = orderStatusFlow.indexOf(order.status)
+  // For takeout orders, skip 'delivering' status
+  if (order.type === 'takeout') {
+    if (order.status === 'preparing') {
+      order.status = 'ready'
+    } else if (order.status === 'ready') {
+      order.status = 'completed'
+    }
+  } else {
+    // Delivery orders go through all statuses
+    if (currentIdx < orderStatusFlow.length - 1) {
+      order.status = orderStatusFlow[currentIdx + 1]
+    }
+  }
+  showToast(`� 訂單狀態已更新為：${getOrderStatusLabel(order)}`)
+}
+
+function contactCustomer(order: TakeoutOrder) {
+  showToast(`📞 正在聯繫 ${order.customerName} (${order.phone})`)
+}
+
+function completeOrder(order: TakeoutOrder) {
+  order.status = 'completed'
+  showToast(`✅ 訂單已完成：${order.customerName}`)
 }
 
 // ─── 六大模組導航 ───
@@ -199,19 +390,6 @@ const modules = [
       <!-- ═══ 主內容區 ═══ -->
       <main class="flex flex-col gap-4 p-4">
 
-        <!-- ═══ Top Dashboard (3 stat badges) ═══ -->
-        <section class="flex justify-center gap-2 flex-wrap" aria-label="統計概覽">
-          <div class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-red-100 text-red-600 shadow-sm">
-            🔴 待接單 (3)
-          </div>
-          <div class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-orange-100 text-orange-600 shadow-sm">
-            🍳 製作中 (2)
-          </div>
-          <div class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-green-100 text-green-600 shadow-sm">
-            🪑 現場空位 ({{ availableTables }} 桌)
-          </div>
-        </section>
-
         <!-- ═══ Tab 切換列 ═══ -->
         <nav class="flex bg-slate-100 rounded-2xl p-1 gap-1 shadow-sm" role="tablist" aria-label="店家管理功能切換">
           <button
@@ -221,7 +399,7 @@ const modules = [
             :class="activeTab === 'orders' ? 'bg-orange-500 text-white shadow-md' : 'bg-transparent text-slate-500 hover:text-slate-700'"
             @click="activeTab = 'orders'"
           >
-            🪑 空位預約
+            空位預約
           </button>
           <button
             role="tab"
@@ -230,7 +408,7 @@ const modules = [
             :class="activeTab === 'menu' ? 'bg-orange-500 text-white shadow-md' : 'bg-transparent text-slate-500 hover:text-slate-700'"
             @click="activeTab = 'menu'"
           >
-            📋 菜單熱量
+            菜單熱量
           </button>
           <button
             role="tab"
@@ -239,7 +417,7 @@ const modules = [
             :class="activeTab === 'dispatch' ? 'bg-orange-500 text-white shadow-md' : 'bg-transparent text-slate-500 hover:text-slate-700'"
             @click="activeTab = 'dispatch'"
           >
-            🚗 外送派單
+            外帶外送
           </button>
         </nav>
 
@@ -300,54 +478,177 @@ const modules = [
             </button>
           </div>
 
-          <!-- 預約與內用訂單列表 -->
-          <div v-for="order in orders" :key="order.id" class="bg-white rounded-2xl border border-slate-200 p-4 flex flex-col gap-3 mb-4 shadow-sm">
-            <!-- 顧客名 + 狀態 -->
-            <div class="flex items-center justify-between">
-              <span class="text-base font-bold text-slate-900">{{ order.customerName }}</span>
-              <span
-                class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold"
-                :class="order.status === 'pending' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'"
+          <!-- ═══ 📅 訂位日曆與時段空位連動管理 ═══ -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-4 flex flex-col gap-4 shadow-sm">
+            <h3 class="text-base font-bold text-slate-900 m-0">📅 訂位日曆與時段空位連動管理</h3>
+
+            <!-- 日期選擇列 -->
+            <div class="flex items-center justify-between bg-slate-50 rounded-xl px-3 py-3">
+              <button
+                class="w-8 h-8 rounded-full bg-white border border-slate-200 text-sm font-bold text-slate-700 cursor-pointer flex items-center justify-center hover:border-orange-400 hover:text-orange-500 active:scale-90 transition-all shadow-sm"
+                @click="prevDate"
               >
-                {{ order.status === 'pending' ? '待接單' : '✅ 已接單' }}
-              </span>
+                &lt;
+              </button>
+              <div class="flex flex-col items-center gap-1">
+                <span class="text-sm font-bold text-slate-800">{{ selectedDateLabel }}</span>
+                <span
+                  class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold"
+                  :class="selectedDateStatus === 'available' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'"
+                >
+                  {{ selectedDateStatus === 'available' ? '🟢 尚有空位' : '🔴 已額滿' }}
+                </span>
+              </div>
+              <button
+                class="w-8 h-8 rounded-full bg-white border border-slate-200 text-sm font-bold text-slate-700 cursor-pointer flex items-center justify-center hover:border-orange-400 hover:text-orange-500 active:scale-90 transition-all shadow-sm"
+                @click="nextDate"
+              >
+                &gt;
+              </button>
             </div>
 
-            <!-- AI 標註 -->
-            <p class="text-sm text-amber-700 m-0 bg-amber-50 rounded-xl px-3 py-2 border border-amber-200">
-              {{ order.aiNote }}
-            </p>
+            <!-- 時段空位控制卡片列表 -->
+            <div class="flex flex-col gap-3">
+              <div
+                v-for="slot in timeSlots"
+                :key="slot.id"
+                class="bg-slate-50 rounded-xl p-3 flex flex-col gap-2 border border-slate-100"
+              >
+                <!-- 時段 header -->
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-extrabold text-slate-900">{{ slot.time }}</span>
+                  <span
+                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold"
+                    :class="getSlotStatusClass(slot.status)"
+                  >
+                    {{ getSlotStatusLabel(slot.status) }}
+                  </span>
+                </div>
 
-            <!-- 品項列表 -->
-            <div class="flex flex-col gap-1.5">
-              <div v-for="item in order.items" :key="item.name" class="flex justify-between text-sm text-slate-700">
-                <span>{{ item.name }} x{{ item.qty }}</span>
-                <span class="font-semibold">${{ item.price * item.qty }}</span>
+                <!-- 剩餘資訊 -->
+                <div class="text-sm text-slate-600">
+                  <span v-if="slot.remainingTables > 0">
+                    剩餘 <span class="font-bold text-slate-800">{{ slot.remainingTables }} 桌 ({{ slot.capacity }}人)</span>
+                  </span>
+                  <span v-else class="font-bold text-red-500">剩餘 0 桌</span>
+                </div>
+
+                <!-- 操作按鈕 -->
+                <div class="flex gap-2 flex-wrap">
+                  <button
+                    v-if="slot.status !== 'full'"
+                    class="px-3 py-1.5 rounded-lg text-xs font-bold bg-red-50 text-red-600 border border-red-200 cursor-pointer hover:bg-red-100 active:scale-95 transition-all"
+                    @click="closeSlot(slot)"
+                  >
+                    關閉該時段
+                  </button>
+                  <button
+                    v-if="slot.status !== 'full'"
+                    class="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-50 text-blue-600 border border-blue-200 cursor-pointer hover:bg-blue-100 active:scale-95 transition-all"
+                    @click="editSlotTables(slot)"
+                  >
+                    修改桌數
+                  </button>
+                  <button
+                    v-if="slot.status === 'full'"
+                    class="px-3 py-1.5 rounded-lg text-xs font-bold bg-green-50 text-green-700 border border-green-200 cursor-pointer hover:bg-green-100 active:scale-95 transition-all"
+                    @click="addTable(slot)"
+                  >
+                    ➕ 加開 1 桌
+                  </button>
+                </div>
               </div>
             </div>
 
-            <!-- 合計 -->
-            <div class="flex justify-between items-center border-t border-slate-100 pt-3">
-              <span class="text-sm text-slate-500">合計</span>
-              <span class="text-lg font-extrabold text-orange-500">${{ order.totalAmount }}</span>
-            </div>
-
-            <!-- 接單按鈕 -->
-            <button
-              v-if="order.status === 'pending'"
-              class="w-full py-2.5 bg-green-500 text-white rounded-xl text-base font-bold cursor-pointer border-none hover:bg-green-600 active:scale-[0.97] transition-all shadow-md"
-              @click="acceptOrder(order)"
-            >
-              🟢 確認接單 / 安排入座
-            </button>
-            <div v-else class="text-sm font-bold text-green-600 bg-green-50 rounded-xl px-3 py-2.5 text-center border border-green-200">
-              ✅ 已接單 — 安排入座中
-            </div>
+            <!-- 連動提示列 -->
+            <p class="text-xs text-slate-400 m-0 text-center leading-relaxed">
+              💡 此處設定的日期與時段空位，將即時連線同步至客戶端『想吃什麼 ➔ 訂位』選單中。
+            </p>
           </div>
         </section>
 
         <!-- ═══ Tab 2：菜單與熱量標籤 ═══ -->
         <section v-show="activeTab === 'menu'" role="tabpanel" aria-label="菜單與熱量標籤">
+
+          <!-- ═══ 📸 AI 菜單熱量自動分析與試算區塊 ═══ -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-4 flex flex-col gap-4 mb-4 shadow-sm">
+            <h3 class="text-base font-bold text-slate-900 m-0">📸 AI 菜單熱量試算與上架</h3>
+
+            <!-- 拍照 / 上傳按鈕 -->
+            <button
+              class="w-full py-3 bg-slate-50 rounded-xl border-2 border-dashed border-slate-300 text-sm font-bold text-slate-600 cursor-pointer hover:border-orange-400 hover:text-orange-500 hover:bg-orange-50 active:scale-[0.97] transition-all"
+              @click="uploadPhoto"
+            >
+              📷 上傳菜色照片
+            </button>
+
+            <!-- 菜色描述輸入 -->
+            <textarea
+              v-model="aiDishDescription"
+              class="w-full min-h-[80px] p-3 rounded-xl border border-slate-200 text-sm text-slate-800 resize-none focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition-all"
+              placeholder="例如：招牌牛肉麵（牛腱肉、手工粗麵、青江菜、紅燒高湯）..."
+            />
+
+            <!-- AI 試算按鈕 -->
+            <button
+              class="w-full py-2.5 bg-orange-500 text-white rounded-xl text-base font-bold cursor-pointer border-none hover:bg-orange-600 active:scale-[0.97] transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+              :disabled="aiAnalysisLoading"
+              @click="triggerAiAnalysis"
+            >
+              <span v-if="aiAnalysisLoading">⏳ AI 分析中...</span>
+              <span v-else>🤖 AI 試算熱量</span>
+            </button>
+
+            <!-- 營養分析結果卡片 -->
+            <div v-if="aiAnalysisComplete" class="bg-slate-50 rounded-xl p-4 flex flex-col gap-3 border border-slate-100">
+              <div class="text-center">
+                <span class="text-lg font-extrabold text-slate-900">預估熱量：</span>
+                <span class="text-lg font-extrabold text-orange-500">{{ aiAnalysisResult.calories }} kcal / 份</span>
+              </div>
+
+              <!-- 四大營養素 -->
+              <div class="grid grid-cols-2 gap-2">
+                <div class="flex items-center gap-2 bg-blue-50 rounded-lg px-3 py-2 border border-blue-100">
+                  <span class="text-sm">🔵</span>
+                  <div class="flex flex-col">
+                    <span class="text-xs text-slate-500">蛋白質</span>
+                    <span class="text-sm font-bold text-blue-700">{{ aiAnalysisResult.protein }} g</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 bg-orange-50 rounded-lg px-3 py-2 border border-orange-100">
+                  <span class="text-sm">🟠</span>
+                  <div class="flex flex-col">
+                    <span class="text-xs text-slate-500">碳水化合物</span>
+                    <span class="text-sm font-bold text-orange-700">{{ aiAnalysisResult.carbs }} g</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 bg-green-50 rounded-lg px-3 py-2 border border-green-100">
+                  <span class="text-sm">🟢</span>
+                  <div class="flex flex-col">
+                    <span class="text-xs text-slate-500">膳食纖維</span>
+                    <span class="text-sm font-bold text-green-700">{{ aiAnalysisResult.fiber }} g</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 bg-red-50 rounded-lg px-3 py-2 border border-red-100">
+                  <span class="text-sm">🔴</span>
+                  <div class="flex flex-col">
+                    <span class="text-xs text-slate-500">脂質/脂肪</span>
+                    <span class="text-sm font-bold text-red-700">{{ aiAnalysisResult.fat }} g</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 一鍵上架 -->
+              <button
+                class="w-full py-2.5 bg-green-500 text-white rounded-xl text-sm font-bold cursor-pointer border-none hover:bg-green-600 active:scale-[0.97] transition-all shadow-md"
+                @click="publishToMenu"
+              >
+                ➕ 同步儲存至菜單並公開至客戶端
+              </button>
+            </div>
+          </div>
+
+          <!-- ═══ 📋 已上架菜單清單與熱量列表 ═══ -->
           <div v-for="item in menuItems" :key="item.id" class="bg-white rounded-2xl border border-slate-200 p-4 flex flex-col gap-3 mb-4 shadow-sm">
             <div class="flex items-center justify-between">
               <span class="text-base font-bold text-slate-900">{{ item.name }}</span>
@@ -355,11 +656,32 @@ const modules = [
             </div>
             <div class="flex items-center justify-between">
               <span class="text-sm text-slate-500 font-medium">🔥 {{ item.calories }} kcal</span>
+              <span
+                class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold"
+                :class="item.available ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'"
+              >
+                {{ item.available ? '🟢 販售中' : '🔴 已售完' }}
+              </span>
+            </div>
+            <!-- 操作按鈕列 -->
+            <div class="flex gap-2">
               <button
-                class="px-4 py-1.5 rounded-full text-xs font-bold cursor-pointer border-none transition-all active:scale-95 shadow-sm"
+                class="flex-1 py-2 rounded-xl text-xs font-bold bg-blue-50 text-blue-600 border border-blue-200 cursor-pointer hover:bg-blue-100 active:scale-95 transition-all"
+                @click="editMenuItem(item)"
+              >
+                ✏️ 編輯
+              </button>
+              <button
+                class="flex-1 py-2 rounded-xl text-xs font-bold bg-red-50 text-red-600 border border-red-200 cursor-pointer hover:bg-red-100 active:scale-95 transition-all"
+                @click="deleteMenuItem(item)"
+              >
+                🗑️ 刪除
+              </button>
+              <button
+                class="flex-1 py-2 rounded-xl text-xs font-bold cursor-pointer border transition-all active:scale-95"
                 :class="item.available
-                  ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                  : 'bg-red-100 text-red-600 hover:bg-red-200'"
+                  ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100'
+                  : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'"
                 @click="toggleAvailability(item)"
               >
                 {{ item.available ? '🟢 販售中' : '🔴 已售完' }}
@@ -368,29 +690,69 @@ const modules = [
           </div>
         </section>
 
-        <!-- ═══ Tab 3：外送派單與進度 ═══ -->
-        <section v-show="activeTab === 'dispatch'" role="tabpanel" aria-label="外送派單與進度">
-          <div v-for="delivery in deliveryOrders" :key="delivery.id" class="bg-white rounded-2xl border border-slate-200 p-4 flex flex-col gap-3 mb-4 shadow-sm">
+        <!-- ═══ Tab 3：外帶外送訂單管理 ═══ -->
+        <section v-show="activeTab === 'dispatch'" role="tabpanel" aria-label="外帶外送訂單管理">
+          <div v-for="order in takeoutOrders" :key="order.id" class="bg-white rounded-2xl border border-slate-200 p-4 flex flex-col gap-3 mb-4 shadow-sm">
+
+            <!-- 卡片頂部：顧客資訊 + 狀態 Badge -->
             <div class="flex items-center justify-between">
-              <span class="text-base font-bold text-slate-900">{{ delivery.orderRef }}</span>
-              <span
-                class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold"
-                :class="delivery.status === 'delivering' ? 'bg-blue-100 text-blue-700' : delivery.status === 'picking' ? 'bg-orange-100 text-orange-600' : 'bg-green-100 text-green-600'"
+              <div class="flex flex-col gap-0.5">
+                <span class="text-base font-bold text-slate-900">👤 {{ order.customerName }} ({{ order.phone }})</span>
+                <span class="text-xs font-semibold" :class="order.type === 'delivery' ? 'text-green-600' : 'text-blue-600'">
+                  {{ order.type === 'delivery' ? '🛵 外送' : '🥡 外帶自取' }}
+                </span>
+              </div>
+              <button
+                class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold cursor-pointer border transition-all active:scale-95"
+                :class="getOrderStatusClass(order.status)"
+                @click="cycleOrderStatus(order)"
               >
-                {{ delivery.status === 'picking' ? '🍳 取餐中' : delivery.status === 'delivering' ? '🚗 外送中' : '✅ 已送達' }}
-              </span>
+                {{ getOrderStatusLabel(order) }}
+              </button>
             </div>
-            <div class="flex items-center gap-2 text-sm">
-              <span class="font-bold text-slate-800">🚗 {{ delivery.driverName }}</span>
-              <span class="text-slate-500">— 預計 {{ delivery.eta }} 分鐘抵達</span>
+
+            <!-- 外送地址 / 自取時間 -->
+            <div v-if="order.type === 'delivery' && order.address" class="text-sm text-slate-600 bg-slate-50 rounded-xl px-3 py-2 border border-slate-100">
+              📍 {{ order.address }}
             </div>
-            <p class="text-sm text-slate-500 m-0">📍 {{ delivery.destination }}</p>
-            <button
-              class="w-full py-2.5 bg-orange-500 text-white rounded-xl text-base font-bold cursor-pointer border-none hover:bg-orange-600 active:scale-[0.97] transition-all shadow-md"
-              @click="pushEta(delivery)"
-            >
-              📲 模擬推送 ETA 給客戶
-            </button>
+            <div v-if="order.type === 'takeout' && order.pickupTime" class="text-sm text-slate-600 bg-blue-50 rounded-xl px-3 py-2 border border-blue-100">
+              ⏱️ 預計自取時間：{{ order.pickupTime }}
+            </div>
+
+            <!-- 餐點明細 -->
+            <div class="flex flex-col gap-1.5">
+              <div v-for="item in order.items" :key="item.name" class="flex justify-between text-sm text-slate-700">
+                <span>• {{ item.name }} x {{ item.qty }}</span>
+                <span class="font-semibold">${{ item.price * item.qty }}</span>
+              </div>
+            </div>
+
+            <!-- 小計 + 備註 -->
+            <div class="flex items-center justify-between border-t border-slate-100 pt-2">
+              <span class="text-sm font-bold text-slate-900">� 總計</span>
+              <span class="text-base font-extrabold text-orange-500">${{ order.total }}</span>
+            </div>
+            <div v-if="order.note" class="text-sm text-amber-700 bg-amber-50 rounded-xl px-3 py-2 border border-amber-200">
+              � 備註：{{ order.note }}
+            </div>
+
+            <!-- 底部操作按鈕 -->
+            <div class="flex gap-2">
+              <button
+                class="flex-1 py-2.5 rounded-xl text-sm font-bold bg-blue-50 text-blue-600 border border-blue-200 cursor-pointer hover:bg-blue-100 active:scale-95 transition-all"
+                @click="contactCustomer(order)"
+              >
+                📞 聯繫顧客
+              </button>
+              <button
+                class="flex-1 py-2.5 rounded-xl text-sm font-bold cursor-pointer border-none active:scale-[0.97] transition-all shadow-md"
+                :class="order.status === 'completed' ? 'bg-slate-300 text-slate-500 cursor-not-allowed' : 'bg-green-500 text-white hover:bg-green-600'"
+                :disabled="order.status === 'completed'"
+                @click="completeOrder(order)"
+              >
+                ✅ 完成訂單
+              </button>
+            </div>
           </div>
         </section>
 
