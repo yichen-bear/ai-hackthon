@@ -157,7 +157,43 @@ const selectedTemplate = ref<NotifyTemplate>('reminder')
 const customMessage = ref('')
 const sendTargetId = ref('')
 
-// ─── Computed ───
+// ─── 報到模式 ───
+const checkinMode = ref(false)
+const checkinActId = ref('')
+
+function enterCheckinMode(actId: string) {
+  checkinMode.value = true
+  checkinActId.value = actId
+  showToast('📱 已進入報到模式 — 點名單中的人或掃描 QR Code 即可報到')
+}
+function exitCheckinMode() {
+  checkinMode.value = false
+  checkinActId.value = ''
+}
+function checkinByTap(act: ManagedActivity, reg: Registration) {
+  if (reg.status === 'confirmed') {
+    reg.status = 'checked_in'
+    act.checkedInCount++
+    showToast(`✅ ${reg.contactName} 報到成功`)
+  }
+}
+
+// ─── 批次操作 ───
+function confirmAllPending(act: ManagedActivity) {
+  const pendings = act.registrations.filter(r => r.status === 'pending')
+  pendings.forEach(r => { r.status = 'confirmed' })
+  showToast(`✅ 已批次確認 ${pendings.length} 位報名者`)
+}
+function resolveAllNeeds(act: ManagedActivity) {
+  act.registrations.forEach(r => r.specialNeeds.forEach(n => { n.resolved = true }))
+  showToast(`✅ 已全部標記為已安排`)
+}
+
+// ─── 展開詳情 ───
+const expandedRegId = ref('')
+function toggleExpand(regId: string) {
+  expandedRegId.value = expandedRegId.value === regId ? '' : regId
+}
 const filteredActivities = computed(() => {
   if (selectedCategory.value === 'all') return activities.value
   return activities.value.filter(a => a.category === selectedCategory.value)
@@ -235,7 +271,7 @@ function resetDemo() { location.reload() }
         <button v-for="(tab, idx) in tabs" :key="tab" class="ea__tab" :class="{ 'ea__tab--active': activeTab === idx }" @click="activeTab = idx">{{ ['📋', '🎯', '📢'][idx] }} {{ tab }}</button>
       </nav>
 
-      <!-- Tab 1：報名管理 -->
+      <!-- Tab 1：報名管理（精簡版） -->
       <section v-show="activeTab === 0">
         <div v-for="act in filteredActivities" :key="act.id" class="ea__card">
           <div class="ea__card-top">
@@ -245,31 +281,68 @@ function resetDemo() { location.reload() }
             </div>
             <span class="ea__badge" :class="{ 'ea__badge--green': act.status==='open', 'ea__badge--amber': act.status==='almost_full', 'ea__badge--red': act.status==='full' }">{{ getStatusLabel(act.status) }}</span>
           </div>
+
           <!-- 人數進度 -->
           <div class="ea__capacity">
             <div class="ea__progress-bar"><div class="ea__progress-fill" :class="getCapacityClass(act.currentParticipants, act.maxParticipants)" :style="{ width: getCapacityPercent(act.currentParticipants, act.maxParticipants) + '%' }"></div></div>
             <span class="ea__capacity-text">👥 {{ act.currentParticipants }}/{{ act.maxParticipants }}<span v-if="act.waitlistCount > 0" class="ea__waitlist">（候補 {{ act.waitlistCount }}）</span></span>
           </div>
-          <!-- 報名列表 -->
-          <div v-for="reg in act.registrations.filter(r => r.status !== 'cancelled')" :key="reg.id" class="ea__reg-row">
-            <div class="ea__reg-info">
-              <span class="ea__reg-name">{{ reg.contactName }}</span>
-              <span class="ea__reg-phone">{{ reg.contactPhone }}</span>
-              <span class="ea__reg-source">{{ getSourceLabel(reg.source) }}</span>
-              <span class="ea__reg-status" :class="'ea__reg-status--' + reg.status">{{ getRegStatusLabel(reg.status) }}</span>
-            </div>
-            <div v-if="reg.specialNeeds.length > 0" class="ea__needs">
-              <div v-for="need in reg.specialNeeds" :key="need.type" class="ea__need" :class="{ 'ea__need--done': need.resolved }">
-                <span>{{ getSpecialNeedLabel(need.type) }}</span>
-                <span v-if="need.note" class="ea__need-note">{{ need.note }}</span>
-                <button v-if="!need.resolved" class="ea__need-btn" @click="resolveNeed(reg, need)">✅ 已安排</button>
-                <span v-else class="ea__need-ok">已處理</span>
+
+          <!-- ═══ 頂部批次操作列 ═══ -->
+          <div class="ea__batch-bar">
+            <button v-if="act.registrations.filter(r => r.status === 'pending').length > 0" class="ea__batch-btn ea__batch-btn--green" @click="confirmAllPending(act)">
+              ✅ 全部確認 ({{ act.registrations.filter(r => r.status === 'pending').length }})
+            </button>
+            <button v-if="!checkinMode || checkinActId !== act.id" class="ea__batch-btn ea__batch-btn--blue" @click="enterCheckinMode(act.id)">
+              📱 報到模式
+            </button>
+            <button v-else class="ea__batch-btn ea__batch-btn--gray" @click="exitCheckinMode">
+              ✕ 退出報到
+            </button>
+          </div>
+
+          <!-- ═══ 特殊需求待處理面板（僅有未處理時顯示） ═══ -->
+          <details v-if="act.registrations.some(r => r.specialNeeds.some(n => !n.resolved))" class="ea__needs-panel">
+            <summary class="ea__needs-summary">⚠️ {{ act.registrations.reduce((s, r) => s + r.specialNeeds.filter(n => !n.resolved).length, 0) }} 項特殊需求待安排</summary>
+            <div class="ea__needs-list">
+              <div v-for="reg in act.registrations.filter(r => r.specialNeeds.some(n => !n.resolved))" :key="reg.id" class="ea__needs-row">
+                <span class="ea__reg-name">{{ reg.contactName }}</span>
+                <div v-for="need in reg.specialNeeds.filter(n => !n.resolved)" :key="need.type" class="ea__need-inline">
+                  <span>{{ getSpecialNeedLabel(need.type) }}</span>
+                  <span v-if="need.note" class="ea__need-note">{{ need.note }}</span>
+                  <button class="ea__need-btn" @click="resolveNeed(reg, need)">✅</button>
+                </div>
               </div>
+              <button class="ea__batch-btn ea__batch-btn--green ea__batch-btn--full" @click="resolveAllNeeds(act)">✅ 全部已安排</button>
             </div>
-            <div class="ea__reg-actions">
-              <button v-if="reg.status==='pending'" class="ea__btn-sm ea__btn-sm--green" @click="confirmReg(act, reg)">✅ 確認</button>
-              <button v-if="reg.status==='confirmed'" class="ea__btn-sm ea__btn-sm--blue" @click="checkinReg(act, reg)">📱 報到</button>
-              <button v-if="!['cancelled','completed'].includes(reg.status)" class="ea__btn-sm ea__btn-sm--red" @click="cancelReg(act, reg)">取消</button>
+          </details>
+
+          <!-- ═══ 報到模式提示 ═══ -->
+          <div v-if="checkinMode && checkinActId === act.id" class="ea__checkin-banner">
+            📱 報到模式啟動中 — 點擊名單即報到（QR 掃碼或手動勾選）
+          </div>
+
+          <!-- ═══ 精簡報名清單 ═══ -->
+          <div class="ea__reg-list">
+            <div
+              v-for="reg in act.registrations.filter(r => r.status !== 'cancelled')"
+              :key="reg.id"
+              class="ea__reg-item"
+              :class="{ 'ea__reg-item--checkin-mode': checkinMode && checkinActId === act.id && reg.status === 'confirmed' }"
+              @click="checkinMode && checkinActId === act.id ? checkinByTap(act, reg) : toggleExpand(reg.id)"
+            >
+              <div class="ea__reg-main">
+                <span class="ea__reg-name">{{ reg.contactName }}</span>
+                <span class="ea__reg-phone">{{ reg.contactPhone }}</span>
+                <span class="ea__reg-source">{{ getSourceLabel(reg.source) }}</span>
+                <span class="ea__reg-status" :class="'ea__reg-status--' + reg.status">{{ getRegStatusLabel(reg.status) }}</span>
+                <span v-if="reg.specialNeeds.some(n => !n.resolved)" class="ea__has-needs">⚠️</span>
+              </div>
+              <!-- 展開詳情（點擊展開，含取消按鈕） -->
+              <div v-if="expandedRegId === reg.id && !checkinMode" class="ea__reg-expanded">
+                <p class="ea__reg-detail">📅 報名：{{ reg.registeredAt }} · {{ reg.paymentMethod }}</p>
+                <button v-if="reg.status !== 'completed'" class="ea__btn-sm ea__btn-sm--red" @click.stop="cancelReg(act, reg)">❌ 取消報名</button>
+              </div>
             </div>
           </div>
         </div>
@@ -398,6 +471,40 @@ function resetDemo() { location.reload() }
 .ea__btn-sm--green { background: #16a34a; color: #fff; }
 .ea__btn-sm--blue { background: #2563eb; color: #fff; }
 .ea__btn-sm--red { background: transparent; border: 1px solid #e11d48; color: #e11d48; }
+
+/* ═══ 批次操作列 ═══ */
+.ea__batch-bar { display: flex; gap: 8px; }
+.ea__batch-btn { flex: 1; padding: 10px 12px; border: none; border-radius: 10px; font-size: 12px; font-weight: 700; font-family: inherit; cursor: pointer; text-align: center; transition: opacity .15s; }
+.ea__batch-btn:hover { opacity: .85; }
+.ea__batch-btn--green { background: #16a34a; color: #fff; }
+.ea__batch-btn--blue { background: #2563eb; color: #fff; }
+.ea__batch-btn--gray { background: #78716c; color: #fff; }
+.ea__batch-btn--full { width: 100%; margin-top: 8px; }
+
+/* ═══ 特殊需求面板 ═══ */
+.ea__needs-panel { border: 1px solid #fde68a; border-radius: 12px; background: #fffbeb; overflow: hidden; }
+.ea__needs-summary { padding: 10px 12px; font-size: 13px; font-weight: 600; color: #d97706; cursor: pointer; list-style: none; }
+.ea__needs-summary::-webkit-details-marker { display: none; }
+.ea__needs-panel[open] .ea__needs-summary { border-bottom: 1px solid #fde68a; }
+.ea__needs-list { padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+.ea__needs-row { display: flex; flex-direction: column; gap: 4px; }
+.ea__need-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 4px 8px; background: #fff; border: 1px solid #fde68a; border-radius: 6px; margin-top: 2px; }
+
+/* ═══ 報到模式 ═══ */
+.ea__checkin-banner { font-size: 12px; font-weight: 600; color: #2563eb; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 10px 12px; text-align: center; animation: pulse-blue 2s infinite; }
+@keyframes pulse-blue { 0%,100% { opacity: 1; } 50% { opacity: .7; } }
+
+/* ═══ 精簡報名清單 ═══ */
+.ea__reg-list { display: flex; flex-direction: column; }
+.ea__reg-item { padding: 10px 0; border-bottom: 1px solid #f1f5f9; cursor: pointer; transition: background .1s; }
+.ea__reg-item:last-child { border-bottom: none; }
+.ea__reg-item:hover { background: #fafafa; }
+.ea__reg-item--checkin-mode { cursor: pointer; padding: 10px 8px; border-radius: 8px; border: 1.5px dashed #2563eb; margin-bottom: 4px; }
+.ea__reg-item--checkin-mode:hover { background: #eff6ff; }
+.ea__reg-main { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.ea__has-needs { font-size: 12px; }
+.ea__reg-expanded { margin-top: 6px; padding: 8px 10px; background: #f8fafc; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; }
+.ea__reg-detail { margin: 0; font-size: 11px; color: #78716c; }
 .ea__manage-actions { display: flex; gap: 8px; }
 .ea__btn { flex: 1; padding: 12px; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .ea__btn--primary { background: #ec4899; color: #fff; }
