@@ -78,6 +78,11 @@ const overallEnrollRate = computed(() => {
 const aiWarningCourses = computed(() => courses.value.filter(c => c.aiWarning && c.aiWarning.level !== 'ok'))
 
 // ─── Mock 資料 ───
+// ─── Mock 資料 ───
+// 格式對齊 DB pms_form_feedback.feedback_content (formId=1009)
+// 課程名稱對應 topicId 3050 選項 (id 4090~4094)
+// 學員 name/phone 來自解密後的加密欄位
+// 經驗程度對應 topicId 3052 選項 (id 4095~4097)
 const courses = ref<ManagedCourse[]>([
   {
     id: 'cc-1', name: '銀髮族手機攝影班', instructor: '陳老師', schedule: '每週三 09:00-11:00',
@@ -85,9 +90,9 @@ const courses = ref<ManagedCourse[]>([
     minStudents: 15, maxStudents: 30, currentStudents: 24, waitlistCount: 2,
     phase: 'enrolling', currentSession: 0,
     students: [
-      { id: 's-1', name: '劉奶奶', phone: '0912-001-002', registeredAt: '07/10', needs: [{ type: 'beginner', note: '從未用過手機拍照', resolved: true }], attendanceRate: 0, attended: 0, total: 12 },
-      { id: 's-2', name: '許伯伯', phone: '0933-002-003', registeredAt: '07/12', needs: [{ type: 'hearing_aid', note: '需坐前排', resolved: false }], attendanceRate: 0, attended: 0, total: 12 },
-      { id: 's-3', name: '蔡阿姨', phone: '0955-003-004', registeredAt: '07/15', needs: [{ type: 'material_purchase', note: '需代購手機腳架', resolved: false }], attendanceRate: 0, attended: 0, total: 12 },
+      { id: 's-1', name: '劉奶奶', phone: '0912-***-002', registeredAt: '08/01', needs: [{ type: 'beginner', note: '從未用過手機拍照', resolved: true }], attendanceRate: 0, attended: 0, total: 12 },
+      { id: 's-2', name: '許伯伯', phone: '0933-***-003', registeredAt: '08/02', needs: [{ type: 'hearing_aid', note: '需坐前排', resolved: false }], attendanceRate: 0, attended: 0, total: 12 },
+      { id: 's-3', name: '蔡阿姨', phone: '0955-***-004', registeredAt: '08/03', needs: [{ type: 'material_purchase', note: '需代購手機腳架', resolved: false }], attendanceRate: 0, attended: 0, total: 12 },
     ],
     aiWarning: { level: 'ok', message: '✅ 已達開班門檻，報名順利', matchedResidents: 0 },
   },
@@ -97,8 +102,8 @@ const courses = ref<ManagedCourse[]>([
     minStudents: 10, maxStudents: 15, currentStudents: 7, waitlistCount: 0,
     phase: 'enrolling', currentSession: 0,
     students: [
-      { id: 's-4', name: '蔡小姐', phone: '0955-004-005', registeredAt: '07/08', needs: [], attendanceRate: 0, attended: 0, total: 8 },
-      { id: 's-5', name: '周媽媽', phone: '0966-005-006', registeredAt: '07/10', needs: [{ type: 'beginner', resolved: true }], attendanceRate: 0, attended: 0, total: 8 },
+      { id: 's-4', name: '蔡小姐', phone: '0955-***-005', registeredAt: '07/28', needs: [], attendanceRate: 0, attended: 0, total: 8 },
+      { id: 's-5', name: '周媽媽', phone: '0966-***-006', registeredAt: '07/30', needs: [{ type: 'beginner', resolved: true }], attendanceRate: 0, attended: 0, total: 8 },
     ],
     aiWarning: { level: 'danger', message: '⚠️ 離開班還差 3 人！已自動推薦給 12 位興趣相符的居民', matchedResidents: 12 },
   },
@@ -108,9 +113,9 @@ const courses = ref<ManagedCourse[]>([
     minStudents: 12, maxStudents: 25, currentStudents: 25, waitlistCount: 6,
     phase: 'in_progress', currentSession: 8,
     students: [
-      { id: 's-6', name: '周先生', phone: '0977-006-007', registeredAt: '06/20', needs: [], attendanceRate: 88, attended: 7, total: 8 },
-      { id: 's-7', name: '趙太太', phone: '0988-007-008', registeredAt: '06/22', needs: [{ type: 'beginner', resolved: true }], attendanceRate: 100, attended: 8, total: 8 },
-      { id: 's-8', name: '魏伯伯', phone: '0911-008-009', registeredAt: '06/25', needs: [{ type: 'wheelchair', note: '右膝舊傷需特別注意', resolved: true }], attendanceRate: 63, attended: 5, total: 8 },
+      { id: 's-6', name: '周先生', phone: '0977-***-007', registeredAt: '06/20', needs: [], attendanceRate: 88, attended: 7, total: 8 },
+      { id: 's-7', name: '趙太太', phone: '0988-***-008', registeredAt: '06/22', needs: [{ type: 'beginner', resolved: true }], attendanceRate: 100, attended: 8, total: 8 },
+      { id: 's-8', name: '魏伯伯', phone: '0911-***-009', registeredAt: '06/25', needs: [{ type: 'wheelchair', note: '右膝舊傷需特別注意', resolved: true }], attendanceRate: 63, attended: 5, total: 8 },
     ],
     aiWarning: { level: 'ok', message: '✅ 已開班，授課進度正常（第 8/24 堂）', matchedResidents: 0 },
   },
@@ -120,7 +125,7 @@ const courses = ref<ManagedCourse[]>([
     minStudents: 8, maxStudents: 12, currentStudents: 5, waitlistCount: 0,
     phase: 'enrolling', currentSession: 0,
     students: [
-      { id: 's-9', name: '邱小姐', phone: '0922-009-010', registeredAt: '07/20', needs: [{ type: 'material_purchase', note: '需代購精油材料包', resolved: false }], attendanceRate: 0, attended: 0, total: 6 },
+      { id: 's-9', name: '邱小姐', phone: '0922-***-010', registeredAt: '08/01', needs: [{ type: 'material_purchase', note: '需代購精油材料包', resolved: false }], attendanceRate: 0, attended: 0, total: 6 },
     ],
     aiWarning: { level: 'warn', message: '⚠️ 離開班還差 3 人，已推薦給 8 位有「手作」興趣的居民', matchedResidents: 8 },
   },
@@ -130,8 +135,8 @@ const courses = ref<ManagedCourse[]>([
     minStudents: 10, maxStudents: 20, currentStudents: 18, waitlistCount: 0,
     phase: 'in_progress', currentSession: 5,
     students: [
-      { id: 's-10', name: '楊先生', phone: '0933-010-011', registeredAt: '06/15', needs: [{ type: 'beginner', note: '完全零基礎', resolved: true }], attendanceRate: 100, attended: 5, total: 5 },
-      { id: 's-11', name: '沈小姐', phone: '0955-011-012', registeredAt: '06/18', needs: [], attendanceRate: 80, attended: 4, total: 5 },
+      { id: 's-10', name: '楊先生', phone: '0933-***-011', registeredAt: '06/15', needs: [{ type: 'beginner', note: '完全零基礎', resolved: true }], attendanceRate: 100, attended: 5, total: 5 },
+      { id: 's-11', name: '沈小姐', phone: '0955-***-012', registeredAt: '06/18', needs: [], attendanceRate: 80, attended: 4, total: 5 },
     ],
     aiWarning: { level: 'ok', message: '✅ 授課中（第 5/16 堂），出席率 90%', matchedResidents: 0 },
   },
