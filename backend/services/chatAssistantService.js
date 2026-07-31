@@ -850,7 +850,7 @@ function buildMatchingSystemPrompt(forms) {
     .join('\n');
 
   return [
-    '你是網站的 AI 表單助手，透過聊天對話方式協助使用者。你負責判斷使用者需求是否對應以下其中一份表單，或僅是一般問答。',
+    '你是「小統」，一位親切友善的 AI 助手。你的工作是透過聊天對話方式協助使用者填寫表單或回答服務相關問題。請用溫暖、有耐心的語氣與使用者對話，像朋友一樣幫忙。你負責判斷使用者需求是否對應以下其中一份表單，或僅是一般問答。',
     '重要：這是純文字聊天介面，不可使用「點擊這裡」、「請按連結」等指引，因為使用者無法點擊任何東西。若使用者的需求對應到某份表單，直接在 reply_text 中告知使用者你會協助填寫，並將 action 設為 match_form。',
     '可選表單清單：',
     formList || '（目前無啟用中的表單）',
@@ -869,11 +869,12 @@ function buildMatchingSystemPrompt(forms) {
  */
 function buildExtractionSystemPrompt(topic) {
   const lines = [
-    '你是網站的 AI 表單填寫助手，透過聊天對話方式引導使用者回答以下題目。注意：這是純文字聊天介面，不可使用「點擊」、「連結」等指引。',
+    '你是「小統」，一位親切友善的 AI 助手，正透過聊天對話方式引導使用者回答以下題目。請用溫暖、有耐心的語氣對話。注意：這是純文字聊天介面，不可使用「點擊」、「連結」等指引。',
     `題目 id：${topic.id}`,
     `題目內容：${topic.title}`,
     topic.remark ? `補充說明：${topic.remark}` : '',
     `題目類型代碼：${topic.type}`,
+    `此題目是否必填：${topic.isRequired === '1' ? '是' : '否（使用者可以跳過）'}`,
   ];
 
   // 對單選/多選題目，附上選項清單讓 LLM 可以回傳正確的選項 id
@@ -887,9 +888,13 @@ function buildExtractionSystemPrompt(topic) {
   lines.push(
     '請以 JSON 格式回覆，且只回覆 JSON，不要包含其他文字，格式為：',
     `{"action":"extract_field"|"answer_question"|"match_form"|"error","reply_text":"要回覆給使用者的文字","collected_fields":{"${topic.id}":擷取到的答案},"confidence":0到1之間的數字}`,
-    '若使用者的訊息是在回答此題目，請將 action 設為 extract_field 並將擷取到的答案放入 collected_fields；',
-    '若使用者提出與此題目無關的問題，請將 action 設為 answer_question 並在 reply_text 回答；',
-    '若使用者的訊息顯示想改填另一份表單，請將 action 設為 match_form 並提供 matched_form_id。',
+    '重要規則：',
+    '1. 只要使用者的訊息可以合理視為此題目的答案，就必須將 action 設為 extract_field，即使答案很簡短或只有一兩個字。',
+    '2. 若使用者的訊息是在回答此題目，請將 action 設為 extract_field 並將擷取到的答案放入 collected_fields。',
+    '3. 若使用者提出明確與此題目完全無關的「問題」（以問號結尾的疑問句），請將 action 設為 answer_question 並在 reply_text 回答。',
+    '4. 若使用者的訊息顯示想改填另一份表單，請將 action 設為 match_form 並提供 matched_form_id。',
+    '5. 不要自行產生「感謝」或「完成」等結語，只需擷取答案即可，後續流程由系統處理。',
+    '6. 對於文字型題目，使用者的任何非空白回覆都應視為有效答案（action: extract_field）。',
   );
 
   return lines.filter(Boolean).join('\n');
@@ -967,9 +972,11 @@ async function handleFormMatchingOrQA(session, formMatchingService, llmGateway) 
       };
       const replyText =
         structured.reply_text && structured.reply_text.trim() !== ''
-          ? structured.reply_text
+          ? nextTopic
+            ? `${structured.reply_text}\n\n首先請回答：${buildTopicQuestionText(nextTopic)}`
+            : structured.reply_text
           : nextTopic
-            ? `好的，我來協助您填寫表單。請問您的${buildTopicQuestionText(nextTopic)}`
+            ? `好的，我來協助您填寫表單。\n\n首先請回答：${buildTopicQuestionText(nextTopic)}`
             : '所有題目皆已完成，感謝您的填寫。';
       return appendAssistantMessage(updated, replyText);
     }
@@ -1031,9 +1038,43 @@ async function handleFieldExtractionOrOffTopic(session, formMatchingService, llm
     return applyCompletionCheck(session, topics);
   }
 
-  // 若使用者輸入為「跳過」/「都不用」且題目非必填，直接跳過此題不呼叫 LLM
+  // 若使用者表示要結帳/送出，跳過所有剩餘非必填題目直接進入確認階段
   const lastUserMsg = (session.messages || []).filter((m) => m.role === 'user').pop();
-  const skipKeywords = ['跳過', '都不用', '不用', '不需要', '沒有'];
+  const checkoutKeywords = ['結帳', '我要結帳', '不用了，我要結帳', '直接送出', '送出', '結帳送出'];
+  const isCheckoutRequest = lastUserMsg && typeof lastUserMsg.text === 'string'
+    && checkoutKeywords.some(kw => lastUserMsg.text.trim().includes(kw));
+
+  if (isCheckoutRequest) {
+    // 檢查是否有未填的必填題目
+    const unansweredRequired = topics.filter((t) =>
+      t.isRequired === '1' && !session.collectedFields[String(t.id)]
+    );
+
+    if (unansweredRequired.length === 0) {
+      // 所有必填已完成，跳過剩餘選填題目，直接進入確認
+      let updated = { ...session };
+      const unansweredOptional = topics.filter((t) =>
+        t.isRequired !== '1' && !updated.collectedFields[String(t.id)]
+      );
+      for (const t of unansweredOptional) {
+        updated = applyFieldExtraction(updated, {
+          success: true,
+          fields: { [String(t.id)]: { topicId: t.id, value: null } },
+        });
+      }
+      updated = { ...updated, currentTopicId: null, stage: 'confirming' };
+      return appendAssistantMessage(updated, buildSummaryText(topics, updated.collectedFields));
+    }
+    // 還有必填未完成，引導填寫下一個必填題目
+    const nextRequired = formMatchingService.selectNextTopic(unansweredRequired, session.collectedFields);
+    if (nextRequired) {
+      const updated = { ...session, currentTopicId: nextRequired.id };
+      return appendAssistantMessage(updated, `還有必填項目需要完成喔！\n\n請回答：${buildTopicQuestionText(nextRequired)}`);
+    }
+  }
+
+  // 若使用者輸入為「跳過」/「都不用」/「無」且題目非必填，直接跳過此題不呼叫 LLM
+  const skipKeywords = ['跳過', '都不用', '不用', '不需要', '沒有', '無', '沒'];
   const isSkipRequest = lastUserMsg && typeof lastUserMsg.text === 'string'
     && skipKeywords.includes(lastUserMsg.text.trim());
 
@@ -1060,6 +1101,51 @@ async function handleFieldExtractionOrOffTopic(session, formMatchingService, llm
           : '好的，已跳過此題。所有題目皆已完成。';
 
     return appendAssistantMessage(updated, replyText);
+  }
+
+  // 若使用者只是簡短的確認/應答語，重新提問目前題目（不視為答案）
+  // 注意：「是」不列入 ackKeywords，因為「是」可能是在回覆助手的是/否問題（如「是否繼續選購」）
+  const ackKeywords = ['好', '好啊', '好的', 'ok', 'OK', '嗯', '可以', '沒問題', '了解', '知道了', '繼續'];
+  const isAckOnly = lastUserMsg && typeof lastUserMsg.text === 'string'
+    && ackKeywords.includes(lastUserMsg.text.trim());
+
+  if (isAckOnly) {
+    const replyText = `請回答：${buildTopicQuestionText(currentTopic)}`;
+    return appendAssistantMessage(session, replyText);
+  }
+
+  // 若使用者的輸入精確匹配目前題目的某個選項名稱，直接接受（不經 LLM）
+  const topicOptions = Array.isArray(currentTopic.options) ? currentTopic.options : [];
+  if (topicOptions.length > 0 && lastUserMsg && typeof lastUserMsg.text === 'string') {
+    const userText = lastUserMsg.text.trim();
+    const matchedOption = topicOptions.find(
+      (opt) => opt.optionName && opt.optionName.trim() === userText
+    );
+
+    if (matchedOption) {
+      let updated = applyFieldExtraction(session, {
+        success: true,
+        fields: {
+          [String(currentTopic.id)]: { topicId: currentTopic.id, value: matchedOption.id },
+        },
+      });
+
+      const nextTopic2 = formMatchingService.selectNextTopic(topics, updated.collectedFields);
+      updated = { ...updated, currentTopicId: nextTopic2 ? nextTopic2.id : null };
+
+      if (!nextTopic2) {
+        updated = applyCompletionCheck(updated, topics);
+      }
+
+      const replyText =
+        updated.stage === 'confirming'
+          ? buildSummaryText(topics, updated.collectedFields)
+          : nextTopic2
+            ? `好的，您選擇了${matchedOption.optionName}。\n\n接下來請回答：${buildTopicQuestionText(nextTopic2)}`
+            : `好的，您選擇了${matchedOption.optionName}。所有題目皆已完成。`;
+
+      return appendAssistantMessage(updated, replyText);
+    }
   }
 
   const systemPrompt = buildExtractionSystemPrompt(currentTopic);
@@ -1134,9 +1220,7 @@ async function handleFieldExtractionOrOffTopic(session, formMatchingService, llm
     updated.stage === 'confirming'
       ? buildSummaryText(topics, updated.collectedFields)
       : nextTopic
-        ? (structured.reply_text && structured.reply_text.trim() !== ''
-            ? `${structured.reply_text}\n\n接下來請回答：${buildTopicQuestionText(nextTopic)}`
-            : buildTopicQuestionText(nextTopic))
+        ? buildTopicQuestionText(nextTopic)
         : (structured.reply_text || '所有題目皆已完成，感謝您的填寫。');
 
   return appendAssistantMessage(updated, replyText);
@@ -1153,8 +1237,36 @@ function buildConfirmingSystemPrompt(topics, collectedFields) {
     .map((topic) => {
       const field = (collectedFields || {})[String(topic.id)];
       if (!field) return null;
-      const value = field.value !== undefined ? field.value : field;
-      const displayValue = Array.isArray(value) ? value.join('、') : value;
+
+      // 安全取出值
+      let rawValue;
+      if (field !== null && typeof field === 'object' && !Array.isArray(field) && 'value' in field) {
+        rawValue = field.value;
+      } else {
+        rawValue = field;
+      }
+
+      // 將選項 ID 轉名稱
+      const options = Array.isArray(topic.options) ? topic.options : [];
+      let displayValue;
+      if (rawValue === null || rawValue === undefined) {
+        displayValue = '跳過';
+      } else if (options.length > 0) {
+        if (Array.isArray(rawValue)) {
+          displayValue = rawValue.map((v) => {
+            const opt = options.find((o) => o.id === v || o.id === Number(v));
+            return opt ? opt.optionName : String(v);
+          }).join('、');
+        } else {
+          const opt = options.find((o) => o.id === rawValue || o.id === Number(rawValue));
+          displayValue = opt ? opt.optionName : String(rawValue);
+        }
+      } else if (typeof rawValue === 'object') {
+        displayValue = JSON.stringify(rawValue);
+      } else {
+        displayValue = Array.isArray(rawValue) ? rawValue.join('、') : String(rawValue);
+      }
+
       return `- id: ${topic.id}, 題目: ${topic.title}, 目前答案: ${displayValue}`;
     })
     .filter(Boolean)
@@ -1194,6 +1306,36 @@ async function handleConfirmingStage(session, formMatchingService, llmGateway) {
   }
 
   const topics = flattenTopics(form);
+
+  // 若使用者直接說「確認送出」，標記 session 為待送出狀態（前端會觸發 submitFeedback）
+  const lastUserMsg = (session.messages || []).filter((m) => m.role === 'user').pop();
+  const confirmKeywords = ['確認送出', '沒問題', '確定', '都對了', '正確', '對', '都正確'];
+  const isDirectConfirm = lastUserMsg && typeof lastUserMsg.text === 'string'
+    && confirmKeywords.includes(lastUserMsg.text.trim());
+
+  if (isDirectConfirm) {
+    // 保持 stage 為 confirming，讓前端顯示確認按鈕並自動觸發送出
+    const updated = { ...session, awaitingSubmitConfirmation: true };
+    return appendAssistantMessage(updated, '好的，正在為您送出表單...');
+  }
+
+  // 若使用者表示要修改但未指定項目，直接回覆詢問要修改哪一項
+  const editKeywords = ['修改', '改', '我想修改', '我要修改', '更改', '變更'];
+  const isEditRequest = lastUserMsg && typeof lastUserMsg.text === 'string'
+    && editKeywords.some(kw => lastUserMsg.text.trim().includes(kw));
+  // 但不是指明具體項目的情況（如「修改數量」），那種交給 LLM 判斷
+  const mentionsSpecificField = lastUserMsg && topics.some(t =>
+    lastUserMsg.text.includes(t.title)
+  );
+
+  if (isEditRequest && !mentionsSpecificField) {
+    const fieldList = topics
+      .filter(t => (session.collectedFields || {})[String(t.id)])
+      .map(t => `・${t.title}`)
+      .join('\n');
+    return appendAssistantMessage(session, `好的，請告訴我您要修改哪一個項目：\n${fieldList}`);
+  }
+
   const systemPrompt = buildConfirmingSystemPrompt(topics, session.collectedFields);
   const messages = toLlmMessages(session, systemPrompt);
   const structured = await llmGateway.requestStructuredResponse({ messages });
@@ -1214,9 +1356,8 @@ async function handleConfirmingStage(session, formMatchingService, llmGateway) {
         stage: 'filling',
       };
 
-      const replyText = structured.reply_text && structured.reply_text.trim() !== ''
-        ? structured.reply_text
-        : `好的，請重新回答：${buildTopicQuestionText(targetTopic)}`;
+      // 固定格式提問，不使用 LLM 的 reply_text（避免 LLM 亂說）
+      const replyText = `好的，請重新選擇：${buildTopicQuestionText(targetTopic)}`;
       return appendAssistantMessage(updated, replyText);
     }
 
@@ -1226,14 +1367,16 @@ async function handleConfirmingStage(session, formMatchingService, llmGateway) {
   }
 
   if (structured.action === 'confirm_submit') {
-    const replyText = structured.reply_text || '好的，請點擊下方的「確認送出」按鈕完成提交。';
-    return appendAssistantMessage(session, replyText);
+    // 標記為待送出，前端會自動觸發
+    const updated = { ...session, awaitingSubmitConfirmation: true };
+    const replyText = structured.reply_text || '好的，正在為您送出表單...';
+    return appendAssistantMessage(updated, replyText);
   }
 
   // answer_question 或其他
   const replyText = structured.reply_text && structured.reply_text.trim() !== ''
     ? structured.reply_text
-    : '如果需要修改任何項目請告訴我，或點擊「確認送出」完成提交。';
+    : '如果需要修改任何項目請告訴我，或回覆「確認送出」完成提交。';
   return appendAssistantMessage(session, replyText);
 }
 

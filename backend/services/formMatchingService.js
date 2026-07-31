@@ -118,6 +118,12 @@ function isSkippedAnswer(rawAnswer) {
   if (typeof rawAnswer === 'string' && rawAnswer.trim() === '都不用') {
     return true;
   }
+  if (typeof rawAnswer === 'string' && rawAnswer.trim() === '無') {
+    return true;
+  }
+  if (typeof rawAnswer === 'string' && rawAnswer.trim() === '沒') {
+    return true;
+  }
   if (Array.isArray(rawAnswer) && rawAnswer.length === 0) {
     return true;
   }
@@ -255,9 +261,37 @@ function validateDateAnswer(topic, rawAnswer, now = new Date()) {
     return { valid: false, normalizedValue: null, errorMessage: '請提供有效的日期' };
   }
 
-  const parsedDate = new Date(rawAnswer);
+  const input = rawAnswer.trim();
+  let parsedDate;
+
+  // 嘗試解析各種格式
+  // 格式: M/D, M-D, M月D日 (沒有年份，自動補今年或明年)
+  const monthDayMatch = input.match(/^(\d{1,2})[\/\-月](\d{1,2})[日]?$/);
+  if (monthDayMatch) {
+    const month = parseInt(monthDayMatch[1], 10);
+    const day = parseInt(monthDayMatch[2], 10);
+
+    if (month < 1 || month > 12 || day < 1 || day > 31) {
+      return { valid: false, normalizedValue: null, errorMessage: '請提供有效的日期' };
+    }
+
+    // 先用今年，如果日期已過就用明年
+    let year = now.getFullYear();
+    const candidateDate = new Date(year, month - 1, day);
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    if (candidateDate < today) {
+      year += 1;
+    }
+
+    parsedDate = new Date(year, month - 1, day);
+  } else {
+    // 嘗試標準格式解析 (YYYY-MM-DD, YYYY/MM/DD 等)
+    parsedDate = new Date(input);
+  }
+
   if (Number.isNaN(parsedDate.getTime())) {
-    return { valid: false, normalizedValue: null, errorMessage: '請提供有效的日期格式' };
+    return { valid: false, normalizedValue: null, errorMessage: '請提供有效的日期格式（例如 7/31 或 2026-07-31）' };
   }
 
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -334,6 +368,13 @@ function validateAnswerAgainstTopic(topic, rawAnswer) {
       return validateImageUploadAnswer(topic, rawAnswer);
     default:
       // 未列舉的題目類型（例如 textarea、備註等）回退至文字驗證，避免使用者無法作答
+      if (typeof rawAnswer === 'object' && rawAnswer !== null) {
+        // LLM 可能回傳 object，將其轉為可讀字串
+        const textValue = Array.isArray(rawAnswer)
+          ? rawAnswer.join('、')
+          : Object.values(rawAnswer).filter(v => v != null && v !== '').join('、');
+        return validateTextAnswer(textValue || JSON.stringify(rawAnswer));
+      }
       return validateTextAnswer(typeof rawAnswer === 'string' ? rawAnswer : String(rawAnswer));
   }
 }

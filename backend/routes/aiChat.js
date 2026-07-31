@@ -5,6 +5,7 @@ const { verifyToken } = require('../services/authService');
 const { createAiChatRateLimiter } = require('../middleware/aiChatRateLimiter');
 const chatAssistantService = require('../services/chatAssistantService');
 const { maskPiiForLogging } = require('../utils/piiLogging');
+const prisma = require('../utils/prismaClient');
 
 const aiChatRateLimiter = createAiChatRateLimiter();
 
@@ -66,6 +67,8 @@ router.post('/message', optionalAuth, aiChatRateLimiter, async (req, res) => {
     let options = null;
     let topicType = null;
     let topicRequired = true;
+    let topicTitle = null;
+    let savedAddresses = null;
     if (result.session.currentTopicId && result.session.selectedFormId && result.session.stage === 'filling') {
       try {
         const formMatchingService = require('../services/formMatchingService');
@@ -75,6 +78,7 @@ router.post('/message', optionalAuth, aiChatRateLimiter, async (req, res) => {
             for (const topic of (group.topics || [])) {
               if (topic.id === result.session.currentTopicId) {
                 topicType = topic.type;
+                topicTitle = topic.title;
                 topicRequired = topic.isRequired === '1';
                 // 只要題目有選項就回傳，不限定特定 type 代碼
                 const topicOptions = topic.options || [];
@@ -84,6 +88,33 @@ router.post('/message', optionalAuth, aiChatRateLimiter, async (req, res) => {
                     name: opt.optionName,
                   }));
                 }
+
+                // 若題目標題含「地址」且使用者已登入，回傳已儲存的常用地址
+                const isAddressTopic = (topic.title || '').includes('地址');
+                if (isAddressTopic && req.user && req.user.sub) {
+                  try {
+                    const { decryptField } = require('../utils/crypto');
+                    const memberAddresses = await prisma.memberAddress.findMany({
+                      where: { memberId: req.user.sub, isDeleted: false },
+                      include: {
+                        county: { select: { name: true } },
+                        district: { select: { name: true } },
+                      },
+                      orderBy: [{ isDefault: 'desc' }, { updTime: 'desc' }],
+                      take: 5,
+                    });
+                    if (memberAddresses.length > 0) {
+                      savedAddresses = memberAddresses.map((addr) => ({
+                        id: addr.id,
+                        label: addr.label || (addr.type === 'mailing' ? '通訊地址' : '近期地址'),
+                        fullAddress: `${addr.county.name}${addr.district.name}${addr.addressDetail ? decryptField(addr.addressDetail) : ''}`,
+                      }));
+                    }
+                  } catch (_) {
+                    // 取地址失敗不影響主流程
+                  }
+                }
+
                 break;
               }
             }
@@ -102,8 +133,10 @@ router.post('/message', optionalAuth, aiChatRateLimiter, async (req, res) => {
         blocked: Boolean(result.blocked),
         reason: result.reason || null,
         topicType,
+        topicTitle,
         topicRequired,
         options,
+        savedAddresses,
       },
     });
   } catch (err) {

@@ -129,6 +129,14 @@
           />
         </div>
 
+        <!-- 通訊地址（一般會員選填） -->
+        <div v-if="activeRole === 'member'" class="form-group">
+          <UiAddressForm
+            v-model="address"
+            label="通訊地址（選填）"
+          />
+        </div>
+
         <div class="form-group">
           <label for="reg-email" class="form-label">Email</label>
           <input
@@ -219,6 +227,13 @@ const name = ref('')
 const phone = ref('')
 const companyName = ref('')
 
+// 通訊地址（一般會員註冊時選填）
+const address = ref({
+  countyCode: '',
+  districtCode: '',
+  addressDetail: '',
+})
+
 const serverError = ref('')
 const isLoading = ref(false)
 
@@ -236,6 +251,7 @@ function resetForm() {
   name.value = ''
   phone.value = ''
   companyName.value = ''
+  address.value = { countyCode: '', districtCode: '', addressDetail: '' }
   errors.value = {}
   serverError.value = ''
 }
@@ -355,6 +371,27 @@ async function handleRegisterSubmit() {
       phone: phone.value.trim() || undefined,
       companyName: activeRole.value === 'vendor' ? companyName.value.trim() : undefined,
     })
+
+    // 註冊成功後，若會員有填寫通訊地址，儲存至 MemberAddress
+    if (activeRole.value === 'member' && address.value.countyCode && address.value.districtCode && address.value.addressDetail.trim()) {
+      try {
+        await $fetch('/api/member/addresses', {
+          method: 'POST',
+          body: {
+            type: 'mailing',
+            label: '通訊地址',
+            countyCode: address.value.countyCode,
+            districtCode: address.value.districtCode,
+            addressDetail: address.value.addressDetail.trim(),
+            isDefault: true,
+          },
+          credentials: 'include',
+        })
+      } catch {
+        // 地址儲存失敗不阻斷註冊流程
+      }
+    }
+
     await redirectAfterAuth()
   } catch (err: any) {
     const message = authState.value.error || err?.data?.message || err?.message

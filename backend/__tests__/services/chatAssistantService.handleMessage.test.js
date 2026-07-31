@@ -235,13 +235,13 @@ describe('handleMessage - type 對應提問形式映射（Requirement 4.2, 5.3, 
   it('文字型題目（TEXT）僅顯示題目標題', async () => {
     const topic = { id: 1, title: '姓名', type: TOPIC_TYPE.TEXT, sort: 1, group: { sort: 1 } };
     const text = await runMatchFormAndGetQuestionText(topic);
-    expect(text).toBe('好的，我來協助您填寫表單。請問您的姓名');
+    expect(text).toBe('好的，我來協助您填寫表單。\n\n首先請回答：姓名');
   });
 
   it('數字型題目（NUMBER）附加提示要求提供數字', async () => {
     const topic = { id: 2, title: '年齡', type: TOPIC_TYPE.NUMBER, sort: 1, group: { sort: 1 } };
     const text = await runMatchFormAndGetQuestionText(topic);
-    expect(text).toBe('好的，我來協助您填寫表單。請問您的年齡（請提供數字）');
+    expect(text).toBe('好的，我來協助您填寫表單。\n\n首先請回答：年齡（請提供數字）');
   });
 
   it('單選型題目（SINGLE_CHOICE）附加選項清單', async () => {
@@ -257,7 +257,7 @@ describe('handleMessage - type 對應提問形式映射（Requirement 4.2, 5.3, 
       ],
     };
     const text = await runMatchFormAndGetQuestionText(topic);
-    expect(text).toBe('好的，我來協助您填寫表單。請問您的性別（請選擇一項：男、女）');
+    expect(text).toBe('好的，我來協助您填寫表單。\n\n首先請回答：性別（請選擇一項：男、女）');
   });
 
   it('多選型題目（MULTIPLE_CHOICE）附加可多選提示與選項清單', async () => {
@@ -273,18 +273,18 @@ describe('handleMessage - type 對應提問形式映射（Requirement 4.2, 5.3, 
       ],
     };
     const text = await runMatchFormAndGetQuestionText(topic);
-    expect(text).toBe('好的，我來協助您填寫表單。請問您的興趣（可多選，請列出所有您選擇的項目：閱讀、運動）');
+    expect(text).toBe('好的，我來協助您填寫表單。\n\n首先請回答：興趣（可多選，請列出所有您選擇的項目：閱讀、運動）');
   });
 
   it('日期型題目（DATE）附加日期格式範例', async () => {
     const topic = { id: 5, title: '預計拜訪日期', type: TOPIC_TYPE.DATE, sort: 1, group: { sort: 1 } };
     const text = await runMatchFormAndGetQuestionText(topic);
-    expect(text).toBe('好的，我來協助您填寫表單。請問您的預計拜訪日期（請提供日期，例如 2024-01-01）');
+    expect(text).toBe('好的，我來協助您填寫表單。\n\n首先請回答：預計拜訪日期（請提供日期，例如 2024-01-01）');
   });
 
   it('上傳圖片型題目（IMAGE_UPLOAD）附加上傳圖片提示', async () => {
     const topic = { id: 6, title: '現場照片', type: TOPIC_TYPE.IMAGE_UPLOAD, sort: 1, group: { sort: 1 } };
     const text = await runMatchFormAndGetQuestionText(topic);
-    expect(text).toBe('好的，我來協助您填寫表單。請問您的現場照片（請上傳圖片）');
+    expect(text).toBe('好的，我來協助您填寫表單。\n\n首先請回答：現場照片（請上傳圖片）');
   });
 });

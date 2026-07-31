@@ -13,15 +13,16 @@ definePageMeta({
 
 const router = useRouter()
 
-const { session, isLoading, error: sessionError, sendMessage, submitFeedback } = useChatSession()
+const { session, isLoading, error: sessionError, sendMessage, submitFeedback, resetSession } = useChatSession()
 const {
   isSupported: sttSupported,
   isListening,
+  isTranscribing,
   start: startListening,
   stop: stopListening,
   transcript,
   error: sttError,
-} = useSpeechRecognition()
+} = useWhisperSpeechRecognition()
 const { isSupported: ttsSupported, playingMessageId, speak, stop: stopSpeaking } = useSpeechSynthesis()
 
 const inputText = ref('')
@@ -43,6 +44,21 @@ const currentTopicRequired = ref(true)
 /** 多選模式下已勾選的選項 id */
 const multiSelectIds = ref<Set<number>>(new Set())
 
+/** 是否顯示「是否繼續」快捷按鈕（用於確認/繼續選購情境） */
+const showConfirmButtons = ref(false)
+
+/** 已儲存的常用地址（地址題目時由後端回傳） */
+interface SavedAddress {
+  id: number
+  label: string
+  fullAddress: string
+}
+const savedAddresses = ref<SavedAddress[]>([])
+
+/** 目前題目是否為地址題或圖片上傳題 */
+const isAddressTopic = ref(false)
+const isImageTopic = ref(false)
+
 /** 範例問題：幫助使用者快速開始對話 */
 const examplePrompts = [
   '我想要清洗冷氣',
@@ -52,6 +68,112 @@ const examplePrompts = [
 ]
 
 const messages = computed(() => session.value.messages)
+
+/** 去除 HTML 標籤，保留純文字 */
+function stripHtml(text: string): string {
+  return text.replace(/<[^>]*>/g, '').trim()
+}
+
+/** 偵測訊息是否含有確認/繼續選購相關的詢問 */
+function isConfirmationQuestion(text: string): boolean {
+  const patterns = [
+    '是否確認',
+    '是否繼續',
+    '要繼續',
+    '還要',
+    '繼續選購',
+    '繼續購物',
+    '還需要',
+    '是否還要',
+    '是否要繼續',
+    '確認嗎',
+    '對嗎',
+    '或結帳',
+    '還是結帳',
+  ]
+  return patterns.some(p => text.includes(p))
+}
+
+/** 格式化摘要文字為 HTML（用於更好的視覺呈現） */
+function formatSummaryHtml(text: string): string {
+  const stripped = stripHtml(text)
+  const lines = stripped.split('\n').filter(l => l.trim())
+  let html = ''
+  let inList = false
+
+  for (const line of lines) {
+    const trimmed = line.trim()
+    if (trimmed.startsWith('・') || trimmed.startsWith('▸')) {
+      if (!inList) {
+        html += '<ul class="chat-summary-list">'
+        inList = true
+      }
+      const content = trimmed.replace(/^[・▸]\s*/, '')
+      const [label, ...valueParts] = content.split('：')
+      const value = valueParts.join('：')
+      html += `<li><span class="chat-summary-label">${label}</span><span class="chat-summary-value">${value || '—'}</span></li>`
+    } else {
+      if (inList) {
+        html += '</ul>'
+        inList = false
+      }
+      if (trimmed.includes('以下是您') || trimmed.includes('填寫的內容')) {
+        html += `<p class="chat-summary-title">📋 您填寫的內容</p>`
+      } else if (trimmed.includes('如果都沒問題') || trimmed.includes('確認送出')) {
+        // 隱藏提示文字（由 UI 按鈕取代）
+      } else if (trimmed) {
+        html += `<p>${trimmed}</p>`
+      }
+    }
+  }
+  if (inList) html += '</ul>'
+  return html
+}
+
+/** 是否顯示「回到底部」按鈕 */
+const showScrollButton = ref(false)
+
+/** 監聽滾動位置 */
+function handleScroll() {
+  if (!messagesContainer.value) return
+  const { scrollTop, scrollHeight, clientHeight } = messagesContainer.value
+  // 如果距離底部超過 100px，顯示按鈕
+  showScrollButton.value = scrollHeight - scrollTop - clientHeight > 100
+}
+
+/** 監聽訊息變化，自動捲到底部 */
+watch(messages, () => {
+  scrollToBottom()
+}, { deep: true })
+
+/** 當 awaitingSubmitConfirmation 為 true 時，自動觸發表單送出 */
+watch(() => session.value.awaitingSubmitConfirmation, async (awaiting) => {
+  if (awaiting) {
+    try {
+      const response = await submitFeedback()
+      if (response?.success) {
+        session.value = {
+          ...session.value,
+          awaitingSubmitConfirmation: false,
+          stage: 'submitted',
+          messages: [
+            ...session.value.messages,
+            {
+              id: crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+              role: 'assistant' as const,
+              text: '已成功送出表單！感謝您的填寫，我們會盡快為您處理。',
+              createdAt: new Date().toISOString(),
+            },
+          ],
+        }
+      } else {
+        session.value = { ...session.value, awaitingSubmitConfirmation: false }
+      }
+    } catch {
+      session.value = { ...session.value, awaitingSubmitConfirmation: false }
+    }
+  }
+})
 
 /** 語音辨識完成後，驗證文字後自動送出（不需手動按傳送） */
 watch(transcript, (text) => {
@@ -72,10 +194,8 @@ async function handleVoiceResult(text: string) {
   }
 
   inlineError.value = null
+  // 語音辨識結果填入輸入框，讓使用者確認後再送出
   inputText.value = truncated
-
-  // 語音辨識完成後自動送出
-  await doSend(truncated, 'voice')
 }
 
 async function scrollToBottom() {
@@ -107,6 +227,10 @@ async function doSend(text: string, mode: 'text' | 'voice') {
   currentTopicType.value = null
   currentTopicRequired.value = true
   multiSelectIds.value = new Set()
+  savedAddresses.value = []
+  isAddressTopic.value = false
+  isImageTopic.value = false
+  showConfirmButtons.value = false
 
   try {
     const response = await sendMessage(text.trim(), mode)
@@ -118,6 +242,24 @@ async function doSend(text: string, mode: 'text' | 'voice') {
       currentTopicType.value = (response.replyMeta.topicType as string) || null
       currentTopicRequired.value = response.replyMeta.topicRequired !== false
       multiSelectIds.value = new Set()
+      await scrollToBottom()
+    }
+
+    // 從 replyMeta 取出已儲存地址
+    if (response?.replyMeta?.savedAddresses && Array.isArray(response.replyMeta.savedAddresses)) {
+      savedAddresses.value = response.replyMeta.savedAddresses as SavedAddress[]
+      await scrollToBottom()
+    }
+
+    // 判斷是否為地址題或圖片上傳題
+    const title = (response?.replyMeta?.topicTitle as string) || ''
+    isAddressTopic.value = title.includes('地址')
+    isImageTopic.value = title.includes('照片') || title.includes('圖片') || title.includes('上傳')
+
+    // 偵測最後一則助手訊息是否為確認類問題（如繼續選購），顯示快捷按鈕
+    const latestAssistantMsg = session.value.messages.filter(m => m.role === 'assistant').pop()
+    if (latestAssistantMsg && isConfirmationQuestion(latestAssistantMsg.text)) {
+      showConfirmButtons.value = true
       await scrollToBottom()
     }
 
@@ -199,10 +341,114 @@ function handlePlayback(messageId: string, text: string) {
 
 async function handleSubmit() {
   try {
-    await submitFeedback()
+    const response = await submitFeedback()
+    if (response?.success) {
+      // 送出成功：更新 stage 並顯示成功訊息
+      session.value = {
+        ...session.value,
+        stage: 'submitted',
+        awaitingSubmitConfirmation: false,
+        messages: [
+          ...session.value.messages,
+          {
+            id: crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+            role: 'assistant' as const,
+            text: '已成功送出表單！感謝您的填寫，我們會盡快為您處理。',
+            createdAt: new Date().toISOString(),
+          },
+        ],
+      }
+    }
   } catch {
     // sessionError 已由 useChatSession 設定，於畫面顯示即可
   }
+}
+
+/** 新對話確認彈窗 */
+const showNewChatModal = ref(false)
+
+/** 定位目前位置 */
+async function handleGetLocation() {
+  if (!navigator.geolocation) {
+    inlineError.value = '您的瀏覽器不支援定位功能'
+    return
+  }
+
+  inlineError.value = null
+
+  try {
+    const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: true,
+        timeout: 10000,
+      })
+    })
+
+    const { latitude, longitude } = position.coords
+
+    // 使用 Nominatim 免費逆地理編碼
+    const res = await $fetch<any>(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=zh-TW`
+    )
+
+    const address = res?.display_name || `${latitude}, ${longitude}`
+    // 填入輸入框，讓使用者確認後再送出
+    inputText.value = address
+  } catch (err: any) {
+    if (err.code === 1) {
+      inlineError.value = '定位權限被拒絕，請在瀏覽器設定中允許'
+    } else {
+      inlineError.value = '無法取得定位，請手動輸入地址'
+    }
+  }
+}
+
+/** 開啟相機拍照 */
+function handleOpenCamera() {
+  const input = document.createElement('input')
+  input.type = 'file'
+  input.accept = 'image/*'
+  input.capture = 'environment'
+  input.onchange = () => handleImageSelected(input.files)
+  input.click()
+}
+
+/** 從圖庫選擇 */
+function handleOpenGallery() {
+  const input = document.createElement('input')
+  input.type = 'file'
+  input.accept = 'image/*'
+  input.multiple = true
+  input.onchange = () => handleImageSelected(input.files)
+  input.click()
+}
+
+/** 處理選取的圖片 — 填入輸入框讓使用者確認 */
+async function handleImageSelected(files: FileList | null) {
+  if (!files || files.length === 0) return
+  const fileNames = Array.from(files).map(f => f.name).join('、')
+  inputText.value = fileNames
+}
+
+function handleNewChat() {
+  if (messages.value.length === 0) {
+    // 沒有對話紀錄，直接重置
+    resetSession()
+    return
+  }
+  showNewChatModal.value = true
+}
+
+function confirmNewChat() {
+  showNewChatModal.value = false
+  resetSession()
+  currentOptions.value = []
+  currentTopicType.value = null
+  currentTopicRequired.value = true
+  multiSelectIds.value = new Set()
+  savedAddresses.value = []
+  showConfirmButtons.value = false
+  inlineError.value = null
 }
 
 function goBack() {
@@ -227,15 +473,22 @@ function goBack() {
       >
         ← 返回
       </button>
-      <h1 class="chat-page__title">AI 助理</h1>
-      <span class="chat-page__header-spacer" aria-hidden="true" />
+      <h1 class="chat-page__title">小統 AI 助理</h1>
+      <button
+        class="chat-page__new-chat"
+        type="button"
+        aria-label="新對話"
+        @click="handleNewChat"
+      >
+        + 新對話
+      </button>
     </header>
 
     <!-- 聊天訊息區域 -->
-    <div ref="messagesContainer" class="chat-page__messages">
+    <div ref="messagesContainer" class="chat-page__messages" @scroll="handleScroll">
       <div v-if="messages.length === 0" class="chat-page__welcome">
         <p class="chat-page__placeholder">
-          有什麼我可以幫忙的嗎？可以直接描述您想辦理的服務，或用語音輸入。
+          嗨！我是小統，您的 AI 助手。有什麼需要幫忙的嗎？可以直接描述您想辦理的服務，或用語音輸入。
         </p>
         <p class="chat-page__suggestion-label">試試以下問題：</p>
         <div class="chat-page__suggestions">
@@ -258,7 +511,10 @@ function goBack() {
         :class="`chat-message--${message.role}`"
       >
         <div class="chat-message__bubble">
-          <p class="chat-message__text">{{ message.text }}</p>
+          <template v-if="message.role === 'assistant' && session.stage === 'confirming' && message.text.includes('以下是您')">
+            <div class="chat-message__summary" v-html="formatSummaryHtml(message.text)"></div>
+          </template>
+          <p v-else class="chat-message__text">{{ stripHtml(message.text) }}</p>
         </div>
         <ClientOnly>
           <button
@@ -274,6 +530,7 @@ function goBack() {
       </div>
 
       <p v-if="isLoading" class="chat-page__loading">助理思考中...</p>
+      <p v-else-if="isTranscribing" class="chat-page__loading">語音辨識中...</p>
 
       <!-- 選擇題選項按鈕 -->
       <div v-if="currentOptions.length > 0 && !isLoading" class="chat-page__options">
@@ -309,18 +566,90 @@ function goBack() {
           確認選擇 ({{ multiSelectIds.size }})
         </button>
       </div>
+
+      <!-- 是否繼續/確認 快捷按鈕 -->
+      <div v-if="showConfirmButtons && !isLoading" class="chat-page__quick-actions">
+        <button
+          class="chat-page__quick-btn chat-page__quick-btn--yes"
+          type="button"
+          @click="doSend('是，我要繼續選購', 'text')"
+        >
+          繼續選購
+        </button>
+        <button
+          class="chat-page__quick-btn chat-page__quick-btn--no"
+          type="button"
+          @click="doSend('不用了，我要結帳', 'text')"
+        >
+          結帳送出
+        </button>
+      </div>
+
+      <!-- 已儲存的常用地址快速填入按鈕 -->
+      <div v-if="savedAddresses.length > 0 && !isLoading" class="chat-page__addresses">
+        <p class="chat-page__addresses-label">快速填入常用地址：</p>
+        <button
+          v-for="addr in savedAddresses"
+          :key="addr.id"
+          class="chat-page__address-btn"
+          type="button"
+          @click="doSend(addr.fullAddress, 'text')"
+        >
+          <span class="chat-page__address-label">{{ addr.label }}</span>
+          <span class="chat-page__address-detail">{{ addr.fullAddress }}</span>
+        </button>
+      </div>
+
+      <!-- 地址題：定位按鈕 -->
+      <div v-if="isAddressTopic && !isLoading" class="chat-page__action-buttons">
+        <button class="chat-page__action-btn" type="button" @click="handleGetLocation">
+          📍 定位目前位置
+        </button>
+      </div>
+
+      <!-- 圖片上傳題：相機和圖庫按鈕 -->
+      <div v-if="isImageTopic && !isLoading" class="chat-page__action-buttons">
+        <button class="chat-page__action-btn" type="button" @click="handleOpenCamera">
+          📷 開啟相機
+        </button>
+        <button class="chat-page__action-btn" type="button" @click="handleOpenGallery">
+          🖼️ 從圖庫選擇
+        </button>
+      </div>
     </div>
+
+    <!-- 回到底部按鈕 -->
+    <button
+      v-if="showScrollButton"
+      class="chat-page__scroll-btn"
+      type="button"
+      aria-label="捲動到最新訊息"
+      @click="scrollToBottom"
+    >
+      ↓
+    </button>
 
     <!-- 送出確認（stage 為 confirming 時顯示） -->
     <div v-if="session.stage === 'confirming'" class="chat-page__confirm-bar">
-      <button
-        class="chat-page__confirm-btn"
-        type="button"
-        :disabled="isLoading"
-        @click="handleSubmit"
-      >
-        確認送出
-      </button>
+      <p class="chat-page__confirm-hint">確認資料無誤後，按下方按鈕送出</p>
+      <div class="chat-page__confirm-actions">
+        <button
+          class="chat-page__confirm-btn chat-page__confirm-btn--edit"
+          type="button"
+          :disabled="isLoading"
+          @click="doSend('我想修改', 'text')"
+        >
+          修改內容
+        </button>
+        <button
+          class="chat-page__confirm-btn chat-page__confirm-btn--submit"
+          type="button"
+          :disabled="isLoading"
+          @click="handleSubmit"
+        >
+          確認送出
+        </button>
+      </div>
     </div>
 
     <!-- 錯誤訊息 -->
@@ -335,11 +664,12 @@ function goBack() {
           v-if="sttSupported"
           class="chat-page__mic"
           type="button"
-          :class="{ 'chat-page__mic--active': isListening }"
-          :aria-label="isListening ? '停止語音輸入' : '開始語音輸入'"
+          :class="{ 'chat-page__mic--active': isListening, 'chat-page__mic--transcribing': isTranscribing }"
+          :aria-label="isTranscribing ? '辨識中' : isListening ? '停止語音輸入' : '開始語音輸入'"
+          :disabled="isTranscribing"
           @click="handleMicClick"
         >
-          {{ isListening ? '⏺' : '🎤' }}
+          {{ isTranscribing ? '⏳' : isListening ? '⏹' : '🎤' }}
         </button>
       </ClientOnly>
       <input
@@ -360,16 +690,45 @@ function goBack() {
         ➤
       </button>
     </div>
+
+    <!-- 新對話確認彈窗 -->
+    <div v-if="showNewChatModal" class="chat-modal-overlay" @click.self="showNewChatModal = false">
+      <div class="chat-modal">
+        <p class="chat-modal__title">開始新對話</p>
+        <p class="chat-modal__desc">目前的對話紀錄將會清除，確定要開始新對話嗎？</p>
+        <div class="chat-modal__actions">
+          <button class="chat-modal__btn chat-modal__btn--cancel" @click="showNewChatModal = false">取消</button>
+          <button class="chat-modal__btn chat-modal__btn--confirm" @click="confirmNewChat">確定</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .chat-page {
+  max-width: 430px;
+  margin: 0 auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
   height: 100vh;
   background-color: var(--color-bg-page, #fafaf9);
+  position: relative;
 }
+</style>
+
+<style>
+/* 隱藏 blank layout 的底部導覽列和 padding */
+.app-container:has(.chat-page) {
+  padding-bottom: 0 !important;
+}
+.app-container:has(.chat-page) > :last-child:not(.chat-page) {
+  display: none !important;
+}
+</style>
+
+<style scoped>
 
 /* ── Header ── */
 .chat-page__header {
@@ -398,8 +757,89 @@ function goBack() {
   margin: 0;
 }
 
-.chat-page__header-spacer {
-  width: 48px;
+.chat-page__new-chat {
+  border: none;
+  background: none;
+  font-size: 13px;
+  color: var(--color-primary, #3b82f6);
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.15s;
+}
+
+.chat-page__new-chat:hover {
+  background-color: #eff6ff;
+}
+
+/* ── 新對話確認彈窗 ── */
+.chat-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 20px;
+}
+
+.chat-modal {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 24px 20px;
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+}
+
+.chat-modal__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary, #1c1917);
+  margin: 0 0 8px;
+}
+
+.chat-modal__desc {
+  font-size: 14px;
+  color: var(--color-text-secondary, #78716c);
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+.chat-modal__actions {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-modal__btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.chat-modal__btn--cancel {
+  background-color: #f5f5f4;
+  color: var(--color-text-secondary, #78716c);
+}
+
+.chat-modal__btn--cancel:hover {
+  background-color: #e7e5e4;
+}
+
+.chat-modal__btn--confirm {
+  background-color: var(--color-primary, #3b82f6);
+  color: #ffffff;
+}
+
+.chat-modal__btn--confirm:hover {
+  background-color: #2563eb;
 }
 
 /* ── 聊天訊息區域 ── */
@@ -414,8 +854,8 @@ function goBack() {
 
 .chat-page__placeholder {
   font-size: 14px;
-  color: var(--color-text-disabled, #a8a29e);
-  text-align: center;
+  color: var(--color-text-primary, #1c1917);
+  text-align: left;
   margin: 0;
 }
 
@@ -529,23 +969,83 @@ function goBack() {
   background-color: #e7e5e4;
 }
 
+/* ── 回到底部按鈕 ── */
+.chat-page__scroll-btn {
+  position: absolute;
+  bottom: 140px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--color-bg-card, #ffffff);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-size: 18px;
+  color: var(--color-text-secondary, #78716c);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: background-color 0.15s;
+}
+
+.chat-page__scroll-btn:hover {
+  background-color: #f5f5f4;
+}
+
 /* ── 送出確認列 ── */
 .chat-page__confirm-bar {
-  padding: 8px 20px;
+  padding: 12px 20px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
   flex-shrink: 0;
+  background-color: var(--color-bg-card, #ffffff);
+  border-top: 1px solid var(--color-border, #e7e5e4);
+}
+
+.chat-page__confirm-hint {
+  font-size: 12px;
+  color: var(--color-text-secondary, #78716c);
+  margin: 0;
+}
+
+.chat-page__confirm-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
 }
 
 .chat-page__confirm-btn {
-  padding: 0.6em 2em;
+  flex: 1;
+  padding: 12px 16px;
   border: none;
-  border-radius: 50em;
-  background-color: var(--color-secondary, #22c55e);
-  color: #ffffff;
-  font-weight: bold;
+  border-radius: 10px;
+  font-weight: 600;
   font-size: 14px;
   cursor: pointer;
+  transition: background-color 0.15s, opacity 0.15s;
+}
+
+.chat-page__confirm-btn--edit {
+  background-color: #f5f5f4;
+  color: var(--color-text-secondary, #78716c);
+  border: 1px solid var(--color-border, #e7e5e4);
+}
+
+.chat-page__confirm-btn--edit:hover:not(:disabled) {
+  background-color: #e7e5e4;
+}
+
+.chat-page__confirm-btn--submit {
+  background-color: var(--color-secondary, #22c55e);
+  color: #ffffff;
+}
+
+.chat-page__confirm-btn--submit:hover:not(:disabled) {
+  background-color: #16a34a;
 }
 
 .chat-page__confirm-btn:disabled {
@@ -591,6 +1091,18 @@ function goBack() {
 .chat-page__mic--active {
   background-color: var(--color-accent-red-light, #ffe4e6);
   color: var(--color-accent-red, #e11d48);
+}
+
+.chat-page__mic--transcribing {
+  background-color: #fef3c7;
+  color: #d97706;
+  cursor: wait;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 .chat-page__input {
@@ -700,5 +1212,161 @@ function goBack() {
 .chat-page__option-confirm:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* ── 是否繼續/確認 快捷按鈕 ── */
+.chat-page__quick-actions {
+  display: flex;
+  gap: 8px;
+  padding: 4px 0;
+  align-self: flex-start;
+}
+
+.chat-page__quick-btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s, transform 0.1s;
+}
+
+.chat-page__quick-btn:active {
+  transform: scale(0.96);
+}
+
+.chat-page__quick-btn--yes {
+  background-color: var(--color-primary, #3b82f6);
+  color: #ffffff;
+}
+
+.chat-page__quick-btn--yes:hover {
+  background-color: #2563eb;
+}
+
+.chat-page__quick-btn--no {
+  background-color: var(--color-secondary, #22c55e);
+  color: #ffffff;
+}
+
+.chat-page__quick-btn--no:hover {
+  background-color: #16a34a;
+}
+
+/* ── 摘要文字格式化 ── */
+.chat-message__summary {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.chat-message__summary :deep(.chat-summary-title) {
+  font-weight: 600;
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--color-text-primary, #1c1917);
+}
+
+.chat-message__summary :deep(.chat-summary-list) {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chat-message__summary :deep(.chat-summary-list li) {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 6px 10px;
+  background-color: #fafaf9;
+  border-radius: 6px;
+  border-left: 3px solid var(--color-primary, #3b82f6);
+}
+
+.chat-message__summary :deep(.chat-summary-label) {
+  font-size: 11px;
+  color: var(--color-text-secondary, #78716c);
+  font-weight: 500;
+}
+
+.chat-message__summary :deep(.chat-summary-value) {
+  font-size: 14px;
+  color: var(--color-text-primary, #1c1917);
+  font-weight: 500;
+}
+
+/* ── 常用地址快速填入 ── */
+.chat-page__addresses {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 4px 0;
+  align-self: flex-start;
+}
+
+.chat-page__addresses-label {
+  font-size: 12px;
+  color: var(--color-text-secondary, #78716c);
+  margin: 0;
+}
+
+.chat-page__address-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 14px;
+  border: 1px solid var(--color-border, #e7e5e4);
+  border-radius: 10px;
+  background-color: #ffffff;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.chat-page__address-btn:hover {
+  border-color: var(--color-primary, #3b82f6);
+  background-color: #f0f9ff;
+}
+
+.chat-page__address-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary, #3b82f6);
+}
+
+.chat-page__address-detail {
+  font-size: 13px;
+  color: var(--color-text-primary, #1c1917);
+}
+
+/* ── 地址定位 / 圖片上傳 操作按鈕 ── */
+.chat-page__action-buttons {
+  display: flex;
+  gap: 8px;
+  padding: 4px 0;
+  align-self: flex-start;
+  flex-wrap: wrap;
+}
+
+.chat-page__action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 16px;
+  border: 1px solid var(--color-primary, #3b82f6);
+  border-radius: 20px;
+  background-color: #ffffff;
+  color: var(--color-primary, #3b82f6);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.chat-page__action-btn:hover {
+  background-color: var(--color-primary, #3b82f6);
+  color: #ffffff;
 }
 </style>

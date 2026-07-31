@@ -88,7 +88,7 @@ describe('POST /api/ai-chat/message', () => {
       expect(res.status).toBe(200);
       expect(res.body.session).toEqual(resultSession);
       expect(res.body.replyText).toBe('請問您想諮詢哪一種服務？');
-      expect(res.body.replyMeta).toEqual({ blocked: false, reason: null, topicType: null, topicRequired: true, options: null });
+      expect(res.body.replyMeta).toEqual({ blocked: false, reason: null, topicType: null, topicTitle: null, topicRequired: true, options: null, savedAddresses: null });
       expect(chatAssistantService.handleMessage).toHaveBeenCalledTimes(1);
       expect(chatAssistantService.handleMessage).toHaveBeenCalledWith(
         expect.objectContaining({ stage: 'selecting_form' }),
@@ -130,7 +130,7 @@ describe('POST /api/ai-chat/message', () => {
         .send({ session: buildFakeSession(), userInput: 'a'.repeat(600), inputMode: 'text' });
 
       expect(res.status).toBe(200);
-      expect(res.body.replyMeta).toEqual({ blocked: true, reason: 'TOO_LONG', topicType: null, topicRequired: true, options: null });
+      expect(res.body.replyMeta).toEqual({ blocked: true, reason: 'TOO_LONG', topicType: null, topicTitle: null, topicRequired: true, options: null, savedAddresses: null });
       expect(res.body.replyText).toBe(rejectionMessage.text);
       // 阻擋情形下 route 仍只負責轉發 handleMessage 的結果，不重複呼叫 LLM 或改變阻擋判定
       expect(chatAssistantService.handleMessage).toHaveBeenCalledTimes(1);
