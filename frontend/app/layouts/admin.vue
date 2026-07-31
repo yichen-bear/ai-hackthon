@@ -15,6 +15,7 @@ const moduleLabels: Record<string, string> = {
   housing: '住',
   transport: '行',
   booking: '預',
+  entertainment: '樂',
 }
 
 const pageTitle = computed(() => {
@@ -46,6 +47,7 @@ function handleLogout() {
       <NuxtLink to="/admin/housing" class="admin-nav__link" :class="{ active: currentModule === 'housing' }">住</NuxtLink>
       <NuxtLink to="/admin/transport" class="admin-nav__link" :class="{ active: currentModule === 'transport' }">行</NuxtLink>
       <NuxtLink to="/admin/booking" class="admin-nav__link" :class="{ active: currentModule === 'booking' }">預</NuxtLink>
+      <NuxtLink to="/admin/entertainment" class="admin-nav__link" :class="{ active: currentModule === 'entertainment' }">樂</NuxtLink>
     </nav>
     <slot />
   </div>
