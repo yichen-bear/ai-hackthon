@@ -4,7 +4,56 @@
  * 標籤：點數、條碼/錢包、活動票券、獎章
  */
 
-const activeTab = ref<'points' | 'barcode' | 'tickets' | 'badges'>('points')
+const activeTab = ref<'points' | 'barcode' | 'tickets' | 'badges' | 'groups'>('points')
+
+// ─── 我的社群 ───
+interface ChatMsg { author: string; content: string; time: string; isPinned?: boolean }
+interface MyGroup {
+  id: string; name: string; type: 'interest' | 'course'
+  icon: string; memberCount: number; unreadCount: number
+  lastMessage?: string; lastMessageTime?: string
+}
+const myGroups = ref<MyGroup[]>([
+  { id: 'mg-1', name: '登山同好會', type: 'interest', icon: '🏔️', memberCount: 23, unreadCount: 3, lastMessage: '本週六改在象山集合', lastMessageTime: '14:30' },
+  { id: 'mg-2', name: '手機攝影班', type: 'course', icon: '📷', memberCount: 24, unreadCount: 0, lastMessage: '下週三帶自己的作品來分享', lastMessageTime: '昨天' },
+  { id: 'mg-3', name: '桌遊揪團', type: 'interest', icon: '🎲', memberCount: 12, unreadCount: 1, lastMessage: '有人週末要來嗎？', lastMessageTime: '11:00' },
+])
+
+const showGroupChat = ref(false)
+const activeGroupChat = ref<MyGroup | null>(null)
+const groupChatMessages = ref<ChatMsg[]>([])
+const newGroupMsg = ref('')
+
+function enterGroupChat(group: MyGroup) {
+  activeGroupChat.value = group
+  group.unreadCount = 0
+  groupChatMessages.value = [
+    { author: '📌 公告', content: `歡迎來到【${group.name}】！請遵守社群規範，友善交流。`, time: '', isPinned: true },
+    { author: '小美', content: '大家好！新人報到～', time: '09:30' },
+    { author: '阿傑', content: '歡迎歡迎！', time: '09:45' },
+    { author: '團長', content: group.lastMessage || '活動細節稍後公布', time: group.lastMessageTime || '10:00' },
+  ]
+  showGroupChat.value = true
+}
+
+function sendGroupMsg() {
+  if (!newGroupMsg.value.trim()) return
+  groupChatMessages.value.push({ author: '我', content: newGroupMsg.value.trim(), time: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }) })
+  newGroupMsg.value = ''
+}
+
+function leaveGroup(group: MyGroup) {
+  myGroups.value = myGroups.value.filter(g => g.id !== group.id)
+  if (activeGroupChat.value?.id === group.id) {
+    showGroupChat.value = false
+    activeGroupChat.value = null
+  }
+}
+
+function closeGroupChatOverlay() {
+  showGroupChat.value = false
+  activeGroupChat.value = null
+}
 
 // ─── OPEN POINT 資料 ───
 const userPoints = ref(2450)
@@ -130,6 +179,10 @@ const allBadges = ref([
       <button class="tab-btn" :class="{ active: activeTab === 'barcode' }" @click="activeTab = 'barcode'">條碼/錢包</button>
       <button class="tab-btn" :class="{ active: activeTab === 'tickets' }" @click="activeTab = 'tickets'">活動票券</button>
       <button class="tab-btn" :class="{ active: activeTab === 'badges' }" @click="activeTab = 'badges'">獎章</button>
+      <button class="tab-btn" :class="{ active: activeTab === 'groups' }" @click="activeTab = 'groups'">
+        社群
+        <span v-if="myGroups.reduce((s, g) => s + g.unreadCount, 0) > 0" class="unread-dot"></span>
+      </button>
     </nav>
 
     <!-- ═══ 點數專區 ═══ -->
@@ -306,6 +359,55 @@ const allBadges = ref([
         </button>
       </div>
     </div>
+
+    <!-- ═══ 我的社群 ═══ -->
+    <div v-if="activeTab === 'groups'" class="tab-content">
+      <div v-if="myGroups.length === 0" class="empty-state">
+        <p>尚未加入任何社群</p>
+        <p class="empty-hint">前往「樂」模組的興趣媒合加入社群吧！</p>
+      </div>
+      <div v-for="group in myGroups" :key="group.id" class="group-card">
+        <div class="group-card-left" @click="enterGroupChat(group)">
+          <span class="group-icon">{{ group.icon }}</span>
+          <div class="group-info">
+            <div class="group-name-row">
+              <span class="group-name">{{ group.name }}</span>
+              <span class="group-type" :class="group.type === 'course' ? 'group-type--course' : 'group-type--interest'">{{ group.type === 'course' ? '📚 課程' : '💡 興趣' }}</span>
+            </div>
+            <p class="group-last-msg">{{ group.lastMessage || '暫無訊息' }}</p>
+          </div>
+        </div>
+        <div class="group-card-right">
+          <span v-if="group.unreadCount > 0" class="group-unread">{{ group.unreadCount }}</span>
+          <span class="group-time">{{ group.lastMessageTime }}</span>
+          <button class="group-leave-btn" @click="leaveGroup(group)">退出</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 社群聊天室 Overlay -->
+    <Teleport to="body">
+      <div v-if="showGroupChat && activeGroupChat" class="chat-overlay" @click.self="closeGroupChatOverlay">
+        <div class="chat-panel">
+          <header class="chat-header">
+            <button class="chat-back" @click="closeGroupChatOverlay">← 返回</button>
+            <span class="chat-title">{{ activeGroupChat.name }}</span>
+            <span class="chat-members">👥 {{ activeGroupChat.memberCount }}</span>
+          </header>
+          <div class="chat-messages">
+            <div v-for="(msg, idx) in groupChatMessages" :key="idx" class="chat-msg" :class="{ 'chat-msg--mine': msg.author === '我', 'chat-msg--pinned': msg.isPinned }">
+              <span v-if="!msg.isPinned && msg.author !== '我'" class="chat-author">{{ msg.author }}</span>
+              <p class="chat-text">{{ msg.content }}</p>
+              <span v-if="msg.time" class="chat-time">{{ msg.time }}</span>
+            </div>
+          </div>
+          <div class="chat-input-bar">
+            <input v-model="newGroupMsg" class="chat-input" placeholder="輸入訊息..." @keydown.enter="sendGroupMsg" />
+            <button class="chat-send" @click="sendGroupMsg">送出</button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
 
     <!-- 獎章詳情懸浮視窗 -->
     <Teleport to="body">
@@ -504,4 +606,43 @@ const allBadges = ref([
 .badge-modal-desc { font-size: 14px; color: #64748b; margin: 4px 0 0; line-height: 1.5; }
 .badge-modal-status { font-size: 13px; font-weight: 600; margin-top: 8px; }
 .badge-modal-status.unlocked { color: #10b981; }
+
+/* ═══ 我的社群 ═══ */
+.group-card { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 8px; }
+.group-card-left { display: flex; align-items: center; gap: 10px; flex: 1; cursor: pointer; }
+.group-icon { font-size: 24px; }
+.group-info { flex: 1; min-width: 0; }
+.group-name-row { display: flex; align-items: center; gap: 6px; }
+.group-name { font-size: 14px; font-weight: 600; color: #1c1917; }
+.group-type { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 6px; }
+.group-type--interest { background: #fdf2f8; color: #ec4899; }
+.group-type--course { background: #f5f3ff; color: #8b5cf6; }
+.group-last-msg { margin: 2px 0 0; font-size: 12px; color: #78716c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.group-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.group-unread { background: #ec4899; color: #fff; font-size: 10px; font-weight: 700; min-width: 18px; height: 18px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
+.group-time { font-size: 10px; color: #78716c; }
+.group-leave-btn { font-size: 10px; color: #e11d48; background: none; border: 1px solid #e11d48; border-radius: 6px; padding: 2px 8px; cursor: pointer; }
+.unread-dot { width: 8px; height: 8px; border-radius: 50%; background: #ec4899; display: inline-block; margin-left: 4px; }
+.empty-hint { font-size: 12px; color: #78716c; margin: 4px 0 0; }
+
+/* ═══ 社群聊天室 ═══ */
+.chat-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; }
+.chat-panel { background: #fff; border-radius: 16px 16px 0 0; width: 100%; max-width: 430px; height: 80vh; display: flex; flex-direction: column; animation: slideUp .3s ease; }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.chat-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #e2e8f0; }
+.chat-back { background: none; border: none; font-size: 14px; cursor: pointer; color: #78716c; }
+.chat-title { font-size: 14px; font-weight: 700; color: #1c1917; }
+.chat-members { font-size: 11px; color: #78716c; }
+.chat-messages { flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+.chat-msg { max-width: 80%; padding: 8px 12px; border-radius: 12px; background: #f1f5f9; }
+.chat-msg--mine { align-self: flex-end; background: #ec4899; color: #fff; }
+.chat-msg--mine .chat-time { color: rgba(255,255,255,.7); }
+.chat-msg--pinned { max-width: 100%; background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; }
+.chat-author { font-size: 10px; font-weight: 600; color: #8b5cf6; display: block; margin-bottom: 2px; }
+.chat-text { margin: 0; font-size: 13px; line-height: 1.5; white-space: pre-wrap; }
+.chat-time { font-size: 10px; color: #78716c; display: block; margin-top: 2px; text-align: right; }
+.chat-input-bar { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid #e2e8f0; }
+.chat-input { flex: 1; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 13px; outline: none; }
+.chat-input:focus { border-color: #ec4899; }
+.chat-send { padding: 10px 16px; background: #ec4899; color: #fff; border: none; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; }
 </style>

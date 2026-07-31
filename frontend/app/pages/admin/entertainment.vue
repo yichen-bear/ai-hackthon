@@ -32,9 +32,15 @@ interface NotifyRecord {
   message: string; sentAt: string; recipientCount: number
 }
 
+interface ResidentQuestion {
+  id: string; contactName: string; contactPhone: string
+  activityName: string; question: string; askedAt: string
+  answered: boolean; answer?: string
+}
+
 // ─── Tab ───
 const activeTab = ref(0)
-const tabs = ['報名管理', '活動管理', '通知中心']
+const tabs = ['報名管理', '活動管理', '通知中心', '居民提問']
 
 // ─── 分類篩選 ───
 type FilterCategory = 'all' | ActivityCategory
@@ -157,6 +163,24 @@ const selectedTemplate = ref<NotifyTemplate>('reminder')
 const customMessage = ref('')
 const sendTargetId = ref('')
 
+// ─── 居民提問 ───
+const residentQuestions = ref<ResidentQuestion[]>([
+  { id: 'q-1', contactName: '王小姐', contactPhone: '0912-345-678', activityName: '中秋社區聯歡晚會', question: '請問活動當天有提供停車位嗎？', askedAt: '07/29 14:00', answered: false },
+  { id: 'q-2', contactName: '林先生', contactPhone: '0933-222-333', activityName: '社區健走日', question: '小朋友可以一起參加嗎？有年齡限制嗎？', askedAt: '07/30 09:30', answered: false },
+  { id: 'q-3', contactName: '張媽媽', contactPhone: '0922-333-444', activityName: '中秋社區聯歡晚會', question: '我婆婆坐輪椅，活動中心有電梯嗎？', askedAt: '07/28 16:00', answered: true, answer: '有的，活動中心 1F 有無障礙坡道，2F 有電梯可達。' },
+])
+const replyingId = ref('')
+const replyText = ref('')
+
+function answerQuestion(q: ResidentQuestion) {
+  if (!replyText.value.trim()) return
+  q.answered = true
+  q.answer = replyText.value.trim()
+  replyText.value = ''
+  replyingId.value = ''
+  showToast(`✅ 已回覆 ${q.contactName} 的提問`)
+}
+
 // ─── 報到模式 ───
 const checkinMode = ref(false)
 const checkinActId = ref('')
@@ -268,7 +292,7 @@ function resetDemo() { location.reload() }
 
       <!-- Tab -->
       <nav class="ea__tabs" role="tablist">
-        <button v-for="(tab, idx) in tabs" :key="tab" class="ea__tab" :class="{ 'ea__tab--active': activeTab === idx }" @click="activeTab = idx">{{ ['📋', '🎯', '📢'][idx] }} {{ tab }}</button>
+        <button v-for="(tab, idx) in tabs" :key="tab" class="ea__tab" :class="{ 'ea__tab--active': activeTab === idx }" @click="activeTab = idx">{{ ['📋', '🎯', '📢', '❓'][idx] }} {{ tab }}</button>
       </nav>
 
       <!-- Tab 1：報名管理（精簡版） -->
@@ -278,6 +302,7 @@ function resetDemo() { location.reload() }
             <div>
               <span class="ea__cat-label">{{ getCategoryLabel(act.category) }}</span>
               <h4 class="ea__card-title">{{ act.name }}</h4>
+              <p class="ea__card-date">📅 {{ act.date }} {{ act.time }} · 📍 {{ act.location }}</p>
             </div>
             <span class="ea__badge" :class="{ 'ea__badge--green': act.status==='open', 'ea__badge--amber': act.status==='almost_full', 'ea__badge--red': act.status==='full' }">{{ getStatusLabel(act.status) }}</span>
           </div>
@@ -301,9 +326,9 @@ function resetDemo() { location.reload() }
             </button>
           </div>
 
-          <!-- ═══ 特殊需求待處理面板（僅有未處理時顯示） ═══ -->
+          <!-- ═══ 特殊需求待處理面板（僅有未處理時顯示）▸ 可收合 ═══ -->
           <details v-if="act.registrations.some(r => r.specialNeeds.some(n => !n.resolved))" class="ea__needs-panel">
-            <summary class="ea__needs-summary">⚠️ {{ act.registrations.reduce((s, r) => s + r.specialNeeds.filter(n => !n.resolved).length, 0) }} 項特殊需求待安排</summary>
+            <summary class="ea__needs-summary">▸ ⚠️ {{ act.registrations.reduce((s, r) => s + r.specialNeeds.filter(n => !n.resolved).length, 0) }} 項特殊需求待安排</summary>
             <div class="ea__needs-list">
               <div v-for="reg in act.registrations.filter(r => r.specialNeeds.some(n => !n.resolved))" :key="reg.id" class="ea__needs-row">
                 <span class="ea__reg-name">{{ reg.contactName }}</span>
@@ -403,6 +428,39 @@ function resetDemo() { location.reload() }
           <p class="ea__notify-msg">{{ n.message }}</p>
         </div>
       </section>
+
+      <!-- Tab 4：居民提問 -->
+      <section v-show="activeTab === 3">
+        <div v-if="residentQuestions.filter(q => !q.answered).length === 0" class="ea__empty">
+          <p>🎉 所有提問已回覆</p>
+        </div>
+        <div v-for="q in residentQuestions" :key="q.id" class="ea__card" :class="{ 'ea__card--answered': q.answered }">
+          <div class="ea__card-top">
+            <div>
+              <span class="ea__reg-name">{{ q.contactName }}</span>
+              <span class="ea__reg-phone">{{ q.contactPhone }}</span>
+            </div>
+            <span class="ea__badge" :class="q.answered ? 'ea__badge--green' : 'ea__badge--amber'">{{ q.answered ? '✅ 已回覆' : '⏳ 待回覆' }}</span>
+          </div>
+          <p class="ea__card-meta">📍 {{ q.activityName }} · 🕐 {{ q.askedAt }}</p>
+          <div class="ea__question-bubble">
+            <p class="ea__question-text">❓ {{ q.question }}</p>
+          </div>
+          <div v-if="q.answered" class="ea__answer-bubble">
+            <p class="ea__answer-text">💬 {{ q.answer }}</p>
+          </div>
+          <div v-if="!q.answered">
+            <div v-if="replyingId === q.id" class="ea__reply-form">
+              <textarea v-model="replyText" class="ea__textarea" rows="2" placeholder="輸入回覆..."></textarea>
+              <div class="ea__reply-actions">
+                <button class="ea__btn-sm ea__btn-sm--green" @click="answerQuestion(q)">送出回覆</button>
+                <button class="ea__btn-sm ea__btn-sm--red" @click="replyingId = ''">取消</button>
+              </div>
+            </div>
+            <button v-else class="ea__btn ea__btn--outline" @click="replyingId = q.id">💬 回覆</button>
+          </div>
+        </div>
+      </section>
     </main>
 
     <Transition name="toast-fade"><div v-if="toastMessage" class="ea__toast">{{ toastMessage }}</div></Transition>
@@ -431,6 +489,7 @@ function resetDemo() { location.reload() }
 .ea__card:last-child { margin-bottom: 0; }
 .ea__card-top { display: flex; align-items: flex-start; justify-content: space-between; }
 .ea__card-title { margin: 0; font-size: 15px; font-weight: 700; color: #1c1917; }
+.ea__card-date { margin: 4px 0 0; font-size: 11px; color: #78716c; }
 .ea__card-meta { margin: 0; font-size: 11px; color: #78716c; }
 .ea__card-details { display: flex; flex-wrap: wrap; gap: 8px; font-size: 12px; color: #78716c; }
 .ea__cat-label { font-size: 10px; font-weight: 600; color: #7c3aed; background: #f3e8ff; padding: 2px 8px; border-radius: 9999px; margin-bottom: 4px; display: inline-block; }
@@ -486,6 +545,11 @@ function resetDemo() { location.reload() }
 .ea__needs-summary { padding: 10px 12px; font-size: 13px; font-weight: 600; color: #d97706; cursor: pointer; list-style: none; }
 .ea__needs-summary::-webkit-details-marker { display: none; }
 .ea__needs-panel[open] .ea__needs-summary { border-bottom: 1px solid #fde68a; }
+.ea__needs-panel[open] .ea__needs-summary::first-letter { content: ''; }
+
+/* 箭頭指示：▸ 收合 → ▾ 展開 */
+.ea__needs-summary::before { content: ''; display: inline; }
+.ea__needs-panel[open] .ea__needs-summary { color: #92400e; }
 .ea__needs-list { padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
 .ea__needs-row { display: flex; flex-direction: column; gap: 4px; }
 .ea__need-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 4px 8px; background: #fff; border: 1px solid #fde68a; border-radius: 6px; margin-top: 2px; }
@@ -514,6 +578,16 @@ function resetDemo() { location.reload() }
 .ea__textarea { padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 13px; font-family: inherit; resize: none; }
 .ea__notify-tpl { font-size: 11px; font-weight: 600; color: #7c3aed; background: #f3e8ff; padding: 2px 8px; border-radius: 9999px; }
 .ea__notify-msg { margin: 0; font-size: 12px; background: #f8fafc; padding: 8px 12px; border-radius: 8px; line-height: 1.5; }
+
+/* ═══ 居民提問 ═══ */
+.ea__card--answered { opacity: .7; }
+.ea__question-bubble { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 10px 12px; }
+.ea__question-text { margin: 0; font-size: 13px; color: #1e40af; line-height: 1.5; }
+.ea__answer-bubble { background: #ecfdf5; border: 1px solid #86efac; border-radius: 10px; padding: 10px 12px; }
+.ea__answer-text { margin: 0; font-size: 13px; color: #166534; line-height: 1.5; }
+.ea__reply-form { display: flex; flex-direction: column; gap: 8px; }
+.ea__reply-actions { display: flex; gap: 8px; }
+.ea__empty { text-align: center; padding: 32px 16px; color: #78716c; font-size: 14px; }
 .ea__toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 200; padding: 12px 20px; background: #1e293b; color: #fff; font-size: 13px; font-weight: 600; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,.15); }
 .ea__demo-panel { position: fixed; bottom: 20px; right: 20px; z-index: 999; }
 .ea__demo-btn { padding: 8px 14px; border: none; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.15); background: #78716c; color: #fff; }
