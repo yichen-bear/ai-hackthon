@@ -90,6 +90,10 @@ function getSourceLabel(s: OrderSource) { return s === 'preorder' ? 'i預購' : 
 function getSourceIcon(s: OrderSource) { return s === 'preorder' ? '🏪' : '🛒' }
 
 // ─── Mock：門市訂單（客戶下單/團購後門市收到） ───
+// 格式對齊 DB pms_form_feedback.feedback_content (formId=1006)
+// contactName/Phone 來自解密後的加密欄位
+// productName/spec/quantity 來自 feedbackContent.data (topicId 3021~3023)
+// 門市來自 feedbackContent.data (topicId 3024)
 const storeOrders = ref<StoreOrder[]>([
   {
     id: 'so-1',
@@ -101,9 +105,9 @@ const storeOrders = ref<StoreOrder[]>([
     groupBuy: {
       id: 'gb-1', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', targetMembers: 5, currentMembers: 3, isForceGrouped: false,
       members: [
-        { id: 'c-1', source: 'groupbuy', contactName: '王小姐', contactPhone: '0912-345-678', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 4, unitPrice: 599, totalAmount: 2396, paymentMethod: '🏪 取貨付款', aiNote: '🤖 社區團購常客', createdAt: '07/28 10:15' },
-        { id: 'c-2', source: 'groupbuy', contactName: '林先生', contactPhone: '0933-456-789', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 3, unitPrice: 599, totalAmount: 1797, paymentMethod: '🏪 取貨付款', aiNote: '🤖 首次參團', createdAt: '07/28 14:30' },
-        { id: 'c-3', source: 'groupbuy', contactName: '陳媽媽', contactPhone: '0922-567-890', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 3, unitPrice: 599, totalAmount: 1797, paymentMethod: '🏪 取貨付款', aiNote: '🤖 家庭大量購買', createdAt: '07/29 09:00' },
+        { id: 'c-1', source: 'groupbuy', contactName: '王小姐', contactPhone: '0912-***-678', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 4, unitPrice: 599, totalAmount: 2396, paymentMethod: '🏪 取貨付款', aiNote: '🤖 社區團購常客', createdAt: '08/01 10:15' },
+        { id: 'c-2', source: 'groupbuy', contactName: '林先生', contactPhone: '0933-***-789', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 3, unitPrice: 599, totalAmount: 1797, paymentMethod: '🏪 取貨付款', aiNote: '🤖 首次參團', createdAt: '08/01 14:30' },
+        { id: 'c-3', source: 'groupbuy', contactName: '陳媽媽', contactPhone: '0922-***-890', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 3, unitPrice: 599, totalAmount: 1797, paymentMethod: '🏪 取貨付款', aiNote: '🤖 家庭大量購買', createdAt: '08/02 09:00' },
       ],
     },
     customers: [],
@@ -119,11 +123,11 @@ const storeOrders = ref<StoreOrder[]>([
     groupBuy: {
       id: 'gb-2', productName: '光泉鮮乳量販組', spec: '1858ml x 6瓶', targetMembers: 5, currentMembers: 5, isForceGrouped: false,
       members: [
-        { id: 'c-4', source: 'groupbuy', contactName: '張同學', contactPhone: '0955-678-901', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '🤖 學生優惠', createdAt: '07/27 16:00' },
-        { id: 'c-5', source: 'groupbuy', contactName: '李太太', contactPhone: '0966-789-012', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/27 18:00' },
-        { id: 'c-6', source: 'groupbuy', contactName: '趙先生', contactPhone: '0977-890-123', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '💳 線上付款', aiNote: '', createdAt: '07/28 08:00' },
-        { id: 'c-7', source: 'groupbuy', contactName: '孫小姐', contactPhone: '0988-901-234', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/28 10:00' },
-        { id: 'c-8', source: 'groupbuy', contactName: '周媽媽', contactPhone: '0911-012-345', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '🤖 冷藏品需快速通知', createdAt: '07/28 12:00' },
+        { id: 'c-4', source: 'groupbuy', contactName: '張同學', contactPhone: '0955-***-901', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '🤖 學生優惠', createdAt: '08/01 16:00' },
+        { id: 'c-5', source: 'groupbuy', contactName: '李太太', contactPhone: '0966-***-012', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '08/01 18:00' },
+        { id: 'c-6', source: 'groupbuy', contactName: '趙先生', contactPhone: '0977-***-123', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '💳 線上付款', aiNote: '', createdAt: '08/02 08:00' },
+        { id: 'c-7', source: 'groupbuy', contactName: '孫小姐', contactPhone: '0988-***-234', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '08/02 10:00' },
+        { id: 'c-8', source: 'groupbuy', contactName: '周媽媽', contactPhone: '0911-***-345', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '🤖 冷藏品需快速通知', createdAt: '08/02 12:00' },
       ],
     },
     customers: [],
@@ -137,8 +141,8 @@ const storeOrders = ref<StoreOrder[]>([
     spec: '經典蛋黃酥 x6入',
     totalQuantity: 3,
     customers: [
-      { id: 'c-9', source: 'preorder', contactName: '黃經理', contactPhone: '0912-111-222', productName: '中秋限定月餅禮盒', spec: '經典蛋黃酥 x6入', quantity: 2, unitPrice: 680, totalAmount: 1360, paymentMethod: '💳 線上付款（OPEN錢包）', aiNote: '🤖 VIP 企業訂單 / 送禮需求', createdAt: '07/29 15:30' },
-      { id: 'c-10', source: 'preorder', contactName: '吳小姐', contactPhone: '0933-222-333', productName: '中秋限定月餅禮盒', spec: '經典蛋黃酥 x6入', quantity: 1, unitPrice: 680, totalAmount: 680, paymentMethod: '💳 線上付款（信用卡）', aiNote: '🤖 自用', createdAt: '07/30 09:00' },
+      { id: 'c-9', source: 'preorder', contactName: '黃經理', contactPhone: '0912-***-222', productName: '中秋限定月餅禮盒', spec: '經典蛋黃酥 x6入', quantity: 2, unitPrice: 680, totalAmount: 1360, paymentMethod: '💳 線上付款（OPEN錢包）', aiNote: '🤖 VIP 企業訂單 / 送禮需求', createdAt: '08/02 15:30' },
+      { id: 'c-10', source: 'preorder', contactName: '吳小姐', contactPhone: '0933-***-333', productName: '中秋限定月餅禮盒', spec: '經典蛋黃酥 x6入', quantity: 1, unitPrice: 680, totalAmount: 680, paymentMethod: '💳 線上付款（信用卡）', aiNote: '🤖 自用', createdAt: '08/03 09:00' },
     ],
     status: 'pending',
   },
@@ -153,12 +157,12 @@ const storeOrders = ref<StoreOrder[]>([
     groupBuy: {
       id: 'gb-3', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', targetMembers: 8, currentMembers: 6, isForceGrouped: false,
       members: [
-        { id: 'c-40', source: 'groupbuy', contactName: '鄭太太', contactPhone: '0912-100-200', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 3, unitPrice: 599, totalAmount: 1797, paymentMethod: '🏪 取貨付款', aiNote: '🤖 社區主婦團', createdAt: '07/28 11:00' },
-        { id: 'c-41', source: 'groupbuy', contactName: '曾先生', contactPhone: '0922-200-300', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 2, unitPrice: 599, totalAmount: 1198, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/28 13:00' },
-        { id: 'c-42', source: 'groupbuy', contactName: '謝小姐', contactPhone: '0933-300-400', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 3, unitPrice: 599, totalAmount: 1797, paymentMethod: '💳 線上付款', aiNote: '', createdAt: '07/28 15:00' },
-        { id: 'c-43', source: 'groupbuy', contactName: '何媽媽', contactPhone: '0955-400-500', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 2, unitPrice: 599, totalAmount: 1198, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/29 08:00' },
-        { id: 'c-44', source: 'groupbuy', contactName: '宋先生', contactPhone: '0966-500-600', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 3, unitPrice: 599, totalAmount: 1797, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/29 10:00' },
-        { id: 'c-45', source: 'groupbuy', contactName: '蕭太太', contactPhone: '0977-600-700', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 2, unitPrice: 599, totalAmount: 1198, paymentMethod: '🏪 取貨付款', aiNote: '🤖 固定每月團購', createdAt: '07/29 14:00' },
+        { id: 'c-40', source: 'groupbuy', contactName: '鄭太太', contactPhone: '0912-***-200', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 3, unitPrice: 599, totalAmount: 1797, paymentMethod: '🏪 取貨付款', aiNote: '🤖 社區主婦團', createdAt: '08/01 11:00' },
+        { id: 'c-41', source: 'groupbuy', contactName: '曾先生', contactPhone: '0922-***-300', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 2, unitPrice: 599, totalAmount: 1198, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '08/01 13:00' },
+        { id: 'c-42', source: 'groupbuy', contactName: '謝小姐', contactPhone: '0933-***-400', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 3, unitPrice: 599, totalAmount: 1797, paymentMethod: '💳 線上付款', aiNote: '', createdAt: '08/01 15:00' },
+        { id: 'c-43', source: 'groupbuy', contactName: '何媽媽', contactPhone: '0955-***-500', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 2, unitPrice: 599, totalAmount: 1198, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '08/02 08:00' },
+        { id: 'c-44', source: 'groupbuy', contactName: '宋先生', contactPhone: '0966-***-600', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 3, unitPrice: 599, totalAmount: 1797, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '08/02 10:00' },
+        { id: 'c-45', source: 'groupbuy', contactName: '蕭太太', contactPhone: '0977-***-700', productName: '舒潔衛生紙箱購', spec: '100抽 x 72包', quantity: 2, unitPrice: 599, totalAmount: 1198, paymentMethod: '🏪 取貨付款', aiNote: '🤖 固定每月團購', createdAt: '08/02 14:00' },
       ],
     },
     customers: [],
@@ -172,8 +176,8 @@ const storeOrders = ref<StoreOrder[]>([
     spec: '300g 霜降片',
     totalQuantity: 4,
     customers: [
-      { id: 'c-46', source: 'preorder', contactName: '方經理', contactPhone: '0988-700-800', productName: '日本A5和牛禮盒', spec: '300g 霜降片', quantity: 2, unitPrice: 1980, totalAmount: 3960, paymentMethod: '💳 線上付款', aiNote: '🤖 公司中秋贈禮', createdAt: '07/29 11:00' },
-      { id: 'c-47', source: 'preorder', contactName: '邱小姐', contactPhone: '0911-800-900', productName: '日本A5和牛禮盒', spec: '300g 霜降片', quantity: 2, unitPrice: 1980, totalAmount: 3960, paymentMethod: '💳 線上付款（OPEN錢包）', aiNote: '🤖 冷凍宅配需求', createdAt: '07/30 08:30' },
+      { id: 'c-46', source: 'preorder', contactName: '方經理', contactPhone: '0988-***-800', productName: '日本A5和牛禮盒', spec: '300g 霜降片', quantity: 2, unitPrice: 1980, totalAmount: 3960, paymentMethod: '💳 線上付款', aiNote: '🤖 公司中秋贈禮', createdAt: '08/02 11:00' },
+      { id: 'c-47', source: 'preorder', contactName: '邱小姐', contactPhone: '0911-***-900', productName: '日本A5和牛禮盒', spec: '300g 霜降片', quantity: 2, unitPrice: 1980, totalAmount: 3960, paymentMethod: '💳 線上付款（OPEN錢包）', aiNote: '🤖 冷凍宅配需求', createdAt: '08/03 08:30' },
     ],
     status: 'pending',
   },
@@ -188,14 +192,14 @@ const storeOrders = ref<StoreOrder[]>([
     groupBuy: {
       id: 'gb-4', productName: '光泉鮮乳量販組', spec: '1858ml x 6瓶', targetMembers: 8, currentMembers: 8, isForceGrouped: false,
       members: [
-        { id: 'c-50', source: 'groupbuy', contactName: '游太太', contactPhone: '0912-001-002', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/27 09:00' },
-        { id: 'c-51', source: 'groupbuy', contactName: '呂先生', contactPhone: '0922-002-003', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/27 10:00' },
-        { id: 'c-52', source: 'groupbuy', contactName: '施小姐', contactPhone: '0933-003-004', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '💳 線上付款', aiNote: '', createdAt: '07/27 11:00' },
-        { id: 'c-53', source: 'groupbuy', contactName: '廖媽媽', contactPhone: '0955-004-005', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/27 14:00' },
-        { id: 'c-54', source: 'groupbuy', contactName: '鍾先生', contactPhone: '0966-005-006', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/28 08:00' },
-        { id: 'c-55', source: 'groupbuy', contactName: '葉小姐', contactPhone: '0977-006-007', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/28 09:00' },
-        { id: 'c-56', source: 'groupbuy', contactName: '蘇先生', contactPhone: '0988-007-008', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '💳 線上付款', aiNote: '', createdAt: '07/28 12:00' },
-        { id: 'c-57', source: 'groupbuy', contactName: '盧太太', contactPhone: '0911-008-009', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '🤖 每週固定訂購', createdAt: '07/28 15:00' },
+        { id: 'c-50', source: 'groupbuy', contactName: '游太太', contactPhone: '0912-***-002', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '08/01 09:00' },
+        { id: 'c-51', source: 'groupbuy', contactName: '呂先生', contactPhone: '0922-***-003', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '08/01 10:00' },
+        { id: 'c-52', source: 'groupbuy', contactName: '施小姐', contactPhone: '0933-***-004', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '💳 線上付款', aiNote: '', createdAt: '08/01 11:00' },
+        { id: 'c-53', source: 'groupbuy', contactName: '廖媽媽', contactPhone: '0955-***-005', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '08/01 14:00' },
+        { id: 'c-54', source: 'groupbuy', contactName: '鍾先生', contactPhone: '0966-***-006', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '08/02 08:00' },
+        { id: 'c-55', source: 'groupbuy', contactName: '葉小姐', contactPhone: '0977-***-007', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '08/02 09:00' },
+        { id: 'c-56', source: 'groupbuy', contactName: '蘇先生', contactPhone: '0988-***-008', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '💳 線上付款', aiNote: '', createdAt: '08/02 12:00' },
+        { id: 'c-57', source: 'groupbuy', contactName: '盧太太', contactPhone: '0911-***-009', productName: '光泉鮮乳量販組', quantity: 1, unitPrice: 399, totalAmount: 399, paymentMethod: '🏪 取貨付款', aiNote: '🤖 每週固定訂購', createdAt: '08/02 15:00' },
       ],
     },
     customers: [],
@@ -212,10 +216,10 @@ const storeOrders = ref<StoreOrder[]>([
     groupBuy: {
       id: 'gb-5', productName: '可口可樂量販箱', spec: '330ml x 24罐', targetMembers: 6, currentMembers: 4, isForceGrouped: false,
       members: [
-        { id: 'c-60', source: 'groupbuy', contactName: '洪同學', contactPhone: '0912-010-020', productName: '可口可樂量販箱', quantity: 3, unitPrice: 249, totalAmount: 747, paymentMethod: '🏪 取貨付款', aiNote: '🤖 宿舍團購', createdAt: '07/29 16:00' },
-        { id: 'c-61', source: 'groupbuy', contactName: '余同學', contactPhone: '0922-020-030', productName: '可口可樂量販箱', quantity: 2, unitPrice: 249, totalAmount: 498, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/29 17:00' },
-        { id: 'c-62', source: 'groupbuy', contactName: '潘同學', contactPhone: '0933-030-040', productName: '可口可樂量販箱', quantity: 3, unitPrice: 249, totalAmount: 747, paymentMethod: '💳 線上付款', aiNote: '', createdAt: '07/29 18:00' },
-        { id: 'c-63', source: 'groupbuy', contactName: '范同學', contactPhone: '0955-040-050', productName: '可口可樂量販箱', quantity: 2, unitPrice: 249, totalAmount: 498, paymentMethod: '🏪 取貨付款', aiNote: '🤖 學生固定補貨', createdAt: '07/30 10:00' },
+        { id: 'c-60', source: 'groupbuy', contactName: '洪同學', contactPhone: '0912-***-020', productName: '可口可樂量販箱', quantity: 3, unitPrice: 249, totalAmount: 747, paymentMethod: '🏪 取貨付款', aiNote: '🤖 宿舍團購', createdAt: '08/02 16:00' },
+        { id: 'c-61', source: 'groupbuy', contactName: '余同學', contactPhone: '0922-***-030', productName: '可口可樂量販箱', quantity: 2, unitPrice: 249, totalAmount: 498, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '08/02 17:00' },
+        { id: 'c-62', source: 'groupbuy', contactName: '潘同學', contactPhone: '0933-***-040', productName: '可口可樂量販箱', quantity: 3, unitPrice: 249, totalAmount: 747, paymentMethod: '💳 線上付款', aiNote: '', createdAt: '08/02 18:00' },
+        { id: 'c-63', source: 'groupbuy', contactName: '范同學', contactPhone: '0955-***-050', productName: '可口可樂量販箱', quantity: 2, unitPrice: 249, totalAmount: 498, paymentMethod: '🏪 取貨付款', aiNote: '🤖 學生固定補貨', createdAt: '08/03 10:00' },
       ],
     },
     customers: [],
@@ -229,8 +233,8 @@ const storeOrders = ref<StoreOrder[]>([
     spec: '馬卡龍 12入',
     totalQuantity: 2,
     customers: [
-      { id: 'c-64', source: 'preorder', contactName: '楊教授', contactPhone: '0966-050-060', productName: '法式甜點禮盒', spec: '馬卡龍 12入', quantity: 1, unitPrice: 880, totalAmount: 880, paymentMethod: '💳 線上付款', aiNote: '🤖 教師節禮品', createdAt: '07/30 11:00' },
-      { id: 'c-65', source: 'preorder', contactName: '江同學', contactPhone: '0977-060-070', productName: '法式甜點禮盒', spec: '馬卡龍 12入', quantity: 1, unitPrice: 880, totalAmount: 880, paymentMethod: '💳 線上付款（OPEN錢包）', aiNote: '', createdAt: '07/30 12:00' },
+      { id: 'c-64', source: 'preorder', contactName: '楊教授', contactPhone: '0966-***-060', productName: '法式甜點禮盒', spec: '馬卡龍 12入', quantity: 1, unitPrice: 880, totalAmount: 880, paymentMethod: '💳 線上付款', aiNote: '🤖 教師節禮品', createdAt: '08/03 11:00' },
+      { id: 'c-65', source: 'preorder', contactName: '江同學', contactPhone: '0977-***-070', productName: '法式甜點禮盒', spec: '馬卡龍 12入', quantity: 1, unitPrice: 880, totalAmount: 880, paymentMethod: '💳 線上付款（OPEN錢包）', aiNote: '', createdAt: '08/03 12:00' },
     ],
     status: 'pending',
   },
@@ -246,12 +250,12 @@ const shippingOrders = ref<StoreOrder[]>([
     spec: '330ml x 24罐',
     totalQuantity: 8,
     customers: [
-      { id: 'c-20', source: 'groupbuy', contactName: '鄭先生', contactPhone: '0955-333-444', productName: '可口可樂量販箱', quantity: 3, unitPrice: 249, totalAmount: 747, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/26' },
-      { id: 'c-21', source: 'groupbuy', contactName: '馬太太', contactPhone: '0966-444-555', productName: '可口可樂量販箱', quantity: 5, unitPrice: 249, totalAmount: 1245, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/26' },
+      { id: 'c-20', source: 'groupbuy', contactName: '鄭先生', contactPhone: '0955-***-444', productName: '可口可樂量販箱', quantity: 3, unitPrice: 249, totalAmount: 747, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/30' },
+      { id: 'c-21', source: 'groupbuy', contactName: '馬太太', contactPhone: '0966-***-555', productName: '可口可樂量販箱', quantity: 5, unitPrice: 249, totalAmount: 1245, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/30' },
     ],
     status: 'shipping',
-    submittedAt: '07/27 14:00',
-    shippingAt: '07/28 09:00',
+    submittedAt: '07/31 14:00',
+    shippingAt: '08/01 09:00',
   },
   {
     id: 'so-ship-2',
@@ -261,11 +265,11 @@ const shippingOrders = ref<StoreOrder[]>([
     spec: '300g 霜降片',
     totalQuantity: 2,
     customers: [
-      { id: 'c-22', source: 'preorder', contactName: '高先生', contactPhone: '0977-555-666', productName: '日本A5和牛禮盒', spec: '300g 霜降片', quantity: 2, unitPrice: 1980, totalAmount: 3960, paymentMethod: '💳 線上付款', aiNote: '🤖 冷凍配送', createdAt: '07/25' },
+      { id: 'c-22', source: 'preorder', contactName: '高先生', contactPhone: '0977-***-666', productName: '日本A5和牛禮盒', spec: '300g 霜降片', quantity: 2, unitPrice: 1980, totalAmount: 3960, paymentMethod: '💳 線上付款', aiNote: '🤖 冷凍配送', createdAt: '07/29' },
     ],
     status: 'shipping',
-    submittedAt: '07/26 10:00',
-    shippingAt: '07/27 15:00',
+    submittedAt: '07/30 10:00',
+    shippingAt: '07/31 15:00',
   },
 ])
 
@@ -278,12 +282,12 @@ const arrivedOrders = ref<StoreOrder[]>([
     spec: '2.4kg x 3瓶',
     totalQuantity: 12,
     customers: [
-      { id: 'c-30', source: 'groupbuy', contactName: '劉媽媽', contactPhone: '0911-666-777', productName: '花王洗衣精超值組', quantity: 2, unitPrice: 469, totalAmount: 938, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/22' },
-      { id: 'c-31', source: 'groupbuy', contactName: '許先生', contactPhone: '0922-777-888', productName: '花王洗衣精超值組', quantity: 3, unitPrice: 469, totalAmount: 1407, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/22' },
-      { id: 'c-32', source: 'groupbuy', contactName: '蔡小姐', contactPhone: '0933-888-999', productName: '花王洗衣精超值組', quantity: 2, unitPrice: 469, totalAmount: 938, paymentMethod: '💳 線上付款', aiNote: '', createdAt: '07/23' },
+      { id: 'c-30', source: 'groupbuy', contactName: '劉媽媽', contactPhone: '0911-***-777', productName: '花王洗衣精超值組', quantity: 2, unitPrice: 469, totalAmount: 938, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/26' },
+      { id: 'c-31', source: 'groupbuy', contactName: '許先生', contactPhone: '0922-***-888', productName: '花王洗衣精超值組', quantity: 3, unitPrice: 469, totalAmount: 1407, paymentMethod: '🏪 取貨付款', aiNote: '', createdAt: '07/26' },
+      { id: 'c-32', source: 'groupbuy', contactName: '蔡小姐', contactPhone: '0933-***-999', productName: '花王洗衣精超值組', quantity: 2, unitPrice: 469, totalAmount: 938, paymentMethod: '💳 線上付款', aiNote: '', createdAt: '07/27' },
     ],
     status: 'arrived',
-    submittedAt: '07/24 10:00',
+    submittedAt: '07/28 10:00',
     shippingAt: '07/25 08:00',
     arrivedAt: '07/27 14:00',
   },

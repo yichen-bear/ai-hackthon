@@ -92,64 +92,68 @@ function getCheckInRate(act: ManagedActivity): string {
 }
 
 // ─── Mock 資料 ───
+// 格式對齊 DB pms_form_feedback.feedback_content (formId=1008)
+// contactName/Phone 來自解密後的加密欄位
+// 活動選擇來自 feedbackContent.data (topicId 3040)
+// 參加人數來自 topicId 3041
 const activities = ref<ManagedActivity[]>([
   {
-    id: 'act-1', name: '中秋社區聯歡晚會', category: 'festival', date: '2024-09-17', time: '18:00-21:00',
+    id: 'act-1', name: '中秋社區聯歡晚會', category: 'festival', date: '2026-09-17', time: '18:00-21:00',
     location: '信義里活動中心', organizer: '信義里辦公處', fee: 0,
     maxParticipants: 80, currentParticipants: 62, waitlistCount: 0, checkedInCount: 0,
     volunteersNeeded: 8, volunteersAssigned: 5, status: 'open',
     registrations: [
-      { id: 'r-1', contactName: '王奶奶', contactPhone: '0912-111-222', registeredAt: '07/25 10:00', status: 'pending', specialNeeds: [{ type: 'elderly_companion', note: '需志工陪伴入座', resolved: false }, { type: 'vegetarian', resolved: false }], source: 'delegate', paymentMethod: '免費', amount: 0 },
-      { id: 'r-2', contactName: '林先生', contactPhone: '0933-222-333', registeredAt: '07/26 14:30', status: 'confirmed', specialNeeds: [], source: 'app', paymentMethod: '免費', amount: 0 },
-      { id: 'r-3', contactName: '張媽媽', contactPhone: '0922-333-444', registeredAt: '07/27 09:00', status: 'pending', specialNeeds: [{ type: 'wheelchair', note: '電動輪椅需無障礙通道', resolved: false }], source: 'delegate', paymentMethod: '免費', amount: 0 },
-      { id: 'r-4', contactName: '陳伯伯', contactPhone: '0955-444-555', registeredAt: '07/28 11:00', status: 'confirmed', specialNeeds: [{ type: 'elderly_companion', resolved: true }], source: 'app', paymentMethod: '免費', amount: 0 },
-      { id: 'r-5', contactName: '趙小姐', contactPhone: '0966-555-666', registeredAt: '07/29 16:00', status: 'pending', specialNeeds: [{ type: 'halal', note: '清真飲食', resolved: false }], source: 'app', paymentMethod: '免費', amount: 0 },
+      { id: 'r-1', contactName: '王奶奶', contactPhone: '0912-***-222', registeredAt: '08/01 10:00', status: 'pending', specialNeeds: [{ type: 'elderly_companion', note: '需志工陪伴入座', resolved: false }, { type: 'vegetarian', resolved: false }], source: 'delegate', paymentMethod: '免費', amount: 0 },
+      { id: 'r-2', contactName: '林先生', contactPhone: '0933-***-333', registeredAt: '08/02 14:30', status: 'confirmed', specialNeeds: [], source: 'app', paymentMethod: '免費', amount: 0 },
+      { id: 'r-3', contactName: '張媽媽', contactPhone: '0922-***-444', registeredAt: '08/03 09:00', status: 'pending', specialNeeds: [{ type: 'wheelchair', note: '電動輪椅需無障礙通道', resolved: false }], source: 'delegate', paymentMethod: '免費', amount: 0 },
+      { id: 'r-4', contactName: '陳伯伯', contactPhone: '0955-***-555', registeredAt: '08/04 11:00', status: 'confirmed', specialNeeds: [{ type: 'elderly_companion', resolved: true }], source: 'app', paymentMethod: '免費', amount: 0 },
+      { id: 'r-5', contactName: '趙小姐', contactPhone: '0966-***-666', registeredAt: '08/05 16:00', status: 'pending', specialNeeds: [{ type: 'halal', note: '清真飲食', resolved: false }], source: 'app', paymentMethod: '免費', amount: 0 },
     ],
   },
   {
-    id: 'act-2', name: '社區健走日', category: 'health', date: '2024-08-10', time: '06:30-08:30',
+    id: 'act-2', name: '社區健走日', category: 'health', date: '2026-08-10', time: '06:30-08:30',
     location: '象山步道入口', organizer: '信義里健康促進委員會', fee: 50,
     maxParticipants: 40, currentParticipants: 40, waitlistCount: 5, checkedInCount: 0,
     volunteersNeeded: 4, volunteersAssigned: 4, status: 'full',
     registrations: [
-      { id: 'r-6', contactName: '李太太', contactPhone: '0977-666-777', registeredAt: '07/20 08:00', status: 'confirmed', specialNeeds: [], source: 'app', paymentMethod: '💳 線上付款', amount: 50 },
-      { id: 'r-7', contactName: '吳爺爺', contactPhone: '0988-777-888', registeredAt: '07/22 10:00', status: 'pending', specialNeeds: [{ type: 'elderly_companion', note: '行動較緩慢需有人同行', resolved: false }], source: 'delegate', paymentMethod: '現場付款', amount: 50 },
+      { id: 'r-6', contactName: '李太太', contactPhone: '0977-***-777', registeredAt: '08/01 08:00', status: 'confirmed', specialNeeds: [], source: 'app', paymentMethod: '💳 線上付款', amount: 50 },
+      { id: 'r-7', contactName: '吳爺爺', contactPhone: '0988-***-888', registeredAt: '08/02 10:00', status: 'pending', specialNeeds: [{ type: 'elderly_companion', note: '行動較緩慢需有人同行', resolved: false }], source: 'delegate', paymentMethod: '現場付款', amount: 50 },
     ],
   },
   {
-    id: 'act-3', name: '親子手作 DIY 工作坊', category: 'family', date: '2024-08-18', time: '14:00-16:00',
+    id: 'act-3', name: '親子手作 DIY 工作坊', category: 'family', date: '2026-08-18', time: '14:00-16:00',
     location: '里民活動室 2F', organizer: '信義里辦公處', fee: 200,
     maxParticipants: 20, currentParticipants: 20, waitlistCount: 4, checkedInCount: 0,
     volunteersNeeded: 3, volunteersAssigned: 2, status: 'full',
     registrations: [
-      { id: 'r-8', contactName: '黃媽媽', contactPhone: '0911-888-999', registeredAt: '07/15 09:00', status: 'confirmed', specialNeeds: [{ type: 'other', note: '小孩 3 歲需兒童用具', resolved: true }], source: 'app', paymentMethod: '💳 線上付款', amount: 200 },
+      { id: 'r-8', contactName: '黃媽媽', contactPhone: '0911-***-999', registeredAt: '08/01 09:00', status: 'confirmed', specialNeeds: [{ type: 'other', note: '小孩 3 歲需兒童用具', resolved: true }], source: 'app', paymentMethod: '💳 線上付款', amount: 200 },
     ],
   },
   {
-    id: 'act-4', name: '社區淨灘環保日', category: 'eco', date: '2024-09-01', time: '08:00-11:00',
+    id: 'act-4', name: '社區淨灘環保日', category: 'eco', date: '2026-09-01', time: '08:00-11:00',
     location: '基隆河畔步道', organizer: '信義里環保志工隊', fee: 0,
     maxParticipants: 50, currentParticipants: 18, waitlistCount: 0, checkedInCount: 0,
     volunteersNeeded: 6, volunteersAssigned: 3, status: 'open',
     registrations: [
-      { id: 'r-9', contactName: '周先生', contactPhone: '0922-999-000', registeredAt: '07/28 14:00', status: 'confirmed', specialNeeds: [], source: 'app', paymentMethod: '免費', amount: 0 },
-      { id: 'r-10', contactName: '鄭同學', contactPhone: '0933-000-111', registeredAt: '07/29 10:00', status: 'pending', specialNeeds: [], source: 'onsite', paymentMethod: '免費', amount: 0 },
+      { id: 'r-9', contactName: '周先生', contactPhone: '0922-***-000', registeredAt: '08/03 14:00', status: 'confirmed', specialNeeds: [], source: 'app', paymentMethod: '免費', amount: 0 },
+      { id: 'r-10', contactName: '鄭同學', contactPhone: '0933-***-111', registeredAt: '08/04 10:00', status: 'pending', specialNeeds: [], source: 'onsite', paymentMethod: '免費', amount: 0 },
     ],
   },
   {
-    id: 'act-5', name: '長者共餐交流日', category: 'elderly', date: '2024-08-15', time: '11:30-13:30',
+    id: 'act-5', name: '長者共餐交流日', category: 'elderly', date: '2026-08-15', time: '11:30-13:30',
     location: '里民活動中心 1F', organizer: '信義里關懷據點', fee: 0,
     maxParticipants: 30, currentParticipants: 28, waitlistCount: 0, checkedInCount: 0,
     volunteersNeeded: 5, volunteersAssigned: 5, status: 'almost_full',
     registrations: [
-      { id: 'r-11', contactName: '蔡奶奶', contactPhone: '0955-112-223', registeredAt: '07/25 09:00', status: 'confirmed', specialNeeds: [{ type: 'elderly_companion', resolved: true }, { type: 'vegan', note: '全素飲食', resolved: false }], source: 'delegate', paymentMethod: '免費', amount: 0 },
-      { id: 'r-12', contactName: '許伯伯', contactPhone: '0966-223-334', registeredAt: '07/26 08:00', status: 'confirmed', specialNeeds: [{ type: 'wheelchair', resolved: true }], source: 'delegate', paymentMethod: '免費', amount: 0 },
+      { id: 'r-11', contactName: '蔡奶奶', contactPhone: '0955-***-223', registeredAt: '08/01 09:00', status: 'confirmed', specialNeeds: [{ type: 'elderly_companion', resolved: true }, { type: 'vegan', note: '全素飲食', resolved: false }], source: 'delegate', paymentMethod: '免費', amount: 0 },
+      { id: 'r-12', contactName: '許伯伯', contactPhone: '0966-***-334', registeredAt: '08/02 08:00', status: 'confirmed', specialNeeds: [{ type: 'wheelchair', resolved: true }], source: 'delegate', paymentMethod: '免費', amount: 0 },
     ],
   },
 ])
 
 // ─── 通知 ───
 const notifications = ref<NotifyRecord[]>([
-  { id: 'n-1', template: 'reminder', targetName: '中秋社區聯歡晚會', targetId: 'act-1', message: '提醒：中秋聯歡晚會 9/17（二）18:00 於信義里活動中心，請準時出席！', sentAt: '07/30 10:00', recipientCount: 62 },
+  { id: 'n-1', template: 'reminder', targetName: '中秋社區聯歡晚會', targetId: 'act-1', message: '提醒：中秋聯歡晚會 9/17（三）18:00 於信義里活動中心，請準時出席！', sentAt: '08/05 10:00', recipientCount: 62 },
 ])
 
 const notifyTemplates: { key: NotifyTemplate; label: string }[] = [
@@ -165,9 +169,9 @@ const sendTargetId = ref('')
 
 // ─── 居民提問 ───
 const residentQuestions = ref<ResidentQuestion[]>([
-  { id: 'q-1', contactName: '王小姐', contactPhone: '0912-345-678', activityName: '中秋社區聯歡晚會', question: '請問活動當天有提供停車位嗎？', askedAt: '07/29 14:00', answered: false },
-  { id: 'q-2', contactName: '林先生', contactPhone: '0933-222-333', activityName: '社區健走日', question: '小朋友可以一起參加嗎？有年齡限制嗎？', askedAt: '07/30 09:30', answered: false },
-  { id: 'q-3', contactName: '張媽媽', contactPhone: '0922-333-444', activityName: '中秋社區聯歡晚會', question: '我婆婆坐輪椅，活動中心有電梯嗎？', askedAt: '07/28 16:00', answered: true, answer: '有的，活動中心 1F 有無障礙坡道，2F 有電梯可達。' },
+  { id: 'q-1', contactName: '王小姐', contactPhone: '0912-***-678', activityName: '中秋社區聯歡晚會', question: '請問活動當天有提供停車位嗎？', askedAt: '08/04 14:00', answered: false },
+  { id: 'q-2', contactName: '林先生', contactPhone: '0933-***-333', activityName: '社區健走日', question: '小朋友可以一起參加嗎？有年齡限制嗎？', askedAt: '08/05 09:30', answered: false },
+  { id: 'q-3', contactName: '張媽媽', contactPhone: '0922-***-444', activityName: '中秋社區聯歡晚會', question: '我婆婆坐輪椅，活動中心有電梯嗎？', askedAt: '08/03 16:00', answered: true, answer: '有的，活動中心 1F 有無障礙坡道，2F 有電梯可達。' },
 ])
 const replyingId = ref('')
 const replyText = ref('')
