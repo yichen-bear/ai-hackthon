@@ -98,6 +98,23 @@ function isRegistered(id: string) {
   return registeredIds.value.has(id)
 }
 
+// ─── 向里長提問 ───
+const askingEventId = ref<string | null>(null)
+const questionText = ref('')
+const questionSentSuccess = ref(false)
+
+function openAskQuestion(eventId: string) {
+  askingEventId.value = eventId
+  questionText.value = ''
+  questionSentSuccess.value = false
+}
+
+function submitQuestion() {
+  if (!questionText.value.trim()) return
+  questionSentSuccess.value = true
+  setTimeout(() => { askingEventId.value = null; questionSentSuccess.value = false }, 2500)
+}
+
 function getStatusClass(status: string) {
   switch (status) {
     case 'open': return 'status-open'
@@ -155,6 +172,18 @@ function getStatusLabel(status: string) {
             我要報名
           </button>
           <span v-else class="full-label">已額滿</span>
+        </div>
+        <!-- 向里長提問 -->
+        <button class="btn-ask" @click="openAskQuestion(event.id)">❓ 向里長提問</button>
+        <div v-if="askingEventId === event.id" class="ask-form">
+          <div v-if="!questionSentSuccess">
+            <textarea v-model="questionText" class="ask-input" placeholder="請輸入您的問題..." rows="2"></textarea>
+            <div class="ask-actions">
+              <button class="ask-send" @click="submitQuestion">送出</button>
+              <button class="ask-cancel" @click="askingEventId = null">取消</button>
+            </div>
+          </div>
+          <div v-else class="ask-success">✅ 提問已送出！里長會盡快回覆</div>
         </div>
       </article>
     </div>
@@ -291,6 +320,17 @@ function getStatusLabel(status: string) {
 .btn-checkin { padding: var(--space-2, 8px) var(--space-4, 16px); min-height: 44px; border: 2px solid var(--color-primary, #ec4899); border-radius: var(--radius-full, 9999px); background: var(--color-primary-light, #fdf2f8); color: var(--color-primary, #ec4899); font-size: var(--text-sm, 13px); font-weight: 600; cursor: pointer; transition: opacity 0.15s ease; }
 .btn-checkin:hover { opacity: 0.85; }
 .full-label { font-size: var(--text-sm, 13px); color: var(--color-text-disabled, #94a3b8); font-weight: 500; }
+
+/* ─── 向里長提問 ─── */
+.btn-ask { width: 100%; margin-top: 8px; padding: 8px; border: 1px solid var(--color-primary, #ec4899); border-radius: var(--radius-md, 8px); background: transparent; color: var(--color-primary, #ec4899); font-size: var(--text-xs, 11px); font-weight: 600; cursor: pointer; min-height: 36px; }
+.btn-ask:hover { background: var(--color-primary-light, #fdf2f8); }
+.ask-form { margin-top: 8px; padding: 10px; background: #f8fafc; border-radius: var(--radius-md, 8px); border: 1px solid var(--color-border, #e2e8f0); }
+.ask-input { width: 100%; padding: 8px 10px; border: 1px solid var(--color-border, #e2e8f0); border-radius: 8px; font-size: var(--text-sm, 13px); font-family: inherit; resize: none; box-sizing: border-box; }
+.ask-input:focus { border-color: var(--color-primary, #ec4899); outline: none; }
+.ask-actions { display: flex; gap: 8px; margin-top: 8px; }
+.ask-send { padding: 6px 14px; background: var(--color-primary, #ec4899); color: #fff; border: none; border-radius: 8px; font-size: var(--text-xs, 11px); font-weight: 600; cursor: pointer; }
+.ask-cancel { padding: 6px 14px; background: transparent; border: 1px solid var(--color-border, #e2e8f0); border-radius: 8px; font-size: var(--text-xs, 11px); cursor: pointer; }
+.ask-success { font-size: var(--text-sm, 13px); color: #16a34a; font-weight: 600; text-align: center; padding: 8px; }
 
 /* Overlay */
 .overlay-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: flex-end; justify-content: center; z-index: 1000; }

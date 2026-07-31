@@ -4,7 +4,57 @@
  * 標籤：點數、條碼/錢包、活動票券、獎章
  */
 
-const activeTab = ref<'points' | 'barcode' | 'tickets' | 'badges'>('points')
+const activeTab = ref<'points' | 'barcode' | 'tickets' | 'badges' | 'groups'>('points')
+
+// ─── 我的社群 ───
+interface ChatMsg { author: string; content: string; time: string; isPinned?: boolean }
+interface MyGroup {
+  id: string; name: string; type: 'interest' | 'course'
+  icon: string; memberCount: number; unreadCount: number
+  lastMessage?: string; lastMessageTime?: string
+  activityDate?: string; activityTime?: string; activityLocation?: string
+}
+const myGroups = ref<MyGroup[]>([
+  { id: 'mg-1', name: '登山同好會', type: 'interest', icon: '🏔️', memberCount: 23, unreadCount: 3, lastMessage: '本週六改在象山集合', lastMessageTime: '14:30', activityDate: '2024-08-03', activityTime: '07:00-10:00', activityLocation: '象山步道入口' },
+  { id: 'mg-2', name: '手機攝影班', type: 'course', icon: '📷', memberCount: 24, unreadCount: 0, lastMessage: '下週三帶自己的作品來分享', lastMessageTime: '昨天', activityDate: '每週三', activityTime: '09:00-11:00', activityLocation: '社大 A201' },
+  { id: 'mg-3', name: '桌遊揪團', type: 'interest', icon: '🎲', memberCount: 12, unreadCount: 1, lastMessage: '有人週末要來嗎？', lastMessageTime: '11:00', activityDate: '2024-08-04', activityTime: '14:00-17:00', activityLocation: '里民活動室' },
+])
+
+const showGroupChat = ref(false)
+const activeGroupChat = ref<MyGroup | null>(null)
+const groupChatMessages = ref<ChatMsg[]>([])
+const newGroupMsg = ref('')
+
+function enterGroupChat(group: MyGroup) {
+  activeGroupChat.value = group
+  group.unreadCount = 0
+  groupChatMessages.value = [
+    { author: '📌 公告', content: `歡迎來到【${group.name}】！請遵守社群規範，友善交流。`, time: '', isPinned: true },
+    { author: '小美', content: '大家好！新人報到～', time: '09:30' },
+    { author: '阿傑', content: '歡迎歡迎！', time: '09:45' },
+    { author: '團長', content: group.lastMessage || '活動細節稍後公布', time: group.lastMessageTime || '10:00' },
+  ]
+  showGroupChat.value = true
+}
+
+function sendGroupMsg() {
+  if (!newGroupMsg.value.trim()) return
+  groupChatMessages.value.push({ author: '我', content: newGroupMsg.value.trim(), time: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }) })
+  newGroupMsg.value = ''
+}
+
+function leaveGroup(group: MyGroup) {
+  myGroups.value = myGroups.value.filter(g => g.id !== group.id)
+  if (activeGroupChat.value?.id === group.id) {
+    showGroupChat.value = false
+    activeGroupChat.value = null
+  }
+}
+
+function closeGroupChatOverlay() {
+  showGroupChat.value = false
+  activeGroupChat.value = null
+}
 
 // ─── OPEN POINT 資料 ───
 const userPoints = ref(2450)
@@ -90,6 +140,39 @@ function toggleQr(ticketId: string) {
   expandedQrId.value = expandedQrId.value === ticketId ? null : ticketId
 }
 
+// ─── 票券取消 + 退款 ───
+const cancellingTicketId = ref<string | null>(null)
+const refundComplete = ref(false)
+
+function cancelTicket(ticket: typeof mockTickets.value[0]) {
+  cancellingTicketId.value = ticket.id
+}
+function confirmCancelTicket(ticket: typeof mockTickets.value[0]) {
+  ticket.status = 'cancelled'
+  // 模擬退款
+  if (ticket.type !== '叫車') {
+    refundComplete.value = true
+    setTimeout(() => { refundComplete.value = false }, 3000)
+  }
+  cancellingTicketId.value = null
+}
+
+// ─── 向里長提問（社區活動票券） ───
+const askingTicketId = ref<string | null>(null)
+const ticketQuestion = ref('')
+const questionSent = ref(false)
+
+function askQuestion(ticketId: string) {
+  askingTicketId.value = ticketId
+  ticketQuestion.value = ''
+  questionSent.value = false
+}
+function submitTicketQuestion() {
+  if (!ticketQuestion.value.trim()) return
+  questionSent.value = true
+  setTimeout(() => { askingTicketId.value = null; questionSent.value = false }, 2000)
+}
+
 // 獎章詳情彈窗
 const selectedBadge = ref<typeof allBadges.value[0] | null>(null)
 function openBadgeDetail(badge: typeof allBadges.value[0]) {
@@ -130,6 +213,10 @@ const allBadges = ref([
       <button class="tab-btn" :class="{ active: activeTab === 'barcode' }" @click="activeTab = 'barcode'">條碼/錢包</button>
       <button class="tab-btn" :class="{ active: activeTab === 'tickets' }" @click="activeTab = 'tickets'">活動票券</button>
       <button class="tab-btn" :class="{ active: activeTab === 'badges' }" @click="activeTab = 'badges'">獎章</button>
+      <button class="tab-btn" :class="{ active: activeTab === 'groups' }" @click="activeTab = 'groups'">
+        社群
+        <span v-if="myGroups.reduce((s, g) => s + g.unreadCount, 0) > 0" class="unread-dot"></span>
+      </button>
     </nav>
 
     <!-- ═══ 點數專區 ═══ -->
@@ -231,7 +318,7 @@ const allBadges = ref([
           <div class="ticket-header">
             <span class="ticket-type-badge">{{ tk.type }}</span>
             <span class="ticket-status" :class="tk.status">
-              {{ tk.status === 'unused' ? '待使用' : tk.status === 'pending' ? '待取貨' : '已使用' }}
+              {{ tk.status === 'unused' ? '待使用' : tk.status === 'pending' ? '待取貨' : tk.status === 'cancelled' ? '已取消' : '已使用' }}
             </span>
           </div>
           <h4 class="ticket-name">{{ tk.name }}</h4>
@@ -246,10 +333,38 @@ const allBadges = ref([
           </button>
           <div class="ticket-actions">
             <NuxtLink :to="{ path: tk.link, query: tk.linkQuery }" class="ticket-link-btn">{{ tk.linkLabel || '前往' }}</NuxtLink>
+            <!-- 社區活動：向里長提問 -->
+            <button v-if="tk.type === '社區'" class="ticket-ask-btn" @click="askQuestion(tk.id)">❓ 向里長提問</button>
+            <!-- 取消票券（未使用才能取消） -->
+            <button v-if="tk.status === 'unused' || tk.status === 'pending'" class="ticket-cancel-btn" @click="cancelTicket(tk)">取消</button>
+          </div>
+          <!-- 取消確認 -->
+          <div v-if="cancellingTicketId === tk.id" class="ticket-cancel-confirm">
+            <p class="cancel-warn">確定要取消「{{ tk.name }}」嗎？{{ tk.type !== '叫車' ? '已付款金額將退回原付款方式。' : '' }}</p>
+            <div class="cancel-actions">
+              <button class="cancel-yes" @click="confirmCancelTicket(tk)">確認取消{{ tk.type !== '叫車' ? '並退款' : '' }}</button>
+              <button class="cancel-no" @click="cancellingTicketId = null">不取消</button>
+            </div>
+          </div>
+          <!-- 向里長提問表單 -->
+          <div v-if="askingTicketId === tk.id" class="ticket-question-form">
+            <div v-if="!questionSent">
+              <textarea v-model="ticketQuestion" class="ticket-question-input" placeholder="請輸入您的問題..." rows="2"></textarea>
+              <div class="ticket-question-actions">
+                <button class="ticket-question-send" @click="submitTicketQuestion">送出提問</button>
+                <button class="ticket-question-cancel" @click="askingTicketId = null">取消</button>
+              </div>
+            </div>
+            <div v-else class="ticket-question-sent">✅ 提問已送出，里長會盡快回覆您！</div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- 退款成功提示 -->
+    <Transition name="toast-fade">
+      <div v-if="refundComplete" class="refund-toast">💰 退款處理中，預計 3-5 個工作天退回原付款方式</div>
+    </Transition>
 
     <!-- 點數歷史紀錄懸浮視窗 -->
     <Teleport to="body">
@@ -306,6 +421,64 @@ const allBadges = ref([
         </button>
       </div>
     </div>
+
+    <!-- ═══ 我的社群 ═══ -->
+    <div v-if="activeTab === 'groups'" class="tab-content">
+      <div v-if="myGroups.length === 0" class="empty-state">
+        <p>尚未加入任何社群</p>
+        <p class="empty-hint">前往「樂」模組的興趣媒合加入社群吧！</p>
+      </div>
+      <div v-for="group in myGroups" :key="group.id" class="group-card">
+        <div class="group-card-left" @click="enterGroupChat(group)">
+          <span class="group-icon">{{ group.icon }}</span>
+          <div class="group-info">
+            <div class="group-name-row">
+              <span class="group-name">{{ group.name }}</span>
+              <span class="group-type" :class="group.type === 'course' ? 'group-type--course' : 'group-type--interest'">{{ group.type === 'course' ? '📚 課程' : '💡 興趣' }}</span>
+            </div>
+            <p class="group-last-msg">{{ group.lastMessage || '暫無訊息' }}</p>
+          </div>
+        </div>
+        <div class="group-card-right">
+          <span v-if="group.unreadCount > 0" class="group-unread">{{ group.unreadCount }}</span>
+          <span class="group-time">{{ group.lastMessageTime }}</span>
+          <button class="group-leave-btn" @click="leaveGroup(group)">退出</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 社群聊天室 Overlay -->
+    <Teleport to="body">
+      <div v-if="showGroupChat && activeGroupChat" class="chat-overlay" @click.self="closeGroupChatOverlay">
+        <div class="chat-panel">
+          <header class="chat-header">
+            <button class="chat-back" @click="closeGroupChatOverlay">← 返回</button>
+            <span class="chat-title">{{ activeGroupChat.name }}</span>
+            <span class="chat-members">👥 {{ activeGroupChat.memberCount }}</span>
+          </header>
+          <!-- 置頂活動資訊卡 -->
+          <div class="chat-activity-card">
+            <div class="chat-activity-icon">{{ activeGroupChat.icon }}</div>
+            <div class="chat-activity-info">
+              <span class="chat-activity-name">{{ activeGroupChat.name }}</span>
+              <span class="chat-activity-detail">📅 {{ activeGroupChat.activityDate }} {{ activeGroupChat.activityTime }}</span>
+              <span class="chat-activity-detail">📍 {{ activeGroupChat.activityLocation }}</span>
+            </div>
+          </div>
+          <div class="chat-messages">
+            <div v-for="(msg, idx) in groupChatMessages" :key="idx" class="chat-msg" :class="{ 'chat-msg--mine': msg.author === '我', 'chat-msg--pinned': msg.isPinned }">
+              <span v-if="!msg.isPinned && msg.author !== '我'" class="chat-author">{{ msg.author }}</span>
+              <p class="chat-text">{{ msg.content }}</p>
+              <span v-if="msg.time" class="chat-time">{{ msg.time }}</span>
+            </div>
+          </div>
+          <div class="chat-input-bar">
+            <input v-model="newGroupMsg" class="chat-input" placeholder="輸入訊息..." @keydown.enter="sendGroupMsg" />
+            <button class="chat-send" @click="sendGroupMsg">送出</button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
 
     <!-- 獎章詳情懸浮視窗 -->
     <Teleport to="body">
@@ -504,4 +677,69 @@ const allBadges = ref([
 .badge-modal-desc { font-size: 14px; color: #64748b; margin: 4px 0 0; line-height: 1.5; }
 .badge-modal-status { font-size: 13px; font-weight: 600; margin-top: 8px; }
 .badge-modal-status.unlocked { color: #10b981; }
+
+/* ═══ 我的社群 ═══ */
+.group-card { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 8px; }
+.group-card-left { display: flex; align-items: center; gap: 10px; flex: 1; cursor: pointer; }
+.group-icon { font-size: 24px; }
+.group-info { flex: 1; min-width: 0; }
+.group-name-row { display: flex; align-items: center; gap: 6px; }
+.group-name { font-size: 14px; font-weight: 600; color: #1c1917; }
+.group-type { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 6px; }
+.group-type--interest { background: #fdf2f8; color: #ec4899; }
+.group-type--course { background: #f5f3ff; color: #8b5cf6; }
+.group-last-msg { margin: 2px 0 0; font-size: 12px; color: #78716c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.group-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.group-unread { background: #ec4899; color: #fff; font-size: 10px; font-weight: 700; min-width: 18px; height: 18px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
+.group-time { font-size: 10px; color: #78716c; }
+.group-leave-btn { font-size: 10px; color: #e11d48; background: none; border: 1px solid #e11d48; border-radius: 6px; padding: 2px 8px; cursor: pointer; }
+.unread-dot { width: 8px; height: 8px; border-radius: 50%; background: #ec4899; display: inline-block; margin-left: 4px; }
+.empty-hint { font-size: 12px; color: #78716c; margin: 4px 0 0; }
+
+/* ═══ 社群聊天室 ═══ */
+.chat-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; }
+.chat-panel { background: #fff; border-radius: 16px 16px 0 0; width: 100%; max-width: 430px; height: 80vh; display: flex; flex-direction: column; animation: slideUp .3s ease; }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.chat-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #e2e8f0; }
+.chat-back { background: none; border: none; font-size: 14px; cursor: pointer; color: #78716c; }
+.chat-title { font-size: 14px; font-weight: 700; color: #1c1917; }
+.chat-members { font-size: 11px; color: #78716c; }
+.chat-activity-card { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: #fdf2f8; border-bottom: 1px solid #fce7f3; }
+.chat-activity-icon { font-size: 24px; }
+.chat-activity-info { display: flex; flex-direction: column; gap: 2px; }
+.chat-activity-name { font-size: 13px; font-weight: 700; color: #1c1917; }
+.chat-activity-detail { font-size: 11px; color: #78716c; }
+.chat-messages { flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+.chat-msg { max-width: 80%; padding: 8px 12px; border-radius: 12px; background: #f1f5f9; }
+.chat-msg--mine { align-self: flex-end; background: #ec4899; color: #fff; }
+.chat-msg--mine .chat-time { color: rgba(255,255,255,.7); }
+.chat-msg--pinned { max-width: 100%; background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; }
+.chat-author { font-size: 10px; font-weight: 600; color: #8b5cf6; display: block; margin-bottom: 2px; }
+.chat-text { margin: 0; font-size: 13px; line-height: 1.5; white-space: pre-wrap; }
+.chat-time { font-size: 10px; color: #78716c; display: block; margin-top: 2px; text-align: right; }
+.chat-input-bar { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid #e2e8f0; }
+.chat-input { flex: 1; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 13px; outline: none; }
+.chat-input:focus { border-color: #ec4899; }
+.chat-send { padding: 10px 16px; background: #ec4899; color: #fff; border: none; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+/* ═══ 票券取消 + 提問 ═══ */
+.ticket-ask-btn { padding: 6px 12px; border: 1px solid #ec4899; border-radius: 8px; background: transparent; color: #ec4899; font-size: 11px; font-weight: 600; cursor: pointer; }
+.ticket-cancel-btn { padding: 6px 12px; border: 1px solid #e11d48; border-radius: 8px; background: transparent; color: #e11d48; font-size: 11px; cursor: pointer; }
+.ticket-cancel-confirm { background: #ffe4e6; border: 1px solid #fca5a5; border-radius: 10px; padding: 10px 12px; margin-top: 8px; }
+.cancel-warn { margin: 0 0 8px; font-size: 12px; color: #991b1b; }
+.cancel-actions { display: flex; gap: 8px; }
+.cancel-yes { padding: 8px 16px; background: #e11d48; color: #fff; border: none; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.cancel-no { padding: 8px 16px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 12px; cursor: pointer; }
+.ticket-question-form { margin-top: 8px; display: flex; flex-direction: column; gap: 8px; }
+.ticket-question-input { padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 13px; font-family: inherit; resize: none; }
+.ticket-question-input:focus { border-color: #ec4899; outline: none; }
+.ticket-question-actions { display: flex; gap: 8px; }
+.ticket-question-send { padding: 6px 14px; background: #ec4899; color: #fff; border: none; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.ticket-question-cancel { padding: 6px 14px; background: transparent; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 12px; cursor: pointer; }
+.ticket-question-sent { font-size: 12px; color: #16a34a; font-weight: 600; padding: 8px; background: #dcfce7; border-radius: 8px; text-align: center; }
+.ticket-status.cancelled { color: #e11d48; }
+.refund-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 200; padding: 12px 20px; background: #16a34a; color: #fff; font-size: 13px; font-weight: 600; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,.15); white-space: nowrap; }
+.toast-fade-enter-active, .toast-fade-leave-active { transition: all .3s ease; }
+.toast-fade-enter-from, .toast-fade-leave-to { opacity: 0; transform: translateX(-50%) translateY(16px); }
+.toast-fade-enter-to, .toast-fade-leave-from { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
