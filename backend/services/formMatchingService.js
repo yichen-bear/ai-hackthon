@@ -362,6 +362,13 @@ function validateAnswerAgainstTopic(topic, rawAnswer) {
       return validateImageUploadAnswer(topic, rawAnswer);
     default:
       // 未列舉的題目類型（例如 textarea、備註等）回退至文字驗證，避免使用者無法作答
+      if (typeof rawAnswer === 'object' && rawAnswer !== null) {
+        // LLM 可能回傳 object，將其轉為可讀字串
+        const textValue = Array.isArray(rawAnswer)
+          ? rawAnswer.join('、')
+          : Object.values(rawAnswer).filter(v => v != null && v !== '').join('、');
+        return validateTextAnswer(textValue || JSON.stringify(rawAnswer));
+      }
       return validateTextAnswer(typeof rawAnswer === 'string' ? rawAnswer : String(rawAnswer));
   }
 }

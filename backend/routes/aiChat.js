@@ -67,6 +67,7 @@ router.post('/message', optionalAuth, aiChatRateLimiter, async (req, res) => {
     let options = null;
     let topicType = null;
     let topicRequired = true;
+    let topicTitle = null;
     let savedAddresses = null;
     if (result.session.currentTopicId && result.session.selectedFormId && result.session.stage === 'filling') {
       try {
@@ -77,6 +78,7 @@ router.post('/message', optionalAuth, aiChatRateLimiter, async (req, res) => {
             for (const topic of (group.topics || [])) {
               if (topic.id === result.session.currentTopicId) {
                 topicType = topic.type;
+                topicTitle = topic.title;
                 topicRequired = topic.isRequired === '1';
                 // 只要題目有選項就回傳，不限定特定 type 代碼
                 const topicOptions = topic.options || [];
@@ -131,6 +133,7 @@ router.post('/message', optionalAuth, aiChatRateLimiter, async (req, res) => {
         blocked: Boolean(result.blocked),
         reason: result.reason || null,
         topicType,
+        topicTitle,
         topicRequired,
         options,
         savedAddresses,

@@ -1180,9 +1180,7 @@ async function handleFieldExtractionOrOffTopic(session, formMatchingService, llm
     updated.stage === 'confirming'
       ? buildSummaryText(topics, updated.collectedFields)
       : nextTopic
-        ? (structured.reply_text && structured.reply_text.trim() !== ''
-            ? `${structured.reply_text}\n\n接下來請回答：${buildTopicQuestionText(nextTopic)}`
-            : buildTopicQuestionText(nextTopic))
+        ? buildTopicQuestionText(nextTopic)
         : (structured.reply_text || '所有題目皆已完成，感謝您的填寫。');
 
   return appendAssistantMessage(updated, replyText);
