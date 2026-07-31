@@ -17,11 +17,12 @@ const { session, isLoading, error: sessionError, sendMessage, submitFeedback } =
 const {
   isSupported: sttSupported,
   isListening,
+  isTranscribing,
   start: startListening,
   stop: stopListening,
   transcript,
   error: sttError,
-} = useSpeechRecognition()
+} = useWhisperSpeechRecognition()
 const { isSupported: ttsSupported, playingMessageId, speak, stop: stopSpeaking } = useSpeechSynthesis()
 
 const inputText = ref('')
@@ -42,6 +43,14 @@ const currentTopicType = ref<string | null>(null)
 const currentTopicRequired = ref(true)
 /** 多選模式下已勾選的選項 id */
 const multiSelectIds = ref<Set<number>>(new Set())
+
+/** 已儲存的常用地址（地址題目時由後端回傳） */
+interface SavedAddress {
+  id: number
+  label: string
+  fullAddress: string
+}
+const savedAddresses = ref<SavedAddress[]>([])
 
 /** 範例問題：幫助使用者快速開始對話 */
 const examplePrompts = [
@@ -141,6 +150,7 @@ async function doSend(text: string, mode: 'text' | 'voice') {
   currentTopicType.value = null
   currentTopicRequired.value = true
   multiSelectIds.value = new Set()
+  savedAddresses.value = []
 
   try {
     const response = await sendMessage(text.trim(), mode)
@@ -152,6 +162,12 @@ async function doSend(text: string, mode: 'text' | 'voice') {
       currentTopicType.value = (response.replyMeta.topicType as string) || null
       currentTopicRequired.value = response.replyMeta.topicRequired !== false
       multiSelectIds.value = new Set()
+      await scrollToBottom()
+    }
+
+    // 從 replyMeta 取出已儲存地址
+    if (response?.replyMeta?.savedAddresses && Array.isArray(response.replyMeta.savedAddresses)) {
+      savedAddresses.value = response.replyMeta.savedAddresses as SavedAddress[]
       await scrollToBottom()
     }
 
@@ -261,7 +277,7 @@ function goBack() {
       >
         ← 返回
       </button>
-      <h1 class="chat-page__title">AI 助理</h1>
+      <h1 class="chat-page__title">小統 AI 助理</h1>
       <span class="chat-page__header-spacer" aria-hidden="true" />
     </header>
 
@@ -269,7 +285,7 @@ function goBack() {
     <div ref="messagesContainer" class="chat-page__messages" @scroll="handleScroll">
       <div v-if="messages.length === 0" class="chat-page__welcome">
         <p class="chat-page__placeholder">
-          有什麼我可以幫忙的嗎？可以直接描述您想辦理的服務，或用語音輸入。
+          嗨！我是小統，您的 AI 助手。有什麼需要幫忙的嗎？可以直接描述您想辦理的服務，或用語音輸入。
         </p>
         <p class="chat-page__suggestion-label">試試以下問題：</p>
         <div class="chat-page__suggestions">
@@ -308,6 +324,7 @@ function goBack() {
       </div>
 
       <p v-if="isLoading" class="chat-page__loading">助理思考中...</p>
+      <p v-else-if="isTranscribing" class="chat-page__loading">語音辨識中...</p>
 
       <!-- 選擇題選項按鈕 -->
       <div v-if="currentOptions.length > 0 && !isLoading" class="chat-page__options">
@@ -341,6 +358,21 @@ function goBack() {
           @click="handleMultiSelectConfirm"
         >
           確認選擇 ({{ multiSelectIds.size }})
+        </button>
+      </div>
+
+      <!-- 已儲存的常用地址快速填入按鈕 -->
+      <div v-if="savedAddresses.length > 0 && !isLoading" class="chat-page__addresses">
+        <p class="chat-page__addresses-label">快速填入常用地址：</p>
+        <button
+          v-for="addr in savedAddresses"
+          :key="addr.id"
+          class="chat-page__address-btn"
+          type="button"
+          @click="doSend(addr.fullAddress, 'text')"
+        >
+          <span class="chat-page__address-label">{{ addr.label }}</span>
+          <span class="chat-page__address-detail">{{ addr.fullAddress }}</span>
         </button>
       </div>
     </div>
@@ -380,11 +412,12 @@ function goBack() {
           v-if="sttSupported"
           class="chat-page__mic"
           type="button"
-          :class="{ 'chat-page__mic--active': isListening }"
-          :aria-label="isListening ? '停止語音輸入' : '開始語音輸入'"
+          :class="{ 'chat-page__mic--active': isListening, 'chat-page__mic--transcribing': isTranscribing }"
+          :aria-label="isTranscribing ? '辨識中' : isListening ? '停止語音輸入' : '開始語音輸入'"
+          :disabled="isTranscribing"
           @click="handleMicClick"
         >
-          {{ isListening ? '⏺' : '🎤' }}
+          {{ isTranscribing ? '⏳' : isListening ? '⏹' : '🎤' }}
         </button>
       </ClientOnly>
       <input
@@ -460,8 +493,8 @@ function goBack() {
 
 .chat-page__placeholder {
   font-size: 14px;
-  color: var(--color-text-disabled, #a8a29e);
-  text-align: center;
+  color: var(--color-text-primary, #1c1917);
+  text-align: left;
   margin: 0;
 }
 
@@ -664,6 +697,18 @@ function goBack() {
   color: var(--color-accent-red, #e11d48);
 }
 
+.chat-page__mic--transcribing {
+  background-color: #fef3c7;
+  color: #d97706;
+  cursor: wait;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
 .chat-page__input {
   flex: 1;
   height: 40px;
@@ -771,5 +816,49 @@ function goBack() {
 .chat-page__option-confirm:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* ── 常用地址快速填入 ── */
+.chat-page__addresses {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 4px 0;
+  align-self: flex-start;
+}
+
+.chat-page__addresses-label {
+  font-size: 12px;
+  color: var(--color-text-secondary, #78716c);
+  margin: 0;
+}
+
+.chat-page__address-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 14px;
+  border: 1px solid var(--color-border, #e7e5e4);
+  border-radius: 10px;
+  background-color: #ffffff;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.chat-page__address-btn:hover {
+  border-color: var(--color-primary, #3b82f6);
+  background-color: #f0f9ff;
+}
+
+.chat-page__address-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary, #3b82f6);
+}
+
+.chat-page__address-detail {
+  font-size: 13px;
+  color: var(--color-text-primary, #1c1917);
 }
 </style>

@@ -84,6 +84,11 @@ export type MmsOrderRecord = $Result.DefaultSelection<Prisma.$MmsOrderRecordPayl
  */
 export type MemberAccount = $Result.DefaultSelection<Prisma.$MemberAccountPayload>
 /**
+ * Model MemberAddress
+ * 
+ */
+export type MemberAddress = $Result.DefaultSelection<Prisma.$MemberAddressPayload>
+/**
  * Model VendorUser
  * 
  */
@@ -349,6 +354,16 @@ export class PrismaClient<
     * ```
     */
   get memberAccount(): Prisma.MemberAccountDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.memberAddress`: Exposes CRUD operations for the **MemberAddress** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MemberAddresses
+    * const memberAddresses = await prisma.memberAddress.findMany()
+    * ```
+    */
+  get memberAddress(): Prisma.MemberAddressDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.vendorUser`: Exposes CRUD operations for the **VendorUser** model.
@@ -820,6 +835,7 @@ export namespace Prisma {
     PmsFormFeedback: 'PmsFormFeedback',
     MmsOrderRecord: 'MmsOrderRecord',
     MemberAccount: 'MemberAccount',
+    MemberAddress: 'MemberAddress',
     VendorUser: 'VendorUser'
   };
 
@@ -836,7 +852,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "cmsHomepageServiceVendor" | "cmsHomepageService" | "serviceType" | "sysCounty" | "sysDistrict" | "pmsForm" | "pmsFormGroup" | "pmsFormTopic" | "pmsTopicOption" | "pmsTopicMedia" | "pmsTopicCountyDistrictRelation" | "pmsFormFeedback" | "mmsOrderRecord" | "memberAccount" | "vendorUser"
+      modelProps: "cmsHomepageServiceVendor" | "cmsHomepageService" | "serviceType" | "sysCounty" | "sysDistrict" | "pmsForm" | "pmsFormGroup" | "pmsFormTopic" | "pmsTopicOption" | "pmsTopicMedia" | "pmsTopicCountyDistrictRelation" | "pmsFormFeedback" | "mmsOrderRecord" | "memberAccount" | "memberAddress" | "vendorUser"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1876,6 +1892,80 @@ export namespace Prisma {
           }
         }
       }
+      MemberAddress: {
+        payload: Prisma.$MemberAddressPayload<ExtArgs>
+        fields: Prisma.MemberAddressFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MemberAddressFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberAddressPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MemberAddressFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberAddressPayload>
+          }
+          findFirst: {
+            args: Prisma.MemberAddressFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberAddressPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MemberAddressFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberAddressPayload>
+          }
+          findMany: {
+            args: Prisma.MemberAddressFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberAddressPayload>[]
+          }
+          create: {
+            args: Prisma.MemberAddressCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberAddressPayload>
+          }
+          createMany: {
+            args: Prisma.MemberAddressCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MemberAddressCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberAddressPayload>[]
+          }
+          delete: {
+            args: Prisma.MemberAddressDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberAddressPayload>
+          }
+          update: {
+            args: Prisma.MemberAddressUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberAddressPayload>
+          }
+          deleteMany: {
+            args: Prisma.MemberAddressDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MemberAddressUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MemberAddressUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberAddressPayload>[]
+          }
+          upsert: {
+            args: Prisma.MemberAddressUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberAddressPayload>
+          }
+          aggregate: {
+            args: Prisma.MemberAddressAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMemberAddress>
+          }
+          groupBy: {
+            args: Prisma.MemberAddressGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MemberAddressGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MemberAddressCountArgs<ExtArgs>
+            result: $Utils.Optional<MemberAddressCountAggregateOutputType> | number
+          }
+        }
+      }
       VendorUser: {
         payload: Prisma.$VendorUserPayload<ExtArgs>
         fields: Prisma.VendorUserFieldRefs
@@ -2087,6 +2177,7 @@ export namespace Prisma {
     pmsFormFeedback?: PmsFormFeedbackOmit
     mmsOrderRecord?: MmsOrderRecordOmit
     memberAccount?: MemberAccountOmit
+    memberAddress?: MemberAddressOmit
     vendorUser?: VendorUserOmit
   }
 
@@ -2232,12 +2323,14 @@ export namespace Prisma {
   export type SysCountyCountOutputType = {
     feedbacks: number
     topicRestrictions: number
+    memberAddresses: number
     districts: number
   }
 
   export type SysCountyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     feedbacks?: boolean | SysCountyCountOutputTypeCountFeedbacksArgs
     topicRestrictions?: boolean | SysCountyCountOutputTypeCountTopicRestrictionsArgs
+    memberAddresses?: boolean | SysCountyCountOutputTypeCountMemberAddressesArgs
     districts?: boolean | SysCountyCountOutputTypeCountDistrictsArgs
   }
 
@@ -2269,6 +2362,13 @@ export namespace Prisma {
   /**
    * SysCountyCountOutputType without action
    */
+  export type SysCountyCountOutputTypeCountMemberAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MemberAddressWhereInput
+  }
+
+  /**
+   * SysCountyCountOutputType without action
+   */
   export type SysCountyCountOutputTypeCountDistrictsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SysDistrictWhereInput
   }
@@ -2281,11 +2381,13 @@ export namespace Prisma {
   export type SysDistrictCountOutputType = {
     feedbacks: number
     topicRestrictions: number
+    memberAddresses: number
   }
 
   export type SysDistrictCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     feedbacks?: boolean | SysDistrictCountOutputTypeCountFeedbacksArgs
     topicRestrictions?: boolean | SysDistrictCountOutputTypeCountTopicRestrictionsArgs
+    memberAddresses?: boolean | SysDistrictCountOutputTypeCountMemberAddressesArgs
   }
 
   // Custom InputTypes
@@ -2311,6 +2413,13 @@ export namespace Prisma {
    */
   export type SysDistrictCountOutputTypeCountTopicRestrictionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PmsTopicCountyDistrictRelationWhereInput
+  }
+
+  /**
+   * SysDistrictCountOutputType without action
+   */
+  export type SysDistrictCountOutputTypeCountMemberAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MemberAddressWhereInput
   }
 
 
@@ -2440,6 +2549,37 @@ export namespace Prisma {
    */
   export type PmsFormTopicCountOutputTypeCountOptionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PmsTopicOptionWhereInput
+  }
+
+
+  /**
+   * Count Type MemberAccountCountOutputType
+   */
+
+  export type MemberAccountCountOutputType = {
+    addresses: number
+  }
+
+  export type MemberAccountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    addresses?: boolean | MemberAccountCountOutputTypeCountAddressesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * MemberAccountCountOutputType without action
+   */
+  export type MemberAccountCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberAccountCountOutputType
+     */
+    select?: MemberAccountCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * MemberAccountCountOutputType without action
+   */
+  export type MemberAccountCountOutputTypeCountAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MemberAddressWhereInput
   }
 
 
@@ -6011,6 +6151,7 @@ export namespace Prisma {
     updId?: boolean
     feedbacks?: boolean | SysCounty$feedbacksArgs<ExtArgs>
     topicRestrictions?: boolean | SysCounty$topicRestrictionsArgs<ExtArgs>
+    memberAddresses?: boolean | SysCounty$memberAddressesArgs<ExtArgs>
     districts?: boolean | SysCounty$districtsArgs<ExtArgs>
     _count?: boolean | SysCountyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["sysCounty"]>
@@ -6052,6 +6193,7 @@ export namespace Prisma {
   export type SysCountyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     feedbacks?: boolean | SysCounty$feedbacksArgs<ExtArgs>
     topicRestrictions?: boolean | SysCounty$topicRestrictionsArgs<ExtArgs>
+    memberAddresses?: boolean | SysCounty$memberAddressesArgs<ExtArgs>
     districts?: boolean | SysCounty$districtsArgs<ExtArgs>
     _count?: boolean | SysCountyCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -6063,6 +6205,7 @@ export namespace Prisma {
     objects: {
       feedbacks: Prisma.$PmsFormFeedbackPayload<ExtArgs>[]
       topicRestrictions: Prisma.$PmsTopicCountyDistrictRelationPayload<ExtArgs>[]
+      memberAddresses: Prisma.$MemberAddressPayload<ExtArgs>[]
       districts: Prisma.$SysDistrictPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -6470,6 +6613,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     feedbacks<T extends SysCounty$feedbacksArgs<ExtArgs> = {}>(args?: Subset<T, SysCounty$feedbacksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PmsFormFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     topicRestrictions<T extends SysCounty$topicRestrictionsArgs<ExtArgs> = {}>(args?: Subset<T, SysCounty$topicRestrictionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PmsTopicCountyDistrictRelationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    memberAddresses<T extends SysCounty$memberAddressesArgs<ExtArgs> = {}>(args?: Subset<T, SysCounty$memberAddressesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MemberAddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     districts<T extends SysCounty$districtsArgs<ExtArgs> = {}>(args?: Subset<T, SysCounty$districtsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SysDistrictPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -6949,6 +7093,30 @@ export namespace Prisma {
   }
 
   /**
+   * SysCounty.memberAddresses
+   */
+  export type SysCounty$memberAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberAddress
+     */
+    select?: MemberAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberAddress
+     */
+    omit?: MemberAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAddressInclude<ExtArgs> | null
+    where?: MemberAddressWhereInput
+    orderBy?: MemberAddressOrderByWithRelationInput | MemberAddressOrderByWithRelationInput[]
+    cursor?: MemberAddressWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MemberAddressScalarFieldEnum | MemberAddressScalarFieldEnum[]
+  }
+
+  /**
    * SysCounty.districts
    */
   export type SysCounty$districtsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7239,6 +7407,7 @@ export namespace Prisma {
     updId?: boolean
     feedbacks?: boolean | SysDistrict$feedbacksArgs<ExtArgs>
     topicRestrictions?: boolean | SysDistrict$topicRestrictionsArgs<ExtArgs>
+    memberAddresses?: boolean | SysDistrict$memberAddressesArgs<ExtArgs>
     county?: boolean | SysCountyDefaultArgs<ExtArgs>
     _count?: boolean | SysDistrictCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["sysDistrict"]>
@@ -7291,6 +7460,7 @@ export namespace Prisma {
   export type SysDistrictInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     feedbacks?: boolean | SysDistrict$feedbacksArgs<ExtArgs>
     topicRestrictions?: boolean | SysDistrict$topicRestrictionsArgs<ExtArgs>
+    memberAddresses?: boolean | SysDistrict$memberAddressesArgs<ExtArgs>
     county?: boolean | SysCountyDefaultArgs<ExtArgs>
     _count?: boolean | SysDistrictCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -7306,6 +7476,7 @@ export namespace Prisma {
     objects: {
       feedbacks: Prisma.$PmsFormFeedbackPayload<ExtArgs>[]
       topicRestrictions: Prisma.$PmsTopicCountyDistrictRelationPayload<ExtArgs>[]
+      memberAddresses: Prisma.$MemberAddressPayload<ExtArgs>[]
       county: Prisma.$SysCountyPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -7716,6 +7887,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     feedbacks<T extends SysDistrict$feedbacksArgs<ExtArgs> = {}>(args?: Subset<T, SysDistrict$feedbacksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PmsFormFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     topicRestrictions<T extends SysDistrict$topicRestrictionsArgs<ExtArgs> = {}>(args?: Subset<T, SysDistrict$topicRestrictionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PmsTopicCountyDistrictRelationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    memberAddresses<T extends SysDistrict$memberAddressesArgs<ExtArgs> = {}>(args?: Subset<T, SysDistrict$memberAddressesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MemberAddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     county<T extends SysCountyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SysCountyDefaultArgs<ExtArgs>>): Prisma__SysCountyClient<$Result.GetResult<Prisma.$SysCountyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -8203,6 +8375,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PmsTopicCountyDistrictRelationScalarFieldEnum | PmsTopicCountyDistrictRelationScalarFieldEnum[]
+  }
+
+  /**
+   * SysDistrict.memberAddresses
+   */
+  export type SysDistrict$memberAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberAddress
+     */
+    select?: MemberAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberAddress
+     */
+    omit?: MemberAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAddressInclude<ExtArgs> | null
+    where?: MemberAddressWhereInput
+    orderBy?: MemberAddressOrderByWithRelationInput | MemberAddressOrderByWithRelationInput[]
+    cursor?: MemberAddressWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MemberAddressScalarFieldEnum | MemberAddressScalarFieldEnum[]
   }
 
   /**
@@ -19051,6 +19247,8 @@ export namespace Prisma {
     creTime?: boolean
     updId?: boolean
     updTime?: boolean
+    addresses?: boolean | MemberAccount$addressesArgs<ExtArgs>
+    _count?: boolean | MemberAccountCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["memberAccount"]>
 
   export type MemberAccountSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -19105,10 +19303,18 @@ export namespace Prisma {
   }
 
   export type MemberAccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "emailHash" | "phone" | "phoneHash" | "name" | "nameHash" | "passwordHash" | "status" | "isDeleted" | "creId" | "creTime" | "updId" | "updTime", ExtArgs["result"]["memberAccount"]>
+  export type MemberAccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    addresses?: boolean | MemberAccount$addressesArgs<ExtArgs>
+    _count?: boolean | MemberAccountCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type MemberAccountIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type MemberAccountIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $MemberAccountPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "MemberAccount"
-    objects: {}
+    objects: {
+      addresses: Prisma.$MemberAddressPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       email: Prisma.Bytes | null
@@ -19518,6 +19724,7 @@ export namespace Prisma {
    */
   export interface Prisma__MemberAccountClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    addresses<T extends MemberAccount$addressesArgs<ExtArgs> = {}>(args?: Subset<T, MemberAccount$addressesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MemberAddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -19578,6 +19785,10 @@ export namespace Prisma {
      */
     omit?: MemberAccountOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAccountInclude<ExtArgs> | null
+    /**
      * Filter, which MemberAccount to fetch.
      */
     where: MemberAccountWhereUniqueInput
@@ -19596,6 +19807,10 @@ export namespace Prisma {
      */
     omit?: MemberAccountOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAccountInclude<ExtArgs> | null
+    /**
      * Filter, which MemberAccount to fetch.
      */
     where: MemberAccountWhereUniqueInput
@@ -19613,6 +19828,10 @@ export namespace Prisma {
      * Omit specific fields from the MemberAccount
      */
     omit?: MemberAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAccountInclude<ExtArgs> | null
     /**
      * Filter, which MemberAccount to fetch.
      */
@@ -19662,6 +19881,10 @@ export namespace Prisma {
      */
     omit?: MemberAccountOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAccountInclude<ExtArgs> | null
+    /**
      * Filter, which MemberAccount to fetch.
      */
     where?: MemberAccountWhereInput
@@ -19709,6 +19932,10 @@ export namespace Prisma {
      * Omit specific fields from the MemberAccount
      */
     omit?: MemberAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAccountInclude<ExtArgs> | null
     /**
      * Filter, which MemberAccounts to fetch.
      */
@@ -19758,6 +19985,10 @@ export namespace Prisma {
      */
     omit?: MemberAccountOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAccountInclude<ExtArgs> | null
+    /**
      * The data needed to create a MemberAccount.
      */
     data: XOR<MemberAccountCreateInput, MemberAccountUncheckedCreateInput>
@@ -19805,6 +20036,10 @@ export namespace Prisma {
      * Omit specific fields from the MemberAccount
      */
     omit?: MemberAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAccountInclude<ExtArgs> | null
     /**
      * The data needed to update a MemberAccount.
      */
@@ -19872,6 +20107,10 @@ export namespace Prisma {
      */
     omit?: MemberAccountOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAccountInclude<ExtArgs> | null
+    /**
      * The filter to search for the MemberAccount to update in case it exists.
      */
     where: MemberAccountWhereUniqueInput
@@ -19898,6 +20137,10 @@ export namespace Prisma {
      */
     omit?: MemberAccountOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAccountInclude<ExtArgs> | null
+    /**
      * Filter which MemberAccount to delete.
      */
     where: MemberAccountWhereUniqueInput
@@ -19918,6 +20161,30 @@ export namespace Prisma {
   }
 
   /**
+   * MemberAccount.addresses
+   */
+  export type MemberAccount$addressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberAddress
+     */
+    select?: MemberAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberAddress
+     */
+    omit?: MemberAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAddressInclude<ExtArgs> | null
+    where?: MemberAddressWhereInput
+    orderBy?: MemberAddressOrderByWithRelationInput | MemberAddressOrderByWithRelationInput[]
+    cursor?: MemberAddressWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MemberAddressScalarFieldEnum | MemberAddressScalarFieldEnum[]
+  }
+
+  /**
    * MemberAccount without action
    */
   export type MemberAccountDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19929,6 +20196,1214 @@ export namespace Prisma {
      * Omit specific fields from the MemberAccount
      */
     omit?: MemberAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAccountInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model MemberAddress
+   */
+
+  export type AggregateMemberAddress = {
+    _count: MemberAddressCountAggregateOutputType | null
+    _avg: MemberAddressAvgAggregateOutputType | null
+    _sum: MemberAddressSumAggregateOutputType | null
+    _min: MemberAddressMinAggregateOutputType | null
+    _max: MemberAddressMaxAggregateOutputType | null
+  }
+
+  export type MemberAddressAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type MemberAddressSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type MemberAddressMinAggregateOutputType = {
+    id: number | null
+    memberId: string | null
+    type: string | null
+    label: string | null
+    countyCode: string | null
+    districtCode: string | null
+    addressDetail: Bytes | null
+    addressHash: string | null
+    isDefault: boolean | null
+    isDeleted: boolean | null
+    creTime: Date | null
+    updTime: Date | null
+  }
+
+  export type MemberAddressMaxAggregateOutputType = {
+    id: number | null
+    memberId: string | null
+    type: string | null
+    label: string | null
+    countyCode: string | null
+    districtCode: string | null
+    addressDetail: Bytes | null
+    addressHash: string | null
+    isDefault: boolean | null
+    isDeleted: boolean | null
+    creTime: Date | null
+    updTime: Date | null
+  }
+
+  export type MemberAddressCountAggregateOutputType = {
+    id: number
+    memberId: number
+    type: number
+    label: number
+    countyCode: number
+    districtCode: number
+    addressDetail: number
+    addressHash: number
+    isDefault: number
+    isDeleted: number
+    creTime: number
+    updTime: number
+    _all: number
+  }
+
+
+  export type MemberAddressAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type MemberAddressSumAggregateInputType = {
+    id?: true
+  }
+
+  export type MemberAddressMinAggregateInputType = {
+    id?: true
+    memberId?: true
+    type?: true
+    label?: true
+    countyCode?: true
+    districtCode?: true
+    addressDetail?: true
+    addressHash?: true
+    isDefault?: true
+    isDeleted?: true
+    creTime?: true
+    updTime?: true
+  }
+
+  export type MemberAddressMaxAggregateInputType = {
+    id?: true
+    memberId?: true
+    type?: true
+    label?: true
+    countyCode?: true
+    districtCode?: true
+    addressDetail?: true
+    addressHash?: true
+    isDefault?: true
+    isDeleted?: true
+    creTime?: true
+    updTime?: true
+  }
+
+  export type MemberAddressCountAggregateInputType = {
+    id?: true
+    memberId?: true
+    type?: true
+    label?: true
+    countyCode?: true
+    districtCode?: true
+    addressDetail?: true
+    addressHash?: true
+    isDefault?: true
+    isDeleted?: true
+    creTime?: true
+    updTime?: true
+    _all?: true
+  }
+
+  export type MemberAddressAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MemberAddress to aggregate.
+     */
+    where?: MemberAddressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MemberAddresses to fetch.
+     */
+    orderBy?: MemberAddressOrderByWithRelationInput | MemberAddressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MemberAddressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MemberAddresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MemberAddresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MemberAddresses
+    **/
+    _count?: true | MemberAddressCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MemberAddressAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MemberAddressSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MemberAddressMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MemberAddressMaxAggregateInputType
+  }
+
+  export type GetMemberAddressAggregateType<T extends MemberAddressAggregateArgs> = {
+        [P in keyof T & keyof AggregateMemberAddress]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMemberAddress[P]>
+      : GetScalarType<T[P], AggregateMemberAddress[P]>
+  }
+
+
+
+
+  export type MemberAddressGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MemberAddressWhereInput
+    orderBy?: MemberAddressOrderByWithAggregationInput | MemberAddressOrderByWithAggregationInput[]
+    by: MemberAddressScalarFieldEnum[] | MemberAddressScalarFieldEnum
+    having?: MemberAddressScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MemberAddressCountAggregateInputType | true
+    _avg?: MemberAddressAvgAggregateInputType
+    _sum?: MemberAddressSumAggregateInputType
+    _min?: MemberAddressMinAggregateInputType
+    _max?: MemberAddressMaxAggregateInputType
+  }
+
+  export type MemberAddressGroupByOutputType = {
+    id: number
+    memberId: string
+    type: string
+    label: string | null
+    countyCode: string
+    districtCode: string
+    addressDetail: Bytes | null
+    addressHash: string | null
+    isDefault: boolean
+    isDeleted: boolean
+    creTime: Date
+    updTime: Date
+    _count: MemberAddressCountAggregateOutputType | null
+    _avg: MemberAddressAvgAggregateOutputType | null
+    _sum: MemberAddressSumAggregateOutputType | null
+    _min: MemberAddressMinAggregateOutputType | null
+    _max: MemberAddressMaxAggregateOutputType | null
+  }
+
+  type GetMemberAddressGroupByPayload<T extends MemberAddressGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MemberAddressGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MemberAddressGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MemberAddressGroupByOutputType[P]>
+            : GetScalarType<T[P], MemberAddressGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MemberAddressSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    memberId?: boolean
+    type?: boolean
+    label?: boolean
+    countyCode?: boolean
+    districtCode?: boolean
+    addressDetail?: boolean
+    addressHash?: boolean
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: boolean
+    updTime?: boolean
+    member?: boolean | MemberAccountDefaultArgs<ExtArgs>
+    county?: boolean | SysCountyDefaultArgs<ExtArgs>
+    district?: boolean | SysDistrictDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["memberAddress"]>
+
+  export type MemberAddressSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    memberId?: boolean
+    type?: boolean
+    label?: boolean
+    countyCode?: boolean
+    districtCode?: boolean
+    addressDetail?: boolean
+    addressHash?: boolean
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: boolean
+    updTime?: boolean
+    member?: boolean | MemberAccountDefaultArgs<ExtArgs>
+    county?: boolean | SysCountyDefaultArgs<ExtArgs>
+    district?: boolean | SysDistrictDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["memberAddress"]>
+
+  export type MemberAddressSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    memberId?: boolean
+    type?: boolean
+    label?: boolean
+    countyCode?: boolean
+    districtCode?: boolean
+    addressDetail?: boolean
+    addressHash?: boolean
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: boolean
+    updTime?: boolean
+    member?: boolean | MemberAccountDefaultArgs<ExtArgs>
+    county?: boolean | SysCountyDefaultArgs<ExtArgs>
+    district?: boolean | SysDistrictDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["memberAddress"]>
+
+  export type MemberAddressSelectScalar = {
+    id?: boolean
+    memberId?: boolean
+    type?: boolean
+    label?: boolean
+    countyCode?: boolean
+    districtCode?: boolean
+    addressDetail?: boolean
+    addressHash?: boolean
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: boolean
+    updTime?: boolean
+  }
+
+  export type MemberAddressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "memberId" | "type" | "label" | "countyCode" | "districtCode" | "addressDetail" | "addressHash" | "isDefault" | "isDeleted" | "creTime" | "updTime", ExtArgs["result"]["memberAddress"]>
+  export type MemberAddressInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    member?: boolean | MemberAccountDefaultArgs<ExtArgs>
+    county?: boolean | SysCountyDefaultArgs<ExtArgs>
+    district?: boolean | SysDistrictDefaultArgs<ExtArgs>
+  }
+  export type MemberAddressIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    member?: boolean | MemberAccountDefaultArgs<ExtArgs>
+    county?: boolean | SysCountyDefaultArgs<ExtArgs>
+    district?: boolean | SysDistrictDefaultArgs<ExtArgs>
+  }
+  export type MemberAddressIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    member?: boolean | MemberAccountDefaultArgs<ExtArgs>
+    county?: boolean | SysCountyDefaultArgs<ExtArgs>
+    district?: boolean | SysDistrictDefaultArgs<ExtArgs>
+  }
+
+  export type $MemberAddressPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MemberAddress"
+    objects: {
+      member: Prisma.$MemberAccountPayload<ExtArgs>
+      county: Prisma.$SysCountyPayload<ExtArgs>
+      district: Prisma.$SysDistrictPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      memberId: string
+      type: string
+      label: string | null
+      countyCode: string
+      districtCode: string
+      addressDetail: Prisma.Bytes | null
+      addressHash: string | null
+      isDefault: boolean
+      isDeleted: boolean
+      creTime: Date
+      updTime: Date
+    }, ExtArgs["result"]["memberAddress"]>
+    composites: {}
+  }
+
+  type MemberAddressGetPayload<S extends boolean | null | undefined | MemberAddressDefaultArgs> = $Result.GetResult<Prisma.$MemberAddressPayload, S>
+
+  type MemberAddressCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MemberAddressFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MemberAddressCountAggregateInputType | true
+    }
+
+  export interface MemberAddressDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MemberAddress'], meta: { name: 'MemberAddress' } }
+    /**
+     * Find zero or one MemberAddress that matches the filter.
+     * @param {MemberAddressFindUniqueArgs} args - Arguments to find a MemberAddress
+     * @example
+     * // Get one MemberAddress
+     * const memberAddress = await prisma.memberAddress.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MemberAddressFindUniqueArgs>(args: SelectSubset<T, MemberAddressFindUniqueArgs<ExtArgs>>): Prisma__MemberAddressClient<$Result.GetResult<Prisma.$MemberAddressPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MemberAddress that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MemberAddressFindUniqueOrThrowArgs} args - Arguments to find a MemberAddress
+     * @example
+     * // Get one MemberAddress
+     * const memberAddress = await prisma.memberAddress.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MemberAddressFindUniqueOrThrowArgs>(args: SelectSubset<T, MemberAddressFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MemberAddressClient<$Result.GetResult<Prisma.$MemberAddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MemberAddress that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemberAddressFindFirstArgs} args - Arguments to find a MemberAddress
+     * @example
+     * // Get one MemberAddress
+     * const memberAddress = await prisma.memberAddress.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MemberAddressFindFirstArgs>(args?: SelectSubset<T, MemberAddressFindFirstArgs<ExtArgs>>): Prisma__MemberAddressClient<$Result.GetResult<Prisma.$MemberAddressPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MemberAddress that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemberAddressFindFirstOrThrowArgs} args - Arguments to find a MemberAddress
+     * @example
+     * // Get one MemberAddress
+     * const memberAddress = await prisma.memberAddress.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MemberAddressFindFirstOrThrowArgs>(args?: SelectSubset<T, MemberAddressFindFirstOrThrowArgs<ExtArgs>>): Prisma__MemberAddressClient<$Result.GetResult<Prisma.$MemberAddressPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MemberAddresses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemberAddressFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MemberAddresses
+     * const memberAddresses = await prisma.memberAddress.findMany()
+     * 
+     * // Get first 10 MemberAddresses
+     * const memberAddresses = await prisma.memberAddress.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const memberAddressWithIdOnly = await prisma.memberAddress.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MemberAddressFindManyArgs>(args?: SelectSubset<T, MemberAddressFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MemberAddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MemberAddress.
+     * @param {MemberAddressCreateArgs} args - Arguments to create a MemberAddress.
+     * @example
+     * // Create one MemberAddress
+     * const MemberAddress = await prisma.memberAddress.create({
+     *   data: {
+     *     // ... data to create a MemberAddress
+     *   }
+     * })
+     * 
+     */
+    create<T extends MemberAddressCreateArgs>(args: SelectSubset<T, MemberAddressCreateArgs<ExtArgs>>): Prisma__MemberAddressClient<$Result.GetResult<Prisma.$MemberAddressPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MemberAddresses.
+     * @param {MemberAddressCreateManyArgs} args - Arguments to create many MemberAddresses.
+     * @example
+     * // Create many MemberAddresses
+     * const memberAddress = await prisma.memberAddress.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MemberAddressCreateManyArgs>(args?: SelectSubset<T, MemberAddressCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MemberAddresses and returns the data saved in the database.
+     * @param {MemberAddressCreateManyAndReturnArgs} args - Arguments to create many MemberAddresses.
+     * @example
+     * // Create many MemberAddresses
+     * const memberAddress = await prisma.memberAddress.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MemberAddresses and only return the `id`
+     * const memberAddressWithIdOnly = await prisma.memberAddress.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MemberAddressCreateManyAndReturnArgs>(args?: SelectSubset<T, MemberAddressCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MemberAddressPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a MemberAddress.
+     * @param {MemberAddressDeleteArgs} args - Arguments to delete one MemberAddress.
+     * @example
+     * // Delete one MemberAddress
+     * const MemberAddress = await prisma.memberAddress.delete({
+     *   where: {
+     *     // ... filter to delete one MemberAddress
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MemberAddressDeleteArgs>(args: SelectSubset<T, MemberAddressDeleteArgs<ExtArgs>>): Prisma__MemberAddressClient<$Result.GetResult<Prisma.$MemberAddressPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MemberAddress.
+     * @param {MemberAddressUpdateArgs} args - Arguments to update one MemberAddress.
+     * @example
+     * // Update one MemberAddress
+     * const memberAddress = await prisma.memberAddress.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MemberAddressUpdateArgs>(args: SelectSubset<T, MemberAddressUpdateArgs<ExtArgs>>): Prisma__MemberAddressClient<$Result.GetResult<Prisma.$MemberAddressPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MemberAddresses.
+     * @param {MemberAddressDeleteManyArgs} args - Arguments to filter MemberAddresses to delete.
+     * @example
+     * // Delete a few MemberAddresses
+     * const { count } = await prisma.memberAddress.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MemberAddressDeleteManyArgs>(args?: SelectSubset<T, MemberAddressDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MemberAddresses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemberAddressUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MemberAddresses
+     * const memberAddress = await prisma.memberAddress.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MemberAddressUpdateManyArgs>(args: SelectSubset<T, MemberAddressUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MemberAddresses and returns the data updated in the database.
+     * @param {MemberAddressUpdateManyAndReturnArgs} args - Arguments to update many MemberAddresses.
+     * @example
+     * // Update many MemberAddresses
+     * const memberAddress = await prisma.memberAddress.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more MemberAddresses and only return the `id`
+     * const memberAddressWithIdOnly = await prisma.memberAddress.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MemberAddressUpdateManyAndReturnArgs>(args: SelectSubset<T, MemberAddressUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MemberAddressPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one MemberAddress.
+     * @param {MemberAddressUpsertArgs} args - Arguments to update or create a MemberAddress.
+     * @example
+     * // Update or create a MemberAddress
+     * const memberAddress = await prisma.memberAddress.upsert({
+     *   create: {
+     *     // ... data to create a MemberAddress
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MemberAddress we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MemberAddressUpsertArgs>(args: SelectSubset<T, MemberAddressUpsertArgs<ExtArgs>>): Prisma__MemberAddressClient<$Result.GetResult<Prisma.$MemberAddressPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MemberAddresses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemberAddressCountArgs} args - Arguments to filter MemberAddresses to count.
+     * @example
+     * // Count the number of MemberAddresses
+     * const count = await prisma.memberAddress.count({
+     *   where: {
+     *     // ... the filter for the MemberAddresses we want to count
+     *   }
+     * })
+    **/
+    count<T extends MemberAddressCountArgs>(
+      args?: Subset<T, MemberAddressCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MemberAddressCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MemberAddress.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemberAddressAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MemberAddressAggregateArgs>(args: Subset<T, MemberAddressAggregateArgs>): Prisma.PrismaPromise<GetMemberAddressAggregateType<T>>
+
+    /**
+     * Group by MemberAddress.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemberAddressGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MemberAddressGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MemberAddressGroupByArgs['orderBy'] }
+        : { orderBy?: MemberAddressGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MemberAddressGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMemberAddressGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MemberAddress model
+   */
+  readonly fields: MemberAddressFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MemberAddress.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MemberAddressClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    member<T extends MemberAccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MemberAccountDefaultArgs<ExtArgs>>): Prisma__MemberAccountClient<$Result.GetResult<Prisma.$MemberAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    county<T extends SysCountyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SysCountyDefaultArgs<ExtArgs>>): Prisma__SysCountyClient<$Result.GetResult<Prisma.$SysCountyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    district<T extends SysDistrictDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SysDistrictDefaultArgs<ExtArgs>>): Prisma__SysDistrictClient<$Result.GetResult<Prisma.$SysDistrictPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MemberAddress model
+   */
+  interface MemberAddressFieldRefs {
+    readonly id: FieldRef<"MemberAddress", 'Int'>
+    readonly memberId: FieldRef<"MemberAddress", 'String'>
+    readonly type: FieldRef<"MemberAddress", 'String'>
+    readonly label: FieldRef<"MemberAddress", 'String'>
+    readonly countyCode: FieldRef<"MemberAddress", 'String'>
+    readonly districtCode: FieldRef<"MemberAddress", 'String'>
+    readonly addressDetail: FieldRef<"MemberAddress", 'Bytes'>
+    readonly addressHash: FieldRef<"MemberAddress", 'String'>
+    readonly isDefault: FieldRef<"MemberAddress", 'Boolean'>
+    readonly isDeleted: FieldRef<"MemberAddress", 'Boolean'>
+    readonly creTime: FieldRef<"MemberAddress", 'DateTime'>
+    readonly updTime: FieldRef<"MemberAddress", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MemberAddress findUnique
+   */
+  export type MemberAddressFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberAddress
+     */
+    select?: MemberAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberAddress
+     */
+    omit?: MemberAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAddressInclude<ExtArgs> | null
+    /**
+     * Filter, which MemberAddress to fetch.
+     */
+    where: MemberAddressWhereUniqueInput
+  }
+
+  /**
+   * MemberAddress findUniqueOrThrow
+   */
+  export type MemberAddressFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberAddress
+     */
+    select?: MemberAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberAddress
+     */
+    omit?: MemberAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAddressInclude<ExtArgs> | null
+    /**
+     * Filter, which MemberAddress to fetch.
+     */
+    where: MemberAddressWhereUniqueInput
+  }
+
+  /**
+   * MemberAddress findFirst
+   */
+  export type MemberAddressFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberAddress
+     */
+    select?: MemberAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberAddress
+     */
+    omit?: MemberAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAddressInclude<ExtArgs> | null
+    /**
+     * Filter, which MemberAddress to fetch.
+     */
+    where?: MemberAddressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MemberAddresses to fetch.
+     */
+    orderBy?: MemberAddressOrderByWithRelationInput | MemberAddressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MemberAddresses.
+     */
+    cursor?: MemberAddressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MemberAddresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MemberAddresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MemberAddresses.
+     */
+    distinct?: MemberAddressScalarFieldEnum | MemberAddressScalarFieldEnum[]
+  }
+
+  /**
+   * MemberAddress findFirstOrThrow
+   */
+  export type MemberAddressFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberAddress
+     */
+    select?: MemberAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberAddress
+     */
+    omit?: MemberAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAddressInclude<ExtArgs> | null
+    /**
+     * Filter, which MemberAddress to fetch.
+     */
+    where?: MemberAddressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MemberAddresses to fetch.
+     */
+    orderBy?: MemberAddressOrderByWithRelationInput | MemberAddressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MemberAddresses.
+     */
+    cursor?: MemberAddressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MemberAddresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MemberAddresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MemberAddresses.
+     */
+    distinct?: MemberAddressScalarFieldEnum | MemberAddressScalarFieldEnum[]
+  }
+
+  /**
+   * MemberAddress findMany
+   */
+  export type MemberAddressFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberAddress
+     */
+    select?: MemberAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberAddress
+     */
+    omit?: MemberAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAddressInclude<ExtArgs> | null
+    /**
+     * Filter, which MemberAddresses to fetch.
+     */
+    where?: MemberAddressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MemberAddresses to fetch.
+     */
+    orderBy?: MemberAddressOrderByWithRelationInput | MemberAddressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MemberAddresses.
+     */
+    cursor?: MemberAddressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MemberAddresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MemberAddresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MemberAddresses.
+     */
+    distinct?: MemberAddressScalarFieldEnum | MemberAddressScalarFieldEnum[]
+  }
+
+  /**
+   * MemberAddress create
+   */
+  export type MemberAddressCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberAddress
+     */
+    select?: MemberAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberAddress
+     */
+    omit?: MemberAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAddressInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MemberAddress.
+     */
+    data: XOR<MemberAddressCreateInput, MemberAddressUncheckedCreateInput>
+  }
+
+  /**
+   * MemberAddress createMany
+   */
+  export type MemberAddressCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MemberAddresses.
+     */
+    data: MemberAddressCreateManyInput | MemberAddressCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MemberAddress createManyAndReturn
+   */
+  export type MemberAddressCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberAddress
+     */
+    select?: MemberAddressSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberAddress
+     */
+    omit?: MemberAddressOmit<ExtArgs> | null
+    /**
+     * The data used to create many MemberAddresses.
+     */
+    data: MemberAddressCreateManyInput | MemberAddressCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAddressIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MemberAddress update
+   */
+  export type MemberAddressUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberAddress
+     */
+    select?: MemberAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberAddress
+     */
+    omit?: MemberAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAddressInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MemberAddress.
+     */
+    data: XOR<MemberAddressUpdateInput, MemberAddressUncheckedUpdateInput>
+    /**
+     * Choose, which MemberAddress to update.
+     */
+    where: MemberAddressWhereUniqueInput
+  }
+
+  /**
+   * MemberAddress updateMany
+   */
+  export type MemberAddressUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MemberAddresses.
+     */
+    data: XOR<MemberAddressUpdateManyMutationInput, MemberAddressUncheckedUpdateManyInput>
+    /**
+     * Filter which MemberAddresses to update
+     */
+    where?: MemberAddressWhereInput
+    /**
+     * Limit how many MemberAddresses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MemberAddress updateManyAndReturn
+   */
+  export type MemberAddressUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberAddress
+     */
+    select?: MemberAddressSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberAddress
+     */
+    omit?: MemberAddressOmit<ExtArgs> | null
+    /**
+     * The data used to update MemberAddresses.
+     */
+    data: XOR<MemberAddressUpdateManyMutationInput, MemberAddressUncheckedUpdateManyInput>
+    /**
+     * Filter which MemberAddresses to update
+     */
+    where?: MemberAddressWhereInput
+    /**
+     * Limit how many MemberAddresses to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAddressIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MemberAddress upsert
+   */
+  export type MemberAddressUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberAddress
+     */
+    select?: MemberAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberAddress
+     */
+    omit?: MemberAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAddressInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MemberAddress to update in case it exists.
+     */
+    where: MemberAddressWhereUniqueInput
+    /**
+     * In case the MemberAddress found by the `where` argument doesn't exist, create a new MemberAddress with this data.
+     */
+    create: XOR<MemberAddressCreateInput, MemberAddressUncheckedCreateInput>
+    /**
+     * In case the MemberAddress was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MemberAddressUpdateInput, MemberAddressUncheckedUpdateInput>
+  }
+
+  /**
+   * MemberAddress delete
+   */
+  export type MemberAddressDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberAddress
+     */
+    select?: MemberAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberAddress
+     */
+    omit?: MemberAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAddressInclude<ExtArgs> | null
+    /**
+     * Filter which MemberAddress to delete.
+     */
+    where: MemberAddressWhereUniqueInput
+  }
+
+  /**
+   * MemberAddress deleteMany
+   */
+  export type MemberAddressDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MemberAddresses to delete
+     */
+    where?: MemberAddressWhereInput
+    /**
+     * Limit how many MemberAddresses to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MemberAddress without action
+   */
+  export type MemberAddressDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberAddress
+     */
+    select?: MemberAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberAddress
+     */
+    omit?: MemberAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAddressInclude<ExtArgs> | null
   }
 
 
@@ -19955,7 +21430,6 @@ export namespace Prisma {
   export type VendorUserMinAggregateOutputType = {
     id: string | null
     vendorId: number | null
-    companyName: string | null
     email: Bytes | null
     emailHash: string | null
     name: Bytes | null
@@ -19968,12 +21442,12 @@ export namespace Prisma {
     creTime: Date | null
     updId: string | null
     updTime: Date | null
+    companyName: string | null
   }
 
   export type VendorUserMaxAggregateOutputType = {
     id: string | null
     vendorId: number | null
-    companyName: string | null
     email: Bytes | null
     emailHash: string | null
     name: Bytes | null
@@ -19986,12 +21460,12 @@ export namespace Prisma {
     creTime: Date | null
     updId: string | null
     updTime: Date | null
+    companyName: string | null
   }
 
   export type VendorUserCountAggregateOutputType = {
     id: number
     vendorId: number
-    companyName: number
     email: number
     emailHash: number
     name: number
@@ -20004,6 +21478,7 @@ export namespace Prisma {
     creTime: number
     updId: number
     updTime: number
+    companyName: number
     _all: number
   }
 
@@ -20019,7 +21494,6 @@ export namespace Prisma {
   export type VendorUserMinAggregateInputType = {
     id?: true
     vendorId?: true
-    companyName?: true
     email?: true
     emailHash?: true
     name?: true
@@ -20032,12 +21506,12 @@ export namespace Prisma {
     creTime?: true
     updId?: true
     updTime?: true
+    companyName?: true
   }
 
   export type VendorUserMaxAggregateInputType = {
     id?: true
     vendorId?: true
-    companyName?: true
     email?: true
     emailHash?: true
     name?: true
@@ -20050,12 +21524,12 @@ export namespace Prisma {
     creTime?: true
     updId?: true
     updTime?: true
+    companyName?: true
   }
 
   export type VendorUserCountAggregateInputType = {
     id?: true
     vendorId?: true
-    companyName?: true
     email?: true
     emailHash?: true
     name?: true
@@ -20068,6 +21542,7 @@ export namespace Prisma {
     creTime?: true
     updId?: true
     updTime?: true
+    companyName?: true
     _all?: true
   }
 
@@ -20160,7 +21635,6 @@ export namespace Prisma {
   export type VendorUserGroupByOutputType = {
     id: string
     vendorId: number | null
-    companyName: string | null
     email: Bytes | null
     emailHash: string | null
     name: Bytes | null
@@ -20173,6 +21647,7 @@ export namespace Prisma {
     creTime: Date
     updId: string
     updTime: Date
+    companyName: string | null
     _count: VendorUserCountAggregateOutputType | null
     _avg: VendorUserAvgAggregateOutputType | null
     _sum: VendorUserSumAggregateOutputType | null
@@ -20197,7 +21672,6 @@ export namespace Prisma {
   export type VendorUserSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     vendorId?: boolean
-    companyName?: boolean
     email?: boolean
     emailHash?: boolean
     name?: boolean
@@ -20210,12 +21684,12 @@ export namespace Prisma {
     creTime?: boolean
     updId?: boolean
     updTime?: boolean
+    companyName?: boolean
   }, ExtArgs["result"]["vendorUser"]>
 
   export type VendorUserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     vendorId?: boolean
-    companyName?: boolean
     email?: boolean
     emailHash?: boolean
     name?: boolean
@@ -20228,12 +21702,12 @@ export namespace Prisma {
     creTime?: boolean
     updId?: boolean
     updTime?: boolean
+    companyName?: boolean
   }, ExtArgs["result"]["vendorUser"]>
 
   export type VendorUserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     vendorId?: boolean
-    companyName?: boolean
     email?: boolean
     emailHash?: boolean
     name?: boolean
@@ -20246,12 +21720,12 @@ export namespace Prisma {
     creTime?: boolean
     updId?: boolean
     updTime?: boolean
+    companyName?: boolean
   }, ExtArgs["result"]["vendorUser"]>
 
   export type VendorUserSelectScalar = {
     id?: boolean
     vendorId?: boolean
-    companyName?: boolean
     email?: boolean
     emailHash?: boolean
     name?: boolean
@@ -20264,9 +21738,10 @@ export namespace Prisma {
     creTime?: boolean
     updId?: boolean
     updTime?: boolean
+    companyName?: boolean
   }
 
-  export type VendorUserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "vendorId" | "companyName" | "email" | "emailHash" | "name" | "nameHash" | "passwordHash" | "role" | "isActive" | "isDeleted" | "creId" | "creTime" | "updId" | "updTime", ExtArgs["result"]["vendorUser"]>
+  export type VendorUserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "vendorId" | "email" | "emailHash" | "name" | "nameHash" | "passwordHash" | "role" | "isActive" | "isDeleted" | "creId" | "creTime" | "updId" | "updTime" | "companyName", ExtArgs["result"]["vendorUser"]>
 
   export type $VendorUserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "VendorUser"
@@ -20274,7 +21749,6 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       vendorId: number | null
-      companyName: string | null
       email: Prisma.Bytes | null
       emailHash: string | null
       name: Prisma.Bytes | null
@@ -20287,6 +21761,7 @@ export namespace Prisma {
       creTime: Date
       updId: string
       updTime: Date
+      companyName: string | null
     }, ExtArgs["result"]["vendorUser"]>
     composites: {}
   }
@@ -20712,7 +22187,6 @@ export namespace Prisma {
   interface VendorUserFieldRefs {
     readonly id: FieldRef<"VendorUser", 'String'>
     readonly vendorId: FieldRef<"VendorUser", 'Int'>
-    readonly companyName: FieldRef<"VendorUser", 'String'>
     readonly email: FieldRef<"VendorUser", 'Bytes'>
     readonly emailHash: FieldRef<"VendorUser", 'String'>
     readonly name: FieldRef<"VendorUser", 'Bytes'>
@@ -20725,6 +22199,7 @@ export namespace Prisma {
     readonly creTime: FieldRef<"VendorUser", 'DateTime'>
     readonly updId: FieldRef<"VendorUser", 'String'>
     readonly updTime: FieldRef<"VendorUser", 'DateTime'>
+    readonly companyName: FieldRef<"VendorUser", 'String'>
   }
     
 
@@ -21399,10 +22874,27 @@ export namespace Prisma {
   export type MemberAccountScalarFieldEnum = (typeof MemberAccountScalarFieldEnum)[keyof typeof MemberAccountScalarFieldEnum]
 
 
+  export const MemberAddressScalarFieldEnum: {
+    id: 'id',
+    memberId: 'memberId',
+    type: 'type',
+    label: 'label',
+    countyCode: 'countyCode',
+    districtCode: 'districtCode',
+    addressDetail: 'addressDetail',
+    addressHash: 'addressHash',
+    isDefault: 'isDefault',
+    isDeleted: 'isDeleted',
+    creTime: 'creTime',
+    updTime: 'updTime'
+  };
+
+  export type MemberAddressScalarFieldEnum = (typeof MemberAddressScalarFieldEnum)[keyof typeof MemberAddressScalarFieldEnum]
+
+
   export const VendorUserScalarFieldEnum: {
     id: 'id',
     vendorId: 'vendorId',
-    companyName: 'companyName',
     email: 'email',
     emailHash: 'emailHash',
     name: 'name',
@@ -21414,7 +22906,8 @@ export namespace Prisma {
     creId: 'creId',
     creTime: 'creTime',
     updId: 'updId',
-    updTime: 'updTime'
+    updTime: 'updTime',
+    companyName: 'companyName'
   };
 
   export type VendorUserScalarFieldEnum = (typeof VendorUserScalarFieldEnum)[keyof typeof VendorUserScalarFieldEnum]
@@ -21788,6 +23281,7 @@ export namespace Prisma {
     updId?: UuidNullableFilter<"SysCounty"> | string | null
     feedbacks?: PmsFormFeedbackListRelationFilter
     topicRestrictions?: PmsTopicCountyDistrictRelationListRelationFilter
+    memberAddresses?: MemberAddressListRelationFilter
     districts?: SysDistrictListRelationFilter
   }
 
@@ -21802,6 +23296,7 @@ export namespace Prisma {
     updId?: SortOrderInput | SortOrder
     feedbacks?: PmsFormFeedbackOrderByRelationAggregateInput
     topicRestrictions?: PmsTopicCountyDistrictRelationOrderByRelationAggregateInput
+    memberAddresses?: MemberAddressOrderByRelationAggregateInput
     districts?: SysDistrictOrderByRelationAggregateInput
   }
 
@@ -21819,6 +23314,7 @@ export namespace Prisma {
     updId?: UuidNullableFilter<"SysCounty"> | string | null
     feedbacks?: PmsFormFeedbackListRelationFilter
     topicRestrictions?: PmsTopicCountyDistrictRelationListRelationFilter
+    memberAddresses?: MemberAddressListRelationFilter
     districts?: SysDistrictListRelationFilter
   }, "code">
 
@@ -21869,6 +23365,7 @@ export namespace Prisma {
     updId?: UuidNullableFilter<"SysDistrict"> | string | null
     feedbacks?: PmsFormFeedbackListRelationFilter
     topicRestrictions?: PmsTopicCountyDistrictRelationListRelationFilter
+    memberAddresses?: MemberAddressListRelationFilter
     county?: XOR<SysCountyScalarRelationFilter, SysCountyWhereInput>
   }
 
@@ -21886,6 +23383,7 @@ export namespace Prisma {
     updId?: SortOrderInput | SortOrder
     feedbacks?: PmsFormFeedbackOrderByRelationAggregateInput
     topicRestrictions?: PmsTopicCountyDistrictRelationOrderByRelationAggregateInput
+    memberAddresses?: MemberAddressOrderByRelationAggregateInput
     county?: SysCountyOrderByWithRelationInput
   }
 
@@ -21906,6 +23404,7 @@ export namespace Prisma {
     updId?: UuidNullableFilter<"SysDistrict"> | string | null
     feedbacks?: PmsFormFeedbackListRelationFilter
     topicRestrictions?: PmsTopicCountyDistrictRelationListRelationFilter
+    memberAddresses?: MemberAddressListRelationFilter
     county?: XOR<SysCountyScalarRelationFilter, SysCountyWhereInput>
   }, "code">
 
@@ -23031,6 +24530,7 @@ export namespace Prisma {
     creTime?: DateTimeFilter<"MemberAccount"> | Date | string
     updId?: UuidFilter<"MemberAccount"> | string
     updTime?: DateTimeFilter<"MemberAccount"> | Date | string
+    addresses?: MemberAddressListRelationFilter
   }
 
   export type MemberAccountOrderByWithRelationInput = {
@@ -23048,6 +24548,7 @@ export namespace Prisma {
     creTime?: SortOrder
     updId?: SortOrder
     updTime?: SortOrder
+    addresses?: MemberAddressOrderByRelationAggregateInput
   }
 
   export type MemberAccountWhereUniqueInput = Prisma.AtLeast<{
@@ -23068,6 +24569,7 @@ export namespace Prisma {
     creTime?: DateTimeFilter<"MemberAccount"> | Date | string
     updId?: UuidFilter<"MemberAccount"> | string
     updTime?: DateTimeFilter<"MemberAccount"> | Date | string
+    addresses?: MemberAddressListRelationFilter
   }, "id" | "emailHash" | "phoneHash">
 
   export type MemberAccountOrderByWithAggregationInput = {
@@ -23110,13 +24612,110 @@ export namespace Prisma {
     updTime?: DateTimeWithAggregatesFilter<"MemberAccount"> | Date | string
   }
 
+  export type MemberAddressWhereInput = {
+    AND?: MemberAddressWhereInput | MemberAddressWhereInput[]
+    OR?: MemberAddressWhereInput[]
+    NOT?: MemberAddressWhereInput | MemberAddressWhereInput[]
+    id?: IntFilter<"MemberAddress"> | number
+    memberId?: UuidFilter<"MemberAddress"> | string
+    type?: StringFilter<"MemberAddress"> | string
+    label?: StringNullableFilter<"MemberAddress"> | string | null
+    countyCode?: StringFilter<"MemberAddress"> | string
+    districtCode?: StringFilter<"MemberAddress"> | string
+    addressDetail?: BytesNullableFilter<"MemberAddress"> | Bytes | null
+    addressHash?: StringNullableFilter<"MemberAddress"> | string | null
+    isDefault?: BoolFilter<"MemberAddress"> | boolean
+    isDeleted?: BoolFilter<"MemberAddress"> | boolean
+    creTime?: DateTimeFilter<"MemberAddress"> | Date | string
+    updTime?: DateTimeFilter<"MemberAddress"> | Date | string
+    member?: XOR<MemberAccountScalarRelationFilter, MemberAccountWhereInput>
+    county?: XOR<SysCountyScalarRelationFilter, SysCountyWhereInput>
+    district?: XOR<SysDistrictScalarRelationFilter, SysDistrictWhereInput>
+  }
+
+  export type MemberAddressOrderByWithRelationInput = {
+    id?: SortOrder
+    memberId?: SortOrder
+    type?: SortOrder
+    label?: SortOrderInput | SortOrder
+    countyCode?: SortOrder
+    districtCode?: SortOrder
+    addressDetail?: SortOrderInput | SortOrder
+    addressHash?: SortOrderInput | SortOrder
+    isDefault?: SortOrder
+    isDeleted?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+    member?: MemberAccountOrderByWithRelationInput
+    county?: SysCountyOrderByWithRelationInput
+    district?: SysDistrictOrderByWithRelationInput
+  }
+
+  export type MemberAddressWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: MemberAddressWhereInput | MemberAddressWhereInput[]
+    OR?: MemberAddressWhereInput[]
+    NOT?: MemberAddressWhereInput | MemberAddressWhereInput[]
+    memberId?: UuidFilter<"MemberAddress"> | string
+    type?: StringFilter<"MemberAddress"> | string
+    label?: StringNullableFilter<"MemberAddress"> | string | null
+    countyCode?: StringFilter<"MemberAddress"> | string
+    districtCode?: StringFilter<"MemberAddress"> | string
+    addressDetail?: BytesNullableFilter<"MemberAddress"> | Bytes | null
+    addressHash?: StringNullableFilter<"MemberAddress"> | string | null
+    isDefault?: BoolFilter<"MemberAddress"> | boolean
+    isDeleted?: BoolFilter<"MemberAddress"> | boolean
+    creTime?: DateTimeFilter<"MemberAddress"> | Date | string
+    updTime?: DateTimeFilter<"MemberAddress"> | Date | string
+    member?: XOR<MemberAccountScalarRelationFilter, MemberAccountWhereInput>
+    county?: XOR<SysCountyScalarRelationFilter, SysCountyWhereInput>
+    district?: XOR<SysDistrictScalarRelationFilter, SysDistrictWhereInput>
+  }, "id">
+
+  export type MemberAddressOrderByWithAggregationInput = {
+    id?: SortOrder
+    memberId?: SortOrder
+    type?: SortOrder
+    label?: SortOrderInput | SortOrder
+    countyCode?: SortOrder
+    districtCode?: SortOrder
+    addressDetail?: SortOrderInput | SortOrder
+    addressHash?: SortOrderInput | SortOrder
+    isDefault?: SortOrder
+    isDeleted?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+    _count?: MemberAddressCountOrderByAggregateInput
+    _avg?: MemberAddressAvgOrderByAggregateInput
+    _max?: MemberAddressMaxOrderByAggregateInput
+    _min?: MemberAddressMinOrderByAggregateInput
+    _sum?: MemberAddressSumOrderByAggregateInput
+  }
+
+  export type MemberAddressScalarWhereWithAggregatesInput = {
+    AND?: MemberAddressScalarWhereWithAggregatesInput | MemberAddressScalarWhereWithAggregatesInput[]
+    OR?: MemberAddressScalarWhereWithAggregatesInput[]
+    NOT?: MemberAddressScalarWhereWithAggregatesInput | MemberAddressScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"MemberAddress"> | number
+    memberId?: UuidWithAggregatesFilter<"MemberAddress"> | string
+    type?: StringWithAggregatesFilter<"MemberAddress"> | string
+    label?: StringNullableWithAggregatesFilter<"MemberAddress"> | string | null
+    countyCode?: StringWithAggregatesFilter<"MemberAddress"> | string
+    districtCode?: StringWithAggregatesFilter<"MemberAddress"> | string
+    addressDetail?: BytesNullableWithAggregatesFilter<"MemberAddress"> | Bytes | null
+    addressHash?: StringNullableWithAggregatesFilter<"MemberAddress"> | string | null
+    isDefault?: BoolWithAggregatesFilter<"MemberAddress"> | boolean
+    isDeleted?: BoolWithAggregatesFilter<"MemberAddress"> | boolean
+    creTime?: DateTimeWithAggregatesFilter<"MemberAddress"> | Date | string
+    updTime?: DateTimeWithAggregatesFilter<"MemberAddress"> | Date | string
+  }
+
   export type VendorUserWhereInput = {
     AND?: VendorUserWhereInput | VendorUserWhereInput[]
     OR?: VendorUserWhereInput[]
     NOT?: VendorUserWhereInput | VendorUserWhereInput[]
     id?: UuidFilter<"VendorUser"> | string
     vendorId?: IntNullableFilter<"VendorUser"> | number | null
-    companyName?: StringNullableFilter<"VendorUser"> | string | null
     email?: BytesNullableFilter<"VendorUser"> | Bytes | null
     emailHash?: StringNullableFilter<"VendorUser"> | string | null
     name?: BytesNullableFilter<"VendorUser"> | Bytes | null
@@ -23129,12 +24728,12 @@ export namespace Prisma {
     creTime?: DateTimeFilter<"VendorUser"> | Date | string
     updId?: UuidFilter<"VendorUser"> | string
     updTime?: DateTimeFilter<"VendorUser"> | Date | string
+    companyName?: StringNullableFilter<"VendorUser"> | string | null
   }
 
   export type VendorUserOrderByWithRelationInput = {
     id?: SortOrder
     vendorId?: SortOrderInput | SortOrder
-    companyName?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     emailHash?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
@@ -23147,6 +24746,7 @@ export namespace Prisma {
     creTime?: SortOrder
     updId?: SortOrder
     updTime?: SortOrder
+    companyName?: SortOrderInput | SortOrder
   }
 
   export type VendorUserWhereUniqueInput = Prisma.AtLeast<{
@@ -23156,7 +24756,6 @@ export namespace Prisma {
     OR?: VendorUserWhereInput[]
     NOT?: VendorUserWhereInput | VendorUserWhereInput[]
     vendorId?: IntNullableFilter<"VendorUser"> | number | null
-    companyName?: StringNullableFilter<"VendorUser"> | string | null
     email?: BytesNullableFilter<"VendorUser"> | Bytes | null
     name?: BytesNullableFilter<"VendorUser"> | Bytes | null
     nameHash?: StringNullableFilter<"VendorUser"> | string | null
@@ -23168,12 +24767,12 @@ export namespace Prisma {
     creTime?: DateTimeFilter<"VendorUser"> | Date | string
     updId?: UuidFilter<"VendorUser"> | string
     updTime?: DateTimeFilter<"VendorUser"> | Date | string
+    companyName?: StringNullableFilter<"VendorUser"> | string | null
   }, "id" | "emailHash">
 
   export type VendorUserOrderByWithAggregationInput = {
     id?: SortOrder
     vendorId?: SortOrderInput | SortOrder
-    companyName?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     emailHash?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
@@ -23186,6 +24785,7 @@ export namespace Prisma {
     creTime?: SortOrder
     updId?: SortOrder
     updTime?: SortOrder
+    companyName?: SortOrderInput | SortOrder
     _count?: VendorUserCountOrderByAggregateInput
     _avg?: VendorUserAvgOrderByAggregateInput
     _max?: VendorUserMaxOrderByAggregateInput
@@ -23199,7 +24799,6 @@ export namespace Prisma {
     NOT?: VendorUserScalarWhereWithAggregatesInput | VendorUserScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"VendorUser"> | string
     vendorId?: IntNullableWithAggregatesFilter<"VendorUser"> | number | null
-    companyName?: StringNullableWithAggregatesFilter<"VendorUser"> | string | null
     email?: BytesNullableWithAggregatesFilter<"VendorUser"> | Bytes | null
     emailHash?: StringNullableWithAggregatesFilter<"VendorUser"> | string | null
     name?: BytesNullableWithAggregatesFilter<"VendorUser"> | Bytes | null
@@ -23212,6 +24811,7 @@ export namespace Prisma {
     creTime?: DateTimeWithAggregatesFilter<"VendorUser"> | Date | string
     updId?: UuidWithAggregatesFilter<"VendorUser"> | string
     updTime?: DateTimeWithAggregatesFilter<"VendorUser"> | Date | string
+    companyName?: StringNullableWithAggregatesFilter<"VendorUser"> | string | null
   }
 
   export type CmsHomepageServiceVendorCreateInput = {
@@ -23400,6 +25000,7 @@ export namespace Prisma {
     updId?: string | null
     feedbacks?: PmsFormFeedbackCreateNestedManyWithoutCountyInput
     topicRestrictions?: PmsTopicCountyDistrictRelationCreateNestedManyWithoutCountyInput
+    memberAddresses?: MemberAddressCreateNestedManyWithoutCountyInput
     districts?: SysDistrictCreateNestedManyWithoutCountyInput
   }
 
@@ -23414,6 +25015,7 @@ export namespace Prisma {
     updId?: string | null
     feedbacks?: PmsFormFeedbackUncheckedCreateNestedManyWithoutCountyInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedCreateNestedManyWithoutCountyInput
+    memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutCountyInput
     districts?: SysDistrictUncheckedCreateNestedManyWithoutCountyInput
   }
 
@@ -23428,6 +25030,7 @@ export namespace Prisma {
     updId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbacks?: PmsFormFeedbackUpdateManyWithoutCountyNestedInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUpdateManyWithoutCountyNestedInput
+    memberAddresses?: MemberAddressUpdateManyWithoutCountyNestedInput
     districts?: SysDistrictUpdateManyWithoutCountyNestedInput
   }
 
@@ -23442,6 +25045,7 @@ export namespace Prisma {
     updId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbacks?: PmsFormFeedbackUncheckedUpdateManyWithoutCountyNestedInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedUpdateManyWithoutCountyNestedInput
+    memberAddresses?: MemberAddressUncheckedUpdateManyWithoutCountyNestedInput
     districts?: SysDistrictUncheckedUpdateManyWithoutCountyNestedInput
   }
 
@@ -23491,6 +25095,7 @@ export namespace Prisma {
     updId?: string | null
     feedbacks?: PmsFormFeedbackCreateNestedManyWithoutDistrictInput
     topicRestrictions?: PmsTopicCountyDistrictRelationCreateNestedManyWithoutDistrictInput
+    memberAddresses?: MemberAddressCreateNestedManyWithoutDistrictInput
     county: SysCountyCreateNestedOneWithoutDistrictsInput
   }
 
@@ -23508,6 +25113,7 @@ export namespace Prisma {
     updId?: string | null
     feedbacks?: PmsFormFeedbackUncheckedCreateNestedManyWithoutDistrictInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedCreateNestedManyWithoutDistrictInput
+    memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutDistrictInput
   }
 
   export type SysDistrictUpdateInput = {
@@ -23523,6 +25129,7 @@ export namespace Prisma {
     updId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbacks?: PmsFormFeedbackUpdateManyWithoutDistrictNestedInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUpdateManyWithoutDistrictNestedInput
+    memberAddresses?: MemberAddressUpdateManyWithoutDistrictNestedInput
     county?: SysCountyUpdateOneRequiredWithoutDistrictsNestedInput
   }
 
@@ -23540,6 +25147,7 @@ export namespace Prisma {
     updId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbacks?: PmsFormFeedbackUncheckedUpdateManyWithoutDistrictNestedInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedUpdateManyWithoutDistrictNestedInput
+    memberAddresses?: MemberAddressUncheckedUpdateManyWithoutDistrictNestedInput
   }
 
   export type SysDistrictCreateManyInput = {
@@ -24860,6 +26468,7 @@ export namespace Prisma {
     creTime?: Date | string
     updId: string
     updTime?: Date | string
+    addresses?: MemberAddressCreateNestedManyWithoutMemberInput
   }
 
   export type MemberAccountUncheckedCreateInput = {
@@ -24877,6 +26486,7 @@ export namespace Prisma {
     creTime?: Date | string
     updId: string
     updTime?: Date | string
+    addresses?: MemberAddressUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type MemberAccountUpdateInput = {
@@ -24894,6 +26504,7 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updId?: StringFieldUpdateOperationsInput | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    addresses?: MemberAddressUpdateManyWithoutMemberNestedInput
   }
 
   export type MemberAccountUncheckedUpdateInput = {
@@ -24911,6 +26522,7 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updId?: StringFieldUpdateOperationsInput | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    addresses?: MemberAddressUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type MemberAccountCreateManyInput = {
@@ -24964,10 +26576,108 @@ export namespace Prisma {
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type MemberAddressCreateInput = {
+    type: string
+    label?: string | null
+    addressDetail?: Bytes | null
+    addressHash?: string | null
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+    member: MemberAccountCreateNestedOneWithoutAddressesInput
+    county: SysCountyCreateNestedOneWithoutMemberAddressesInput
+    district: SysDistrictCreateNestedOneWithoutMemberAddressesInput
+  }
+
+  export type MemberAddressUncheckedCreateInput = {
+    id?: number
+    memberId: string
+    type: string
+    label?: string | null
+    countyCode: string
+    districtCode: string
+    addressDetail?: Bytes | null
+    addressHash?: string | null
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+  }
+
+  export type MemberAddressUpdateInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    addressHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    member?: MemberAccountUpdateOneRequiredWithoutAddressesNestedInput
+    county?: SysCountyUpdateOneRequiredWithoutMemberAddressesNestedInput
+    district?: SysDistrictUpdateOneRequiredWithoutMemberAddressesNestedInput
+  }
+
+  export type MemberAddressUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    countyCode?: StringFieldUpdateOperationsInput | string
+    districtCode?: StringFieldUpdateOperationsInput | string
+    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    addressHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MemberAddressCreateManyInput = {
+    id?: number
+    memberId: string
+    type: string
+    label?: string | null
+    countyCode: string
+    districtCode: string
+    addressDetail?: Bytes | null
+    addressHash?: string | null
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+  }
+
+  export type MemberAddressUpdateManyMutationInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    addressHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MemberAddressUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    countyCode?: StringFieldUpdateOperationsInput | string
+    districtCode?: StringFieldUpdateOperationsInput | string
+    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    addressHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type VendorUserCreateInput = {
     id?: string
     vendorId?: number | null
-    companyName?: string | null
     email?: Bytes | null
     emailHash?: string | null
     name?: Bytes | null
@@ -24980,12 +26690,12 @@ export namespace Prisma {
     creTime?: Date | string
     updId: string
     updTime?: Date | string
+    companyName?: string | null
   }
 
   export type VendorUserUncheckedCreateInput = {
     id?: string
     vendorId?: number | null
-    companyName?: string | null
     email?: Bytes | null
     emailHash?: string | null
     name?: Bytes | null
@@ -24998,12 +26708,12 @@ export namespace Prisma {
     creTime?: Date | string
     updId: string
     updTime?: Date | string
+    companyName?: string | null
   }
 
   export type VendorUserUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     vendorId?: NullableIntFieldUpdateOperationsInput | number | null
-    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     emailHash?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableBytesFieldUpdateOperationsInput | Bytes | null
@@ -25016,12 +26726,12 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updId?: StringFieldUpdateOperationsInput | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type VendorUserUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     vendorId?: NullableIntFieldUpdateOperationsInput | number | null
-    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     emailHash?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableBytesFieldUpdateOperationsInput | Bytes | null
@@ -25034,12 +26744,12 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updId?: StringFieldUpdateOperationsInput | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type VendorUserCreateManyInput = {
     id?: string
     vendorId?: number | null
-    companyName?: string | null
     email?: Bytes | null
     emailHash?: string | null
     name?: Bytes | null
@@ -25052,12 +26762,12 @@ export namespace Prisma {
     creTime?: Date | string
     updId: string
     updTime?: Date | string
+    companyName?: string | null
   }
 
   export type VendorUserUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     vendorId?: NullableIntFieldUpdateOperationsInput | number | null
-    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     emailHash?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableBytesFieldUpdateOperationsInput | Bytes | null
@@ -25070,12 +26780,12 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updId?: StringFieldUpdateOperationsInput | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type VendorUserUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     vendorId?: NullableIntFieldUpdateOperationsInput | number | null
-    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     emailHash?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableBytesFieldUpdateOperationsInput | Bytes | null
@@ -25088,6 +26798,7 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updId?: StringFieldUpdateOperationsInput | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -25370,6 +27081,12 @@ export namespace Prisma {
     none?: PmsTopicCountyDistrictRelationWhereInput
   }
 
+  export type MemberAddressListRelationFilter = {
+    every?: MemberAddressWhereInput
+    some?: MemberAddressWhereInput
+    none?: MemberAddressWhereInput
+  }
+
   export type SysDistrictListRelationFilter = {
     every?: SysDistrictWhereInput
     some?: SysDistrictWhereInput
@@ -25381,6 +27098,10 @@ export namespace Prisma {
   }
 
   export type PmsTopicCountyDistrictRelationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MemberAddressOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -26540,10 +28261,67 @@ export namespace Prisma {
     updTime?: SortOrder
   }
 
+  export type MemberAccountScalarRelationFilter = {
+    is?: MemberAccountWhereInput
+    isNot?: MemberAccountWhereInput
+  }
+
+  export type MemberAddressCountOrderByAggregateInput = {
+    id?: SortOrder
+    memberId?: SortOrder
+    type?: SortOrder
+    label?: SortOrder
+    countyCode?: SortOrder
+    districtCode?: SortOrder
+    addressDetail?: SortOrder
+    addressHash?: SortOrder
+    isDefault?: SortOrder
+    isDeleted?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+  }
+
+  export type MemberAddressAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type MemberAddressMaxOrderByAggregateInput = {
+    id?: SortOrder
+    memberId?: SortOrder
+    type?: SortOrder
+    label?: SortOrder
+    countyCode?: SortOrder
+    districtCode?: SortOrder
+    addressDetail?: SortOrder
+    addressHash?: SortOrder
+    isDefault?: SortOrder
+    isDeleted?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+  }
+
+  export type MemberAddressMinOrderByAggregateInput = {
+    id?: SortOrder
+    memberId?: SortOrder
+    type?: SortOrder
+    label?: SortOrder
+    countyCode?: SortOrder
+    districtCode?: SortOrder
+    addressDetail?: SortOrder
+    addressHash?: SortOrder
+    isDefault?: SortOrder
+    isDeleted?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+  }
+
+  export type MemberAddressSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
   export type VendorUserCountOrderByAggregateInput = {
     id?: SortOrder
     vendorId?: SortOrder
-    companyName?: SortOrder
     email?: SortOrder
     emailHash?: SortOrder
     name?: SortOrder
@@ -26556,6 +28334,7 @@ export namespace Prisma {
     creTime?: SortOrder
     updId?: SortOrder
     updTime?: SortOrder
+    companyName?: SortOrder
   }
 
   export type VendorUserAvgOrderByAggregateInput = {
@@ -26565,7 +28344,6 @@ export namespace Prisma {
   export type VendorUserMaxOrderByAggregateInput = {
     id?: SortOrder
     vendorId?: SortOrder
-    companyName?: SortOrder
     email?: SortOrder
     emailHash?: SortOrder
     name?: SortOrder
@@ -26578,12 +28356,12 @@ export namespace Prisma {
     creTime?: SortOrder
     updId?: SortOrder
     updTime?: SortOrder
+    companyName?: SortOrder
   }
 
   export type VendorUserMinOrderByAggregateInput = {
     id?: SortOrder
     vendorId?: SortOrder
-    companyName?: SortOrder
     email?: SortOrder
     emailHash?: SortOrder
     name?: SortOrder
@@ -26596,6 +28374,7 @@ export namespace Prisma {
     creTime?: SortOrder
     updId?: SortOrder
     updTime?: SortOrder
+    companyName?: SortOrder
   }
 
   export type VendorUserSumOrderByAggregateInput = {
@@ -26748,6 +28527,13 @@ export namespace Prisma {
     connect?: PmsTopicCountyDistrictRelationWhereUniqueInput | PmsTopicCountyDistrictRelationWhereUniqueInput[]
   }
 
+  export type MemberAddressCreateNestedManyWithoutCountyInput = {
+    create?: XOR<MemberAddressCreateWithoutCountyInput, MemberAddressUncheckedCreateWithoutCountyInput> | MemberAddressCreateWithoutCountyInput[] | MemberAddressUncheckedCreateWithoutCountyInput[]
+    connectOrCreate?: MemberAddressCreateOrConnectWithoutCountyInput | MemberAddressCreateOrConnectWithoutCountyInput[]
+    createMany?: MemberAddressCreateManyCountyInputEnvelope
+    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+  }
+
   export type SysDistrictCreateNestedManyWithoutCountyInput = {
     create?: XOR<SysDistrictCreateWithoutCountyInput, SysDistrictUncheckedCreateWithoutCountyInput> | SysDistrictCreateWithoutCountyInput[] | SysDistrictUncheckedCreateWithoutCountyInput[]
     connectOrCreate?: SysDistrictCreateOrConnectWithoutCountyInput | SysDistrictCreateOrConnectWithoutCountyInput[]
@@ -26767,6 +28553,13 @@ export namespace Prisma {
     connectOrCreate?: PmsTopicCountyDistrictRelationCreateOrConnectWithoutCountyInput | PmsTopicCountyDistrictRelationCreateOrConnectWithoutCountyInput[]
     createMany?: PmsTopicCountyDistrictRelationCreateManyCountyInputEnvelope
     connect?: PmsTopicCountyDistrictRelationWhereUniqueInput | PmsTopicCountyDistrictRelationWhereUniqueInput[]
+  }
+
+  export type MemberAddressUncheckedCreateNestedManyWithoutCountyInput = {
+    create?: XOR<MemberAddressCreateWithoutCountyInput, MemberAddressUncheckedCreateWithoutCountyInput> | MemberAddressCreateWithoutCountyInput[] | MemberAddressUncheckedCreateWithoutCountyInput[]
+    connectOrCreate?: MemberAddressCreateOrConnectWithoutCountyInput | MemberAddressCreateOrConnectWithoutCountyInput[]
+    createMany?: MemberAddressCreateManyCountyInputEnvelope
+    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
   }
 
   export type SysDistrictUncheckedCreateNestedManyWithoutCountyInput = {
@@ -26802,6 +28595,20 @@ export namespace Prisma {
     update?: PmsTopicCountyDistrictRelationUpdateWithWhereUniqueWithoutCountyInput | PmsTopicCountyDistrictRelationUpdateWithWhereUniqueWithoutCountyInput[]
     updateMany?: PmsTopicCountyDistrictRelationUpdateManyWithWhereWithoutCountyInput | PmsTopicCountyDistrictRelationUpdateManyWithWhereWithoutCountyInput[]
     deleteMany?: PmsTopicCountyDistrictRelationScalarWhereInput | PmsTopicCountyDistrictRelationScalarWhereInput[]
+  }
+
+  export type MemberAddressUpdateManyWithoutCountyNestedInput = {
+    create?: XOR<MemberAddressCreateWithoutCountyInput, MemberAddressUncheckedCreateWithoutCountyInput> | MemberAddressCreateWithoutCountyInput[] | MemberAddressUncheckedCreateWithoutCountyInput[]
+    connectOrCreate?: MemberAddressCreateOrConnectWithoutCountyInput | MemberAddressCreateOrConnectWithoutCountyInput[]
+    upsert?: MemberAddressUpsertWithWhereUniqueWithoutCountyInput | MemberAddressUpsertWithWhereUniqueWithoutCountyInput[]
+    createMany?: MemberAddressCreateManyCountyInputEnvelope
+    set?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    disconnect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    delete?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    update?: MemberAddressUpdateWithWhereUniqueWithoutCountyInput | MemberAddressUpdateWithWhereUniqueWithoutCountyInput[]
+    updateMany?: MemberAddressUpdateManyWithWhereWithoutCountyInput | MemberAddressUpdateManyWithWhereWithoutCountyInput[]
+    deleteMany?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
   }
 
   export type SysDistrictUpdateManyWithoutCountyNestedInput = {
@@ -26846,6 +28653,20 @@ export namespace Prisma {
     deleteMany?: PmsTopicCountyDistrictRelationScalarWhereInput | PmsTopicCountyDistrictRelationScalarWhereInput[]
   }
 
+  export type MemberAddressUncheckedUpdateManyWithoutCountyNestedInput = {
+    create?: XOR<MemberAddressCreateWithoutCountyInput, MemberAddressUncheckedCreateWithoutCountyInput> | MemberAddressCreateWithoutCountyInput[] | MemberAddressUncheckedCreateWithoutCountyInput[]
+    connectOrCreate?: MemberAddressCreateOrConnectWithoutCountyInput | MemberAddressCreateOrConnectWithoutCountyInput[]
+    upsert?: MemberAddressUpsertWithWhereUniqueWithoutCountyInput | MemberAddressUpsertWithWhereUniqueWithoutCountyInput[]
+    createMany?: MemberAddressCreateManyCountyInputEnvelope
+    set?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    disconnect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    delete?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    update?: MemberAddressUpdateWithWhereUniqueWithoutCountyInput | MemberAddressUpdateWithWhereUniqueWithoutCountyInput[]
+    updateMany?: MemberAddressUpdateManyWithWhereWithoutCountyInput | MemberAddressUpdateManyWithWhereWithoutCountyInput[]
+    deleteMany?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
+  }
+
   export type SysDistrictUncheckedUpdateManyWithoutCountyNestedInput = {
     create?: XOR<SysDistrictCreateWithoutCountyInput, SysDistrictUncheckedCreateWithoutCountyInput> | SysDistrictCreateWithoutCountyInput[] | SysDistrictUncheckedCreateWithoutCountyInput[]
     connectOrCreate?: SysDistrictCreateOrConnectWithoutCountyInput | SysDistrictCreateOrConnectWithoutCountyInput[]
@@ -26874,6 +28695,13 @@ export namespace Prisma {
     connect?: PmsTopicCountyDistrictRelationWhereUniqueInput | PmsTopicCountyDistrictRelationWhereUniqueInput[]
   }
 
+  export type MemberAddressCreateNestedManyWithoutDistrictInput = {
+    create?: XOR<MemberAddressCreateWithoutDistrictInput, MemberAddressUncheckedCreateWithoutDistrictInput> | MemberAddressCreateWithoutDistrictInput[] | MemberAddressUncheckedCreateWithoutDistrictInput[]
+    connectOrCreate?: MemberAddressCreateOrConnectWithoutDistrictInput | MemberAddressCreateOrConnectWithoutDistrictInput[]
+    createMany?: MemberAddressCreateManyDistrictInputEnvelope
+    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+  }
+
   export type SysCountyCreateNestedOneWithoutDistrictsInput = {
     create?: XOR<SysCountyCreateWithoutDistrictsInput, SysCountyUncheckedCreateWithoutDistrictsInput>
     connectOrCreate?: SysCountyCreateOrConnectWithoutDistrictsInput
@@ -26892,6 +28720,13 @@ export namespace Prisma {
     connectOrCreate?: PmsTopicCountyDistrictRelationCreateOrConnectWithoutDistrictInput | PmsTopicCountyDistrictRelationCreateOrConnectWithoutDistrictInput[]
     createMany?: PmsTopicCountyDistrictRelationCreateManyDistrictInputEnvelope
     connect?: PmsTopicCountyDistrictRelationWhereUniqueInput | PmsTopicCountyDistrictRelationWhereUniqueInput[]
+  }
+
+  export type MemberAddressUncheckedCreateNestedManyWithoutDistrictInput = {
+    create?: XOR<MemberAddressCreateWithoutDistrictInput, MemberAddressUncheckedCreateWithoutDistrictInput> | MemberAddressCreateWithoutDistrictInput[] | MemberAddressUncheckedCreateWithoutDistrictInput[]
+    connectOrCreate?: MemberAddressCreateOrConnectWithoutDistrictInput | MemberAddressCreateOrConnectWithoutDistrictInput[]
+    createMany?: MemberAddressCreateManyDistrictInputEnvelope
+    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
   }
 
   export type PmsFormFeedbackUpdateManyWithoutDistrictNestedInput = {
@@ -26920,6 +28755,20 @@ export namespace Prisma {
     update?: PmsTopicCountyDistrictRelationUpdateWithWhereUniqueWithoutDistrictInput | PmsTopicCountyDistrictRelationUpdateWithWhereUniqueWithoutDistrictInput[]
     updateMany?: PmsTopicCountyDistrictRelationUpdateManyWithWhereWithoutDistrictInput | PmsTopicCountyDistrictRelationUpdateManyWithWhereWithoutDistrictInput[]
     deleteMany?: PmsTopicCountyDistrictRelationScalarWhereInput | PmsTopicCountyDistrictRelationScalarWhereInput[]
+  }
+
+  export type MemberAddressUpdateManyWithoutDistrictNestedInput = {
+    create?: XOR<MemberAddressCreateWithoutDistrictInput, MemberAddressUncheckedCreateWithoutDistrictInput> | MemberAddressCreateWithoutDistrictInput[] | MemberAddressUncheckedCreateWithoutDistrictInput[]
+    connectOrCreate?: MemberAddressCreateOrConnectWithoutDistrictInput | MemberAddressCreateOrConnectWithoutDistrictInput[]
+    upsert?: MemberAddressUpsertWithWhereUniqueWithoutDistrictInput | MemberAddressUpsertWithWhereUniqueWithoutDistrictInput[]
+    createMany?: MemberAddressCreateManyDistrictInputEnvelope
+    set?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    disconnect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    delete?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    update?: MemberAddressUpdateWithWhereUniqueWithoutDistrictInput | MemberAddressUpdateWithWhereUniqueWithoutDistrictInput[]
+    updateMany?: MemberAddressUpdateManyWithWhereWithoutDistrictInput | MemberAddressUpdateManyWithWhereWithoutDistrictInput[]
+    deleteMany?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
   }
 
   export type SysCountyUpdateOneRequiredWithoutDistrictsNestedInput = {
@@ -26956,6 +28805,20 @@ export namespace Prisma {
     update?: PmsTopicCountyDistrictRelationUpdateWithWhereUniqueWithoutDistrictInput | PmsTopicCountyDistrictRelationUpdateWithWhereUniqueWithoutDistrictInput[]
     updateMany?: PmsTopicCountyDistrictRelationUpdateManyWithWhereWithoutDistrictInput | PmsTopicCountyDistrictRelationUpdateManyWithWhereWithoutDistrictInput[]
     deleteMany?: PmsTopicCountyDistrictRelationScalarWhereInput | PmsTopicCountyDistrictRelationScalarWhereInput[]
+  }
+
+  export type MemberAddressUncheckedUpdateManyWithoutDistrictNestedInput = {
+    create?: XOR<MemberAddressCreateWithoutDistrictInput, MemberAddressUncheckedCreateWithoutDistrictInput> | MemberAddressCreateWithoutDistrictInput[] | MemberAddressUncheckedCreateWithoutDistrictInput[]
+    connectOrCreate?: MemberAddressCreateOrConnectWithoutDistrictInput | MemberAddressCreateOrConnectWithoutDistrictInput[]
+    upsert?: MemberAddressUpsertWithWhereUniqueWithoutDistrictInput | MemberAddressUpsertWithWhereUniqueWithoutDistrictInput[]
+    createMany?: MemberAddressCreateManyDistrictInputEnvelope
+    set?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    disconnect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    delete?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    update?: MemberAddressUpdateWithWhereUniqueWithoutDistrictInput | MemberAddressUpdateWithWhereUniqueWithoutDistrictInput[]
+    updateMany?: MemberAddressUpdateManyWithWhereWithoutDistrictInput | MemberAddressUpdateManyWithWhereWithoutDistrictInput[]
+    deleteMany?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
   }
 
   export type PmsFormFeedbackCreateNestedManyWithoutFormInput = {
@@ -27444,6 +29307,90 @@ export namespace Prisma {
 
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
+  }
+
+  export type MemberAddressCreateNestedManyWithoutMemberInput = {
+    create?: XOR<MemberAddressCreateWithoutMemberInput, MemberAddressUncheckedCreateWithoutMemberInput> | MemberAddressCreateWithoutMemberInput[] | MemberAddressUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: MemberAddressCreateOrConnectWithoutMemberInput | MemberAddressCreateOrConnectWithoutMemberInput[]
+    createMany?: MemberAddressCreateManyMemberInputEnvelope
+    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+  }
+
+  export type MemberAddressUncheckedCreateNestedManyWithoutMemberInput = {
+    create?: XOR<MemberAddressCreateWithoutMemberInput, MemberAddressUncheckedCreateWithoutMemberInput> | MemberAddressCreateWithoutMemberInput[] | MemberAddressUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: MemberAddressCreateOrConnectWithoutMemberInput | MemberAddressCreateOrConnectWithoutMemberInput[]
+    createMany?: MemberAddressCreateManyMemberInputEnvelope
+    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+  }
+
+  export type MemberAddressUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<MemberAddressCreateWithoutMemberInput, MemberAddressUncheckedCreateWithoutMemberInput> | MemberAddressCreateWithoutMemberInput[] | MemberAddressUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: MemberAddressCreateOrConnectWithoutMemberInput | MemberAddressCreateOrConnectWithoutMemberInput[]
+    upsert?: MemberAddressUpsertWithWhereUniqueWithoutMemberInput | MemberAddressUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: MemberAddressCreateManyMemberInputEnvelope
+    set?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    disconnect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    delete?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    update?: MemberAddressUpdateWithWhereUniqueWithoutMemberInput | MemberAddressUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: MemberAddressUpdateManyWithWhereWithoutMemberInput | MemberAddressUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
+  }
+
+  export type MemberAddressUncheckedUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<MemberAddressCreateWithoutMemberInput, MemberAddressUncheckedCreateWithoutMemberInput> | MemberAddressCreateWithoutMemberInput[] | MemberAddressUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: MemberAddressCreateOrConnectWithoutMemberInput | MemberAddressCreateOrConnectWithoutMemberInput[]
+    upsert?: MemberAddressUpsertWithWhereUniqueWithoutMemberInput | MemberAddressUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: MemberAddressCreateManyMemberInputEnvelope
+    set?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    disconnect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    delete?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    update?: MemberAddressUpdateWithWhereUniqueWithoutMemberInput | MemberAddressUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: MemberAddressUpdateManyWithWhereWithoutMemberInput | MemberAddressUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
+  }
+
+  export type MemberAccountCreateNestedOneWithoutAddressesInput = {
+    create?: XOR<MemberAccountCreateWithoutAddressesInput, MemberAccountUncheckedCreateWithoutAddressesInput>
+    connectOrCreate?: MemberAccountCreateOrConnectWithoutAddressesInput
+    connect?: MemberAccountWhereUniqueInput
+  }
+
+  export type SysCountyCreateNestedOneWithoutMemberAddressesInput = {
+    create?: XOR<SysCountyCreateWithoutMemberAddressesInput, SysCountyUncheckedCreateWithoutMemberAddressesInput>
+    connectOrCreate?: SysCountyCreateOrConnectWithoutMemberAddressesInput
+    connect?: SysCountyWhereUniqueInput
+  }
+
+  export type SysDistrictCreateNestedOneWithoutMemberAddressesInput = {
+    create?: XOR<SysDistrictCreateWithoutMemberAddressesInput, SysDistrictUncheckedCreateWithoutMemberAddressesInput>
+    connectOrCreate?: SysDistrictCreateOrConnectWithoutMemberAddressesInput
+    connect?: SysDistrictWhereUniqueInput
+  }
+
+  export type MemberAccountUpdateOneRequiredWithoutAddressesNestedInput = {
+    create?: XOR<MemberAccountCreateWithoutAddressesInput, MemberAccountUncheckedCreateWithoutAddressesInput>
+    connectOrCreate?: MemberAccountCreateOrConnectWithoutAddressesInput
+    upsert?: MemberAccountUpsertWithoutAddressesInput
+    connect?: MemberAccountWhereUniqueInput
+    update?: XOR<XOR<MemberAccountUpdateToOneWithWhereWithoutAddressesInput, MemberAccountUpdateWithoutAddressesInput>, MemberAccountUncheckedUpdateWithoutAddressesInput>
+  }
+
+  export type SysCountyUpdateOneRequiredWithoutMemberAddressesNestedInput = {
+    create?: XOR<SysCountyCreateWithoutMemberAddressesInput, SysCountyUncheckedCreateWithoutMemberAddressesInput>
+    connectOrCreate?: SysCountyCreateOrConnectWithoutMemberAddressesInput
+    upsert?: SysCountyUpsertWithoutMemberAddressesInput
+    connect?: SysCountyWhereUniqueInput
+    update?: XOR<XOR<SysCountyUpdateToOneWithWhereWithoutMemberAddressesInput, SysCountyUpdateWithoutMemberAddressesInput>, SysCountyUncheckedUpdateWithoutMemberAddressesInput>
+  }
+
+  export type SysDistrictUpdateOneRequiredWithoutMemberAddressesNestedInput = {
+    create?: XOR<SysDistrictCreateWithoutMemberAddressesInput, SysDistrictUncheckedCreateWithoutMemberAddressesInput>
+    connectOrCreate?: SysDistrictCreateOrConnectWithoutMemberAddressesInput
+    upsert?: SysDistrictUpsertWithoutMemberAddressesInput
+    connect?: SysDistrictWhereUniqueInput
+    update?: XOR<XOR<SysDistrictUpdateToOneWithWhereWithoutMemberAddressesInput, SysDistrictUpdateWithoutMemberAddressesInput>, SysDistrictUncheckedUpdateWithoutMemberAddressesInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -28102,6 +30049,43 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type MemberAddressCreateWithoutCountyInput = {
+    type: string
+    label?: string | null
+    addressDetail?: Bytes | null
+    addressHash?: string | null
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+    member: MemberAccountCreateNestedOneWithoutAddressesInput
+    district: SysDistrictCreateNestedOneWithoutMemberAddressesInput
+  }
+
+  export type MemberAddressUncheckedCreateWithoutCountyInput = {
+    id?: number
+    memberId: string
+    type: string
+    label?: string | null
+    districtCode: string
+    addressDetail?: Bytes | null
+    addressHash?: string | null
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+  }
+
+  export type MemberAddressCreateOrConnectWithoutCountyInput = {
+    where: MemberAddressWhereUniqueInput
+    create: XOR<MemberAddressCreateWithoutCountyInput, MemberAddressUncheckedCreateWithoutCountyInput>
+  }
+
+  export type MemberAddressCreateManyCountyInputEnvelope = {
+    data: MemberAddressCreateManyCountyInput | MemberAddressCreateManyCountyInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SysDistrictCreateWithoutCountyInput = {
     code: string
     name: string
@@ -28115,6 +30099,7 @@ export namespace Prisma {
     updId?: string | null
     feedbacks?: PmsFormFeedbackCreateNestedManyWithoutDistrictInput
     topicRestrictions?: PmsTopicCountyDistrictRelationCreateNestedManyWithoutDistrictInput
+    memberAddresses?: MemberAddressCreateNestedManyWithoutDistrictInput
   }
 
   export type SysDistrictUncheckedCreateWithoutCountyInput = {
@@ -28130,6 +30115,7 @@ export namespace Prisma {
     updId?: string | null
     feedbacks?: PmsFormFeedbackUncheckedCreateNestedManyWithoutDistrictInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedCreateNestedManyWithoutDistrictInput
+    memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutDistrictInput
   }
 
   export type SysDistrictCreateOrConnectWithoutCountyInput = {
@@ -28220,6 +30206,40 @@ export namespace Prisma {
     creTime?: DateTimeFilter<"PmsTopicCountyDistrictRelation"> | Date | string
     creId?: UuidFilter<"PmsTopicCountyDistrictRelation"> | string
     updId?: UuidNullableFilter<"PmsTopicCountyDistrictRelation"> | string | null
+  }
+
+  export type MemberAddressUpsertWithWhereUniqueWithoutCountyInput = {
+    where: MemberAddressWhereUniqueInput
+    update: XOR<MemberAddressUpdateWithoutCountyInput, MemberAddressUncheckedUpdateWithoutCountyInput>
+    create: XOR<MemberAddressCreateWithoutCountyInput, MemberAddressUncheckedCreateWithoutCountyInput>
+  }
+
+  export type MemberAddressUpdateWithWhereUniqueWithoutCountyInput = {
+    where: MemberAddressWhereUniqueInput
+    data: XOR<MemberAddressUpdateWithoutCountyInput, MemberAddressUncheckedUpdateWithoutCountyInput>
+  }
+
+  export type MemberAddressUpdateManyWithWhereWithoutCountyInput = {
+    where: MemberAddressScalarWhereInput
+    data: XOR<MemberAddressUpdateManyMutationInput, MemberAddressUncheckedUpdateManyWithoutCountyInput>
+  }
+
+  export type MemberAddressScalarWhereInput = {
+    AND?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
+    OR?: MemberAddressScalarWhereInput[]
+    NOT?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
+    id?: IntFilter<"MemberAddress"> | number
+    memberId?: UuidFilter<"MemberAddress"> | string
+    type?: StringFilter<"MemberAddress"> | string
+    label?: StringNullableFilter<"MemberAddress"> | string | null
+    countyCode?: StringFilter<"MemberAddress"> | string
+    districtCode?: StringFilter<"MemberAddress"> | string
+    addressDetail?: BytesNullableFilter<"MemberAddress"> | Bytes | null
+    addressHash?: StringNullableFilter<"MemberAddress"> | string | null
+    isDefault?: BoolFilter<"MemberAddress"> | boolean
+    isDeleted?: BoolFilter<"MemberAddress"> | boolean
+    creTime?: DateTimeFilter<"MemberAddress"> | Date | string
+    updTime?: DateTimeFilter<"MemberAddress"> | Date | string
   }
 
   export type SysDistrictUpsertWithWhereUniqueWithoutCountyInput = {
@@ -28355,6 +30375,43 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type MemberAddressCreateWithoutDistrictInput = {
+    type: string
+    label?: string | null
+    addressDetail?: Bytes | null
+    addressHash?: string | null
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+    member: MemberAccountCreateNestedOneWithoutAddressesInput
+    county: SysCountyCreateNestedOneWithoutMemberAddressesInput
+  }
+
+  export type MemberAddressUncheckedCreateWithoutDistrictInput = {
+    id?: number
+    memberId: string
+    type: string
+    label?: string | null
+    countyCode: string
+    addressDetail?: Bytes | null
+    addressHash?: string | null
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+  }
+
+  export type MemberAddressCreateOrConnectWithoutDistrictInput = {
+    where: MemberAddressWhereUniqueInput
+    create: XOR<MemberAddressCreateWithoutDistrictInput, MemberAddressUncheckedCreateWithoutDistrictInput>
+  }
+
+  export type MemberAddressCreateManyDistrictInputEnvelope = {
+    data: MemberAddressCreateManyDistrictInput | MemberAddressCreateManyDistrictInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SysCountyCreateWithoutDistrictsInput = {
     code: string
     name: string
@@ -28366,6 +30423,7 @@ export namespace Prisma {
     updId?: string | null
     feedbacks?: PmsFormFeedbackCreateNestedManyWithoutCountyInput
     topicRestrictions?: PmsTopicCountyDistrictRelationCreateNestedManyWithoutCountyInput
+    memberAddresses?: MemberAddressCreateNestedManyWithoutCountyInput
   }
 
   export type SysCountyUncheckedCreateWithoutDistrictsInput = {
@@ -28379,6 +30437,7 @@ export namespace Prisma {
     updId?: string | null
     feedbacks?: PmsFormFeedbackUncheckedCreateNestedManyWithoutCountyInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedCreateNestedManyWithoutCountyInput
+    memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutCountyInput
   }
 
   export type SysCountyCreateOrConnectWithoutDistrictsInput = {
@@ -28418,6 +30477,22 @@ export namespace Prisma {
     data: XOR<PmsTopicCountyDistrictRelationUpdateManyMutationInput, PmsTopicCountyDistrictRelationUncheckedUpdateManyWithoutDistrictInput>
   }
 
+  export type MemberAddressUpsertWithWhereUniqueWithoutDistrictInput = {
+    where: MemberAddressWhereUniqueInput
+    update: XOR<MemberAddressUpdateWithoutDistrictInput, MemberAddressUncheckedUpdateWithoutDistrictInput>
+    create: XOR<MemberAddressCreateWithoutDistrictInput, MemberAddressUncheckedCreateWithoutDistrictInput>
+  }
+
+  export type MemberAddressUpdateWithWhereUniqueWithoutDistrictInput = {
+    where: MemberAddressWhereUniqueInput
+    data: XOR<MemberAddressUpdateWithoutDistrictInput, MemberAddressUncheckedUpdateWithoutDistrictInput>
+  }
+
+  export type MemberAddressUpdateManyWithWhereWithoutDistrictInput = {
+    where: MemberAddressScalarWhereInput
+    data: XOR<MemberAddressUpdateManyMutationInput, MemberAddressUncheckedUpdateManyWithoutDistrictInput>
+  }
+
   export type SysCountyUpsertWithoutDistrictsInput = {
     update: XOR<SysCountyUpdateWithoutDistrictsInput, SysCountyUncheckedUpdateWithoutDistrictsInput>
     create: XOR<SysCountyCreateWithoutDistrictsInput, SysCountyUncheckedCreateWithoutDistrictsInput>
@@ -28440,6 +30515,7 @@ export namespace Prisma {
     updId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbacks?: PmsFormFeedbackUpdateManyWithoutCountyNestedInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUpdateManyWithoutCountyNestedInput
+    memberAddresses?: MemberAddressUpdateManyWithoutCountyNestedInput
   }
 
   export type SysCountyUncheckedUpdateWithoutDistrictsInput = {
@@ -28453,6 +30529,7 @@ export namespace Prisma {
     updId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbacks?: PmsFormFeedbackUncheckedUpdateManyWithoutCountyNestedInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedUpdateManyWithoutCountyNestedInput
+    memberAddresses?: MemberAddressUncheckedUpdateManyWithoutCountyNestedInput
   }
 
   export type PmsFormFeedbackCreateWithoutFormInput = {
@@ -29474,6 +31551,7 @@ export namespace Prisma {
     creId?: string
     updId?: string | null
     feedbacks?: PmsFormFeedbackCreateNestedManyWithoutCountyInput
+    memberAddresses?: MemberAddressCreateNestedManyWithoutCountyInput
     districts?: SysDistrictCreateNestedManyWithoutCountyInput
   }
 
@@ -29487,6 +31565,7 @@ export namespace Prisma {
     creId?: string
     updId?: string | null
     feedbacks?: PmsFormFeedbackUncheckedCreateNestedManyWithoutCountyInput
+    memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutCountyInput
     districts?: SysDistrictUncheckedCreateNestedManyWithoutCountyInput
   }
 
@@ -29507,6 +31586,7 @@ export namespace Prisma {
     creId?: string
     updId?: string | null
     feedbacks?: PmsFormFeedbackCreateNestedManyWithoutDistrictInput
+    memberAddresses?: MemberAddressCreateNestedManyWithoutDistrictInput
     county: SysCountyCreateNestedOneWithoutDistrictsInput
   }
 
@@ -29523,6 +31603,7 @@ export namespace Prisma {
     creId?: string
     updId?: string | null
     feedbacks?: PmsFormFeedbackUncheckedCreateNestedManyWithoutDistrictInput
+    memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutDistrictInput
   }
 
   export type SysDistrictCreateOrConnectWithoutTopicRestrictionsInput = {
@@ -29603,6 +31684,7 @@ export namespace Prisma {
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbacks?: PmsFormFeedbackUpdateManyWithoutCountyNestedInput
+    memberAddresses?: MemberAddressUpdateManyWithoutCountyNestedInput
     districts?: SysDistrictUpdateManyWithoutCountyNestedInput
   }
 
@@ -29616,6 +31698,7 @@ export namespace Prisma {
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbacks?: PmsFormFeedbackUncheckedUpdateManyWithoutCountyNestedInput
+    memberAddresses?: MemberAddressUncheckedUpdateManyWithoutCountyNestedInput
     districts?: SysDistrictUncheckedUpdateManyWithoutCountyNestedInput
   }
 
@@ -29642,6 +31725,7 @@ export namespace Prisma {
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbacks?: PmsFormFeedbackUpdateManyWithoutDistrictNestedInput
+    memberAddresses?: MemberAddressUpdateManyWithoutDistrictNestedInput
     county?: SysCountyUpdateOneRequiredWithoutDistrictsNestedInput
   }
 
@@ -29658,6 +31742,7 @@ export namespace Prisma {
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbacks?: PmsFormFeedbackUncheckedUpdateManyWithoutDistrictNestedInput
+    memberAddresses?: MemberAddressUncheckedUpdateManyWithoutDistrictNestedInput
   }
 
   export type PmsFormTopicUpsertWithoutRestrictionsInput = {
@@ -29728,6 +31813,7 @@ export namespace Prisma {
     creId?: string
     updId?: string | null
     topicRestrictions?: PmsTopicCountyDistrictRelationCreateNestedManyWithoutCountyInput
+    memberAddresses?: MemberAddressCreateNestedManyWithoutCountyInput
     districts?: SysDistrictCreateNestedManyWithoutCountyInput
   }
 
@@ -29741,6 +31827,7 @@ export namespace Prisma {
     creId?: string
     updId?: string | null
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedCreateNestedManyWithoutCountyInput
+    memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutCountyInput
     districts?: SysDistrictUncheckedCreateNestedManyWithoutCountyInput
   }
 
@@ -29761,6 +31848,7 @@ export namespace Prisma {
     creId?: string
     updId?: string | null
     topicRestrictions?: PmsTopicCountyDistrictRelationCreateNestedManyWithoutDistrictInput
+    memberAddresses?: MemberAddressCreateNestedManyWithoutDistrictInput
     county: SysCountyCreateNestedOneWithoutDistrictsInput
   }
 
@@ -29777,6 +31865,7 @@ export namespace Prisma {
     creId?: string
     updId?: string | null
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedCreateNestedManyWithoutDistrictInput
+    memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutDistrictInput
   }
 
   export type SysDistrictCreateOrConnectWithoutFeedbacksInput = {
@@ -29855,6 +31944,7 @@ export namespace Prisma {
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
     topicRestrictions?: PmsTopicCountyDistrictRelationUpdateManyWithoutCountyNestedInput
+    memberAddresses?: MemberAddressUpdateManyWithoutCountyNestedInput
     districts?: SysDistrictUpdateManyWithoutCountyNestedInput
   }
 
@@ -29868,6 +31958,7 @@ export namespace Prisma {
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedUpdateManyWithoutCountyNestedInput
+    memberAddresses?: MemberAddressUncheckedUpdateManyWithoutCountyNestedInput
     districts?: SysDistrictUncheckedUpdateManyWithoutCountyNestedInput
   }
 
@@ -29894,6 +31985,7 @@ export namespace Prisma {
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
     topicRestrictions?: PmsTopicCountyDistrictRelationUpdateManyWithoutDistrictNestedInput
+    memberAddresses?: MemberAddressUpdateManyWithoutDistrictNestedInput
     county?: SysCountyUpdateOneRequiredWithoutDistrictsNestedInput
   }
 
@@ -29910,6 +32002,7 @@ export namespace Prisma {
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedUpdateManyWithoutDistrictNestedInput
+    memberAddresses?: MemberAddressUncheckedUpdateManyWithoutDistrictNestedInput
   }
 
   export type PmsFormUpsertWithoutFeedbacksInput = {
@@ -29966,6 +32059,295 @@ export namespace Prisma {
     updId?: NullableStringFieldUpdateOperationsInput | string | null
     groups?: PmsFormGroupUncheckedUpdateManyWithoutFormNestedInput
     topics?: PmsFormTopicUncheckedUpdateManyWithoutFormNestedInput
+  }
+
+  export type MemberAddressCreateWithoutMemberInput = {
+    type: string
+    label?: string | null
+    addressDetail?: Bytes | null
+    addressHash?: string | null
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+    county: SysCountyCreateNestedOneWithoutMemberAddressesInput
+    district: SysDistrictCreateNestedOneWithoutMemberAddressesInput
+  }
+
+  export type MemberAddressUncheckedCreateWithoutMemberInput = {
+    id?: number
+    type: string
+    label?: string | null
+    countyCode: string
+    districtCode: string
+    addressDetail?: Bytes | null
+    addressHash?: string | null
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+  }
+
+  export type MemberAddressCreateOrConnectWithoutMemberInput = {
+    where: MemberAddressWhereUniqueInput
+    create: XOR<MemberAddressCreateWithoutMemberInput, MemberAddressUncheckedCreateWithoutMemberInput>
+  }
+
+  export type MemberAddressCreateManyMemberInputEnvelope = {
+    data: MemberAddressCreateManyMemberInput | MemberAddressCreateManyMemberInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MemberAddressUpsertWithWhereUniqueWithoutMemberInput = {
+    where: MemberAddressWhereUniqueInput
+    update: XOR<MemberAddressUpdateWithoutMemberInput, MemberAddressUncheckedUpdateWithoutMemberInput>
+    create: XOR<MemberAddressCreateWithoutMemberInput, MemberAddressUncheckedCreateWithoutMemberInput>
+  }
+
+  export type MemberAddressUpdateWithWhereUniqueWithoutMemberInput = {
+    where: MemberAddressWhereUniqueInput
+    data: XOR<MemberAddressUpdateWithoutMemberInput, MemberAddressUncheckedUpdateWithoutMemberInput>
+  }
+
+  export type MemberAddressUpdateManyWithWhereWithoutMemberInput = {
+    where: MemberAddressScalarWhereInput
+    data: XOR<MemberAddressUpdateManyMutationInput, MemberAddressUncheckedUpdateManyWithoutMemberInput>
+  }
+
+  export type MemberAccountCreateWithoutAddressesInput = {
+    id?: string
+    email?: Bytes | null
+    emailHash?: string | null
+    phone?: Bytes | null
+    phoneHash?: string | null
+    name?: Bytes | null
+    nameHash?: string | null
+    passwordHash: string
+    status?: string
+    isDeleted?: boolean
+    creId: string
+    creTime?: Date | string
+    updId: string
+    updTime?: Date | string
+  }
+
+  export type MemberAccountUncheckedCreateWithoutAddressesInput = {
+    id?: string
+    email?: Bytes | null
+    emailHash?: string | null
+    phone?: Bytes | null
+    phoneHash?: string | null
+    name?: Bytes | null
+    nameHash?: string | null
+    passwordHash: string
+    status?: string
+    isDeleted?: boolean
+    creId: string
+    creTime?: Date | string
+    updId: string
+    updTime?: Date | string
+  }
+
+  export type MemberAccountCreateOrConnectWithoutAddressesInput = {
+    where: MemberAccountWhereUniqueInput
+    create: XOR<MemberAccountCreateWithoutAddressesInput, MemberAccountUncheckedCreateWithoutAddressesInput>
+  }
+
+  export type SysCountyCreateWithoutMemberAddressesInput = {
+    code: string
+    name: string
+    sort: number
+    isDeleted: string
+    updTime: Date | string
+    creTime: Date | string
+    creId?: string
+    updId?: string | null
+    feedbacks?: PmsFormFeedbackCreateNestedManyWithoutCountyInput
+    topicRestrictions?: PmsTopicCountyDistrictRelationCreateNestedManyWithoutCountyInput
+    districts?: SysDistrictCreateNestedManyWithoutCountyInput
+  }
+
+  export type SysCountyUncheckedCreateWithoutMemberAddressesInput = {
+    code: string
+    name: string
+    sort: number
+    isDeleted: string
+    updTime: Date | string
+    creTime: Date | string
+    creId?: string
+    updId?: string | null
+    feedbacks?: PmsFormFeedbackUncheckedCreateNestedManyWithoutCountyInput
+    topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedCreateNestedManyWithoutCountyInput
+    districts?: SysDistrictUncheckedCreateNestedManyWithoutCountyInput
+  }
+
+  export type SysCountyCreateOrConnectWithoutMemberAddressesInput = {
+    where: SysCountyWhereUniqueInput
+    create: XOR<SysCountyCreateWithoutMemberAddressesInput, SysCountyUncheckedCreateWithoutMemberAddressesInput>
+  }
+
+  export type SysDistrictCreateWithoutMemberAddressesInput = {
+    code: string
+    name: string
+    nameWithCounty: string
+    zip: string
+    sort: number
+    isDeleted: string
+    updTime: Date | string
+    creTime: Date | string
+    creId?: string
+    updId?: string | null
+    feedbacks?: PmsFormFeedbackCreateNestedManyWithoutDistrictInput
+    topicRestrictions?: PmsTopicCountyDistrictRelationCreateNestedManyWithoutDistrictInput
+    county: SysCountyCreateNestedOneWithoutDistrictsInput
+  }
+
+  export type SysDistrictUncheckedCreateWithoutMemberAddressesInput = {
+    code: string
+    countyCode: string
+    name: string
+    nameWithCounty: string
+    zip: string
+    sort: number
+    isDeleted: string
+    updTime: Date | string
+    creTime: Date | string
+    creId?: string
+    updId?: string | null
+    feedbacks?: PmsFormFeedbackUncheckedCreateNestedManyWithoutDistrictInput
+    topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedCreateNestedManyWithoutDistrictInput
+  }
+
+  export type SysDistrictCreateOrConnectWithoutMemberAddressesInput = {
+    where: SysDistrictWhereUniqueInput
+    create: XOR<SysDistrictCreateWithoutMemberAddressesInput, SysDistrictUncheckedCreateWithoutMemberAddressesInput>
+  }
+
+  export type MemberAccountUpsertWithoutAddressesInput = {
+    update: XOR<MemberAccountUpdateWithoutAddressesInput, MemberAccountUncheckedUpdateWithoutAddressesInput>
+    create: XOR<MemberAccountCreateWithoutAddressesInput, MemberAccountUncheckedCreateWithoutAddressesInput>
+    where?: MemberAccountWhereInput
+  }
+
+  export type MemberAccountUpdateToOneWithWhereWithoutAddressesInput = {
+    where?: MemberAccountWhereInput
+    data: XOR<MemberAccountUpdateWithoutAddressesInput, MemberAccountUncheckedUpdateWithoutAddressesInput>
+  }
+
+  export type MemberAccountUpdateWithoutAddressesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    emailHash?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    phoneHash?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    nameHash?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creId?: StringFieldUpdateOperationsInput | string
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updId?: StringFieldUpdateOperationsInput | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MemberAccountUncheckedUpdateWithoutAddressesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    emailHash?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    phoneHash?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    nameHash?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creId?: StringFieldUpdateOperationsInput | string
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updId?: StringFieldUpdateOperationsInput | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SysCountyUpsertWithoutMemberAddressesInput = {
+    update: XOR<SysCountyUpdateWithoutMemberAddressesInput, SysCountyUncheckedUpdateWithoutMemberAddressesInput>
+    create: XOR<SysCountyCreateWithoutMemberAddressesInput, SysCountyUncheckedCreateWithoutMemberAddressesInput>
+    where?: SysCountyWhereInput
+  }
+
+  export type SysCountyUpdateToOneWithWhereWithoutMemberAddressesInput = {
+    where?: SysCountyWhereInput
+    data: XOR<SysCountyUpdateWithoutMemberAddressesInput, SysCountyUncheckedUpdateWithoutMemberAddressesInput>
+  }
+
+  export type SysCountyUpdateWithoutMemberAddressesInput = {
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    sort?: IntFieldUpdateOperationsInput | number
+    isDeleted?: StringFieldUpdateOperationsInput | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    creId?: StringFieldUpdateOperationsInput | string
+    updId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbacks?: PmsFormFeedbackUpdateManyWithoutCountyNestedInput
+    topicRestrictions?: PmsTopicCountyDistrictRelationUpdateManyWithoutCountyNestedInput
+    districts?: SysDistrictUpdateManyWithoutCountyNestedInput
+  }
+
+  export type SysCountyUncheckedUpdateWithoutMemberAddressesInput = {
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    sort?: IntFieldUpdateOperationsInput | number
+    isDeleted?: StringFieldUpdateOperationsInput | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    creId?: StringFieldUpdateOperationsInput | string
+    updId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbacks?: PmsFormFeedbackUncheckedUpdateManyWithoutCountyNestedInput
+    topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedUpdateManyWithoutCountyNestedInput
+    districts?: SysDistrictUncheckedUpdateManyWithoutCountyNestedInput
+  }
+
+  export type SysDistrictUpsertWithoutMemberAddressesInput = {
+    update: XOR<SysDistrictUpdateWithoutMemberAddressesInput, SysDistrictUncheckedUpdateWithoutMemberAddressesInput>
+    create: XOR<SysDistrictCreateWithoutMemberAddressesInput, SysDistrictUncheckedCreateWithoutMemberAddressesInput>
+    where?: SysDistrictWhereInput
+  }
+
+  export type SysDistrictUpdateToOneWithWhereWithoutMemberAddressesInput = {
+    where?: SysDistrictWhereInput
+    data: XOR<SysDistrictUpdateWithoutMemberAddressesInput, SysDistrictUncheckedUpdateWithoutMemberAddressesInput>
+  }
+
+  export type SysDistrictUpdateWithoutMemberAddressesInput = {
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    nameWithCounty?: StringFieldUpdateOperationsInput | string
+    zip?: StringFieldUpdateOperationsInput | string
+    sort?: IntFieldUpdateOperationsInput | number
+    isDeleted?: StringFieldUpdateOperationsInput | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    creId?: StringFieldUpdateOperationsInput | string
+    updId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbacks?: PmsFormFeedbackUpdateManyWithoutDistrictNestedInput
+    topicRestrictions?: PmsTopicCountyDistrictRelationUpdateManyWithoutDistrictNestedInput
+    county?: SysCountyUpdateOneRequiredWithoutDistrictsNestedInput
+  }
+
+  export type SysDistrictUncheckedUpdateWithoutMemberAddressesInput = {
+    code?: StringFieldUpdateOperationsInput | string
+    countyCode?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    nameWithCounty?: StringFieldUpdateOperationsInput | string
+    zip?: StringFieldUpdateOperationsInput | string
+    sort?: IntFieldUpdateOperationsInput | number
+    isDeleted?: StringFieldUpdateOperationsInput | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    creId?: StringFieldUpdateOperationsInput | string
+    updId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbacks?: PmsFormFeedbackUncheckedUpdateManyWithoutDistrictNestedInput
+    topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedUpdateManyWithoutDistrictNestedInput
   }
 
   export type CmsHomepageServiceCreateManyVendorInput = {
@@ -30068,6 +32450,20 @@ export namespace Prisma {
     creTime: Date | string
     creId?: string
     updId?: string | null
+  }
+
+  export type MemberAddressCreateManyCountyInput = {
+    id?: number
+    memberId: string
+    type: string
+    label?: string | null
+    districtCode: string
+    addressDetail?: Bytes | null
+    addressHash?: string | null
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
   }
 
   export type SysDistrictCreateManyCountyInput = {
@@ -30203,6 +32599,47 @@ export namespace Prisma {
     updId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type MemberAddressUpdateWithoutCountyInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    addressHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    member?: MemberAccountUpdateOneRequiredWithoutAddressesNestedInput
+    district?: SysDistrictUpdateOneRequiredWithoutMemberAddressesNestedInput
+  }
+
+  export type MemberAddressUncheckedUpdateWithoutCountyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    districtCode?: StringFieldUpdateOperationsInput | string
+    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    addressHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MemberAddressUncheckedUpdateManyWithoutCountyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    districtCode?: StringFieldUpdateOperationsInput | string
+    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    addressHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type SysDistrictUpdateWithoutCountyInput = {
     code?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -30216,6 +32653,7 @@ export namespace Prisma {
     updId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbacks?: PmsFormFeedbackUpdateManyWithoutDistrictNestedInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUpdateManyWithoutDistrictNestedInput
+    memberAddresses?: MemberAddressUpdateManyWithoutDistrictNestedInput
   }
 
   export type SysDistrictUncheckedUpdateWithoutCountyInput = {
@@ -30231,6 +32669,7 @@ export namespace Prisma {
     updId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbacks?: PmsFormFeedbackUncheckedUpdateManyWithoutDistrictNestedInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedUpdateManyWithoutDistrictNestedInput
+    memberAddresses?: MemberAddressUncheckedUpdateManyWithoutDistrictNestedInput
   }
 
   export type SysDistrictUncheckedUpdateManyWithoutCountyInput = {
@@ -30284,6 +32723,20 @@ export namespace Prisma {
     creTime: Date | string
     creId?: string
     updId?: string | null
+  }
+
+  export type MemberAddressCreateManyDistrictInput = {
+    id?: number
+    memberId: string
+    type: string
+    label?: string | null
+    countyCode: string
+    addressDetail?: Bytes | null
+    addressHash?: string | null
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
   }
 
   export type PmsFormFeedbackUpdateWithoutDistrictInput = {
@@ -30404,6 +32857,47 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MemberAddressUpdateWithoutDistrictInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    addressHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    member?: MemberAccountUpdateOneRequiredWithoutAddressesNestedInput
+    county?: SysCountyUpdateOneRequiredWithoutMemberAddressesNestedInput
+  }
+
+  export type MemberAddressUncheckedUpdateWithoutDistrictInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    countyCode?: StringFieldUpdateOperationsInput | string
+    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    addressHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MemberAddressUncheckedUpdateManyWithoutDistrictInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    countyCode?: StringFieldUpdateOperationsInput | string
+    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    addressHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PmsFormFeedbackCreateManyFormInput = {
@@ -30905,6 +33399,61 @@ export namespace Prisma {
     feature?: NullableJsonNullValueInput | InputJsonValue
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MemberAddressCreateManyMemberInput = {
+    id?: number
+    type: string
+    label?: string | null
+    countyCode: string
+    districtCode: string
+    addressDetail?: Bytes | null
+    addressHash?: string | null
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+  }
+
+  export type MemberAddressUpdateWithoutMemberInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    addressHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    county?: SysCountyUpdateOneRequiredWithoutMemberAddressesNestedInput
+    district?: SysDistrictUpdateOneRequiredWithoutMemberAddressesNestedInput
+  }
+
+  export type MemberAddressUncheckedUpdateWithoutMemberInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    countyCode?: StringFieldUpdateOperationsInput | string
+    districtCode?: StringFieldUpdateOperationsInput | string
+    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    addressHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MemberAddressUncheckedUpdateManyWithoutMemberInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    countyCode?: StringFieldUpdateOperationsInput | string
+    districtCode?: StringFieldUpdateOperationsInput | string
+    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    addressHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

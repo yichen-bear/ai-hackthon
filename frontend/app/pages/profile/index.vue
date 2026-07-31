@@ -58,6 +58,14 @@
         </form>
       </section>
 
+      <!-- 常用地址管理卡片 -->
+      <section class="info-card" style="cursor:pointer;" @click="navigateTo('/profile/addresses')">
+        <div class="card-label" :style="{ backgroundColor: '#22c55e' }">📍</div>
+        <h2 class="card-title">常用地址管理</h2>
+        <p class="action-desc">管理您的通訊地址與近期服務地址，填寫表單時可快速帶入。</p>
+        <button class="save-btn" style="background-color:#22c55e;border-color:#22c55e;" @click.stop="navigateTo('/profile/addresses')">管理地址 →</button>
+      </section>
+
       <!-- 帳戶操作卡片 -->
       <section class="info-card action-card">
         <div class="card-label" :style="{ backgroundColor: '#ef4444' }">🚪</div>

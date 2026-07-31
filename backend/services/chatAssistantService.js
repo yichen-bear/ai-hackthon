@@ -850,7 +850,7 @@ function buildMatchingSystemPrompt(forms) {
     .join('\n');
 
   return [
-    '你是網站的 AI 表單助手，透過聊天對話方式協助使用者。你負責判斷使用者需求是否對應以下其中一份表單，或僅是一般問答。',
+    '你是「小統」，一位親切友善的 AI 助手。你的工作是透過聊天對話方式協助使用者填寫表單或回答服務相關問題。請用溫暖、有耐心的語氣與使用者對話，像朋友一樣幫忙。你負責判斷使用者需求是否對應以下其中一份表單，或僅是一般問答。',
     '重要：這是純文字聊天介面，不可使用「點擊這裡」、「請按連結」等指引，因為使用者無法點擊任何東西。若使用者的需求對應到某份表單，直接在 reply_text 中告知使用者你會協助填寫，並將 action 設為 match_form。',
     '可選表單清單：',
     formList || '（目前無啟用中的表單）',
@@ -869,7 +869,7 @@ function buildMatchingSystemPrompt(forms) {
  */
 function buildExtractionSystemPrompt(topic) {
   const lines = [
-    '你是網站的 AI 表單填寫助手，透過聊天對話方式引導使用者回答以下題目。注意：這是純文字聊天介面，不可使用「點擊」、「連結」等指引。',
+    '你是「小統」，一位親切友善的 AI 助手，正透過聊天對話方式引導使用者回答以下題目。請用溫暖、有耐心的語氣對話。注意：這是純文字聊天介面，不可使用「點擊」、「連結」等指引。',
     `題目 id：${topic.id}`,
     `題目內容：${topic.title}`,
     topic.remark ? `補充說明：${topic.remark}` : '',
@@ -1072,6 +1072,40 @@ async function handleFieldExtractionOrOffTopic(session, formMatchingService, llm
   if (isAckOnly) {
     const replyText = `請回答：${buildTopicQuestionText(currentTopic)}`;
     return appendAssistantMessage(session, replyText);
+  }
+
+  // 若使用者的輸入精確匹配目前題目的某個選項名稱，直接接受（不經 LLM）
+  const topicOptions = Array.isArray(currentTopic.options) ? currentTopic.options : [];
+  if (topicOptions.length > 0 && lastUserMsg && typeof lastUserMsg.text === 'string') {
+    const userText = lastUserMsg.text.trim();
+    const matchedOption = topicOptions.find(
+      (opt) => opt.optionName && opt.optionName.trim() === userText
+    );
+
+    if (matchedOption) {
+      let updated = applyFieldExtraction(session, {
+        success: true,
+        fields: {
+          [String(currentTopic.id)]: { topicId: currentTopic.id, value: matchedOption.id },
+        },
+      });
+
+      const nextTopic2 = formMatchingService.selectNextTopic(topics, updated.collectedFields);
+      updated = { ...updated, currentTopicId: nextTopic2 ? nextTopic2.id : null };
+
+      if (!nextTopic2) {
+        updated = applyCompletionCheck(updated, topics);
+      }
+
+      const replyText =
+        updated.stage === 'confirming'
+          ? buildSummaryText(topics, updated.collectedFields)
+          : nextTopic2
+            ? `好的，您選擇了${matchedOption.optionName}。\n\n接下來請回答：${buildTopicQuestionText(nextTopic2)}`
+            : `好的，您選擇了${matchedOption.optionName}。所有題目皆已完成。`;
+
+      return appendAssistantMessage(updated, replyText);
+    }
   }
 
   const systemPrompt = buildExtractionSystemPrompt(currentTopic);
