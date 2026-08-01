@@ -499,6 +499,7 @@ model ActivityRegistration {
   userPhone    String?  @map("user_phone") @db.VarChar(20)
   status       String   @default("registered") @db.VarChar(20)  // registered, waitlisted, cancelled, attended
   source       String   @default("app") @db.VarChar(20)  // app, onsite, delegate
+  specialNeeds String?  @map("special_needs") @db.VarChar(200)
   registeredAt DateTime @default(now()) @map("registered_at") @db.Timestamptz(6)
 
   activity     CommunityActivity @relation(fields: [activityId], references: [id])

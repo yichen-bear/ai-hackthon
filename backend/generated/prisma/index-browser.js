@@ -508,6 +508,7 @@ exports.Prisma.ActivityRegistrationScalarFieldEnum = {
   userPhone: 'userPhone',
   status: 'status',
   source: 'source',
+  specialNeeds: 'specialNeeds',
   registeredAt: 'registeredAt'
 };
 

@@ -30734,6 +30734,7 @@ export namespace Prisma {
     userPhone: string | null
     status: string | null
     source: string | null
+    specialNeeds: string | null
     registeredAt: Date | null
   }
 
@@ -30745,6 +30746,7 @@ export namespace Prisma {
     userPhone: string | null
     status: string | null
     source: string | null
+    specialNeeds: string | null
     registeredAt: Date | null
   }
 
@@ -30756,6 +30758,7 @@ export namespace Prisma {
     userPhone: number
     status: number
     source: number
+    specialNeeds: number
     registeredAt: number
     _all: number
   }
@@ -30769,6 +30772,7 @@ export namespace Prisma {
     userPhone?: true
     status?: true
     source?: true
+    specialNeeds?: true
     registeredAt?: true
   }
 
@@ -30780,6 +30784,7 @@ export namespace Prisma {
     userPhone?: true
     status?: true
     source?: true
+    specialNeeds?: true
     registeredAt?: true
   }
 
@@ -30791,6 +30796,7 @@ export namespace Prisma {
     userPhone?: true
     status?: true
     source?: true
+    specialNeeds?: true
     registeredAt?: true
     _all?: true
   }
@@ -30875,6 +30881,7 @@ export namespace Prisma {
     userPhone: string | null
     status: string
     source: string
+    specialNeeds: string | null
     registeredAt: Date
     _count: ActivityRegistrationCountAggregateOutputType | null
     _min: ActivityRegistrationMinAggregateOutputType | null
@@ -30903,6 +30910,7 @@ export namespace Prisma {
     userPhone?: boolean
     status?: boolean
     source?: boolean
+    specialNeeds?: boolean
     registeredAt?: boolean
     activity?: boolean | CommunityActivityDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["activityRegistration"]>
@@ -30915,6 +30923,7 @@ export namespace Prisma {
     userPhone?: boolean
     status?: boolean
     source?: boolean
+    specialNeeds?: boolean
     registeredAt?: boolean
     activity?: boolean | CommunityActivityDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["activityRegistration"]>
@@ -30927,6 +30936,7 @@ export namespace Prisma {
     userPhone?: boolean
     status?: boolean
     source?: boolean
+    specialNeeds?: boolean
     registeredAt?: boolean
     activity?: boolean | CommunityActivityDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["activityRegistration"]>
@@ -30939,10 +30949,11 @@ export namespace Prisma {
     userPhone?: boolean
     status?: boolean
     source?: boolean
+    specialNeeds?: boolean
     registeredAt?: boolean
   }
 
-  export type ActivityRegistrationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "activityId" | "userId" | "userName" | "userPhone" | "status" | "source" | "registeredAt", ExtArgs["result"]["activityRegistration"]>
+  export type ActivityRegistrationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "activityId" | "userId" | "userName" | "userPhone" | "status" | "source" | "specialNeeds" | "registeredAt", ExtArgs["result"]["activityRegistration"]>
   export type ActivityRegistrationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     activity?: boolean | CommunityActivityDefaultArgs<ExtArgs>
   }
@@ -30966,6 +30977,7 @@ export namespace Prisma {
       userPhone: string | null
       status: string
       source: string
+      specialNeeds: string | null
       registeredAt: Date
     }, ExtArgs["result"]["activityRegistration"]>
     composites: {}
@@ -31398,6 +31410,7 @@ export namespace Prisma {
     readonly userPhone: FieldRef<"ActivityRegistration", 'String'>
     readonly status: FieldRef<"ActivityRegistration", 'String'>
     readonly source: FieldRef<"ActivityRegistration", 'String'>
+    readonly specialNeeds: FieldRef<"ActivityRegistration", 'String'>
     readonly registeredAt: FieldRef<"ActivityRegistration", 'DateTime'>
   }
     
@@ -33377,6 +33390,7 @@ export namespace Prisma {
     userPhone: 'userPhone',
     status: 'status',
     source: 'source',
+    specialNeeds: 'specialNeeds',
     registeredAt: 'registeredAt'
   };
 
@@ -35919,6 +35933,7 @@ export namespace Prisma {
     userPhone?: StringNullableFilter<"ActivityRegistration"> | string | null
     status?: StringFilter<"ActivityRegistration"> | string
     source?: StringFilter<"ActivityRegistration"> | string
+    specialNeeds?: StringNullableFilter<"ActivityRegistration"> | string | null
     registeredAt?: DateTimeFilter<"ActivityRegistration"> | Date | string
     activity?: XOR<CommunityActivityScalarRelationFilter, CommunityActivityWhereInput>
   }
@@ -35931,6 +35946,7 @@ export namespace Prisma {
     userPhone?: SortOrderInput | SortOrder
     status?: SortOrder
     source?: SortOrder
+    specialNeeds?: SortOrderInput | SortOrder
     registeredAt?: SortOrder
     activity?: CommunityActivityOrderByWithRelationInput
   }
@@ -35947,6 +35963,7 @@ export namespace Prisma {
     userPhone?: StringNullableFilter<"ActivityRegistration"> | string | null
     status?: StringFilter<"ActivityRegistration"> | string
     source?: StringFilter<"ActivityRegistration"> | string
+    specialNeeds?: StringNullableFilter<"ActivityRegistration"> | string | null
     registeredAt?: DateTimeFilter<"ActivityRegistration"> | Date | string
     activity?: XOR<CommunityActivityScalarRelationFilter, CommunityActivityWhereInput>
   }, "id" | "activityId_userId">
@@ -35959,6 +35976,7 @@ export namespace Prisma {
     userPhone?: SortOrderInput | SortOrder
     status?: SortOrder
     source?: SortOrder
+    specialNeeds?: SortOrderInput | SortOrder
     registeredAt?: SortOrder
     _count?: ActivityRegistrationCountOrderByAggregateInput
     _max?: ActivityRegistrationMaxOrderByAggregateInput
@@ -35976,6 +35994,7 @@ export namespace Prisma {
     userPhone?: StringNullableWithAggregatesFilter<"ActivityRegistration"> | string | null
     status?: StringWithAggregatesFilter<"ActivityRegistration"> | string
     source?: StringWithAggregatesFilter<"ActivityRegistration"> | string
+    specialNeeds?: StringNullableWithAggregatesFilter<"ActivityRegistration"> | string | null
     registeredAt?: DateTimeWithAggregatesFilter<"ActivityRegistration"> | Date | string
   }
 
@@ -38776,6 +38795,7 @@ export namespace Prisma {
     userPhone?: string | null
     status?: string
     source?: string
+    specialNeeds?: string | null
     registeredAt?: Date | string
     activity: CommunityActivityCreateNestedOneWithoutRegistrationsInput
   }
@@ -38788,6 +38808,7 @@ export namespace Prisma {
     userPhone?: string | null
     status?: string
     source?: string
+    specialNeeds?: string | null
     registeredAt?: Date | string
   }
 
@@ -38798,6 +38819,7 @@ export namespace Prisma {
     userPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
+    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     activity?: CommunityActivityUpdateOneRequiredWithoutRegistrationsNestedInput
   }
@@ -38810,6 +38832,7 @@ export namespace Prisma {
     userPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
+    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -38821,6 +38844,7 @@ export namespace Prisma {
     userPhone?: string | null
     status?: string
     source?: string
+    specialNeeds?: string | null
     registeredAt?: Date | string
   }
 
@@ -38831,6 +38855,7 @@ export namespace Prisma {
     userPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
+    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -38842,6 +38867,7 @@ export namespace Prisma {
     userPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
+    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -40951,6 +40977,7 @@ export namespace Prisma {
     userPhone?: SortOrder
     status?: SortOrder
     source?: SortOrder
+    specialNeeds?: SortOrder
     registeredAt?: SortOrder
   }
 
@@ -40962,6 +40989,7 @@ export namespace Prisma {
     userPhone?: SortOrder
     status?: SortOrder
     source?: SortOrder
+    specialNeeds?: SortOrder
     registeredAt?: SortOrder
   }
 
@@ -40973,6 +41001,7 @@ export namespace Prisma {
     userPhone?: SortOrder
     status?: SortOrder
     source?: SortOrder
+    specialNeeds?: SortOrder
     registeredAt?: SortOrder
   }
 
@@ -45931,6 +45960,7 @@ export namespace Prisma {
     userPhone?: string | null
     status?: string
     source?: string
+    specialNeeds?: string | null
     registeredAt?: Date | string
   }
 
@@ -45941,6 +45971,7 @@ export namespace Prisma {
     userPhone?: string | null
     status?: string
     source?: string
+    specialNeeds?: string | null
     registeredAt?: Date | string
   }
 
@@ -45981,6 +46012,7 @@ export namespace Prisma {
     userPhone?: StringNullableFilter<"ActivityRegistration"> | string | null
     status?: StringFilter<"ActivityRegistration"> | string
     source?: StringFilter<"ActivityRegistration"> | string
+    specialNeeds?: StringNullableFilter<"ActivityRegistration"> | string | null
     registeredAt?: DateTimeFilter<"ActivityRegistration"> | Date | string
   }
 
@@ -47397,6 +47429,7 @@ export namespace Prisma {
     userPhone?: string | null
     status?: string
     source?: string
+    specialNeeds?: string | null
     registeredAt?: Date | string
   }
 
@@ -47407,6 +47440,7 @@ export namespace Prisma {
     userPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
+    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -47417,6 +47451,7 @@ export namespace Prisma {
     userPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
+    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -47427,6 +47462,7 @@ export namespace Prisma {
     userPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
+    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
