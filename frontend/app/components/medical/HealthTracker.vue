@@ -38,17 +38,8 @@ onMounted(() => {
       <span class="ht-loading__text">載入健康追蹤資料中...</span>
     </div>
 
-    <!-- 無資料空狀態 -->
-    <div v-else-if="!data" class="ht-empty">
-      <div class="ht-empty__icon">🤖</div>
-      <p class="ht-empty__title">尚未設定 AI 健康追蹤</p>
-      <p class="ht-empty__desc">
-        透過 AI 助手對話，設定您的飲水目標與保健品提醒，資料將自動同步至此。
-      </p>
-      <button class="ht-empty__btn" @click="refresh">
-        🔄 重新整理
-      </button>
-    </div>
+    <!-- 無資料：不顯示 -->
+    <template v-else-if="!data" />
 
     <!-- 有資料：顯示卡片 -->
     <template v-else>

@@ -51,9 +51,9 @@ model SysCounty {
   creTime           DateTime                         @map("cre_time") @db.Timestamptz(6)
   creId             String                           @default(uuid()) @map("cre_id") @db.Uuid
   updId             String?                          @map("upd_id") @db.Uuid
+  memberAddresses   MemberAddress[]
   feedbacks         PmsFormFeedback[]
   topicRestrictions PmsTopicCountyDistrictRelation[]
-  memberAddresses   MemberAddress[]
   districts         SysDistrict[]
 
   @@map("sys_county")
@@ -71,9 +71,9 @@ model SysDistrict {
   creTime           DateTime                         @map("cre_time") @db.Timestamptz(6)
   creId             String                           @default(uuid()) @map("cre_id") @db.Uuid
   updId             String?                          @map("upd_id") @db.Uuid
+  memberAddresses   MemberAddress[]
   feedbacks         PmsFormFeedback[]
   topicRestrictions PmsTopicCountyDistrictRelation[]
-  memberAddresses   MemberAddress[]
   county            SysCounty                        @relation(fields: [countyCode], references: [code])
 
   @@map("sys_district")
@@ -296,42 +296,41 @@ model MmsOrderRecord {
 }
 
 model MemberAccount {
-  id                 String          @id @default(uuid()) @db.Uuid
-  email              Bytes?
-  emailHash          String?         @unique @map("email_hash") @db.VarChar(64)
-  phone              Bytes?
-  phoneHash          String?         @unique @map("phone_hash") @db.VarChar(64)
-  name               Bytes?
-  nameHash           String?         @map("name_hash") @db.VarChar(64)
-  passwordHash       String          @map("password_hash") @db.VarChar(255)
-  communityNickname  String?         @map("community_nickname") @db.VarChar(30)
-  status             String          @default("01") @map("status") @db.VarChar(2)
-  isDeleted          Boolean         @default(false) @map("is_deleted")
-  creId              String          @map("cre_id") @db.Uuid
-  creTime            DateTime        @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updId              String          @map("upd_id") @db.Uuid
-  updTime            DateTime        @default(now()) @map("upd_time") @db.Timestamptz(6)
-  addresses          MemberAddress[]
+  id           String          @id @default(uuid()) @db.Uuid
+  email        Bytes?
+  emailHash    String?         @unique @map("email_hash") @db.VarChar(64)
+  phone        Bytes?
+  phoneHash    String?         @unique @map("phone_hash") @db.VarChar(64)
+  name         Bytes?
+  nameHash     String?         @map("name_hash") @db.VarChar(64)
+  passwordHash String          @map("password_hash") @db.VarChar(255)
+  status       String          @default("01") @map("status") @db.VarChar(2)
+  isDeleted    Boolean         @default(false) @map("is_deleted")
+  creId        String          @map("cre_id") @db.Uuid
+  creTime      DateTime        @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updId        String          @map("upd_id") @db.Uuid
+  updTime      DateTime        @default(now()) @map("upd_time") @db.Timestamptz(6)
+  addresses    MemberAddress[]
 
   @@map("member_account")
 }
 
 model MemberAddress {
-  id                Int         @id @default(autoincrement())
-  memberId          String      @map("member_id") @db.Uuid
-  type              String      @default("mailing") @db.VarChar(20)
-  label             String?     @db.VarChar(50)
-  countyCode        String      @map("county_code") @db.VarChar(2)
-  districtCode      String      @map("district_code") @db.VarChar(3)
-  addressDetail     Bytes?      @map("address_detail")
-  addressDetailHash String?     @map("address_detail_hash") @db.VarChar(64)
-  isDefault         Boolean     @default(false) @map("is_default")
-  isDeleted         Boolean     @default(false) @map("is_deleted")
-  creTime           DateTime    @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updTime           DateTime    @default(now()) @map("upd_time") @db.Timestamptz(6)
+  id                Int           @id @default(autoincrement())
+  memberId          String        @map("member_id") @db.Uuid
+  type              String        @default("mailing") @db.VarChar(20)
+  label             String?       @db.VarChar(50)
+  countyCode        String        @map("county_code") @db.VarChar(2)
+  districtCode      String        @map("district_code") @db.VarChar(3)
+  addressDetail     Bytes?        @map("address_detail")
+  addressDetailHash String?       @map("address_detail_hash") @db.VarChar(64)
+  isDefault         Boolean       @default(false) @map("is_default")
+  isDeleted         Boolean       @default(false) @map("is_deleted")
+  creTime           DateTime      @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updTime           DateTime      @default(now()) @map("upd_time") @db.Timestamptz(6)
+  county            SysCounty     @relation(fields: [countyCode], references: [code])
+  district          SysDistrict   @relation(fields: [districtCode], references: [code])
   member            MemberAccount @relation(fields: [memberId], references: [id])
-  county            SysCounty   @relation(fields: [countyCode], references: [code])
-  district          SysDistrict @relation(fields: [districtCode], references: [code])
 
   @@map("member_address")
 }
@@ -381,19 +380,19 @@ model SecondhandListing {
 }
 
 model ChatMessage {
-  id              String             @id @default(uuid()) @db.Uuid
-  senderId        String             @map("sender_id") @db.Uuid
-  senderName      String             @map("sender_name") @db.VarChar(50)
-  receiverId      String?            @map("receiver_id") @db.Uuid
-  receiverName    String?            @map("receiver_name") @db.VarChar(50)
-  listingId       String?            @map("listing_id") @db.Uuid
-  content         String             @db.VarChar(1000)
-  messageType     String             @default("text") @map("message_type") @db.VarChar(20)
-  isRead          Boolean            @default(false) @map("is_read")
-  creTime         DateTime           @default(now()) @map("cre_time") @db.Timestamptz(6)
-  groupId         String?            @map("group_id") @db.Uuid
-  listing         SecondhandListing? @relation(fields: [listingId], references: [id])
-  group           CommunityGroup?   @relation(fields: [groupId], references: [id])
+  id           String             @id @default(uuid()) @db.Uuid
+  senderId     String             @map("sender_id") @db.Uuid
+  senderName   String             @map("sender_name") @db.VarChar(50)
+  receiverId   String?            @map("receiver_id") @db.Uuid
+  receiverName String?            @map("receiver_name") @db.VarChar(50)
+  listingId    String?            @map("listing_id") @db.Uuid
+  content      String             @db.VarChar(1000)
+  messageType  String             @default("text") @map("message_type") @db.VarChar(20)
+  isRead       Boolean            @default(false) @map("is_read")
+  creTime      DateTime           @default(now()) @map("cre_time") @db.Timestamptz(6)
+  groupId      String?            @map("group_id") @db.Uuid
+  group        CommunityGroup?    @relation(fields: [groupId], references: [id])
+  listing      SecondhandListing? @relation(fields: [listingId], references: [id])
 
   @@index([senderId, receiverId])
   @@index([receiverId, isRead])
@@ -401,38 +400,34 @@ model ChatMessage {
   @@map("chat_message")
 }
 
-// ?��????�趣社群 ?��???
-
 model CommunityGroup {
-  id          String   @id @default(uuid()) @db.Uuid
-  name        String   @db.VarChar(50)
-  type        String   @db.VarChar(20)  // interest, course
-  icon        String   @db.VarChar(10)
-  tags        String[] @default([])
-  description String?  @db.VarChar(200)
-  maxMembers  Int      @default(50) @map("max_members")
-  activityDate     String?  @map("activity_date") @db.VarChar(50)
-  activityTime     String?  @map("activity_time") @db.VarChar(50)
-  activityLocation String?  @map("activity_location") @db.VarChar(100)
-  creatorId   String   @map("creator_id") @db.Uuid
-  creatorName String   @map("creator_name") @db.VarChar(50)
-  isDeleted   Boolean  @default(false) @map("is_deleted")
-  creTime     DateTime @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updTime     DateTime @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
-
-  members     GroupMember[]
-  messages    ChatMessage[]
+  id               String        @id @default(uuid()) @db.Uuid
+  name             String        @db.VarChar(50)
+  type             String        @db.VarChar(20)
+  icon             String        @db.VarChar(10)
+  tags             String[]      @default([])
+  description      String?       @db.VarChar(200)
+  maxMembers       Int           @default(50) @map("max_members")
+  activityDate     String?       @map("activity_date") @db.VarChar(50)
+  activityTime     String?       @map("activity_time") @db.VarChar(50)
+  activityLocation String?       @map("activity_location") @db.VarChar(100)
+  creatorId        String        @map("creator_id") @db.Uuid
+  creatorName      String        @map("creator_name") @db.VarChar(50)
+  isDeleted        Boolean       @default(false) @map("is_deleted")
+  creTime          DateTime      @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updTime          DateTime      @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
+  messages         ChatMessage[]
+  members          GroupMember[]
 
   @@map("community_group")
 }
 
 model GroupMember {
-  id       String   @id @default(uuid()) @db.Uuid
-  groupId  String   @map("group_id") @db.Uuid
-  userId   String   @map("user_id") @db.Uuid
-  userName String   @map("user_name") @db.VarChar(50)
-  joinedAt DateTime @default(now()) @map("joined_at") @db.Timestamptz(6)
-
+  id       String         @id @default(uuid()) @db.Uuid
+  groupId  String         @map("group_id") @db.Uuid
+  userId   String         @map("user_id") @db.Uuid
+  userName String         @map("user_name") @db.VarChar(50)
+  joinedAt DateTime       @default(now()) @map("joined_at") @db.Timestamptz(6)
   group    CommunityGroup @relation(fields: [groupId], references: [id])
 
   @@unique([groupId, userId])
@@ -454,119 +449,7 @@ model PickupReservation {
   creTime        DateTime          @default(now()) @map("cre_time") @db.Timestamptz(6)
   updTime        DateTime          @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
   pickupDeadline DateTime?         @map("pickup_deadline") @db.Timestamptz(6)
-  storedAt       DateTime?         @map("stored_at") @db.Timestamptz(6)
   listing        SecondhandListing @relation(fields: [listingId], references: [id])
 
   @@map("pickup_reservation")
-}
-
-
-
-
-
-// ═══ 社區活動模組 ═══
-
-model CommunityActivity {
-  id                  String   @id @default(uuid()) @db.Uuid
-  title               String   @db.VarChar(100)
-  description         String?  @db.VarChar(500)
-  category            String   @default("general") @db.VarChar(20)
-  location            String?  @db.VarChar(100)
-  activityDate        DateTime @map("activity_date") @db.Timestamptz(6)
-  activityEndDate     DateTime? @map("activity_end_date") @db.Timestamptz(6)
-  maxParticipants     Int      @default(50) @map("max_participants")
-  extraParticipants   Int      @default(0) @map("extra_participants")
-  volunteersNeeded    Int      @default(0) @map("volunteers_needed")
-  volunteersAssigned  Int      @default(0) @map("volunteers_assigned")
-  status              String   @default("open") @db.VarChar(20)
-  imageUrl            String?  @map("image_url")
-  organizerId         String   @map("organizer_id") @db.Uuid
-  organizerName       String   @map("organizer_name") @db.VarChar(50)
-  isDeleted           Boolean  @default(false) @map("is_deleted")
-  creTime             DateTime @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updTime             DateTime @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
-
-  registrations       ActivityRegistration[]
-
-  @@map("community_activity")
-}
-
-model ActivityRegistration {
-  id           String   @id @default(uuid()) @db.Uuid
-  activityId   String   @map("activity_id") @db.Uuid
-  userId       String   @map("user_id") @db.Uuid
-  userName     String   @map("user_name") @db.VarChar(50)
-  userPhone    String?  @map("user_phone") @db.VarChar(20)
-  status       String   @default("registered") @db.VarChar(20)  // registered, waitlisted, cancelled, attended
-  source       String   @default("app") @db.VarChar(20)  // app, onsite, delegate
-  specialNeeds String?  @map("special_needs") @db.VarChar(200)
-  registeredAt DateTime @default(now()) @map("registered_at") @db.Timestamptz(6)
-
-  activity     CommunityActivity @relation(fields: [activityId], references: [id])
-
-  @@unique([activityId, userId])
-  @@map("activity_registration")
-}
-
-model CommunityQuestion {
-  id            String    @id @default(uuid()) @db.Uuid
-  askerId       String    @map("asker_id") @db.Uuid
-  askerName     String    @map("asker_name") @db.VarChar(50)
-  content       String    @db.VarChar(500)
-  category      String    @default("general") @db.VarChar(20)  // general, facility, noise, safety, suggestion
-  isAnonymous   Boolean   @default(false) @map("is_anonymous")
-  replyContent  String?   @map("reply_content") @db.VarChar(500)
-  repliedAt     DateTime? @map("replied_at") @db.Timestamptz(6)
-  repliedBy     String?   @map("replied_by") @db.VarChar(50)
-  status        String    @default("pending") @db.VarChar(20)  // pending, replied, closed
-  isDeleted     Boolean   @default(false) @map("is_deleted")
-  creTime       DateTime  @default(now()) @map("cre_time") @db.Timestamptz(6)
-
-  @@map("community_question")
-}
-
-
-// ═══ yoxi 叫車模組 ═══
-
-model Driver {
-  id           String   @id @default(uuid()) @db.Uuid
-  name         String   @db.VarChar(50)
-  phone        String   @db.VarChar(20)
-  plateNumber  String   @map("plate_number") @db.VarChar(20)
-  carModel     String   @map("car_model") @db.VarChar(50)
-  carType      String   @default("sedan") @map("car_type") @db.VarChar(20)  // sedan, van, accessible, pet-friendly
-  rating       Decimal  @default(5.0) @db.Decimal(2, 1)
-  totalTrips   Int      @default(0) @map("total_trips")
-  status       String   @default("available") @db.VarChar(20)  // available, busy, offline
-  isDeleted    Boolean  @default(false) @map("is_deleted")
-  creTime      DateTime @default(now()) @map("cre_time") @db.Timestamptz(6)
-
-  rideOrders   RideOrder[]
-
-  @@map("driver")
-}
-
-model RideOrder {
-  id              String    @id @default(uuid()) @db.Uuid
-  passengerId     String    @map("passenger_id") @db.Uuid
-  passengerName   String    @map("passenger_name") @db.VarChar(50)
-  passengerPhone  String?   @map("passenger_phone") @db.VarChar(20)
-  pickup          String    @db.VarChar(200)
-  destination     String    @db.VarChar(200)
-  carType         String    @default("sedan") @map("car_type") @db.VarChar(20)
-  mode            String    @default("instant") @db.VarChar(20)  // instant, scheduled
-  scheduledAt     DateTime? @map("scheduled_at") @db.Timestamptz(6)
-  status          String    @default("pending") @db.VarChar(20)  // pending, dispatched, in_progress, completed, cancelled
-  driverId        String?   @map("driver_id") @db.Uuid
-  fare            Int?
-  distance        Decimal?  @db.Decimal(5, 1)
-  rating          Int?      // 1-5 乘客評分
-  ratingComment   String?   @map("rating_comment") @db.VarChar(200)
-  creTime         DateTime  @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updTime         DateTime  @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
-  completedAt     DateTime? @map("completed_at") @db.Timestamptz(6)
-
-  driver          Driver?   @relation(fields: [driverId], references: [id])
-
-  @@map("ride_order")
 }

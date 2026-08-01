@@ -359,7 +359,6 @@ exports.Prisma.MemberAccountScalarFieldEnum = {
   name: 'name',
   nameHash: 'nameHash',
   passwordHash: 'passwordHash',
-  communityNickname: 'communityNickname',
   status: 'status',
   isDeleted: 'isDeleted',
   creId: 'creId',
@@ -475,91 +474,7 @@ exports.Prisma.PickupReservationScalarFieldEnum = {
   scheduledAt: 'scheduledAt',
   creTime: 'creTime',
   updTime: 'updTime',
-  pickupDeadline: 'pickupDeadline',
-  storedAt: 'storedAt'
-};
-
-exports.Prisma.CommunityActivityScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  description: 'description',
-  category: 'category',
-  location: 'location',
-  activityDate: 'activityDate',
-  activityEndDate: 'activityEndDate',
-  maxParticipants: 'maxParticipants',
-  extraParticipants: 'extraParticipants',
-  volunteersNeeded: 'volunteersNeeded',
-  volunteersAssigned: 'volunteersAssigned',
-  status: 'status',
-  imageUrl: 'imageUrl',
-  organizerId: 'organizerId',
-  organizerName: 'organizerName',
-  isDeleted: 'isDeleted',
-  creTime: 'creTime',
-  updTime: 'updTime'
-};
-
-exports.Prisma.ActivityRegistrationScalarFieldEnum = {
-  id: 'id',
-  activityId: 'activityId',
-  userId: 'userId',
-  userName: 'userName',
-  userPhone: 'userPhone',
-  status: 'status',
-  source: 'source',
-  specialNeeds: 'specialNeeds',
-  registeredAt: 'registeredAt'
-};
-
-exports.Prisma.CommunityQuestionScalarFieldEnum = {
-  id: 'id',
-  askerId: 'askerId',
-  askerName: 'askerName',
-  content: 'content',
-  category: 'category',
-  isAnonymous: 'isAnonymous',
-  replyContent: 'replyContent',
-  repliedAt: 'repliedAt',
-  repliedBy: 'repliedBy',
-  status: 'status',
-  isDeleted: 'isDeleted',
-  creTime: 'creTime'
-};
-
-exports.Prisma.DriverScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  phone: 'phone',
-  plateNumber: 'plateNumber',
-  carModel: 'carModel',
-  carType: 'carType',
-  rating: 'rating',
-  totalTrips: 'totalTrips',
-  status: 'status',
-  isDeleted: 'isDeleted',
-  creTime: 'creTime'
-};
-
-exports.Prisma.RideOrderScalarFieldEnum = {
-  id: 'id',
-  passengerId: 'passengerId',
-  passengerName: 'passengerName',
-  passengerPhone: 'passengerPhone',
-  pickup: 'pickup',
-  destination: 'destination',
-  carType: 'carType',
-  mode: 'mode',
-  scheduledAt: 'scheduledAt',
-  status: 'status',
-  driverId: 'driverId',
-  fare: 'fare',
-  distance: 'distance',
-  rating: 'rating',
-  ratingComment: 'ratingComment',
-  creTime: 'creTime',
-  updTime: 'updTime',
-  completedAt: 'completedAt'
+  pickupDeadline: 'pickupDeadline'
 };
 
 exports.Prisma.SortOrder = {
@@ -614,12 +529,7 @@ exports.Prisma.ModelName = {
   ChatMessage: 'ChatMessage',
   CommunityGroup: 'CommunityGroup',
   GroupMember: 'GroupMember',
-  PickupReservation: 'PickupReservation',
-  CommunityActivity: 'CommunityActivity',
-  ActivityRegistration: 'ActivityRegistration',
-  CommunityQuestion: 'CommunityQuestion',
-  Driver: 'Driver',
-  RideOrder: 'RideOrder'
+  PickupReservation: 'PickupReservation'
 };
 
 /**

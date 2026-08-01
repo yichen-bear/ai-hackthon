@@ -66,9 +66,72 @@ function decrementTables() {
   if (availableTables.value > 0) availableTables.value--
 }
 
-function syncToClient() {
-  showToast('✅ 已同步空位資訊至客戶端')
+const LINKED_PLACE_ID = 'linked_restaurant_01'
+
+async function syncToClient() {
+  try {
+    await $fetch('http://localhost:3001/api/queue/admin/update', {
+      method: 'PUT',
+      body: {
+        placeId: LINKED_PLACE_ID,
+        emptyTables: availableTables.value,
+      },
+    })
+    showToast('✅ 已同步空位資訊至客戶端')
+  } catch {
+    showToast('❌ 同步失敗，請稍後再試')
+  }
 }
+
+// ─── 桌位分配情況 ───
+const showSeatPanel = ref(false)
+const seatLoading = ref(false)
+const seatedCustomers = ref<{ id: number; ticketNumber: number; partySize: number; customerName: string; customerPhone: string; note: string | null }[]>([])
+const waitingCustomers = ref<{ id: number; ticketNumber: number; partySize: number; customerName: string; customerPhone: string; note: string | null }[]>([])
+
+async function fetchSeatDetail() {
+  seatLoading.value = true
+  try {
+    const res = await $fetch<{ success: boolean; data: any }>(`http://localhost:3001/api/queue/detail/${LINKED_PLACE_ID}`)
+    if (res.success) {
+      seatedCustomers.value = res.data.seated
+      waitingCustomers.value = res.data.waiting
+      availableTables.value = res.data.emptyTables
+      waitingGroups.value = res.data.waitingGroups
+    }
+  } catch {
+    showToast('❌ 無法載入桌位資訊')
+  } finally {
+    seatLoading.value = false
+  }
+}
+
+function openSeatPanel() {
+  showSeatPanel.value = true
+  fetchSeatDetail()
+}
+
+function closeSeatPanel() {
+  showSeatPanel.value = false
+}
+
+async function callNextCustomer() {
+  try {
+    await $fetch('http://localhost:3001/api/queue/admin/call-next', {
+      method: 'POST',
+      body: { placeId: LINKED_PLACE_ID },
+    })
+    showToast('✅ 已叫號，下一組入座')
+    await fetchSeatDetail()
+  } catch {
+    showToast('❌ 叫號失敗')
+  }
+}
+
+// 進入頁面時載入即時資料
+onMounted(() => {
+  fetchSeatDetail()
+})
 
 // ─── 日曆與時段管理 ───
 const weekdays = ['日', '一', '二', '三', '四', '五', '六']
@@ -424,6 +487,12 @@ function completeOrder(order: TakeoutOrder) {
             >
               📲 連動同步至客戶端
             </button>
+            <button
+              class="w-full py-2.5 bg-blue-500 text-white rounded-xl text-base font-bold cursor-pointer border-none hover:bg-blue-600 active:scale-[0.97] transition-all shadow-md"
+              @click="openSeatPanel"
+            >
+              🪑 看桌位分配情況
+            </button>
           </div>
 
           <!-- ═══ 📅 訂位日曆與時段空位連動管理 ═══ -->
@@ -512,6 +581,65 @@ function completeOrder(order: TakeoutOrder) {
             <p class="text-xs text-slate-400 m-0 text-center leading-relaxed">
               💡 此處設定的日期與時段空位，將即時連線同步至客戶端『想吃什麼 ➔ 訂位』選單中。
             </p>
+          </div>
+        </section>
+
+        <!-- ═══ 桌位分配情況面板 ═══ -->
+        <section v-if="showSeatPanel" class="fixed inset-0 z-40 bg-black/40 flex items-end justify-center">
+          <div class="bg-white w-full max-w-md rounded-t-3xl p-5 flex flex-col gap-4 max-h-[85vh] overflow-y-auto">
+            <!-- Header -->
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-bold text-slate-900 m-0">🪑 桌位分配情況</h3>
+              <button class="text-2xl text-slate-400 cursor-pointer border-none bg-transparent" @click="closeSeatPanel">✕</button>
+            </div>
+
+            <!-- Loading -->
+            <div v-if="seatLoading" class="text-center py-8 text-slate-500 text-sm">載入中...</div>
+
+            <template v-else>
+              <!-- 在座顧客 -->
+              <div>
+                <h4 class="text-sm font-bold text-green-700 mb-2">🟢 在座顧客（{{ seatedCustomers.length }} 桌）</h4>
+                <div class="grid grid-cols-2 gap-2">
+                  <div
+                    v-for="c in seatedCustomers"
+                    :key="c.id"
+                    class="bg-green-50 border border-green-200 rounded-xl p-3 flex flex-col gap-1"
+                  >
+                    <span class="text-sm font-bold text-slate-900">{{ c.customerName }}</span>
+                    <span class="text-xs text-slate-500">📞 {{ c.customerPhone }}</span>
+                    <span class="text-xs text-green-700 font-semibold">{{ c.partySize }} 位用餐</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 候位顧客 -->
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <h4 class="text-sm font-bold text-orange-700 m-0">🟡 候位顧客（{{ waitingCustomers.length }} 組）</h4>
+                  <button
+                    v-if="waitingCustomers.length > 0"
+                    class="px-3 py-1.5 bg-orange-500 text-white text-xs font-bold rounded-lg border-none cursor-pointer hover:bg-orange-600 active:scale-95 transition-all"
+                    @click="callNextCustomer"
+                  >
+                    📢 叫下一號
+                  </button>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div
+                    v-for="c in waitingCustomers"
+                    :key="c.id"
+                    class="bg-orange-50 border border-orange-200 rounded-xl p-3 flex flex-col gap-1"
+                  >
+                    <span class="text-sm font-bold text-slate-900">{{ c.customerName }}</span>
+                    <span class="text-xs text-slate-500">📞 {{ c.customerPhone }}</span>
+                    <span class="text-xs text-orange-700 font-semibold">{{ c.partySize }} 位候位</span>
+                    <span v-if="c.note" class="text-xs text-amber-600">📝 {{ c.note }}</span>
+                  </div>
+                </div>
+                <p v-if="waitingCustomers.length === 0" class="text-sm text-slate-400 text-center py-4">目前沒有候位顧客</p>
+              </div>
+            </template>
           </div>
         </section>
 
