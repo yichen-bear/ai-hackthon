@@ -163,11 +163,63 @@ async function handleDispatch() {
   } catch { /* silent */ }
 
   rideState.value = 'waiting'
-  startCountdown(driverInfo.value.eta)
+  // 開始輪詢等待派車
+  startPolling()
+}
+
+// ─── 輪詢機制：等待廠商端派車 ───
+let pollTimer: ReturnType<typeof setInterval> | null = null
+const pollingDots = ref('.')
+
+function startPolling() {
+  // 動畫效果
+  pollTimer = setInterval(async () => {
+    pollingDots.value = pollingDots.value.length >= 3 ? '.' : pollingDots.value + '.'
+
+    if (!currentRideId.value) return
+    try {
+      const order: any = await $fetch(`/api/rides`, { params: { userId: rideUser.value.id, status: 'all' } })
+      const myOrder = Array.isArray(order) ? order.find((o: any) => o.id === currentRideId.value) : null
+      if (!myOrder) return
+
+      if (myOrder.status === 'dispatched' || myOrder.status === 'in_progress') {
+        // 廠商已派車！更新司機資訊
+        if (myOrder.driver) {
+          driverInfo.value = {
+            name: myOrder.driver.name,
+            plateNumber: myOrder.driver.plateNumber,
+            carModel: myOrder.driver.carModel || '',
+            rating: Number(myOrder.driver.rating) || 4.5,
+            eta: 300,
+          }
+        }
+        if (myOrder.fare) {
+          // fare 已從 DB 取得，不需額外處理
+        }
+        stopPolling()
+
+        if (myOrder.status === 'in_progress') {
+          rideState.value = 'arrived'
+        } else {
+          rideState.value = 'arrived'
+          // 模擬司機抵達倒數
+          startCountdown(180)
+        }
+      } else if (myOrder.status === 'cancelled') {
+        stopPolling()
+        rideState.value = 'idle'
+      }
+    } catch { /* silent */ }
+  }, 3000)
+}
+
+function stopPolling() {
+  if (pollTimer) { clearInterval(pollTimer); pollTimer = null }
 }
 
 async function handleCancel() {
   stopCountdown()
+  stopPolling()
   if (currentRideId.value) {
     try { await $fetch(`/api/rides/${currentRideId.value}/cancel`, { method: 'PATCH' }) } catch {}
   }
@@ -213,6 +265,7 @@ function openHistory() {
 
 onUnmounted(() => {
   stopCountdown()
+  stopPolling()
 })
 </script>
 
@@ -357,7 +410,7 @@ onUnmounted(() => {
 
       <!-- waiting 狀態：等候司機 -->
       <div v-else-if="rideState === 'waiting'" class="ride-waiting" aria-live="polite">
-        <h4 class="state-title">司機正在前往中</h4>
+        <h4 class="state-title">🔍 尋找司機中{{ pollingDots }}</h4>
 
         <!-- 叫車資訊卡片 -->
         <div class="ride-trip-info">
@@ -384,6 +437,15 @@ onUnmounted(() => {
           </div>
         </div>
 
+        <p class="waiting-hint">正在為您媒合最近的司機，請稍候...</p>
+        <p class="waiting-hint-sub">廠商端確認派車後會顯示司機資訊</p>
+
+        <button class="cancel-btn" @click="handleCancel">取消叫車</button>
+      </div>
+
+      <!-- arrived 狀態：司機已派車/到達 -->
+      <div v-else-if="rideState === 'arrived'" class="ride-arrived" aria-live="polite">
+        <h4 class="state-title">🎉 司機已指派</h4>
         <!-- 司機資訊 -->
         <div class="driver-card">
           <div class="driver-info">
@@ -395,19 +457,9 @@ onUnmounted(() => {
             <span class="driver-model">{{ driverInfo.carModel }}</span>
           </div>
         </div>
-        <div class="countdown">
-          <span class="countdown-label">預估到達</span>
-          <span class="countdown-time">{{ formatCountdown(countdown) }}</span>
-        </div>
-        <button class="cancel-btn" @click="handleCancel">取消叫車</button>
-      </div>
-
-      <!-- arrived 狀態：司機已到達 -->
-      <div v-else-if="rideState === 'arrived'" class="ride-arrived" aria-live="polite">
-        <h4 class="state-title">🎉 司機已到達</h4>
         <div class="arrived-plate">{{ driverInfo.plateNumber }}</div>
-        <p class="arrived-hint">請至上車地點搭乘</p>
-        <button class="complete-btn" @click="handleComplete">確認上車</button>
+        <p class="arrived-hint">司機正在前往，請至上車地點等候</p>
+        <button class="complete-btn" @click="handleComplete">確認上車・完成行程</button>
       </div>
 
       <!-- completed 狀態：行程結束 + 評分 -->
@@ -907,6 +959,10 @@ onUnmounted(() => {
 
 /* 評分 */
 .rating-section { margin: 16px 0; text-align: center; }
+
+/* 等待提示 */
+.waiting-hint { text-align: center; font-size: 14px; color: #f59e0b; font-weight: 600; margin: 16px 0 4px; }
+.waiting-hint-sub { text-align: center; font-size: 12px; color: #94a3b8; margin: 0 0 16px; }
 .rating-label { font-size: 13px; color: #64748b; margin-bottom: 8px; }
 .rating-stars { display: flex; gap: 4px; justify-content: center; margin-bottom: 12px; }
 .star-btn { background: none; border: none; font-size: 24px; opacity: 0.3; cursor: pointer; transition: opacity 0.15s; }
