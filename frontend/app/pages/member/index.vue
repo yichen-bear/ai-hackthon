@@ -55,11 +55,20 @@ async function fetchConversations() {
     msgs.forEach((m: any) => {
       const peerId = m.senderId === currentUserId.value ? m.receiverId : m.senderId
       const peerName = m.senderId === currentUserId.value ? m.receiverName : m.senderName
+      // 預覽文字：reservation_notice 類型轉為可讀文字
+      let preview = m.content
+      if (m.messageType === 'reservation_notice') {
+        try {
+          const p = JSON.parse(m.content)
+          const method = p.pickupMethod === '門市代收' ? '代收' : '面交'
+          preview = `🤝 ${method}預約 · ${p.pickupStore}`
+        } catch { preview = '🤝 交易預約' }
+      }
       if (!peers.has(peerId)) {
-        peers.set(peerId, { peerId, peerName, lastMessage: m.content, lastTime: m.creTime, unreadCount: 0 })
+        peers.set(peerId, { peerId, peerName, lastMessage: preview, lastTime: m.creTime, unreadCount: 0 })
       } else {
         const p = peers.get(peerId)!
-        if (new Date(m.creTime) > new Date(p.lastTime)) { p.lastMessage = m.content; p.lastTime = m.creTime }
+        if (new Date(m.creTime) > new Date(p.lastTime)) { p.lastMessage = preview; p.lastTime = m.creTime }
       }
       if (m.receiverId === currentUserId.value && !m.isRead) {
         const p = peers.get(peerId)!
