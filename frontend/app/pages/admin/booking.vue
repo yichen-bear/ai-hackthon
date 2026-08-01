@@ -551,13 +551,7 @@ function resetDemo() {
 </script>
 
 <template>
-  <div class="w-full max-w-[430px] mx-auto min-h-screen bg-[#fafaf9] relative flex flex-col pb-20 shadow-xl border-x border-[#e2e8f0]">
-
-    <!-- ═══ Header ═══ -->
-    <header class="bk__header">
-      <span class="bk__header-title">🛒 i預購 / i划算 賣家端</span>
-      <NuxtLink class="bk__header-link" to="/booking">📱 用戶端</NuxtLink>
-    </header>
+  <div class="admin-page pb-20">
 
     <!-- ═══ RBAC 角色 Dropdown ═══ -->
     <div class="bk__rbac">
@@ -844,20 +838,6 @@ function resetDemo() {
 </template>
 
 <style scoped>
-/* ═══ Header ═══ */
-.bk__header {
-  position: sticky; top: 0; z-index: 100;
-  display: flex; align-items: center; justify-content: space-between;
-  height: 50px; padding: 0 16px;
-  background: #fff; border-bottom: 1px solid #e2e8f0;
-}
-.bk__header-title { font-size: 13px; font-weight: 600; color: #1c1917; }
-.bk__header-link {
-  padding: 4px 10px; font-size: 11px; font-weight: 700;
-  color: #10b981; background: #ecfdf5; border: 1px solid rgba(16,185,129,.2);
-  border-radius: 9999px; text-decoration: none;
-}
-
 /* ═══ RBAC Dropdown ═══ */
 .bk__rbac { padding: 12px 16px 0; }
 .bk__rbac-select {

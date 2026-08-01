@@ -276,11 +276,7 @@ function resetDemo() { location.reload() }
 </script>
 
 <template>
-  <div class="w-full max-w-[430px] mx-auto min-h-screen bg-[#fafaf9] relative flex flex-col pb-20 shadow-xl border-x border-[#e2e8f0]">
-    <header class="ea__header">
-      <span class="ea__header-title">🏘️ 社區活動管理（里長端）</span>
-      <NuxtLink class="ea__header-link" to="/entertainment">📱 用戶端</NuxtLink>
-    </header>
+  <div class="admin-page pb-20">
 
     <main class="ea__content" role="main">
       <!-- 統計 -->
@@ -473,9 +469,6 @@ function resetDemo() { location.reload() }
 </template>
 
 <style scoped>
-.ea__header { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; height: 50px; padding: 0 16px; background: #fff; border-bottom: 1px solid #e2e8f0; }
-.ea__header-title { font-size: 13px; font-weight: 600; color: #1c1917; }
-.ea__header-link { padding: 4px 10px; font-size: 11px; font-weight: 700; color: #ec4899; background: #fdf2f8; border: 1px solid rgba(236,72,153,.2); border-radius: 9999px; text-decoration: none; }
 .ea__content { display: flex; flex-direction: column; gap: 16px; padding: 16px; flex: 1; }
 .ea__stats { display: flex; justify-content: center; gap: 8px; }
 .ea__stat { display: inline-flex; padding: 6px 12px; border-radius: 9999px; font-size: 11px; font-weight: 600; }
