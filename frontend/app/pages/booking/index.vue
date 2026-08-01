@@ -20,7 +20,7 @@ const navTabs = [
   { key: 'pickup', label: '取貨' },
   { key: 'preorder', label: 'i預購' },
   { key: 'groupbuy', label: 'i划算' },
-  { key: 'secondhand', label: '♻️ i二手' },
+  { key: 'secondhand', label: 'i二手' },
   { key: 'order', label: '訂單' },
   { key: 'wishlist', label: '收藏' },
 ] as const
@@ -307,7 +307,7 @@ function demoReset() {
         />
       </template>
 
-      <!-- ♻️ i二手 -->
+      <!-- i二手 -->
       <template v-if="activeNav === 'secondhand'">
         <BookingSecondhandMarket />
       </template>
