@@ -185,7 +185,7 @@ const consultations = ref<ConsultationForm[]>([
     id: 'c-1',
     feedbackNo: 'FB20260731001',
     contactName: '陳先生',
-    contactPhone: '0912-***-678',
+    contactPhone: '0912-345-678',
     pickup: '臺北市中山區南京東路二段50號',
     destination: '桃園國際機場第一航廈',
     carType: 'van',
@@ -202,7 +202,7 @@ const consultations = ref<ConsultationForm[]>([
     id: 'c-2',
     feedbackNo: 'FB20260801001',
     contactName: '林奶奶',
-    contactPhone: '0922-***-789',
+    contactPhone: '0922-456-789',
     pickup: '臺北市大安區忠孝東路四段200號',
     destination: '台大醫院門診大樓',
     carType: 'accessible',
@@ -218,7 +218,7 @@ const consultations = ref<ConsultationForm[]>([
     id: 'c-3',
     feedbackNo: 'FB20260801002',
     contactName: '張小姐',
-    contactPhone: '0933-***-012',
+    contactPhone: '0933-567-012',
     pickup: '臺北市信義區松壽路20號',
     destination: '臺北市內湖區瑞光路300號',
     carType: 'sedan',
@@ -234,7 +234,7 @@ const consultations = ref<ConsultationForm[]>([
     id: 'c-4',
     feedbackNo: 'FB20260801003',
     contactName: '王經理',
-    contactPhone: '0955-***-321',
+    contactPhone: '0955-789-321',
     pickup: '臺北市信義區信義路五段7號B1',
     destination: '桃園國際機場第二航廈',
     carType: 'van',
@@ -255,7 +255,7 @@ const orders = ref<Order[]>([
     id: 'o-1',
     orderNo: 'TR-2026-0001',
     contactName: '劉先生',
-    contactPhone: '0966-***-888',
+    contactPhone: '0966-890-888',
     pickup: '臺北市南港區經貿二路1號',
     destination: '新北市板橋區站前路5號',
     carType: 'sedan',
@@ -272,7 +272,7 @@ const orders = ref<Order[]>([
     id: 'o-2',
     orderNo: 'TR-2026-0002',
     contactName: '許小姐',
-    contactPhone: '0911-***-555',
+    contactPhone: '0911-123-555',
     pickup: '臺北市萬華區中華路一段',
     destination: '臺北市士林區忠誠路二段200號',
     carType: 'sedan',
@@ -400,13 +400,13 @@ function resetDemo() {
   consultations.value.forEach(c => { c.status = 'pending' })
   orders.value = [
     {
-      id: 'o-1', orderNo: 'TR-2026-0001', contactName: '劉先生', contactPhone: '0966-***-888',
+      id: 'o-1', orderNo: 'TR-2026-0001', contactName: '劉先生', contactPhone: '0966-890-888',
       pickup: '臺北市南港區經貿二路1號', destination: '新北市板橋區站前路5號', carType: 'sedan', passengers: 1,
       assignedDriver: '王志明', assignedPlate: 'DEF-5678', eta: 12, finalAmount: 320,
       status: 'in_transit', orderTime: '2026-07-31 13:50', serviceTime: '2026-07-31 14:02',
     },
     {
-      id: 'o-2', orderNo: 'TR-2026-0002', contactName: '許小姐', contactPhone: '0911-***-555',
+      id: 'o-2', orderNo: 'TR-2026-0002', contactName: '許小姐', contactPhone: '0911-123-555',
       pickup: '臺北市萬華區中華路一段', destination: '臺北市士林區忠誠路二段200號', carType: 'sedan', passengers: 2,
       assignedDriver: '張國榮', assignedPlate: 'PQR-2468', eta: 5, finalAmount: 380,
       status: 'dispatched', orderTime: '2026-07-31 14:20',
@@ -480,10 +480,10 @@ function resetDemo() {
             </span>
           </div>
 
-          <!-- 客戶資訊 -->
+          <!-- 客戶資訊（派車前隱藏，保護乘客個資） -->
           <div class="ta__customer-info">
-            <span class="ta__customer-name">👤 {{ consultation.contactName }}</span>
-            <span class="ta__customer-phone">📞 {{ consultation.contactPhone }}</span>
+            <span class="ta__customer-name">👤 {{ consultation.status === 'pending' ? '待接單' : consultation.contactName }}</span>
+            <span class="ta__customer-phone">📞 {{ consultation.status === 'pending' ? '接單後顯示' : consultation.contactPhone }}</span>
           </div>
 
           <!-- 路線資訊 -->
