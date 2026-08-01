@@ -136,29 +136,33 @@ router.patch('/:id/return-to-seller', async (req, res) => {
       data: { status: 'active' },
     })
 
-    // 通知賣家
-    await prisma.chatMessage.create({
-      data: {
-        senderId: '00000000-0000-0000-0000-ffffffffffff',
-        senderName: '系統通知',
-        receiverId: reservation.sellerId,
-        receiverName: reservation.sellerName,
-        listingId: reservation.listingId,
-        content: '⚠️ 買家逾期未取貨，商品已安排退回原門市，請前往取回。',
-        messageType: 'system',
-      },
+    // 更新聊天室中的預約卡片狀態
+    const cardMessages = await prisma.chatMessage.findMany({
+      where: { messageType: 'reservation_notice', listingId: reservation.listingId },
     })
+    for (const msg of cardMessages) {
+      try {
+        const parsed = JSON.parse(msg.content)
+        if (parsed.reservationId === id) {
+          parsed.status = 'EXPIRED_RETURNED'
+          await prisma.chatMessage.update({
+            where: { id: msg.id },
+            data: { content: JSON.stringify(parsed) },
+          })
+        }
+      } catch { /* skip */ }
+    }
 
-    // 通知買家
+    // 在原聊天室通知（由賣家發給買家）
     await prisma.chatMessage.create({
       data: {
-        senderId: '00000000-0000-0000-0000-ffffffffffff',
-        senderName: '系統通知',
+        senderId: reservation.sellerId,
+        senderName: reservation.sellerName,
         receiverId: reservation.buyerId,
         receiverName: reservation.buyerName,
         listingId: reservation.listingId,
-        content: '⚠️ 您的取貨期限已過，商品將退回賣家。如有需要請重新預約。',
-        messageType: 'system',
+        content: '⚠️ 取貨期限已過，商品將退回門市由我取回。如需要請重新預約。',
+        messageType: 'text',
       },
     })
 
