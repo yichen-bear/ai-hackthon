@@ -12,7 +12,10 @@
  * - transcript: 辨識結果文字
  * - error: 錯誤訊息
  * - isTranscribing: 是否正在辨識中（上傳+等待結果）
+ * - language: 語言設定（'mandarin' | 'taiwanese'）
  */
+
+export type SpeechLanguage = 'mandarin' | 'taiwanese'
 
 const MAX_RECORDING_DURATION_MS = 60_000 // 最長錄音 60 秒
 
@@ -23,6 +26,7 @@ export function useWhisperSpeechRecognition() {
   const isTranscribing = ref(false)
   const transcript = ref('')
   const error = ref<string | null>(null)
+  const language = ref<SpeechLanguage>('mandarin')
 
   let mediaRecorder: MediaRecorder | null = null
   let audioChunks: Blob[] = []
@@ -121,7 +125,7 @@ export function useWhisperSpeechRecognition() {
     }
   }
 
-  /** 上傳音檔到後端進行 Whisper 辨識 */
+  /** 上傳音檔到後端進行辨識（依語言選擇端點） */
   async function transcribeAudio(audioBlob: Blob, mimeType: string) {
     isTranscribing.value = true
 
@@ -130,8 +134,13 @@ export function useWhisperSpeechRecognition() {
       const formData = new FormData()
       formData.append('audio', audioBlob, `recording.${ext}`)
 
+      // 台語使用 SageMaker 端點，其他使用 Groq Whisper
+      const endpoint = language.value === 'taiwanese'
+        ? '/api/speech/taiwanese-asr'
+        : '/api/speech/transcribe'
+
       const response = await $fetch<{ success: boolean; text?: string; message?: string }>(
-        '/api/speech/transcribe',
+        endpoint,
         {
           method: 'POST',
           body: formData,
@@ -172,5 +181,6 @@ export function useWhisperSpeechRecognition() {
     stop,
     transcript,
     error,
+    language,
   }
 }
