@@ -158,6 +158,7 @@ export interface CommunityEvent {
   currentParticipants: number
   maxParticipants: number
   description?: string
+  isRegistered?: boolean
 }
 
 /** 社大課程 */

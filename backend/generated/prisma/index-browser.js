@@ -479,6 +479,49 @@ exports.Prisma.PickupReservationScalarFieldEnum = {
   storedAt: 'storedAt'
 };
 
+exports.Prisma.CommunityActivityScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  category: 'category',
+  location: 'location',
+  activityDate: 'activityDate',
+  activityEndDate: 'activityEndDate',
+  maxParticipants: 'maxParticipants',
+  status: 'status',
+  imageUrl: 'imageUrl',
+  organizerId: 'organizerId',
+  organizerName: 'organizerName',
+  isDeleted: 'isDeleted',
+  creTime: 'creTime',
+  updTime: 'updTime'
+};
+
+exports.Prisma.ActivityRegistrationScalarFieldEnum = {
+  id: 'id',
+  activityId: 'activityId',
+  userId: 'userId',
+  userName: 'userName',
+  userPhone: 'userPhone',
+  status: 'status',
+  registeredAt: 'registeredAt'
+};
+
+exports.Prisma.CommunityQuestionScalarFieldEnum = {
+  id: 'id',
+  askerId: 'askerId',
+  askerName: 'askerName',
+  content: 'content',
+  category: 'category',
+  isAnonymous: 'isAnonymous',
+  replyContent: 'replyContent',
+  repliedAt: 'repliedAt',
+  repliedBy: 'repliedBy',
+  status: 'status',
+  isDeleted: 'isDeleted',
+  creTime: 'creTime'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -531,7 +574,10 @@ exports.Prisma.ModelName = {
   ChatMessage: 'ChatMessage',
   CommunityGroup: 'CommunityGroup',
   GroupMember: 'GroupMember',
-  PickupReservation: 'PickupReservation'
+  PickupReservation: 'PickupReservation',
+  CommunityActivity: 'CommunityActivity',
+  ActivityRegistration: 'ActivityRegistration',
+  CommunityQuestion: 'CommunityQuestion'
 };
 
 /**

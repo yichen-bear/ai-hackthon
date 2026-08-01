@@ -44,7 +44,12 @@ const tabs = ['報名管理', '活動管理', '通知中心', '居民提問']
 
 // 支援 ?tab=0/1/2/3 跳轉
 const adminRoute = useRoute()
-onMounted(() => { const t = adminRoute.query.tab; if (t != null) activeTab.value = Number(t) })
+onMounted(async () => {
+  const t = adminRoute.query.tab; if (t != null) activeTab.value = Number(t)
+  // 從 DB 載入活動與提問
+  await fetchDbActivities()
+  await fetchDbQuestions()
+})
 
 // ─── 分類篩選 ───
 type FilterCategory = 'all' | ActivityCategory
@@ -65,6 +70,134 @@ function showToast(msg: string) {
   toastMessage.value = msg
   if (toastTimer) clearTimeout(toastTimer)
   toastTimer = setTimeout(() => { toastMessage.value = '' }, 2500)
+}
+
+// ─── 從 DB 載入活動（覆蓋 mock） ───
+async function fetchDbActivities() {
+  try {
+    const data: any[] = await $fetch('/api/activities', { params: { status: 'open' } })
+    if (data.length > 0) {
+      activities.value = data.map(a => ({
+        id: a.id,
+        name: a.title || a.name,
+        category: mapDbCategory(a.category),
+        date: new Date(a.activityDate).toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' }),
+        time: `${new Date(a.activityDate).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' })}${a.activityEndDate ? '-' + new Date(a.activityEndDate).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }) : ''}`,
+        location: a.location || '待定',
+        organizer: a.organizerName || '信義區里辦公處',
+        fee: 0,
+        maxParticipants: a.maxParticipants,
+        currentParticipants: a.currentParticipants || 0,
+        waitlistCount: 0,
+        checkedInCount: 0,
+        volunteersNeeded: 0,
+        volunteersAssigned: 0,
+        status: a.isFull ? 'full' : 'open',
+        registrations: [],
+      }))
+      // 載入每個活動的報名名單
+      for (const act of activities.value) {
+        try {
+          const detail: any = await $fetch(`/api/activities/${act.id}`)
+          if (detail.registrations) {
+            act.registrations = detail.registrations.map((r: any) => ({
+              id: r.id,
+              contactName: r.userName,
+              contactPhone: r.userPhone || '',
+              registeredAt: new Date(r.registeredAt).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+              status: r.status === 'registered' ? 'confirmed' : r.status,
+              specialNeeds: [],
+              source: 'app',
+              paymentMethod: '免費',
+              amount: 0,
+            }))
+            act.currentParticipants = detail.registrations.length
+          }
+        } catch { /* skip */ }
+      }
+    }
+  } catch { /* use mock fallback */ }
+}
+
+function mapDbCategory(cat: string): ActivityCategory {
+  const map: Record<string, ActivityCategory> = { health: 'health', culture: 'festival', environment: 'eco', general: 'health', sport: 'health', safety: 'family' }
+  return map[cat] || 'health'
+}
+
+// ─── 從 DB 載入居民提問（覆蓋 mock） ───
+async function fetchDbQuestions() {
+  try {
+    const data: any[] = await $fetch('/api/activities/questions/list')
+    if (data.length > 0) {
+      residentQuestions.value = data.map(q => ({
+        id: q.id,
+        contactName: q.isAnonymous ? '匿名居民' : q.askerName,
+        contactPhone: '',
+        activityName: '社區提問',
+        question: q.content,
+        askedAt: new Date(q.creTime).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+        answered: q.status === 'replied',
+        answer: q.replyContent || undefined,
+      }))
+    }
+  } catch { /* use mock fallback */ }
+}
+
+// ─── 回覆提問（改為呼叫 API） ───
+async function answerQuestionDb(q: ResidentQuestion) {
+  if (!replyText.value.trim()) return
+  try {
+    await $fetch(`/api/activities/questions/${q.id}/reply`, {
+      method: 'PATCH',
+      body: { replyContent: replyText.value.trim(), repliedBy: '里長' },
+    })
+    q.answered = true
+    q.answer = replyText.value.trim()
+    replyText.value = ''
+    replyingId.value = ''
+    showToast(`✅ 已回覆 ${q.contactName} 的提問（已通知居民）`)
+  } catch {
+    showToast('❌ 回覆失敗')
+  }
+}
+
+// ─── 發送通知（改為呼叫 API） ───
+async function sendNotifyDb() {
+  if (!sendTargetId.value) { showToast('⚠️ 請選擇活動'); return }
+  const msg = selectedTemplate.value === 'custom' ? customMessage.value.trim() : getTemplateMsg(selectedTemplate.value)
+  if (!msg) { showToast('⚠️ 請輸入通知內容'); return }
+  try {
+    const result: any = await $fetch(`/api/activities/${sendTargetId.value}/notify`, {
+      method: 'POST',
+      body: { content: msg },
+    })
+    notifications.value.unshift({
+      id: `n-${Date.now()}`,
+      template: selectedTemplate.value,
+      targetName: activities.value.find(a => a.id === sendTargetId.value)?.name || '',
+      targetId: sendTargetId.value,
+      message: msg,
+      sentAt: new Date().toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+      recipientCount: result.notifiedCount || 0,
+    })
+    showToast(`✅ 通知已發送給 ${result.notifiedCount} 位報名者（私訊推播）`)
+    customMessage.value = ''
+    sendTargetId.value = ''
+  } catch {
+    showToast('❌ 發送失敗')
+  }
+}
+
+function getTemplateMsg(tmpl: NotifyTemplate): string {
+  const act = activities.value.find(a => a.id === sendTargetId.value)
+  if (!act) return ''
+  switch (tmpl) {
+    case 'reminder': return `提醒您：「${act.name}」將於 ${act.date} ${act.time} 在 ${act.location} 舉行，請準時出席！`
+    case 'location_change': return `地點變更通知：「${act.name}」活動地點已更改為 ${act.location}，請留意。`
+    case 'cancel': return `很抱歉通知您：「${act.name}」因故取消，造成不便敬請見諒。`
+    case 'waitlist_promoted': return `恭喜您！「${act.name}」有名額釋出，您已從候補名單遞補成功！`
+    default: return ''
+  }
 }
 
 // ─── 工具函數 ───
@@ -181,12 +314,7 @@ const replyingId = ref('')
 const replyText = ref('')
 
 function answerQuestion(q: ResidentQuestion) {
-  if (!replyText.value.trim()) return
-  q.answered = true
-  q.answer = replyText.value.trim()
-  replyText.value = ''
-  replyingId.value = ''
-  showToast(`✅ 已回覆 ${q.contactName} 的提問`)
+  answerQuestionDb(q)
 }
 
 // ─── 報到模式 ───
@@ -269,12 +397,7 @@ function completeActivity(act: ManagedActivity) {
   showToast(`🎉 活動完成：${act.name}`)
 }
 function sendNotification() {
-  const target = activities.value.find(a => a.id === sendTargetId.value)
-  if (!target) { showToast('⚠️ 請選擇活動'); return }
-  const count = target.registrations.filter(r => r.status !== 'cancelled').length
-  notifications.value.unshift({ id: `n-${Date.now()}`, template: selectedTemplate.value, targetName: target.name, targetId: target.id, message: selectedTemplate.value === 'custom' ? customMessage.value : `${target.name} 通知已發送`, sentAt: new Date().toLocaleString('zh-TW', { hour12: false, month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }), recipientCount: count })
-  customMessage.value = ''
-  showToast(`📤 已發送通知給 ${count} 位`)
+  sendNotifyDb()
 }
 function resetDemo() { location.reload() }
 </script>

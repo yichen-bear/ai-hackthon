@@ -463,3 +463,59 @@ model PickupReservation {
 
 
 
+
+// ═══ 社區活動模組 ═══
+
+model CommunityActivity {
+  id               String   @id @default(uuid()) @db.Uuid
+  title            String   @db.VarChar(100)
+  description      String?  @db.VarChar(500)
+  category         String   @default("general") @db.VarChar(20)  // general, health, culture, sport, environment
+  location         String?  @db.VarChar(100)
+  activityDate     DateTime @map("activity_date") @db.Timestamptz(6)
+  activityEndDate  DateTime? @map("activity_end_date") @db.Timestamptz(6)
+  maxParticipants  Int      @default(50) @map("max_participants")
+  status           String   @default("open") @db.VarChar(20)  // draft, open, closed, completed
+  imageUrl         String?  @map("image_url")
+  organizerId      String   @map("organizer_id") @db.Uuid  // 里辦公處 vendor ID
+  organizerName    String   @map("organizer_name") @db.VarChar(50)
+  isDeleted        Boolean  @default(false) @map("is_deleted")
+  creTime          DateTime @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updTime          DateTime @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
+
+  registrations    ActivityRegistration[]
+
+  @@map("community_activity")
+}
+
+model ActivityRegistration {
+  id          String   @id @default(uuid()) @db.Uuid
+  activityId  String   @map("activity_id") @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  userName    String   @map("user_name") @db.VarChar(50)
+  userPhone   String?  @map("user_phone") @db.VarChar(20)
+  status      String   @default("registered") @db.VarChar(20)  // registered, cancelled, attended
+  registeredAt DateTime @default(now()) @map("registered_at") @db.Timestamptz(6)
+
+  activity    CommunityActivity @relation(fields: [activityId], references: [id])
+
+  @@unique([activityId, userId])
+  @@map("activity_registration")
+}
+
+model CommunityQuestion {
+  id            String    @id @default(uuid()) @db.Uuid
+  askerId       String    @map("asker_id") @db.Uuid
+  askerName     String    @map("asker_name") @db.VarChar(50)
+  content       String    @db.VarChar(500)
+  category      String    @default("general") @db.VarChar(20)  // general, facility, noise, safety, suggestion
+  isAnonymous   Boolean   @default(false) @map("is_anonymous")
+  replyContent  String?   @map("reply_content") @db.VarChar(500)
+  repliedAt     DateTime? @map("replied_at") @db.Timestamptz(6)
+  repliedBy     String?   @map("replied_by") @db.VarChar(50)
+  status        String    @default("pending") @db.VarChar(20)  // pending, replied, closed
+  isDeleted     Boolean   @default(false) @map("is_deleted")
+  creTime       DateTime  @default(now()) @map("cre_time") @db.Timestamptz(6)
+
+  @@map("community_question")
+}

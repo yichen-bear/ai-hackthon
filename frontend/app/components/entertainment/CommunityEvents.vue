@@ -28,6 +28,14 @@ const activeTab = ref<TabKey>('community')
 const registeredIds = ref<Set<string>>(new Set())
 const paymentTarget = ref<{ id: string; name: string; fee: number; type: 'community' | 'course'; details?: string } | null>(null)
 
+// 初始化已報名狀態（從 API 回傳的 isRegistered）
+onMounted(() => {
+  props.communityEvents.forEach(e => { if ((e as any).isRegistered) registeredIds.value.add(e.id) })
+})
+watch(() => props.communityEvents, (events) => {
+  events.forEach(e => { if ((e as any).isRegistered) registeredIds.value.add(e.id) })
+})
+
 // PaymentFlow 狀態
 const showPaymentFlow = ref(false)
 const showRegisterSuccess = ref(false)
@@ -102,6 +110,7 @@ function isRegistered(id: string) {
 const askingEventId = ref<string | null>(null)
 const questionText = ref('')
 const questionSentSuccess = ref(false)
+const { currentUser: questionUser } = useCurrentUser()
 
 function openAskQuestion(eventId: string) {
   askingEventId.value = eventId
@@ -109,8 +118,19 @@ function openAskQuestion(eventId: string) {
   questionSentSuccess.value = false
 }
 
-function submitQuestion() {
+async function submitQuestion() {
   if (!questionText.value.trim()) return
+  try {
+    await $fetch('/api/activities/questions', {
+      method: 'POST',
+      body: {
+        askerId: questionUser.value.id,
+        askerName: questionUser.value.name,
+        content: questionText.value.trim(),
+        category: 'general',
+      },
+    })
+  } catch { /* silent */ }
   questionSentSuccess.value = true
   setTimeout(() => { askingEventId.value = null; questionSentSuccess.value = false }, 2500)
 }
