@@ -359,6 +359,7 @@ exports.Prisma.MemberAccountScalarFieldEnum = {
   name: 'name',
   nameHash: 'nameHash',
   passwordHash: 'passwordHash',
+  communityNickname: 'communityNickname',
   status: 'status',
   isDeleted: 'isDeleted',
   creId: 'creId',

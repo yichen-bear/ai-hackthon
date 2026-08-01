@@ -36,7 +36,7 @@ const items = ref<SecondhandItem[]>([])
 const isLoading = ref(false)
 
 // 模擬當前用戶（使用 UUID 格式以匹配 DB）
-const currentUser = { id: '00000000-0000-0000-0000-000000000001', name: '沈小姐' }
+const currentUser = { id: '00000000-0000-0000-0000-000000000001', name: '沈O淇' }
 
 // ─── Toast 通知系統（APP 風格） ───
 const toastMsg = ref('')
@@ -70,10 +70,10 @@ async function fetchListings() {
   } catch {
     // fallback mock（API 不可用時）
     items.value = [
-      { id: '00000000-0000-0000-0000-100000000001', productName: '嬰兒推車（九成新）', imageUrl: null, price: 800, isFree: false, sellerName: '王媽媽', sellerId: '00000000-0000-0000-0000-000000000002', pickupStore: '7-11 信義門市', pickupMethod: '門市面交', carbonSaved: 5.2, category: 'baby', creTime: new Date(Date.now() - 172800000).toISOString() },
-      { id: '00000000-0000-0000-0000-100000000002', productName: '小米空氣清淨機', imageUrl: null, price: 1200, isFree: false, sellerName: '李先生', sellerId: '00000000-0000-0000-0000-000000000003', pickupStore: '7-11 松山門市', pickupMethod: '門市代放', carbonSaved: 8.1, category: 'electronics', creTime: new Date(Date.now() - 86400000).toISOString() },
-      { id: '00000000-0000-0000-0000-100000000003', productName: '兒童繪本套組 (20本)', imageUrl: null, price: 0, isFree: true, sellerName: '陳老師', sellerId: '00000000-0000-0000-0000-000000000004', pickupStore: '7-11 大安門市', pickupMethod: '門市面交', carbonSaved: 3.0, category: 'baby', creTime: new Date(Date.now() - 10800000).toISOString() },
-      { id: '00000000-0000-0000-0000-100000000004', productName: '瑜珈墊 + 彈力帶', imageUrl: null, price: 0, isFree: true, sellerName: '林小姐', sellerId: '00000000-0000-0000-0000-000000000005', pickupStore: '7-11 忠孝門市', pickupMethod: '門市代放', carbonSaved: 1.5, category: 'household', creTime: new Date(Date.now() - 21600000).toISOString() },
+      { id: '00000000-0000-0000-0000-100000000001', productName: '嬰兒推車（九成新）', imageUrl: null, price: 800, isFree: false, sellerName: '王O媽', sellerId: '00000000-0000-0000-0000-000000000002', pickupStore: '7-ELEVEN 信義門市', pickupMethod: '門市面交', carbonSaved: 5.2, category: 'baby', creTime: new Date(Date.now() - 172800000).toISOString() },
+      { id: '00000000-0000-0000-0000-100000000002', productName: '小米空氣清淨機', imageUrl: null, price: 1200, isFree: false, sellerName: '李O生', sellerId: '00000000-0000-0000-0000-000000000003', pickupStore: '7-ELEVEN 松山門市', pickupMethod: '門市代收', carbonSaved: 8.1, category: 'electronics', creTime: new Date(Date.now() - 86400000).toISOString() },
+      { id: '00000000-0000-0000-0000-100000000003', productName: '兒童繪本套組 (20本)', imageUrl: null, price: 0, isFree: true, sellerName: '陳O師', sellerId: '00000000-0000-0000-0000-000000000004', pickupStore: '7-ELEVEN 大安門市', pickupMethod: '門市面交', carbonSaved: 3.0, category: 'baby', creTime: new Date(Date.now() - 10800000).toISOString() },
+      { id: '00000000-0000-0000-0000-100000000004', productName: '瑜珈墊 + 彈力帶', imageUrl: null, price: 0, isFree: true, sellerName: '林O姐', sellerId: '00000000-0000-0000-0000-000000000005', pickupStore: '7-ELEVEN 忠孝門市', pickupMethod: '門市代收', carbonSaved: 1.5, category: 'household', creTime: new Date(Date.now() - 21600000).toISOString() },
     ]
   }
   isLoading.value = false

@@ -18,7 +18,7 @@ onMounted(() => {
 
 // ─── 私訊系統 ───
 const currentUserId = '00000000-0000-0000-0000-000000000001'
-const currentUserName = '沈小姐'
+const currentUserName = '沈O淇' // i二手私訊脫敏顯示
 
 interface ChatConversation {
   peerId: string
@@ -60,8 +60,8 @@ async function fetchConversations() {
   } catch {
     // mock fallback
     conversations.value = [
-      { peerId: 'user-002', peerName: '王媽媽', lastMessage: '好的，那我們約週六下午 2 點在信義門市面交？', lastTime: new Date(Date.now() - 3600000).toISOString(), unreadCount: 2, listingName: '嬰兒推車' },
-      { peerId: 'user-003', peerName: '李先生', lastMessage: '🤝 沈小姐 已預約面交！', lastTime: new Date(Date.now() - 7200000).toISOString(), unreadCount: 1, listingName: '小米空氣清淨機' },
+      { peerId: 'user-002', peerName: '王O明', lastMessage: '好的，那我們約週六下午 2 點在信義門市面交？', lastTime: new Date(Date.now() - 3600000).toISOString(), unreadCount: 2, listingName: '嬰兒推車' },
+      { peerId: 'user-003', peerName: '李O玲', lastMessage: '🤝 沈O淇 已預約面交！', lastTime: new Date(Date.now() - 7200000).toISOString(), unreadCount: 1, listingName: '小米空氣清淨機' },
     ]
     msgUnreadTotal.value = 3
   }
@@ -365,7 +365,10 @@ const allBadges = ref([
   <div class="member-center">
     <!-- 頂部資訊 -->
     <div class="member-header">
-      <h1 class="member-title">會員中心</h1>
+      <div>
+        <h1 class="member-title">會員中心</h1>
+        <p class="member-realname">沈湘淇 <span class="verified-badge">🟢 實名認證</span></p>
+      </div>
       <div class="points-badge">🪙 {{ userPoints.toLocaleString() }} 點</div>
     </div>
 
@@ -744,6 +747,17 @@ const allBadges = ref([
 }
 
 .member-title { font-size: 20px; font-weight: 700; margin: 0; }
+
+.member-realname {
+  font-size: 14px;
+  color: #374151;
+  margin: 4px 0 0;
+}
+.verified-badge {
+  font-size: 12px;
+  color: #059669;
+  font-weight: 600;
+}
 
 .points-badge {
   background: linear-gradient(135deg, #f59e0b, #d97706);

@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const prisma = require('../utils/prismaClient')
+const { maskName } = require('../utils/maskName')
 
 // GET /api/listings - 取得二手商品列表
 router.get('/', async (req, res) => {
@@ -16,7 +17,12 @@ router.get('/', async (req, res) => {
       orderBy: { creTime: 'desc' },
       take: 50,
     })
-    res.json(listings)
+    // i二手 listing 回傳時賣家名稱脫敏
+    const masked = listings.map(l => ({
+      ...l,
+      sellerName: maskName(l.sellerName),
+    }))
+    res.json(masked)
   } catch (err) {
     console.error('GET /api/listings error:', err)
     res.status(500).json({ error: 'Failed to fetch listings' })

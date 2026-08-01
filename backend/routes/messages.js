@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const prisma = require('../utils/prismaClient')
+const { maskName } = require('../utils/maskName')
 
 // GET /api/messages?userId=xxx - 取得某用戶的所有對話
 router.get('/', async (req, res) => {
@@ -17,7 +18,13 @@ router.get('/', async (req, res) => {
       orderBy: { creTime: 'asc' },
       take: 100,
     })
-    res.json(messages)
+    // i二手私訊對話中，名稱脫敏（有 listingId 代表二手相關）
+    const masked = messages.map(m => ({
+      ...m,
+      senderName: m.listingId ? maskName(m.senderName) : m.senderName,
+      receiverName: m.listingId && m.receiverName ? maskName(m.receiverName) : m.receiverName,
+    }))
+    res.json(masked)
   } catch (err) {
     console.error('GET /api/messages error:', err)
     res.status(500).json({ error: 'Failed to fetch messages' })

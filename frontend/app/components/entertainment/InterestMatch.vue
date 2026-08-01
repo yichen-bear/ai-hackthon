@@ -11,7 +11,7 @@ const emit = defineEmits<{ 'join-group': [payload: { groupId: string; matchScore
 
 const AVAILABLE_INTERESTS = ['攝影', '登山', '桌遊', '手作', '咖啡', '閱讀', '音樂', '運動', '料理', '旅行', '電影', '舞蹈']
 const currentUserId = '00000000-0000-0000-0000-000000000001'
-const currentUserName = '沈小姐'
+const currentUserName = '淇淇愛登山' // 社群暱稱
 
 // ─── 篩選標籤（改為篩選制度：未選全列、選了 OR） ───
 const localInterests = ref<string[]>([...props.userInterests])
