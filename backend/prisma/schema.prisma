@@ -481,16 +481,16 @@ model CommunityActivity {
 }
 
 model ActivityRegistration {
-  id            String            @id @default(uuid()) @db.Uuid
-  activityId    String            @map("activity_id") @db.Uuid
-  userId        String            @map("user_id") @db.Uuid
-  userName      String            @map("user_name") @db.VarChar(50)
-  userPhone     String?           @map("user_phone") @db.VarChar(20)
-  status        String            @default("registered") @db.VarChar(20)
-  registeredAt  DateTime          @default(now()) @map("registered_at") @db.Timestamptz(6)
-  source        String            @default("app") @db.VarChar(20)
-  special_needs String?           @db.VarChar(200)
-  activity      CommunityActivity @relation(fields: [activityId], references: [id])
+  id           String            @id @default(uuid()) @db.Uuid
+  activityId   String            @map("activity_id") @db.Uuid
+  userId       String            @map("user_id") @db.Uuid
+  userName     String            @map("user_name") @db.VarChar(50)
+  userPhone    String?           @map("user_phone") @db.VarChar(20)
+  status       String            @default("registered") @db.VarChar(20)
+  source       String            @default("app") @db.VarChar(20)
+  specialNeeds String?           @map("special_needs") @db.VarChar(200)
+  registeredAt DateTime          @default(now()) @map("registered_at") @db.Timestamptz(6)
+  activity     CommunityActivity @relation(fields: [activityId], references: [id])
 
   @@unique([activityId, userId])
   @@map("activity_registration")
@@ -544,4 +544,47 @@ model QueueEntry {
   queue         RestaurantQueue @relation(fields: [queueId], references: [id])
 
   @@map("queue_entry")
+}
+
+// ═══ yoxi 叫車模組 ═══
+
+model Driver {
+  id          String      @id @default(uuid()) @db.Uuid
+  name        String      @db.VarChar(50)
+  phone       String      @db.VarChar(20)
+  plateNumber String      @map("plate_number") @db.VarChar(20)
+  carModel    String      @map("car_model") @db.VarChar(50)
+  carType     String      @default("sedan") @map("car_type") @db.VarChar(20)
+  rating      Decimal     @default(5.0) @db.Decimal(2, 1)
+  totalTrips  Int         @default(0) @map("total_trips")
+  status      String      @default("available") @db.VarChar(20)
+  isDeleted   Boolean     @default(false) @map("is_deleted")
+  creTime     DateTime    @default(now()) @map("cre_time") @db.Timestamptz(6)
+  rideOrders  RideOrder[]
+
+  @@map("driver")
+}
+
+model RideOrder {
+  id             String    @id @default(uuid()) @db.Uuid
+  passengerId    String    @map("passenger_id") @db.Uuid
+  passengerName  String    @map("passenger_name") @db.VarChar(50)
+  passengerPhone String?   @map("passenger_phone") @db.VarChar(20)
+  pickup         String    @db.VarChar(200)
+  destination    String    @db.VarChar(200)
+  carType        String    @default("sedan") @map("car_type") @db.VarChar(20)
+  mode           String    @default("instant") @db.VarChar(20)
+  scheduledAt    DateTime? @map("scheduled_at") @db.Timestamptz(6)
+  status         String    @default("pending") @db.VarChar(20)
+  driverId       String?   @map("driver_id") @db.Uuid
+  fare           Int?
+  distance       Decimal?  @db.Decimal(5, 1)
+  rating         Int?
+  ratingComment  String?   @map("rating_comment") @db.VarChar(200)
+  creTime        DateTime  @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updTime        DateTime  @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
+  completedAt    DateTime? @map("completed_at") @db.Timestamptz(6)
+  driver         Driver?   @relation(fields: [driverId], references: [id])
+
+  @@map("ride_order")
 }
