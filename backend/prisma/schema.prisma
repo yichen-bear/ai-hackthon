@@ -363,8 +363,9 @@ model ChatMessage {
   id           String   @id @default(uuid()) @db.Uuid
   senderId     String   @map("sender_id") @db.Uuid
   senderName   String   @map("sender_name") @db.VarChar(50)
-  receiverId   String   @map("receiver_id") @db.Uuid
-  receiverName String   @map("receiver_name") @db.VarChar(50)
+  receiverId   String?  @map("receiver_id") @db.Uuid
+  receiverName String?  @map("receiver_name") @db.VarChar(50)
+  groupId      String?  @map("group_id") @db.Uuid
   listingId    String?  @map("listing_id") @db.Uuid
   content      String   @db.VarChar(1000)
   messageType  String   @default("text") @map("message_type") @db.VarChar(20)
@@ -372,10 +373,50 @@ model ChatMessage {
   creTime      DateTime @default(now()) @map("cre_time") @db.Timestamptz(6)
 
   listing      SecondhandListing? @relation(fields: [listingId], references: [id])
+  group        CommunityGroup?   @relation(fields: [groupId], references: [id])
 
   @@index([senderId, receiverId])
   @@index([receiverId, isRead])
+  @@index([groupId, creTime])
   @@map("chat_message")
+}
+
+// ═══ 興趣社群 ═══
+
+model CommunityGroup {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String   @db.VarChar(50)
+  type        String   @db.VarChar(20)  // interest, course
+  icon        String   @db.VarChar(10)
+  tags        String[] @default([])
+  description String?  @db.VarChar(200)
+  maxMembers  Int      @default(50) @map("max_members")
+  activityDate     String?  @map("activity_date") @db.VarChar(50)
+  activityTime     String?  @map("activity_time") @db.VarChar(50)
+  activityLocation String?  @map("activity_location") @db.VarChar(100)
+  creatorId   String   @map("creator_id") @db.Uuid
+  creatorName String   @map("creator_name") @db.VarChar(50)
+  isDeleted   Boolean  @default(false) @map("is_deleted")
+  creTime     DateTime @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updTime     DateTime @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
+
+  members     GroupMember[]
+  messages    ChatMessage[]
+
+  @@map("community_group")
+}
+
+model GroupMember {
+  id       String   @id @default(uuid()) @db.Uuid
+  groupId  String   @map("group_id") @db.Uuid
+  userId   String   @map("user_id") @db.Uuid
+  userName String   @map("user_name") @db.VarChar(50)
+  joinedAt DateTime @default(now()) @map("joined_at") @db.Timestamptz(6)
+
+  group    CommunityGroup @relation(fields: [groupId], references: [id])
+
+  @@unique([groupId, userId])
+  @@map("group_member")
 }
 
 model PickupReservation {

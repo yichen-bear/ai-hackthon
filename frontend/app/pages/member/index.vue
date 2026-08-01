@@ -129,41 +129,61 @@ interface MyGroup {
   lastMessage?: string; lastMessageTime?: string
   activityDate?: string; activityTime?: string; activityLocation?: string
 }
-const myGroups = ref<MyGroup[]>([
-  { id: 'mg-1', name: '登山同好會', type: 'interest', icon: '🏔️', memberCount: 23, unreadCount: 3, lastMessage: '本週六改在象山集合', lastMessageTime: '14:30', activityDate: '2024-08-03', activityTime: '07:00-10:00', activityLocation: '象山步道入口' },
-  { id: 'mg-2', name: '手機攝影班', type: 'course', icon: '📷', memberCount: 24, unreadCount: 0, lastMessage: '下週三帶自己的作品來分享', lastMessageTime: '昨天', activityDate: '每週三', activityTime: '09:00-11:00', activityLocation: '社大 A201' },
-  { id: 'mg-3', name: '桌遊揪團', type: 'interest', icon: '🎲', memberCount: 12, unreadCount: 1, lastMessage: '有人週末要來嗎？', lastMessageTime: '11:00', activityDate: '2024-08-04', activityTime: '14:00-17:00', activityLocation: '里民活動室' },
-])
+const myGroups = ref<MyGroup[]>([])
 
 const showGroupChat = ref(false)
 const activeGroupChat = ref<MyGroup | null>(null)
 const groupChatMessages = ref<ChatMsg[]>([])
 const newGroupMsg = ref('')
 
-function enterGroupChat(group: MyGroup) {
+// 從 DB 取得我的社群
+async function fetchMyGroups() {
+  try {
+    const data: any[] = await $fetch('/api/groups/my', { params: { userId: currentUserId } })
+    myGroups.value = data.map(g => ({
+      id: g.id, name: g.name, type: g.type || 'interest', icon: g.icon || '💡',
+      memberCount: g.memberCount || 0, unreadCount: g.unreadCount || 0,
+      lastMessage: g.lastMessage || '', lastMessageTime: g.lastMessageTime || '',
+      activityDate: g.activityDate, activityTime: g.activityTime, activityLocation: g.activityLocation,
+    }))
+  } catch { myGroups.value = [] }
+}
+
+onMounted(() => { fetchMyGroups() })
+
+async function enterGroupChat(group: MyGroup) {
   activeGroupChat.value = group
   group.unreadCount = 0
-  groupChatMessages.value = [
-    { author: '📌 公告', content: `歡迎來到【${group.name}】！請遵守社群規範，友善交流。`, time: '', isPinned: true },
-    { author: '小美', content: '大家好！新人報到～', time: '09:30' },
-    { author: '阿傑', content: '歡迎歡迎！', time: '09:45' },
-    { author: '團長', content: group.lastMessage || '活動細節稍後公布', time: group.lastMessageTime || '10:00' },
-  ]
   showGroupChat.value = true
-}
-
-function sendGroupMsg() {
-  if (!newGroupMsg.value.trim()) return
-  groupChatMessages.value.push({ author: '我', content: newGroupMsg.value.trim(), time: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }) })
-  newGroupMsg.value = ''
-}
-
-function leaveGroup(group: MyGroup) {
-  myGroups.value = myGroups.value.filter(g => g.id !== group.id)
-  if (activeGroupChat.value?.id === group.id) {
-    showGroupChat.value = false
-    activeGroupChat.value = null
+  try {
+    const msgs: any[] = await $fetch(`/api/groups/${group.id}/messages`)
+    groupChatMessages.value = msgs.map(m => ({
+      author: m.senderId === currentUserId ? '我' : m.senderName,
+      content: m.content,
+      time: m.messageType === 'system' ? '' : new Date(m.creTime).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }),
+      isPinned: m.messageType === 'system',
+    }))
+  } catch {
+    groupChatMessages.value = [{ author: '📌 公告', content: `歡迎來到【${group.name}】！`, time: '', isPinned: true }]
   }
+}
+
+async function sendGroupMsg() {
+  if (!newGroupMsg.value.trim() || !activeGroupChat.value) return
+  const content = newGroupMsg.value.trim()
+  newGroupMsg.value = ''
+  groupChatMessages.value.push({ author: '我', content, time: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }) })
+  try {
+    await $fetch(`/api/groups/${activeGroupChat.value.id}/messages`, { method: 'POST', body: { senderId: currentUserId, senderName: currentUserName, content } })
+  } catch { /* silent */ }
+}
+
+async function leaveGroup(group: MyGroup) {
+  try {
+    await $fetch('/api/groups/leave', { method: 'POST', body: { groupId: group.id, userId: currentUserId, userName: currentUserName } })
+  } catch { /* silent */ }
+  myGroups.value = myGroups.value.filter(g => g.id !== group.id)
+  if (activeGroupChat.value?.id === group.id) { showGroupChat.value = false; activeGroupChat.value = null }
 }
 
 function closeGroupChatOverlay() {

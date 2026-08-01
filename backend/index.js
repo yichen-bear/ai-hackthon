@@ -44,10 +44,12 @@ const listingsRouter = require('./routes/listings');
 const messagesRouter = require('./routes/messages');
 const reservationsRouter = require('./routes/reservations');
 const uploadRouter = require('./routes/upload');
+const groupsRouter = require('./routes/groups');
 app.use('/api/listings', listingsRouter);
 app.use('/api/messages', messagesRouter);
 app.use('/api/reservations', reservationsRouter);
 app.use('/api/upload', uploadRouter);
+app.use('/api/groups', groupsRouter);
 
 // 靜態檔案（圖片上傳）
 app.use('/uploads', express.static('public/uploads'));

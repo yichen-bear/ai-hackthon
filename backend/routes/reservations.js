@@ -115,7 +115,7 @@ router.patch('/:id', async (req, res) => {
     if (statusMsgs[status]) {
       await prisma.chatMessage.create({
         data: {
-          senderId: 'system',
+          senderId: '00000000-0000-0000-0000-ffffffffffff',
           senderName: '系統通知',
           receiverId: reservation.buyerId,
           receiverName: reservation.buyerName,
