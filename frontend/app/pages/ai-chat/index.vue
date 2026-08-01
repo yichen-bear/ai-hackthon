@@ -661,7 +661,7 @@ function goBack() {
       >
         ← 返回
       </button>
-      <h1 class="chat-page__title">統依 AI 助理</h1>
+      <h1 class="chat-page__title">統統 AI 助理</h1>
       <button
         class="chat-page__new-chat"
         type="button"
@@ -676,7 +676,7 @@ function goBack() {
     <div ref="messagesContainer" class="chat-page__messages" @scroll="handleScroll">
       <div v-if="messages.length === 0" class="chat-page__welcome">
         <p class="chat-page__placeholder">
-          嗨！我是統依，您的 AI 助手。<br>有什麼需要幫忙的嗎？可以直接描述您想辦理的服務，或用語音輸入。
+          嗨！我是統統，您的 AI 助手。<br>有什麼需要幫忙的嗎？可以直接描述您想辦理的服務，或用語音輸入。
         </p>
 
         <!-- 語言選擇 -->

@@ -108,37 +108,37 @@
       {
         "name": "智慧路線規劃",
         "description": "支援公車、捷運、高鐵、台鐵、汽車、機車多種交通方式，結合即時路況推薦最佳路線。",
-        "link": "/transport"
+        "link": "/transport?tab=route"
       },
       {
         "name": "叫車服務",
         "description": "整合 yoxi 叫車平台，支援即時/預約叫車、無障礙專車與寵物友善車。",
-        "link": "/transport"
+        "link": "/transport?tab=ride"
       },
       {
         "name": "模擬購票與票券夾",
         "description": "高鐵/台鐵模擬購票流程，動態 QR Code 票券夾統一管理。",
-        "link": "/transport"
+        "link": "/transport?tab=ticket"
       },
       {
         "name": "共享運具租賃",
         "description": "查看周邊 YouBike、GoShare、iRent 站點，一鍵完成租借。",
-        "link": "/transport"
+        "link": "/transport?tab=sharing"
       },
       {
         "name": "停車助手",
         "description": "查詢周邊停車場即時空位，記錄停放位置避免找不到車。",
-        "link": "/transport"
+        "link": "/transport?tab=parking"
       },
       {
         "name": "情境智慧推播",
         "description": "依據時間、天氣或餐廳行程，主動詢問是否叫車或規劃路線。",
-        "link": "/transport"
+        "link": "/transport?tab=ride"
       },
       {
         "name": "碳足跡追蹤",
         "description": "追蹤交通碳排放量，透過減碳成就徽章鼓勵綠色出行。",
-        "link": "/transport"
+        "link": "/transport?tab=badge"
       }
     ],
     "description": "讓每一次出行都高效、順暢",
@@ -153,27 +153,27 @@
       {
         "name": "i預購",
         "description": "線上大賣場虛擬門市貨架，主打節慶禮盒、名店美食、限量預購與獨家商品。",
-        "link": "/booking"
+        "link": "/booking?tab=preorder"
       },
       {
         "name": "i划算",
         "description": "7-11門市在地社群團購，主打日用品箱購、生鮮食材與一人即享團購價。",
-        "link": "/booking"
+        "link": "/booking?tab=groupbuy"
       },
       {
         "name": "AI 對話匹配",
         "description": "智慧分析需求關鍵字，自動推薦最適合的商品與購買頻道。",
-        "link": "/booking"
+        "link": "/booking?tab=pickup"
       },
       {
         "name": "訂單追蹤與取貨",
         "description": "即時追蹤預購/團購進度，到貨提醒並導航至取貨門市。",
-        "link": "/booking"
+        "link": "/booking?tab=order"
       },
       {
         "name": "收藏清單",
         "description": "收藏有興趣的商品，降價或即將截止時自動提醒。",
-        "link": "/booking"
+        "link": "/booking?tab=wishlist"
       }
     ],
     "description": "i預購 × i划算，智慧預購團購一站搞定",
@@ -188,32 +188,32 @@
       {
         "name": "ibon 票務中心",
         "description": "統一獅球賽門票、展覽演出與星巴克/門市體驗活動，購票後生成電子票券 QR Code。",
-        "link": "/entertainment"
+        "link": "/entertainment?tab=ticket"
       },
       {
         "name": "AI 週末提案",
         "description": "AI 偵測休閒意圖，自動推薦熱門活動並內嵌購票卡片，一步完成。",
-        "link": "/entertainment"
+        "link": "/entertainment?tab=recommend"
       },
       {
         "name": "跨模組導流",
         "description": "購票成功後一鍵跳轉交通規劃/叫車，憑票享 7-11/星巴克優惠。",
-        "link": "/entertainment"
+        "link": "/entertainment?tab=ticket"
       },
       {
         "name": "OPEN POINT 點數中心",
         "description": "購物購票累積點數，兌換咖啡、美食折抵或參加幸運轉盤抽獎。",
-        "link": "/entertainment"
+        "link": "/entertainment?tab=ticket"
       },
       {
         "name": "在地社區與社大課程",
         "description": "社區活動報名付款、社區大學課程瀏覽，現場 QR Code 掃碼報到。",
-        "link": "/entertainment"
+        "link": "/entertainment?tab=community"
       },
       {
         "name": "興趣媒合與社群",
         "description": "依興趣標籤推薦同好活動，創建或加入社群，群組互動與置頂公告。",
-        "link": "/entertainment"
+        "link": "/entertainment?tab=board"
       }
     ],
     "description": "票務、點數、社群，一站滿足你的娛樂生活",

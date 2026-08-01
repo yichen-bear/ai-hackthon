@@ -17,9 +17,21 @@ const garbageRouter = require('./routes/garbage');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// CORS 設定：允許前端 (localhost:3000) 發送 cookies
+// CORS 設定：允許前端網域發送 cookies
+const allowedOrigins = [
+  'http://localhost:3000',
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: function (origin, callback) {
+    // 允許無 origin 的請求（如 curl、server-to-server）
+    if (!origin || allowedOrigins.some(o => origin.startsWith(o))) {
+      callback(null, true);
+    } else {
+      callback(null, true); // 開發階段先全部允許，正式上線再鎖
+    }
+  },
   credentials: true,
 }));
 
