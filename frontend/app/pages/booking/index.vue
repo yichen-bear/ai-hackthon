@@ -63,8 +63,8 @@ const initialOrders: BookingOrder[] = [
   { id: 'ord-1', type: 'groupbuy', productName: '舒潔衛生紙 72包/箱', spec: '72包/箱', status: 'pending-group', currentStep: 0, totalSteps: 4, groupProgress: { current: 3, target: 5 }, pickupStore: '7-11 信義門市', createdAt: '2026-07-25' },
   { id: 'ord-2', type: 'preorder', productName: '中秋限定鳳梨酥禮盒', spec: '12入裝', status: 'shipping', currentStep: 2, totalSteps: 4, estimatedDate: '08/01', pickupStore: '7-11 松山門市', createdAt: '2026-07-20' },
   { id: 'ord-3', type: 'groupbuy', productName: '可口可樂 24罐裝', spec: '330ml × 24', status: 'ready', currentStep: 3, totalSteps: 4, pickupStore: '7-11 大安門市', createdAt: '2026-07-22' },
-  { id: 'ord-sh-1', type: 'preorder', productName: '【i二手】嬰兒推車（九成新）', spec: '門市面交 · 王媽媽', status: 'shipping', currentStep: 2, totalSteps: 4, estimatedDate: '08/05 15:30', pickupStore: '7-11 信義門市', createdAt: '2026-08-01' },
-  { id: 'ord-sh-2', type: 'preorder', productName: '【i二手】小米空氣清淨機', spec: '門市代放 · 李先生', status: 'shipping', currentStep: 2, totalSteps: 4, estimatedDate: '08/08', pickupStore: '7-11 松山門市', createdAt: '2026-08-01' },
+  { id: 'ord-sh-1', type: 'preorder', productName: '【i二手】嬰兒推車（九成新）', spec: '門市面交 · 賣家：王媽媽', status: 'ready', currentStep: 1, totalSteps: 2, pickupStore: '7-11 信義門市', createdAt: '2026-08-01' },
+  { id: 'ord-sh-2', type: 'preorder', productName: '【i二手】小米空氣清淨機', spec: '門市代收 · 賣家：李先生 · 取貨倒數 5 天', status: 'shipping', currentStep: 1, totalSteps: 3, estimatedDate: '08/08', pickupStore: '7-11 松山門市', createdAt: '2026-08-01' },
 ]
 
 // ─── 取貨提醒 ───
@@ -175,6 +175,16 @@ function handleConfirmPurchase(payload: { productId: string; quantity: number; s
 function handleNavigateToStore(payload: { storeId: string; mode: string }) {
   // 模擬跨模組聯動（行模組路線規劃）
   console.log(`[跨模組] 導航至門市 ${payload.storeId}，模式：${payload.mode}`)
+}
+
+function handleConfirmMeetup(pickupId: string) {
+  const item = pickups.value.find(p => p.id === pickupId)
+  if (item) {
+    pickups.value = pickups.value.filter(p => p.id !== pickupId)
+    // 同步更新訂單狀態
+    const order = orders.value.find(o => o.id === item.orderId)
+    if (order) { order.status = 'completed'; order.currentStep = 4 }
+  }
 }
 
 function handleBuyNow(payload: { productId: string; channel: string }) {
@@ -288,7 +298,7 @@ function demoReset() {
         <BookingPickupReminder
           :pickups="pickups"
           @navigate-to-store="handleNavigateToStore"
-          @confirm-pickup="() => {}"
+          @confirm-pickup="handleConfirmMeetup"
         />
       </template>
 

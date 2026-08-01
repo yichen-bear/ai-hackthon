@@ -128,47 +128,84 @@ interface MyGroup {
   icon: string; memberCount: number; unreadCount: number
   lastMessage?: string; lastMessageTime?: string
   activityDate?: string; activityTime?: string; activityLocation?: string
+  creatorId?: string
 }
-const myGroups = ref<MyGroup[]>([
-  { id: 'mg-1', name: '登山同好會', type: 'interest', icon: '🏔️', memberCount: 23, unreadCount: 3, lastMessage: '本週六改在象山集合', lastMessageTime: '14:30', activityDate: '2024-08-03', activityTime: '07:00-10:00', activityLocation: '象山步道入口' },
-  { id: 'mg-2', name: '手機攝影班', type: 'course', icon: '📷', memberCount: 24, unreadCount: 0, lastMessage: '下週三帶自己的作品來分享', lastMessageTime: '昨天', activityDate: '每週三', activityTime: '09:00-11:00', activityLocation: '社大 A201' },
-  { id: 'mg-3', name: '桌遊揪團', type: 'interest', icon: '🎲', memberCount: 12, unreadCount: 1, lastMessage: '有人週末要來嗎？', lastMessageTime: '11:00', activityDate: '2024-08-04', activityTime: '14:00-17:00', activityLocation: '里民活動室' },
-])
+const myGroups = ref<MyGroup[]>([])
 
 const showGroupChat = ref(false)
 const activeGroupChat = ref<MyGroup | null>(null)
 const groupChatMessages = ref<ChatMsg[]>([])
 const newGroupMsg = ref('')
 
-function enterGroupChat(group: MyGroup) {
+// 從 DB 取得我的社群
+async function fetchMyGroups() {
+  try {
+    const data: any[] = await $fetch('/api/groups/my', { params: { userId: currentUserId } })
+    myGroups.value = data.map(g => ({
+      id: g.id, name: g.name, type: g.type || 'interest', icon: g.icon || '💡',
+      memberCount: g.memberCount || 0, unreadCount: g.unreadCount || 0,
+      lastMessage: g.lastMessage || '', lastMessageTime: g.lastMessageTime || '',
+      activityDate: g.activityDate, activityTime: g.activityTime, activityLocation: g.activityLocation,
+      creatorId: g.creatorId,
+    }))
+  } catch { myGroups.value = [] }
+}
+
+onMounted(() => { fetchMyGroups() })
+
+async function enterGroupChat(group: MyGroup) {
   activeGroupChat.value = group
   group.unreadCount = 0
-  groupChatMessages.value = [
-    { author: '📌 公告', content: `歡迎來到【${group.name}】！請遵守社群規範，友善交流。`, time: '', isPinned: true },
-    { author: '小美', content: '大家好！新人報到～', time: '09:30' },
-    { author: '阿傑', content: '歡迎歡迎！', time: '09:45' },
-    { author: '團長', content: group.lastMessage || '活動細節稍後公布', time: group.lastMessageTime || '10:00' },
-  ]
   showGroupChat.value = true
-}
-
-function sendGroupMsg() {
-  if (!newGroupMsg.value.trim()) return
-  groupChatMessages.value.push({ author: '我', content: newGroupMsg.value.trim(), time: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }) })
-  newGroupMsg.value = ''
-}
-
-function leaveGroup(group: MyGroup) {
-  myGroups.value = myGroups.value.filter(g => g.id !== group.id)
-  if (activeGroupChat.value?.id === group.id) {
-    showGroupChat.value = false
-    activeGroupChat.value = null
+  try {
+    const msgs: any[] = await $fetch(`/api/groups/${group.id}/messages`)
+    groupChatMessages.value = msgs.map(m => ({
+      author: m.senderId === currentUserId ? '我' : m.senderName,
+      content: m.content,
+      time: new Date(m.creTime).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }),
+      isPinned: false,
+    })).filter(m => !m.content.startsWith('【'))
+  } catch {
+    groupChatMessages.value = [{ author: '📌 公告', content: `歡迎來到【${group.name}】！`, time: '', isPinned: true }]
   }
+}
+
+async function sendGroupMsg() {
+  if (!newGroupMsg.value.trim() || !activeGroupChat.value) return
+  const content = newGroupMsg.value.trim()
+  newGroupMsg.value = ''
+  groupChatMessages.value.push({ author: '我', content, time: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }) })
+  try {
+    await $fetch(`/api/groups/${activeGroupChat.value.id}/messages`, { method: 'POST', body: { senderId: currentUserId, senderName: currentUserName, content } })
+  } catch { /* silent */ }
+}
+
+async function leaveGroup(group: MyGroup) {
+  try {
+    await $fetch('/api/groups/leave', { method: 'POST', body: { groupId: group.id, userId: currentUserId, userName: currentUserName } })
+  } catch { /* silent */ }
+  myGroups.value = myGroups.value.filter(g => g.id !== group.id)
+  if (activeGroupChat.value?.id === group.id) { showGroupChat.value = false; activeGroupChat.value = null }
 }
 
 function closeGroupChatOverlay() {
   showGroupChat.value = false
   activeGroupChat.value = null
+}
+
+async function sendGroupAnnouncement() {
+  if (!activeGroupChat.value) return
+  const msg = prompt('輸入團長公告：')
+  if (!msg) return
+  groupChatMessages.value.push({ author: '📌 團長公告', content: msg, time: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }), isPinned: true })
+  try { await $fetch(`/api/groups/${activeGroupChat.value.id}/messages`, { method: 'POST', body: { senderId: currentUserId, senderName: '📌 團長公告', content: msg } }) } catch {}
+}
+
+async function disbandGroupFromMember() {
+  if (!activeGroupChat.value || !confirm(`確定解散「${activeGroupChat.value.name}」？`)) return
+  try { await $fetch('/api/groups/leave', { method: 'POST', body: { groupId: activeGroupChat.value.id, userId: currentUserId, userName: currentUserName } }) } catch {}
+  myGroups.value = myGroups.value.filter(g => g.id !== activeGroupChat.value!.id)
+  closeGroupChatOverlay()
 }
 
 // ─── OPEN POINT 資料 ───
@@ -327,7 +364,6 @@ const allBadges = ref([
       <button class="tab-btn" :class="{ active: activeTab === 'points' }" @click="activeTab = 'points'">點數</button>
       <button class="tab-btn" :class="{ active: activeTab === 'barcode' }" @click="activeTab = 'barcode'">條碼/錢包</button>
       <button class="tab-btn" :class="{ active: activeTab === 'tickets' }" @click="activeTab = 'tickets'">活動票券</button>
-      <button class="tab-btn" :class="{ active: activeTab === 'badges' }" @click="activeTab = 'badges'">獎章</button>
       <button class="tab-btn" :class="{ active: activeTab === 'messages' }" @click="activeTab = 'messages'; fetchConversations()">
         私訊
         <span v-if="msgUnreadTotal > 0" class="unread-dot"></span>
@@ -336,6 +372,7 @@ const allBadges = ref([
         社群
         <span v-if="myGroups.reduce((s, g) => s + g.unreadCount, 0) > 0" class="unread-dot"></span>
       </button>
+      <button class="tab-btn" :class="{ active: activeTab === 'badges' }" @click="activeTab = 'badges'">獎章</button>
     </nav>
 
     <!-- ═══ 點數專區 ═══ -->
@@ -616,11 +653,11 @@ const allBadges = ref([
               <span class="group-type" :class="group.type === 'course' ? 'group-type--course' : 'group-type--interest'">{{ group.type === 'course' ? '📚 課程' : '💡 興趣' }}</span>
             </div>
             <p class="group-last-msg">{{ group.lastMessage || '暫無訊息' }}</p>
+            <span class="group-member-count">👥 {{ group.memberCount }} 人</span>
           </div>
         </div>
         <div class="group-card-right">
           <span v-if="group.unreadCount > 0" class="group-unread">{{ group.unreadCount }}</span>
-          <span class="group-time">{{ group.lastMessageTime }}</span>
           <button class="group-leave-btn" @click="leaveGroup(group)">退出</button>
         </div>
       </div>
@@ -635,13 +672,18 @@ const allBadges = ref([
             <span class="chat-title">{{ activeGroupChat.name }}</span>
             <span class="chat-members">👥 {{ activeGroupChat.memberCount }}</span>
           </header>
-          <!-- 置頂活動資訊卡 -->
+          <!-- 團長功能（僅在會員中心顯示） -->
+          <div v-if="activeGroupChat.creatorId === currentUserId" class="chat-leader-bar">
+            <button class="chat-leader-btn" @click="sendGroupAnnouncement">📢 發公告</button>
+            <button class="chat-leader-btn chat-leader-btn--danger" @click="disbandGroupFromMember">🗑️ 解散社群</button>
+          </div>
+          <!-- 聊天訊息 -->
           <div class="chat-activity-card">
             <div class="chat-activity-icon">{{ activeGroupChat.icon }}</div>
             <div class="chat-activity-info">
               <span class="chat-activity-name">{{ activeGroupChat.name }}</span>
-              <span class="chat-activity-detail">📅 {{ activeGroupChat.activityDate }} {{ activeGroupChat.activityTime }}</span>
-              <span class="chat-activity-detail">📍 {{ activeGroupChat.activityLocation }}</span>
+              <span v-if="activeGroupChat.activityDate" class="chat-activity-detail">📅 {{ activeGroupChat.activityDate }} {{ activeGroupChat.activityTime }}</span>
+              <span v-if="activeGroupChat.activityLocation" class="chat-activity-detail">📍 {{ activeGroupChat.activityLocation }}</span>
             </div>
           </div>
           <div class="chat-messages">
@@ -867,7 +909,8 @@ const allBadges = ref([
 .group-type { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 6px; }
 .group-type--interest { background: #fdf2f8; color: #ec4899; }
 .group-type--course { background: #f5f3ff; color: #8b5cf6; }
-.group-last-msg { margin: 2px 0 0; font-size: 12px; color: #78716c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.group-last-msg { margin: 2px 0 0; font-size: 12px; color: #78716c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+.group-member-count { font-size: 10px; color: #9ca3af; }
 .group-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
 .group-unread { background: #ec4899; color: #fff; font-size: 10px; font-weight: 700; min-width: 18px; height: 18px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
 .group-time { font-size: 10px; color: #78716c; }
@@ -883,6 +926,9 @@ const allBadges = ref([
 .chat-back { background: none; border: none; font-size: 14px; cursor: pointer; color: #78716c; }
 .chat-title { font-size: 14px; font-weight: 700; color: #1c1917; }
 .chat-members { font-size: 11px; color: #78716c; }
+.chat-leader-bar { display: flex; gap: 6px; padding: 6px 16px; border-bottom: 1px solid #e2e8f0; }
+.chat-leader-btn { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #ec4899; border-radius: 8px; background: transparent; color: #ec4899; cursor: pointer; }
+.chat-leader-btn--danger { border-color: #e11d48; color: #e11d48; }
 .chat-activity-card { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: #fdf2f8; border-bottom: 1px solid #fce7f3; }
 .chat-activity-icon { font-size: 24px; }
 .chat-activity-info { display: flex; flex-direction: column; gap: 2px; }

@@ -52,8 +52,16 @@ const filteredOrders = computed(() => {
 })
 
 // ─── 步驟條邏輯（對齊廠商端流程） ───
-function getStepLabels(type: 'preorder' | 'groupbuy'): string[] {
-  if (type === 'groupbuy') return ['待成團', '門市彙整', '區域配送', '已到店']
+function getStepLabels(order: BookingOrder): string[] {
+  // i二手面交：2步
+  if (order.productName.includes('i二手') && order.spec?.includes('面交')) {
+    return ['已確認交易', '自行確認已面交']
+  }
+  // i二手代收：3步
+  if (order.productName.includes('i二手') && order.spec?.includes('代收')) {
+    return ['賣家已寄放', '取貨倒數中', '買家已取貨']
+  }
+  if (order.type === 'groupbuy') return ['待成團', '門市彙整', '區域配送', '已到店']
   return ['已下單', '門市彙整', '區域配送', '已到店']
 }
 
@@ -125,7 +133,7 @@ function getGroupPercent(order: BookingOrder): number {
         <!-- 步驟條 -->
         <div class="step-indicator" :aria-label="`訂單進度：第 ${order.currentStep + 1} 步，共 ${order.totalSteps} 步`">
           <div
-            v-for="(label, idx) in getStepLabels(order.type)"
+            v-for="(label, idx) in getStepLabels(order)"
             :key="idx"
             class="step-item"
           >
@@ -133,7 +141,7 @@ function getGroupPercent(order: BookingOrder): number {
               <span v-if="getStepStatus(idx, order.currentStep) === 'completed'" class="step-check">✓</span>
             </div>
             <span class="step-label" :class="getStepStatus(idx, order.currentStep)">{{ label }}</span>
-            <div v-if="idx < getStepLabels(order.type).length - 1" class="step-line" :class="{ filled: idx < order.currentStep }"></div>
+            <div v-if="idx < getStepLabels(order).length - 1" class="step-line" :class="{ filled: idx < order.currentStep }"></div>
           </div>
         </div>
 
@@ -186,6 +194,7 @@ function getGroupPercent(order: BookingOrder): number {
         <div class="empty-actions">
           <button class="empty-btn" aria-label="前往 i預購">前往 i預購</button>
           <button class="empty-btn" aria-label="前往 i划算">前往 i划算</button>
+          <button class="empty-btn" aria-label="前往 i二手">前往 i二手</button>
         </div>
       </div>
     </div>

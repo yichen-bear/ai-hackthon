@@ -127,6 +127,15 @@ function isExpired(item: PickupItem): boolean {
             </button>
           </div>
         </div>
+
+        <!-- i二手面交確認按鈕 -->
+        <button
+          v-if="!isExpired(item) && item.productName.includes('i二手') && item.productName.includes('面交')"
+          class="confirm-meetup-btn"
+          @click="emit('confirm-pickup', item.id)"
+        >
+          ✅ 確認已面交完成
+        </button>
       </div>
 
       <!-- 空狀態 -->
@@ -328,6 +337,22 @@ function isExpired(item: PickupItem): boolean {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
+
+.confirm-meetup-btn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  background: #16a34a;
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md, 12px);
+  font-size: var(--text-sm, 13px);
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+  transition: opacity 0.15s ease;
+}
+.confirm-meetup-btn:hover { opacity: 0.85; }
 
 /* ─── 空狀態 ─── */
 .empty-state {
