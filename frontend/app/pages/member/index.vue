@@ -655,6 +655,14 @@ const allBadges = ref([
             <span class="chat-members">👥 {{ activeGroupChat.memberCount }}</span>
           </header>
           <!-- 聊天訊息 -->
+          <div class="chat-activity-card">
+            <div class="chat-activity-icon">{{ activeGroupChat.icon }}</div>
+            <div class="chat-activity-info">
+              <span class="chat-activity-name">{{ activeGroupChat.name }}</span>
+              <span v-if="activeGroupChat.activityDate" class="chat-activity-detail">📅 {{ activeGroupChat.activityDate }} {{ activeGroupChat.activityTime }}</span>
+              <span v-if="activeGroupChat.activityLocation" class="chat-activity-detail">📍 {{ activeGroupChat.activityLocation }}</span>
+            </div>
+          </div>
           <div class="chat-messages">
             <div v-for="(msg, idx) in groupChatMessages" :key="idx" class="chat-msg" :class="{ 'chat-msg--mine': msg.author === '我', 'chat-msg--pinned': msg.isPinned }">
               <span v-if="!msg.isPinned && msg.author !== '我'" class="chat-author">{{ msg.author }}</span>
