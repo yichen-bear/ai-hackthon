@@ -199,6 +199,33 @@ async function handleReserve() {
 const totalTransactions = 128
 const totalCarbonSaved = 42.5
 
+// ─── 我的刊登 ───
+const myListings = ref<SecondhandItem[]>([])
+const showMyListings = ref(false)
+
+async function fetchMyListings() {
+  showMyListings.value = !showMyListings.value
+  if (!showMyListings.value) return
+  try {
+    const data: any = await $fetch('/api/listings', { params: { category: 'all' } })
+    myListings.value = data.filter((i: any) => i.sellerId === currentUser.id)
+  } catch {
+    myListings.value = []
+  }
+}
+
+async function cancelMyListing(item: SecondhandItem) {
+  if (!confirm(`確定要取消「${item.productName}」的刊登嗎？`)) return
+  try {
+    await $fetch(`/api/listings/${item.id}`, { method: 'PATCH', body: { status: 'cancelled' } })
+    alert('✅ 已取消刊登')
+    myListings.value = myListings.value.filter(i => i.id !== item.id)
+    fetchListings()
+  } catch (e: any) {
+    alert('❌ 取消失敗：' + (e?.data?.error || e?.message || ''))
+  }
+}
+
 function timeAgo(iso: string): string {
   const d = Date.now() - new Date(iso).getTime()
   const h = Math.floor(d / 3600000)
@@ -217,6 +244,19 @@ function timeAgo(iso: string): string {
         <div class="sh__banner-item"><span>🌍</span><span>累積減碳：<strong>{{ totalCarbonSaved }} kg</strong> CO₂e</span></div>
       </div>
       <button class="sh__post-btn" @click="showPostForm = true">➕ 我要出清</button>
+    </div>
+
+    <!-- 我的刊登 -->
+    <button class="sh__my-btn" @click="fetchMyListings">📋 {{ showMyListings ? '收合' : '查看' }}我的刊登</button>
+    <div v-if="showMyListings" class="sh__my-list">
+      <div v-if="myListings.length === 0" class="sh__empty">您目前沒有刊登中的商品</div>
+      <div v-for="item in myListings" :key="item.id" class="sh__my-item">
+        <div class="sh__my-info">
+          <span class="sh__my-name">{{ item.productName }}</span>
+          <span class="sh__my-status">{{ item.price === 0 ? '免費' : `$${item.price}` }} · {{ item.pickupStore }}</span>
+        </div>
+        <button class="sh__my-cancel" @click="cancelMyListing(item)">取消刊登</button>
+      </div>
     </div>
 
     <!-- 分類 -->
@@ -420,6 +460,16 @@ function timeAgo(iso: string): string {
 .sh__reserve-product { margin: 0 0 4px; font-size: 15px; font-weight: 700; color: #1c1917; }
 .sh__reserve-meta { margin: 0 0 2px; font-size: 12px; color: #78716c; }
 .sh__reserve-hint { margin: 0; font-size: 12px; color: #0369a1; background: #e0f2fe; padding: 10px 12px; border-radius: 10px; }
+
+/* 我的刊登 */
+.sh__my-btn { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; font-size: 13px; font-weight: 600; color: #1c1917; cursor: pointer; text-align: center; }
+.sh__my-btn:hover { background: #f8fafc; }
+.sh__my-list { margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px; }
+.sh__my-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 10px; }
+.sh__my-info { display: flex; flex-direction: column; gap: 2px; }
+.sh__my-name { font-size: 13px; font-weight: 600; color: #1c1917; }
+.sh__my-status { font-size: 11px; color: #78716c; }
+.sh__my-cancel { padding: 6px 12px; border: 1px solid #e11d48; border-radius: 8px; background: transparent; color: #e11d48; font-size: 11px; font-weight: 600; cursor: pointer; }
 
 /* Image upload */
 .sh__image-upload { position: relative; }
