@@ -154,7 +154,7 @@ async function createGroup() {
     </div>
 
     <!-- 推薦列表 -->
-    <div v-if="localInterests.length > 0 && sortedGroups.length > 0" class="match-list">
+    <div v-if="sortedGroups.length > 0" class="match-list">
       <article v-for="group in sortedGroups" :key="group.id" class="match-card">
         <div class="match-header">
           <h3 class="match-name">{{ group.name }}</h3>
@@ -177,11 +177,11 @@ async function createGroup() {
     </div>
 
     <!-- 引導 -->
-    <div v-else-if="localInterests.length === 0" class="empty-state">
-      <p>選擇你的興趣標籤，我們幫你找到同好！</p>
+    <div v-else-if="localInterests.length > 0" class="empty-state">
+      <p>暫無匹配社群，試試其他興趣標籤</p>
     </div>
     <div v-else class="empty-state">
-      <p>暫無匹配社群，試試增加更多興趣標籤</p>
+      <p>載入中...</p>
     </div>
 
     <!-- 群組互動 Overlay -->
