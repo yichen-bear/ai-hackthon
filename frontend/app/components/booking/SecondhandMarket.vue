@@ -35,8 +35,9 @@ const activeCategory = ref<ItemCategory>('all')
 const items = ref<SecondhandItem[]>([])
 const isLoading = ref(false)
 
-// 模擬當前用戶（使用 UUID 格式以匹配 DB）
-const currentUser = { id: '00000000-0000-0000-0000-000000000001', name: '沈O淇' }
+// 當前用戶（從登入狀態取得）
+const { currentUser: authUser } = useCurrentUser()
+const currentUser = computed(() => ({ id: authUser.value.id, name: authUser.value.maskedName }))
 
 // ─── Toast 通知系統（APP 風格） ───
 const toastMsg = ref('')
@@ -124,8 +125,8 @@ async function handlePost() {
     await $fetch('/api/listings', {
       method: 'POST',
       body: {
-        sellerId: currentUser.id,
-        sellerName: currentUser.name,
+        sellerId: currentUser.value.id,
+        sellerName: currentUser.value.name,
         productName: postForm.value.productName,
         description: postForm.value.description,
         price: postForm.value.isFree ? 0 : postForm.value.price,
@@ -160,7 +161,7 @@ const msgTarget = ref<SecondhandItem | null>(null)
 const msgContent = ref('')
 
 function openMsgModal(item: SecondhandItem) {
-  if (item.sellerId === currentUser.id) {
+  if (item.sellerId === currentUser.value.id) {
     showToast('❌ 不可私訊自己', 'error')
     return
   }
@@ -174,7 +175,7 @@ async function sendMsg() {
   try {
     await $fetch('/api/messages', {
       method: 'POST',
-      body: { senderId: currentUser.id, senderName: currentUser.name, receiverId: msgTarget.value.sellerId, receiverName: msgTarget.value.sellerName, listingId: msgTarget.value.id, content: msgContent.value.trim() },
+      body: { senderId: currentUser.value.id, senderName: currentUser.value.name, receiverId: msgTarget.value.sellerId, receiverName: msgTarget.value.sellerName, listingId: msgTarget.value.id, content: msgContent.value.trim() },
     })
     showToast('✅ 訊息已發送！可在會員中心「私訊」查看。')
     showMsgModal.value = false
@@ -192,7 +193,7 @@ const isReserving = ref(false)
 
 function openReserveModal(item: SecondhandItem) {
   // 賣家不可預約自己的商品
-  if (item.sellerId === currentUser.id) {
+  if (item.sellerId === currentUser.value.id) {
     showToast('❌ 不可預約自己刊登的商品', 'error')
     return
   }
@@ -216,8 +217,8 @@ async function handleReserve() {
       method: 'POST',
       body: {
         listingId: item.id,
-        buyerId: currentUser.id,
-        buyerName: currentUser.name,
+        buyerId: currentUser.value.id,
+        buyerName: currentUser.value.name,
         sellerId: item.sellerId,
         sellerName: item.sellerName,
         pickupStore: item.pickupStore,
@@ -266,7 +267,7 @@ async function fetchMyListings() {
   if (!showMyListings.value) return
   try {
     const data: any = await $fetch('/api/listings', { params: { category: 'all' } })
-    myListings.value = data.filter((i: any) => i.sellerId === currentUser.id)
+    myListings.value = data.filter((i: any) => i.sellerId === currentUser.value.id)
   } catch {
     myListings.value = []
   }

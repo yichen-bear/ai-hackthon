@@ -9,6 +9,8 @@ export interface AuthUser {
   role: 'member' | 'vendor'
   vendorId?: number
   name?: string
+  communityNickname?: string
+  maskedName?: string
 }
 
 export interface RegisterPayload {
