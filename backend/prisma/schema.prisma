@@ -390,17 +390,17 @@ model ChatMessage {
   messageType     String             @default("text") @map("message_type") @db.VarChar(20)
   isRead          Boolean            @default(false) @map("is_read")
   creTime         DateTime           @default(now()) @map("cre_time") @db.Timestamptz(6)
-  group_id        String?            @db.Uuid
-  community_group community_group?   @relation(fields: [group_id], references: [id])
+  groupId         String?            @map("group_id") @db.Uuid
   listing         SecondhandListing? @relation(fields: [listingId], references: [id])
+  group           CommunityGroup?   @relation(fields: [groupId], references: [id])
 
   @@index([senderId, receiverId])
   @@index([receiverId, isRead])
-  @@index([group_id, creTime])
+  @@index([groupId, creTime])
   @@map("chat_message")
 }
 
-// ?â????ˆè¶£ç¤¾ç¾¤ ?â???
+// ?ï¿½ï¿½????ï¿½è¶£ç¤¾ç¾¤ ?ï¿½ï¿½???
 
 model CommunityGroup {
   id          String   @id @default(uuid()) @db.Uuid
