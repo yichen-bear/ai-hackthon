@@ -7,7 +7,7 @@
 
 export type RideMode = 'instant' | 'scheduled'
 export type CarType = 'sedan' | 'van' | 'accessible' | 'pet-friendly'
-export type RideState = 'idle' | 'confirming' | 'waiting' | 'arrived' | 'completed'
+export type RideState = 'idle' | 'confirming' | 'waiting' | 'arrived' | 'riding' | 'completed'
 
 export interface RideRequest {
   pickup: string
@@ -459,7 +459,29 @@ onUnmounted(() => {
         </div>
         <div class="arrived-plate">{{ driverInfo.plateNumber }}</div>
         <p class="arrived-hint">司機正在前往，請至上車地點等候</p>
-        <button class="complete-btn" @click="handleComplete">確認上車・完成行程</button>
+        <button class="complete-btn" @click="rideState = 'riding'">確認上車</button>
+      </div>
+
+      <!-- riding 狀態：搭車中 -->
+      <div v-else-if="rideState === 'riding'" class="ride-riding" aria-live="polite">
+        <h4 class="state-title">🚗 搭車中</h4>
+        <div class="driver-card">
+          <div class="driver-info">
+            <span class="driver-name">{{ driverInfo.name }}</span>
+            <span class="driver-rating">⭐ {{ driverInfo.rating }}</span>
+          </div>
+          <div class="driver-car">
+            <span class="driver-plate">{{ driverInfo.plateNumber }}</span>
+            <span class="driver-model">{{ driverInfo.carModel }}</span>
+          </div>
+        </div>
+        <div class="riding-route">
+          <p class="riding-from">📍 {{ pickupInput }}</p>
+          <p class="riding-arrow">↓</p>
+          <p class="riding-to">🏁 {{ destinationInput }}</p>
+        </div>
+        <p class="riding-hint">行程進行中，請繫好安全帶</p>
+        <button class="complete-btn" @click="handleComplete">已到達目的地</button>
       </div>
 
       <!-- completed 狀態：行程結束 + 評分 -->
@@ -963,6 +985,14 @@ onUnmounted(() => {
 /* 等待提示 */
 .waiting-hint { text-align: center; font-size: 14px; color: #f59e0b; font-weight: 600; margin: 16px 0 4px; }
 .waiting-hint-sub { text-align: center; font-size: 12px; color: #94a3b8; margin: 0 0 16px; }
+
+/* 搭車中 */
+.ride-riding { text-align: center; }
+.riding-route { background: #f0fdf4; border-radius: 12px; padding: 12px; margin: 12px 0; }
+.riding-from { font-size: 13px; color: #059669; margin: 4px 0; }
+.riding-arrow { font-size: 16px; color: #94a3b8; margin: 4px 0; }
+.riding-to { font-size: 13px; color: #dc2626; margin: 4px 0; }
+.riding-hint { font-size: 13px; color: #64748b; margin: 12px 0; }
 .rating-label { font-size: 13px; color: #64748b; margin-bottom: 8px; }
 .rating-stars { display: flex; gap: 4px; justify-content: center; margin-bottom: 12px; }
 .star-btn { background: none; border: none; font-size: 24px; opacity: 0.3; cursor: pointer; transition: opacity 0.15s; }
