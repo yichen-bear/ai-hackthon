@@ -8,7 +8,6 @@ import {
 
 definePageMeta({
   layout: 'blank',
-  pageTransition: { name: 'chat-fill', mode: 'out-in' },
 })
 
 const router = useRouter()
@@ -29,6 +28,7 @@ const { isSupported: ttsSupported, playingMessageId, speak, stop: stopSpeaking }
 const inputText = ref('')
 const inlineError = ref<string | null>(null)
 const messagesContainer = ref<HTMLElement | null>(null)
+const inputTextarea = ref<HTMLTextAreaElement | null>(null)
 /** 追蹤最後一次送出是否為語音輸入，用於判斷是否自動播放 AI 回應 */
 const lastInputWasVoice = ref(false)
 
@@ -47,6 +47,9 @@ const multiSelectIds = ref<Set<number>>(new Set())
 /** 使用者是否選擇了自行填寫（此時不顯示跳過按鈕） */
 const isManualInput = ref(false)
 
+/** 定位中 */
+const isLocating = ref(false)
+
 /** 是否顯示「是否繼續」快捷按鈕（用於確認/繼續選購情境） */
 const showConfirmButtons = ref(false)
 
@@ -58,9 +61,10 @@ interface SavedAddress {
 }
 const savedAddresses = ref<SavedAddress[]>([])
 
-/** 目前題目是否為地址題或圖片上傳題 */
+/** 目前題目是否為地址題或圖片上傳題或備註題 */
 const isAddressTopic = ref(false)
 const isImageTopic = ref(false)
+const isRemarkTopic = ref(false)
 
 /** 聯絡欄位自動帶入：當題目為姓名/電話/信箱時，從登入者資料預填 */
 interface AutoFillInfo {
@@ -96,8 +100,8 @@ async function getAutoFillForTopic(topicTitle: string): Promise<AutoFillInfo | n
 /** 範例問題：幫助使用者快速開始對話 */
 const examplePrompts = [
   '我想要清洗冷氣',
-  '洗衣機需要清洗估價',
-  '我家冰箱想清洗，怎麼填單？',
+  '我需要居家清潔服務',
+  '我想要預購商品，怎麼填單？',
   '有哪些服務可以申請？',
 ]
 
@@ -126,6 +130,19 @@ function isConfirmationQuestion(text: string): boolean {
     '還是結帳',
   ]
   return patterns.some(p => text.includes(p))
+}
+
+/** 偵測最新助手訊息是否含有建議值（如飲水量計算結果） */
+const suggestedValue = ref<string | null>(null)
+
+function detectSuggestedValue(text: string): string | null {
+  // 匹配 "建議每日飲水量為 XXXml" 模式
+  const waterMatch = text.match(/建議每日飲水量為\s*(\d+)\s*ml/)
+  if (waterMatch) return waterMatch[1]
+  // 匹配 "建議看診科別為「XXX」" 模式
+  const deptMatch = text.match(/建議看診科別為「([^」]+)」/)
+  if (deptMatch) return deptMatch[1]
+  return null
 }
 
 /** 格式化摘要文字為 HTML（用於更好的視覺呈現） */
@@ -264,9 +281,11 @@ async function doSend(text: string, mode: 'text' | 'voice') {
   savedAddresses.value = []
   isAddressTopic.value = false
   isImageTopic.value = false
+  isRemarkTopic.value = false
   showConfirmButtons.value = false
   autoFillSuggestion.value = null
   isManualInput.value = false
+  suggestedValue.value = null
 
   try {
     const response = await sendMessage(text.trim(), mode)
@@ -285,23 +304,49 @@ async function doSend(text: string, mode: 'text' | 'voice') {
       currentTopicRequired.value = response.replyMeta.topicRequired !== false
     }
 
-    // 從 replyMeta 取出已儲存地址
-    if (response?.replyMeta?.savedAddresses && Array.isArray(response.replyMeta.savedAddresses)) {
-      savedAddresses.value = response.replyMeta.savedAddresses as SavedAddress[]
-      await scrollToBottom()
-    }
-
-    // 判斷是否為地址題或圖片上傳題
+    // 判斷是否為地址題或圖片上傳題或備註題
     const title = (response?.replyMeta?.topicTitle as string) || ''
     isAddressTopic.value = title.includes('地址')
     isImageTopic.value = title.includes('照片') || title.includes('圖片') || title.includes('上傳')
+    isRemarkTopic.value = title.includes('備註')
 
-    // 判斷聯絡欄位是否可自動帶入
+    // 地址題：主動取得已儲存地址
+    if (isAddressTopic.value) {
+      try {
+        const addrRes = await $fetch<{ success: boolean; data: any[] }>('/api/member/addresses', {
+          credentials: 'include',
+        })
+        if (addrRes?.success && Array.isArray(addrRes.data) && addrRes.data.length > 0) {
+          savedAddresses.value = addrRes.data.map((addr: any) => ({
+            id: addr.id,
+            label: addr.label || (addr.type === 'mailing' ? '通訊地址' : '近期地址'),
+            fullAddress: `${addr.countyName || ''}${addr.districtName || ''}${addr.addressDetail || ''}`,
+          }))
+        }
+      } catch {
+        // 未登入或取得失敗，不影響主流程
+      }
+      await scrollToBottom()
+    }
+
+    // 判斷聯絡欄位是否可自動帶入（只在 AI 當前正在問這題時才顯示）
     autoFillSuggestion.value = null
-    if (title) {
+    suggestedValue.value = null
+    const latestAiMsg = session.value.messages.filter(m => m.role === 'assistant').pop()
+    const aiIsAsking = latestAiMsg && !latestAiMsg.text.includes('已經成功') && !latestAiMsg.text.includes('已記錄') && !latestAiMsg.text.includes('好的，您')
+    if (title && aiIsAsking) {
       const suggestion = await getAutoFillForTopic(title)
       if (suggestion) {
         autoFillSuggestion.value = suggestion
+        await scrollToBottom()
+      }
+    }
+
+    // 偵測 AI 回覆是否含有建議值
+    if (latestAiMsg && aiIsAsking) {
+      const detected = detectSuggestedValue(latestAiMsg.text)
+      if (detected) {
+        suggestedValue.value = detected
         await scrollToBottom()
       }
     }
@@ -333,6 +378,34 @@ async function handleSend() {
   }
 
   await doSend(text, 'text')
+  // 重設 textarea 高度
+  if (inputTextarea.value) {
+    inputTextarea.value.style.height = 'auto'
+  }
+}
+
+/** Enter 送出，Shift+Enter 換行 */
+function handleEnterKey(e: KeyboardEvent) {
+  if (e.shiftKey) return // 允許 Shift+Enter 換行
+  e.preventDefault()
+  handleSend()
+}
+
+/** 自動調整 textarea 高度 */
+function autoResizeTextarea() {
+  const el = inputTextarea.value
+  if (!el) return
+  el.style.height = 'auto'
+  el.style.height = el.scrollHeight + 'px'
+}
+
+/** 失焦時收合 textarea（若文字只有一行則恢復最小高度） */
+function collapseTextarea() {
+  const el = inputTextarea.value
+  if (!el) return
+  // 保持自適應，不強制收合（讓使用者能看到已輸入的內容）
+  el.style.height = 'auto'
+  el.style.height = el.scrollHeight + 'px'
 }
 
 /** 單選：點擊選項按鈕直接送出該選項名稱 */
@@ -425,6 +498,7 @@ async function handleGetLocation() {
   }
 
   inlineError.value = null
+  isLocating.value = true
 
   try {
     const position = await new Promise<GeolocationPosition>((resolve, reject) => {
@@ -442,14 +516,20 @@ async function handleGetLocation() {
     )
 
     const address = res?.display_name || `${latitude}, ${longitude}`
+    // 反轉地址順序：Nominatim 回傳為小到大（號→路→區→市→國），改為大到小（國→市→區→路→號）
+    const reversedAddress = address.split(',').map((s: string) => s.trim()).reverse().join('')
     // 填入輸入框，讓使用者確認後再送出
-    inputText.value = address
+    inputText.value = reversedAddress
+    await nextTick()
+    autoResizeTextarea()
   } catch (err: any) {
     if (err.code === 1) {
       inlineError.value = '定位權限被拒絕，請在瀏覽器設定中允許'
     } else {
       inlineError.value = '無法取得定位，請手動輸入地址'
     }
+  } finally {
+    isLocating.value = false
   }
 }
 
@@ -523,7 +603,7 @@ function goBack() {
       >
         ← 返回
       </button>
-      <h1 class="chat-page__title">小統 AI 助理</h1>
+      <h1 class="chat-page__title">統依 AI 助理</h1>
       <button
         class="chat-page__new-chat"
         type="button"
@@ -538,7 +618,7 @@ function goBack() {
     <div ref="messagesContainer" class="chat-page__messages" @scroll="handleScroll">
       <div v-if="messages.length === 0" class="chat-page__welcome">
         <p class="chat-page__placeholder">
-          嗨！我是小統，您的 AI 助手。<br>有什麼需要幫忙的嗎？可以直接描述您想辦理的服務，或用語音輸入。
+          嗨！我是統依，您的 AI 助手。<br>有什麼需要幫忙的嗎？可以直接描述您想辦理的服務，或用語音輸入。
         </p>
 
         <!-- 語言選擇 -->
@@ -603,8 +683,28 @@ function goBack() {
         </ClientOnly>
       </div>
 
-      <p v-if="isLoading" class="chat-page__loading">助理思考中...</p>
-      <p v-else-if="isTranscribing" class="chat-page__loading">語音辨識中...</p>
+      <div v-if="isLoading" class="chat-page__loading">
+        <div class="spinner">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <span>助理思考中...</span>
+      </div>
+      <div v-else-if="isTranscribing" class="chat-page__loading">
+        <div class="spinner">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <span>語音辨識中...</span>
+      </div>
 
       <!-- 選擇題選項按鈕 -->
       <div v-if="currentOptions.length > 0 && !isLoading" class="chat-page__options">
@@ -630,6 +730,14 @@ function goBack() {
         >
           確認選擇 ({{ multiSelectIds.size }})
         </button>
+        <button
+          v-if="!currentTopicRequired && currentOptions.length > 2"
+          class="chat-page__option-btn chat-page__option-btn--skip"
+          type="button"
+          @click="handleSkipTopic"
+        >
+          都不用
+        </button>
       </div>
 
       <!-- 是否繼續/確認 快捷按鈕 -->
@@ -650,30 +758,37 @@ function goBack() {
         </button>
       </div>
 
-      <!-- 已儲存的常用地址快速填入按鈕 -->
-      <div v-if="savedAddresses.length > 0 && !isLoading" class="chat-page__addresses">
-        <p class="chat-page__addresses-label">快速填入常用地址：</p>
+      <!-- 地址題：定位 + 常用地址按鈕 -->
+      <div v-if="isAddressTopic && !isLoading" class="chat-page__address-actions">
+        <button class="chat-page__action-btn" type="button" :disabled="isLocating" @click="handleGetLocation">
+          <template v-if="isLocating">
+            <div class="spinner spinner--small">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            定位中...
+          </template>
+          <template v-else>
+            📍 定位目前位置
+          </template>
+        </button>
         <button
           v-for="addr in savedAddresses"
           :key="addr.id"
-          class="chat-page__address-btn"
+          class="chat-page__action-btn"
           type="button"
           @click="doSend(addr.fullAddress, 'text')"
         >
-          <span class="chat-page__address-label">{{ addr.label }}</span>
-          <span class="chat-page__address-detail">{{ addr.fullAddress }}</span>
-        </button>
-      </div>
-
-      <!-- 地址題：定位按鈕 -->
-      <div v-if="isAddressTopic && !isLoading" class="chat-page__action-buttons">
-        <button class="chat-page__action-btn" type="button" @click="handleGetLocation">
-          📍 定位目前位置
+          🏠 {{ addr.label }}
         </button>
       </div>
 
       <!-- 非必填題目：跳過按鈕（備註/說明類欄位） -->
-      <div v-if="!currentTopicRequired && currentOptions.length === 0 && !isLoading && !isManualInput" class="chat-page__skip-area">
+      <div v-if="!currentTopicRequired && isRemarkTopic && currentOptions.length === 0 && !isLoading && !isManualInput" class="chat-page__skip-area">
         <button
           class="chat-page__skip-btn"
           type="button"
@@ -699,6 +814,26 @@ function goBack() {
             class="chat-page__autofill-btn chat-page__autofill-btn--edit"
             type="button"
             @click="autoFillSuggestion = null"
+          >
+            自行輸入
+          </button>
+        </div>
+      </div>
+
+      <!-- AI 建議值快速填入（如飲水量） -->
+      <div v-if="suggestedValue && !isLoading && !autoFillSuggestion" class="chat-page__autofill">
+        <div class="chat-page__autofill-actions">
+          <button
+            class="chat-page__autofill-btn chat-page__autofill-btn--use"
+            type="button"
+            @click="doSend(suggestedValue!, 'text')"
+          >
+            使用建議值：{{ suggestedValue }}
+          </button>
+          <button
+            class="chat-page__autofill-btn chat-page__autofill-btn--edit"
+            type="button"
+            @click="suggestedValue = null"
           >
             自行輸入
           </button>
@@ -756,7 +891,7 @@ function goBack() {
     <p v-else-if="sessionError" class="chat-page__error" role="alert">{{ sessionError }}</p>
 
     <!-- 輸入區域 -->
-    <div class="chat-page__input-area">
+    <div v-if="session.stage !== 'submitted'" class="chat-page__input-area">
       <!-- 語言切換小按鈕 -->
       <button
         class="chat-page__lang-toggle"
@@ -779,14 +914,18 @@ function goBack() {
           {{ isTranscribing ? '⏳' : isListening ? '⏹' : '🎤' }}
         </button>
       </ClientOnly>
-      <input
+      <textarea
+        ref="inputTextarea"
         v-model="inputText"
         class="chat-page__input"
-        type="text"
         placeholder="輸入訊息..."
         :maxlength="MESSAGE_MAX_LENGTH"
-        @keyup.enter="handleSend"
-      />
+        rows="1"
+        @keydown.enter.exact="handleEnterKey"
+        @input="autoResizeTextarea"
+        @focus="autoResizeTextarea"
+        @blur="collapseTextarea"
+      ></textarea>
       <button
         class="chat-page__send"
         type="button"
@@ -795,6 +934,17 @@ function goBack() {
         @click="handleSend"
       >
         ➤
+      </button>
+    </div>
+
+    <!-- 送出完成：開始新對話按鈕 -->
+    <div v-if="session.stage === 'submitted'" class="chat-page__submitted-bar">
+      <button
+        class="chat-page__new-chat-btn"
+        type="button"
+        @click="confirmNewChat"
+      >
+        開始新對話
       </button>
     </div>
 
@@ -957,6 +1107,28 @@ function goBack() {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+}
+
+/* Chrome / Edge / Safari 專屬：自訂捲軸外觀 */
+.chat-page__messages::-webkit-scrollbar {
+  width: 4px;               /* 讓垂直捲軸變得很細 */
+  height: 4px;
+}
+
+.chat-page__messages::-webkit-scrollbar-track {
+  background: transparent;   /* 軌道（背景）完全透明 */
+}
+
+.chat-page__messages::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12); /* 滑塊顏色極淡 */
+  border-radius: 20px;             /* 圓角讓它更柔和 */
+  transition: background 0.2s;
+}
+
+.chat-page__messages::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25); /* 滑鼠懸停時稍微加深一點點 */
 }
 
 .chat-page__placeholder {
@@ -1013,6 +1185,10 @@ function goBack() {
   color: var(--color-text-secondary, #78716c);
   text-align: center;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 
 .chat-message {
@@ -1169,10 +1345,35 @@ function goBack() {
   flex-shrink: 0;
 }
 
+/* ── 送出完成：新對話按鈕 ── */
+.chat-page__submitted-bar {
+  padding: 16px 20px;
+  border-top: 1px solid var(--color-border, #e7e5e4);
+  background-color: var(--color-bg-card, #ffffff);
+  flex-shrink: 0;
+}
+
+.chat-page__new-chat-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background-color: var(--color-primary, #3b82f6);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.chat-page__new-chat-btn:hover {
+  background-color: #2563eb;
+}
+
 /* ── 輸入區域 ── */
 .chat-page__input-area {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 8px;
   padding: 12px 16px;
   border-top: 1px solid var(--color-border, #e7e5e4);
@@ -1214,14 +1415,18 @@ function goBack() {
 
 .chat-page__input {
   flex: 1;
-  height: 40px;
-  padding: 0 12px;
+  min-height: 40px;
+  padding: 10px 12px;
   border: 1px solid var(--color-border, #d6d3d1);
   border-radius: 20px;
   font-size: 14px;
   background-color: #fafaf9;
   color: var(--color-text-primary, #1c1917);
   outline: none;
+  resize: none;
+  line-height: 1.4;
+  font-family: inherit;
+  overflow-y: hidden;
 }
 
 .chat-page__input:focus {
@@ -1450,6 +1655,14 @@ function goBack() {
 }
 
 /* ── 地址定位 / 圖片上傳 操作按鈕 ── */
+.chat-page__address-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 4px 0;
+  align-self: flex-start;
+}
+
 .chat-page__action-buttons {
   display: flex;
   gap: 8px;
@@ -1461,7 +1674,7 @@ function goBack() {
 .chat-page__action-btn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   padding: 10px 16px;
   border: 1px solid var(--color-primary, #3b82f6);
   border-radius: 20px;
@@ -1472,9 +1685,14 @@ function goBack() {
   transition: background-color 0.15s, color 0.15s;
 }
 
-.chat-page__action-btn:hover {
+.chat-page__action-btn:hover:not(:disabled) {
   background-color: var(--color-primary, #3b82f6);
   color: #ffffff;
+}
+
+.chat-page__action-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
 }
 
 /* ── 非必填跳過按鈕 ── */
@@ -1625,5 +1843,79 @@ function goBack() {
 .chat-page__lang-toggle:hover {
   background-color: #eff6ff;
   border-color: var(--color-primary, #3b82f6);
+}
+
+/* ── 3D Cube Spinner ── */
+.spinner {
+  width: 22px;
+  height: 22px;
+  animation: spinner-y0fdc1 2s infinite ease;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.spinner > div {
+  background-color: rgba(249, 115, 22, 0.2);
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  border: 2px solid #f97316;
+}
+
+.spinner div:nth-of-type(1) {
+  transform: translateZ(-11px) rotateY(180deg);
+}
+
+.spinner div:nth-of-type(2) {
+  transform: rotateY(-270deg) translateX(50%);
+  transform-origin: top right;
+}
+
+.spinner div:nth-of-type(3) {
+  transform: rotateY(270deg) translateX(-50%);
+  transform-origin: center left;
+}
+
+.spinner div:nth-of-type(4) {
+  transform: rotateX(90deg) translateY(-50%);
+  transform-origin: top center;
+}
+
+.spinner div:nth-of-type(5) {
+  transform: rotateX(-90deg) translateY(50%);
+  transform-origin: bottom center;
+}
+
+.spinner div:nth-of-type(6) {
+  transform: translateZ(11px);
+}
+
+.spinner--small {
+  width: 14px;
+  height: 14px;
+}
+
+.spinner--small > div {
+  border-width: 1.5px;
+}
+
+.spinner--small div:nth-of-type(1) {
+  transform: translateZ(-7px) rotateY(180deg);
+}
+
+.spinner--small div:nth-of-type(6) {
+  transform: translateZ(7px);
+}
+
+@keyframes spinner-y0fdc1 {
+  0% {
+    transform: rotate(45deg) rotateX(-25deg) rotateY(25deg);
+  }
+  50% {
+    transform: rotate(45deg) rotateX(-385deg) rotateY(25deg);
+  }
+  100% {
+    transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
+  }
 }
 </style>
