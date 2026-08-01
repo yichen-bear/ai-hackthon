@@ -105,15 +105,24 @@ function stripHtml(html: string): string { return html.replace(/<[^>]*>/g, '').r
 
 // ─── 透過後端 proxy 呼叫 Directions API 取得真實資料 ───
 async function fetchDirections(origin: string, destination: string, mode: string) {
-  // 嘗試透過 server route 取得真實 Directions JSON
   try {
-    const data = await $fetch('/api/directions', {
+    const data: any = await $fetch('/api/directions', {
       params: { origin, destination, mode },
     })
+
+    // 印出完整 API 回應供除錯
+    console.log('Directions API Status:', data?.status)
+    console.log('Directions API Result:', data)
+
+    if (data?.status !== 'OK') {
+      console.error('Directions API 錯誤:', data?.status, data?.error_message)
+      return { status: data?.status || 'UNKNOWN', error_message: data?.error_message, routes: [] }
+    }
+
     return data
-  } catch {
-    // fallback：若無 server route，回傳 null（僅用地圖 embed 展示）
-    return null
+  } catch (e: any) {
+    console.error('Directions API 呼叫失敗:', e.message || e)
+    return { status: 'FETCH_ERROR', error_message: e.message || '網路錯誤', routes: [] }
   }
 }
 
@@ -137,7 +146,7 @@ const externalMapsUrl = computed(() => {
 async function handleSearch() {
   if (!destinationInput.value) return
 
-  // 清空舊資料
+  // 清空舊資料（不殘留任何歷史步驟）
   isSearching.value = true
   routeSummary.value = null
   warningMessage.value = ''
@@ -147,13 +156,26 @@ async function handleSearch() {
   const orig = originInput.value === '📍 我的位置' ? 'My Location' : originInput.value
   const dest = destinationInput.value
 
-  // 嘗試取得真實 API 資料
+  console.log('查詢路線:', { origin: orig, destination: dest, mode: currentGmapMode.value })
+
+  // 呼叫 API
   const apiResult = await fetchDirections(orig, dest, currentGmapMode.value)
 
-  if (apiResult && apiResult.routes && apiResult.routes.length > 0) {
-    // ─── 真實 API 回傳：動態解析 ───
+  // ─── 安全讀取：只在 status === 'OK' 且 routes 存在時才解析 ───
+  if (
+    apiResult &&
+    apiResult.status === 'OK' &&
+    apiResult.routes &&
+    apiResult.routes.length > 0 &&
+    apiResult.routes[0].legs &&
+    apiResult.routes[0].legs[0]
+  ) {
     const leg = apiResult.routes[0].legs[0]
-    routeSteps.value = parseSteps(leg.steps)
+
+    // 安全讀取 steps
+    if (leg.steps && leg.steps.length > 0) {
+      routeSteps.value = parseSteps(leg.steps)
+    }
 
     const distKm = parseFloat(leg.distance?.text) || 1
     const emission = calculateEmission(selectedMode.value, distKm)
@@ -172,11 +194,15 @@ async function handleSearch() {
       }
     }
   } else {
-    // ─── 無法取得 API JSON（使用 Embed 地圖 + 提示） ───
-    // 地圖仍會正確顯示路線（Embed Directions 會自動算）
-    // 但文字步驟無法取得，顯示提示
-    routeSummary.value = { duration: '見地圖', distance: '見地圖', carbonEmission: 0 }
-    apiError.value = '文字導航資料載入中... 請參考下方地圖路線'
+    // ─── API 失敗或無結果：顯示錯誤提示，不顯示任何步驟 ───
+    const status = apiResult?.status || 'UNKNOWN'
+    const errMsg = apiResult?.error_message || ''
+    apiError.value = `❌ 路線查詢失敗（狀態: ${status}）${errMsg ? '：' + errMsg : ''}，請檢查 API 設定或輸入的起終點`
+    console.error('路線查詢失敗:', { status, errMsg, apiResult })
+
+    // 地圖 Embed 仍可顯示（作為 fallback）
+    routeSummary.value = null
+    routeSteps.value = [] // 確保不顯示任何錯誤步驟
   }
 
   showMap.value = true
@@ -264,8 +290,8 @@ function getStepClass(type: ParsedStep['type']): string {
         </div>
       </div>
 
-      <!-- Fallback：API 無法取得步驟時 -->
-      <div v-else-if="apiError && showMap" class="rp__fallback">
+      <!-- Fallback：API 失敗時顯示紅色錯誤提示 -->
+      <div v-else-if="apiError && showMap" class="rp__error">
         <p>{{ apiError }}</p>
         <a class="rp__steps-link" :href="externalMapsUrl" target="_blank" rel="noopener">🗺️ 在 Google 地圖查看完整路線</a>
       </div>
@@ -340,4 +366,5 @@ function getStepClass(type: ParsedStep['type']): string {
 .rp__step-distance { font-size: 10px; color: #9ca3af; }
 
 .rp__fallback { text-align: center; padding: 16px; font-size: 13px; color: #78716c; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.rp__error { text-align: center; padding: 16px; font-size: 13px; color: #e11d48; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
 </style>
