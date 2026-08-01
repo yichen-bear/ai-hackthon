@@ -6,6 +6,16 @@
 
 const activeTab = ref<'points' | 'barcode' | 'tickets' | 'badges' | 'groups' | 'messages'>('points')
 
+// ─── Toast 通知 ───
+const toastMsg = ref('')
+const toastType = ref<'success' | 'error'>('success')
+let toastTimer: ReturnType<typeof setTimeout> | null = null
+function showToast(msg: string, type: 'success' | 'error' = 'success') {
+  toastMsg.value = msg; toastType.value = type
+  if (toastTimer) clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => { toastMsg.value = '' }, 3000)
+}
+
 // 支援 ?tab=xxx 直接跳轉
 const memberRoute = useRoute()
 onMounted(() => {
@@ -126,11 +136,11 @@ async function confirmReservation(reservationId: string, newStatus: string) {
   if (!reservationId) return
   try {
     await $fetch(`/api/reservations/${reservationId}`, { method: 'PATCH', body: { status: newStatus } })
-    alert(newStatus === 'APPROVED_MEETUP' ? '✅ 已同意面交！' : '❌ 已拒絕交易')
-    // 重新載入對話
-    if (activePeer.value) openChat(activePeer.value)
+    showToast(newStatus === 'APPROVED_MEETUP' ? '✅ 已同意面交！買家已收到通知。' : '❌ 已拒絕交易')
+    // 重新載入對話以更新卡片狀態
+    if (activePeer.value) await openChat(activePeer.value)
   } catch (e: any) {
-    alert('操作失敗：' + (e?.data?.error || e?.message || ''))
+    showToast('操作失敗：' + (e?.data?.error || e?.message || ''), 'error')
   }
 }
 interface ChatMsg { author: string; content: string; time: string; isPinned?: boolean }
@@ -364,6 +374,13 @@ const allBadges = ref([
 
 <template>
   <div class="member-center">
+    <!-- Toast 通知 -->
+    <Transition name="toast">
+      <div v-if="toastMsg" class="member-toast" :class="{ 'member-toast--error': toastType === 'error' }">
+        {{ toastMsg }}
+      </div>
+    </Transition>
+
     <!-- 頂部資訊 -->
     <div class="member-header">
       <div>
@@ -734,6 +751,15 @@ const allBadges = ref([
 </template>
 
 <style scoped>
+.member-toast {
+  position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
+  background: #10b981; color: #fff; padding: 10px 24px; border-radius: 12px;
+  font-size: 14px; font-weight: 600; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.member-toast--error { background: #ef4444; }
+.toast-enter-active, .toast-leave-active { transition: all 0.3s ease; }
+.toast-enter-from, .toast-leave-to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+
 .member-center {
   padding: 16px;
   max-width: 430px;
