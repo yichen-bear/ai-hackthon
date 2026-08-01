@@ -47,7 +47,7 @@ interface VehicleTab {
 }
 
 const vehicleTabs: VehicleTab[] = [
-  { key: 'bike', icon: '🚲', label: '腳踏車' },
+  { key: 'bike', icon: '🚲', label: 'YouBike 2.0' },
   { key: 'scooter', icon: '🛵', label: '機車' },
   { key: 'car', icon: '🚗', label: '汽車' },
 ]
@@ -181,6 +181,13 @@ onMounted(() => {
         </button>
       </div>
 
+      <!-- YouBike 2.0 即時車況（bike 選中時） -->
+      <template v-if="selectedType === 'bike'">
+        <TransportYouBikePanel />
+      </template>
+
+      <!-- 機車 / 汽車：原有列表 -->
+      <template v-else>
       <!-- 視圖切換 -->
       <div class="view-switch">
         <button
@@ -279,6 +286,7 @@ onMounted(() => {
           @error="handleMapError"
         />
       </div>
+      </template>
     </div>
   </section>
 </template>
