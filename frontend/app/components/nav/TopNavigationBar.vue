@@ -78,11 +78,17 @@ onMounted(() => {
   getLocation() // 自動定位
 })
 
-// ---------- 登入者（保留不變） ----------
-const user = ref({
-  name: '王小明',
+// ---------- 登入者（從 composable 取得） ----------
+const { currentUser, isAuthenticated, init: initUser } = useCurrentUser()
+
+const user = computed(() => ({
+  name: currentUser.value.name,
   avatar: '',
-  isLogin: true,
+  isLogin: isAuthenticated.value,
+}))
+
+onMounted(() => {
+  initUser()
 })
 
 // ---------- 下拉選單狀態 ----------

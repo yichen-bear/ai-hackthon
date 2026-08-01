@@ -38,6 +38,10 @@ interface TakeoutOrder {
 // ─── Tab 狀態 ───
 const activeTab = ref<'orders' | 'menu' | 'dispatch'>('orders')
 
+// 支援 ?tab=orders/menu/dispatch 跳轉
+const adminRoute = useRoute()
+onMounted(() => { const t = adminRoute.query.tab as string; if (t && ['orders', 'menu', 'dispatch'].includes(t)) activeTab.value = t as any })
+
 // ─── Toast 系統 ───
 const toastMessage = ref('')
 let toastTimer: ReturnType<typeof setTimeout> | null = null

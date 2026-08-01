@@ -7,7 +7,8 @@ const authRouter = require('./routes/auth');
 const aiChatRouter = require('./routes/aiChat');
 const addressRouter = require('./routes/address');
 const memberAddressRouter = require('./routes/memberAddress');
-const speechRouter = require('./routes/speech');
+let speechRouter
+try { speechRouter = require('./routes/speech') } catch (e) { speechRouter = require('express').Router(); console.warn('⚠️ speech route skipped (missing dependency)') }
 const formRouter = require('./routes/form');
 const healthTrackerRouter = require('./routes/healthTracker');
 const wasteClassificationRouter = require('./routes/wasteClassification');
@@ -83,10 +84,14 @@ const listingsRouter = require('./routes/listings');
 const messagesRouter = require('./routes/messages');
 const reservationsRouter = require('./routes/reservations');
 const uploadRouter = require('./routes/upload');
+const groupsRouter = require('./routes/groups');
 app.use('/api/listings', listingsRouter);
 app.use('/api/messages', messagesRouter);
 app.use('/api/reservations', reservationsRouter);
 app.use('/api/upload', uploadRouter);
+app.use('/api/groups', groupsRouter);
+app.use('/api/secondhand-items', require('./routes/secondhand-items'));
+app.use('/api/activities', require('./routes/activities'));
 
 // 靜態檔案（圖片上傳）
 app.use('/uploads', express.static('public/uploads'));

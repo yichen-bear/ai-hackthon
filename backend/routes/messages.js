@@ -9,8 +9,8 @@ router.get('/', async (req, res) => {
     if (!userId) return res.status(400).json({ error: 'userId is required' })
 
     const where = peerId
-      ? { OR: [{ senderId: userId, receiverId: peerId }, { senderId: peerId, receiverId: userId }] }
-      : { OR: [{ senderId: userId }, { receiverId: userId }] }
+      ? { OR: [{ senderId: userId, receiverId: peerId }, { senderId: peerId, receiverId: userId }], groupId: null }
+      : { OR: [{ senderId: userId }, { receiverId: userId }], groupId: null }
 
     const messages = await prisma.chatMessage.findMany({
       where,
@@ -30,10 +30,14 @@ router.get('/unread', async (req, res) => {
     const { userId } = req.query
     if (!userId) return res.status(400).json({ error: 'userId is required' })
     const count = await prisma.chatMessage.count({
-      where: { receiverId: userId, isRead: false },
+      where: { receiverId: userId, isRead: false, groupId: null },
     })
     res.json({ unreadCount: count })
   } catch (err) {
+    // 表不存在時回傳 0，避免前端噴紅字
+    if (err.message && err.message.includes('does not exist')) {
+      return res.json({ unreadCount: 0 })
+    }
     console.error('GET /api/messages/unread error:', err)
     res.status(500).json({ error: 'Failed to get unread count' })
   }

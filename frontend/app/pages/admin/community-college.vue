@@ -35,6 +35,10 @@ const tabs = computed(() => viewMode.value === 'overview'
   : ['學員名單', '出缺席', '特殊需求']
 )
 
+// 支援 ?tab=0/1/2 跳轉
+const adminRoute = useRoute()
+onMounted(() => { const t = adminRoute.query.tab; if (t != null) activeTab.value = Number(t) })
+
 // ─── Toast ───
 const toastMessage = ref('')
 let toastTimer: ReturnType<typeof setTimeout> | null = null

@@ -1,101 +1,138 @@
 <script setup lang="ts">
 /**
- * 興趣媒合
- * 可創建社群 / 加入社群後進入群組互動（公告置頂 + 成員聊天）
+ * 興趣媒合（DB 版）
+ * 篩選：未選=全列；選了=至少一個標籤匹配（OR）
+ * 建立社群寫入 DB，團長可取消/發公告
  */
 import type { MatchedGroup } from '~/types/entertainment'
 
-const props = defineProps<{
-  userInterests: string[]
-  matchedGroups: MatchedGroup[]
-}>()
+const props = defineProps<{ userInterests: string[]; matchedGroups: MatchedGroup[] }>()
+const emit = defineEmits<{ 'join-group': [payload: { groupId: string; matchScore: number }]; 'update-interests': [interests: string[]] }>()
 
-const emit = defineEmits<{
-  'join-group': [payload: { groupId: string; matchScore: number }]
-  'update-interests': [interests: string[]]
-}>()
+const AVAILABLE_INTERESTS = ['攝影', '登山', '桌遊', '手作', '咖啡', '閱讀', '音樂', '運動', '料理', '旅行', '電影', '舞蹈']
+const { currentUser: authUser } = useCurrentUser()
+const currentUserId = computed(() => authUser.value.id)
+const currentUserName = computed(() => authUser.value.nickname)
 
-const AVAILABLE_INTERESTS = [
-  '攝影', '登山', '桌遊', '手作', '咖啡', '閱讀',
-  '音樂', '運動', '料理', '旅行', '電影', '舞蹈',
-]
-
-const localInterests = ref<string[]>([...props.userInterests])
-watch(() => props.userInterests, (val) => { localInterests.value = [...val] })
+// ─── 篩選標籤（改為篩選制度：未選全列、選了 OR） ───
+const localInterests = ref<string[]>([])
+watch(() => props.userInterests, (v) => { /* 不自動套用，讓使用者手動選 */ })
 
 function toggleInterest(interest: string) {
   const idx = localInterests.value.indexOf(interest)
   if (idx >= 0) localInterests.value.splice(idx, 1)
   else localInterests.value.push(interest)
   emit('update-interests', [...localInterests.value])
+  fetchGroups()
 }
-
 function isSelected(interest: string) { return localInterests.value.includes(interest) }
-
-const sortedGroups = computed(() => [...props.matchedGroups].sort((a, b) => b.matchScore - a.matchScore))
 function isMatchedTag(tag: string) { return localInterests.value.includes(tag) }
 
-// 已加入的社群
+// ─── 從 DB 取得社群 ───
+const dbGroups = ref<any[]>([])
 const joinedGroups = ref<Set<string>>(new Set())
 
-// 群組互動 overlay
+async function fetchGroups() {
+  try {
+    const data: any[] = await $fetch('/api/groups/discover', { params: { userId: currentUserId.value, tags: localInterests.value.join(',') } })
+    dbGroups.value = data
+    data.forEach(g => { if (g.isJoined) joinedGroups.value.add(g.id) })
+  } catch { /* use props fallback */ }
+}
+onMounted(() => { fetchGroups() })
+
+// 篩選邏輯：未選全列、選了至少一個匹配
+const sortedGroups = computed(() => {
+  let list = dbGroups.value
+  if (localInterests.value.length > 0) {
+    list = list.filter(g => g.tags && g.tags.some((t: string) => localInterests.value.includes(t)))
+  }
+  return [...list].sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0))
+})
+
+// ─── 加入 ───
+async function joinGroup(group: any) {
+  if (group.isJoined) return
+  try {
+    await $fetch('/api/groups/join', { method: 'POST', body: { groupId: group.id, userId: currentUserId.value, userName: currentUserName.value } })
+    joinedGroups.value.add(group.id)
+    group.isJoined = true
+    if (group.memberCount != null) group.memberCount++
+    emit('join-group', { groupId: group.id, matchScore: group.matchScore || 50 })
+  } catch { joinedGroups.value.add(group.id); group.isJoined = true }
+}
+
+// 導向會員中心社群
+function goToMemberGroups() {
+  navigateTo('/member?tab=groups')
+}
+
+// ─── 聊天（興趣模組不開聊天室，僅保留給會員中心） ───
 const showGroupChat = ref(false)
-const activeGroup = ref<MatchedGroup | null>(null)
+const activeGroup = ref<any | null>(null)
 const chatMessages = ref<{ author: string; content: string; time: string; isPinned?: boolean }[]>([])
 const newMessage = ref('')
 
-function joinGroup(group: MatchedGroup) {
-  joinedGroups.value.add(group.id)
-  emit('join-group', { groupId: group.id, matchScore: group.matchScore })
-}
-
-function openGroupChat(group: MatchedGroup) {
+async function openGroupChat(group: any) {
   activeGroup.value = group
-  // Mock 群組訊息
-  chatMessages.value = [
-    { author: '📌 公告', content: `【${group.name}】活動時間：${group.date} ${group.time}\n地點：${group.location}\n注意事項：請穿著舒適運動服裝，攜帶飲用水。準時集合不等人！`, time: '', isPinned: true },
-    { author: '小美', content: '大家好！我是新加入的，請多多指教～', time: '10:30' },
-    { author: '阿傑', content: '歡迎歡迎！這週活動很精彩喔', time: '10:45' },
-    { author: '團長', content: '提醒一下，記得帶防曬用品！', time: '11:02' },
-  ]
   showGroupChat.value = true
+  try {
+    const msgs: any[] = await $fetch(`/api/groups/${group.id}/messages`)
+    chatMessages.value = msgs.filter(m => !m.content.startsWith('【')).map(m => ({
+      author: m.senderId === currentUserId.value ? '我' : m.senderName,
+      content: m.content,
+      time: new Date(m.creTime).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }),
+      isPinned: m.senderName === '📌 團長公告',
+    }))
+  } catch { chatMessages.value = [] }
+}
+function closeGroupChat() { showGroupChat.value = false; activeGroup.value = null }
+
+async function sendMessage() {
+  if (!newMessage.value.trim() || !activeGroup.value) return
+  const content = newMessage.value.trim(); newMessage.value = ''
+  chatMessages.value.push({ author: '我', content, time: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }) })
+  try { await $fetch(`/api/groups/${activeGroup.value.id}/messages`, { method: 'POST', body: { senderId: currentUserId.value, senderName: currentUserName.value, content } }) } catch {}
 }
 
-function closeGroupChat() {
-  showGroupChat.value = false
-  activeGroup.value = null
+// ─── 團長功能 ───
+function isCreator(group: any) { return group?.creatorId === currentUserId.value }
+
+async function sendAnnouncement() {
+  if (!activeGroup.value) return
+  const msg = prompt('輸入團長公告：')
+  if (!msg) return
+  chatMessages.value.push({ author: '📌 團長公告', content: msg, time: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }), isPinned: true })
+  try { await $fetch(`/api/groups/${activeGroup.value.id}/messages`, { method: 'POST', body: { senderId: currentUserId.value, senderName: '📌 團長公告', content: msg } }) } catch {}
 }
 
-function sendMessage() {
-  if (!newMessage.value.trim()) return
-  chatMessages.value.push({
-    author: '我',
-    content: newMessage.value.trim(),
-    time: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }),
-  })
-  newMessage.value = ''
+async function disbandGroup() {
+  if (!activeGroup.value || !confirm(`確定解散「${activeGroup.value.name}」？`)) return
+  try { await $fetch('/api/groups/leave', { method: 'POST', body: { groupId: activeGroup.value.id, userId: currentUserId.value, userName: currentUserName.value } }) } catch {}
+  dbGroups.value = dbGroups.value.filter(g => g.id !== activeGroup.value!.id)
+  closeGroupChat()
 }
 
-// 創建社群 overlay
+// ─── 創建社群 ───
 const showCreate = ref(false)
 const newGroupName = ref('')
 const newGroupDate = ref('')
 const newGroupLocation = ref('')
 const newGroupTags = ref<string[]>([])
+const isCreating = ref(false)
 
 function openCreate() { showCreate.value = true }
 function closeCreate() { showCreate.value = false; newGroupName.value = ''; newGroupDate.value = ''; newGroupLocation.value = ''; newGroupTags.value = [] }
+function toggleCreateTag(tag: string) { const i = newGroupTags.value.indexOf(tag); if (i >= 0) newGroupTags.value.splice(i, 1); else newGroupTags.value.push(tag) }
 
-function toggleCreateTag(tag: string) {
-  const idx = newGroupTags.value.indexOf(tag)
-  if (idx >= 0) newGroupTags.value.splice(idx, 1)
-  else newGroupTags.value.push(tag)
-}
-
-function createGroup() {
+async function createGroup() {
   if (!newGroupName.value.trim()) return
-  // 模擬成功
-  closeCreate()
+  isCreating.value = true
+  try {
+    await $fetch('/api/groups', { method: 'POST', body: { name: newGroupName.value.trim(), type: 'interest', icon: '💡', tags: newGroupTags.value, activityDate: newGroupDate.value || null, activityLocation: newGroupLocation.value || null, creatorId: currentUserId.value, creatorName: currentUserName.value } })
+    closeCreate(); fetchGroups()
+  } catch {}
+  isCreating.value = false
 }
 </script>
 
@@ -117,21 +154,21 @@ function createGroup() {
     </div>
 
     <!-- 推薦列表 -->
-    <div v-if="localInterests.length > 0 && sortedGroups.length > 0" class="match-list">
+    <div v-if="sortedGroups.length > 0" class="match-list">
       <article v-for="group in sortedGroups" :key="group.id" class="match-card">
         <div class="match-header">
           <h3 class="match-name">{{ group.name }}</h3>
           <span class="match-score">🎯 {{ group.matchScore }}%</span>
         </div>
-        <p class="match-meta">{{ group.date }} {{ group.time }} · {{ group.location }}</p>
-        <p class="match-participants">已有 {{ group.participants }} 人加入</p>
+        <p class="match-meta">{{ group.activityDate || group.date }} {{ group.activityTime || group.time }} · {{ group.activityLocation || group.location }}</p>
+        <p class="match-participants">👥 {{ group.memberCount || group.participants }} 人加入</p>
         <div class="match-footer">
           <div class="match-tags">
             <span v-for="tag in group.tags" :key="tag" class="tag-pill" :class="{ highlighted: isMatchedTag(tag) }">{{ tag }}</span>
           </div>
-          <!-- 已加入 → 進入群組 -->
-          <button v-if="joinedGroups.has(group.id)" class="btn-enter" @click="openGroupChat(group)">
-            💬 進入群組
+          <!-- 已加入 → 前往會員中心 -->
+          <button v-if="joinedGroups.has(group.id) || group.isJoined" class="btn-enter" @click="goToMemberGroups">
+            ✅ 已加入 → 前往社群
           </button>
           <!-- 未加入 -->
           <button v-else class="btn-join" @click="joinGroup(group)">加入</button>
@@ -140,11 +177,11 @@ function createGroup() {
     </div>
 
     <!-- 引導 -->
-    <div v-else-if="localInterests.length === 0" class="empty-state">
-      <p>選擇你的興趣標籤，我們幫你找到同好！</p>
+    <div v-else-if="localInterests.length > 0" class="empty-state">
+      <p>暫無匹配社群，試試其他興趣標籤</p>
     </div>
     <div v-else class="empty-state">
-      <p>暫無匹配社群，試試增加更多興趣標籤</p>
+      <p>載入中...</p>
     </div>
 
     <!-- 群組互動 Overlay -->
@@ -156,7 +193,7 @@ function createGroup() {
             <button class="chat-back" @click="closeGroupChat">←</button>
             <div class="chat-title-area">
               <h3 class="chat-group-name">{{ activeGroup?.name }}</h3>
-              <span class="chat-member-count">{{ activeGroup?.participants }} 位成員</span>
+              <span class="chat-member-count">{{ activeGroup?.memberCount || activeGroup?.participants }} 位成員</span>
             </div>
           </div>
 
@@ -276,6 +313,11 @@ function createGroup() {
 .chat-input:focus { border-color: var(--color-primary, #ec4899); }
 .chat-send { padding: 0 16px; min-height: 44px; border: none; border-radius: var(--radius-full, 9999px); background: var(--color-primary, #ec4899); color: #fff; font-size: var(--text-sm, 13px); font-weight: 600; cursor: pointer; }
 .chat-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* 團長功能 */
+.chat-leader-actions { display: flex; gap: 6px; padding: 6px 16px; border-bottom: 1px solid var(--color-border, #e2e8f0); }
+.chat-leader-btn { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid var(--color-primary, #ec4899); border-radius: 8px; background: transparent; color: var(--color-primary, #ec4899); cursor: pointer; }
+.chat-leader-btn--danger { border-color: #e11d48; color: #e11d48; }
 
 /* 創建社群 Overlay */
 .overlay-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: flex-end; justify-content: center; z-index: 1000; }
