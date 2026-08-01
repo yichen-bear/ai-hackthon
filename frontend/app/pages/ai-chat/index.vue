@@ -44,6 +44,12 @@ const currentTopicType = ref<string | null>(null)
 const currentTopicRequired = ref(true)
 /** 多選模式下已勾選的選項 id */
 const multiSelectIds = ref<Set<number>>(new Set())
+/** 已上傳的圖片 URL（用於在聊天中顯示圖片預覽） */
+const uploadedImages = ref<Map<string, string[]>>(new Map())
+
+/** 追蹤最近一次上傳的圖片 URL（用於摘要中顯示） */
+const lastUploadedUrls = ref<string[]>([])
+
 /** 使用者是否選擇了自行填寫（此時不顯示跳過按鈕） */
 const isManualInput = ref(false)
 
@@ -145,6 +151,16 @@ function detectSuggestedValue(text: string): string | null {
   return null
 }
 
+/** 渲染摘要中的值：若為圖片上傳則顯示圖片 */
+function renderSummaryValue(value: string): string {
+  if (!value) return '—'
+  if (value.includes('已上傳') && value.includes('張圖片') && lastUploadedUrls.value.length > 0) {
+    const imgs = lastUploadedUrls.value.map(url => `<img src="${url}" class="chat-summary-img" alt="上傳的圖片" />`).join('')
+    return `<div class="chat-summary-images">${imgs}</div>`
+  }
+  return value
+}
+
 /** 格式化摘要文字為 HTML（用於更好的視覺呈現） */
 function formatSummaryHtml(text: string): string {
   const stripped = stripHtml(text)
@@ -162,7 +178,7 @@ function formatSummaryHtml(text: string): string {
       const content = trimmed.replace(/^[・▸]\s*/, '')
       const [label, ...valueParts] = content.split('：')
       const value = valueParts.join('：')
-      html += `<li><span class="chat-summary-label">${label}</span><span class="chat-summary-value">${value || '—'}</span></li>`
+      html += `<li><span class="chat-summary-label">${label}</span><span class="chat-summary-value">${renderSummaryValue(value)}</span></li>`
     } else {
       if (inList) {
         html += '</ul>'
@@ -553,7 +569,7 @@ function handleOpenGallery() {
   input.click()
 }
 
-/** 處理選取的圖片 — 上傳到後端，取得 URL 後送出 */
+/** 處理選取的圖片 — 上傳到後端，取得 URL 後在對話中顯示圖片 */
 async function handleImageSelected(files: FileList | null) {
   if (!files || files.length === 0) return
 
@@ -575,7 +591,18 @@ async function handleImageSelected(files: FileList | null) {
   }
 
   if (uploadedUrls.length > 0) {
-    await doSend(`已上傳 ${uploadedUrls.length} 張圖片`, 'text')
+    // 記錄最近上傳的圖片 URL
+    lastUploadedUrls.value = [...lastUploadedUrls.value, ...uploadedUrls]
+    // 先送出訊息，拿到 message id 後再關聯圖片
+    const msgText = `已上傳 ${uploadedUrls.length} 張圖片`
+    await doSend(msgText, 'text')
+    // 找到剛剛送出的 user 訊息，綁定圖片
+    const userMsgs = session.value.messages.filter(m => m.role === 'user')
+    const lastUserMsg = userMsgs[userMsgs.length - 1]
+    if (lastUserMsg) {
+      uploadedImages.value.set(lastUserMsg.id, uploadedUrls)
+    }
+    await scrollToBottom()
   } else {
     inlineError.value = '圖片上傳失敗，請重試'
   }
@@ -700,6 +727,16 @@ function goBack() {
             <div class="chat-message__summary" v-html="formatSummaryHtml(message.text)"></div>
           </template>
           <p v-else class="chat-message__text">{{ stripHtml(message.text) }}</p>
+          <!-- 圖片預覽 -->
+          <div v-if="uploadedImages.get(message.id)" class="chat-message__images">
+            <img
+              v-for="(imgUrl, idx) in uploadedImages.get(message.id)"
+              :key="idx"
+              :src="imgUrl"
+              alt="上傳的圖片"
+              class="chat-message__img"
+            />
+          </div>
         </div>
         <ClientOnly>
           <button
@@ -1264,6 +1301,21 @@ function goBack() {
   word-break: break-word;
 }
 
+.chat-message__images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.chat-message__img {
+  width: 100%;
+  max-width: 200px;
+  border-radius: 10px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
 .chat-message__play {
   flex-shrink: 0;
   width: 28px;
@@ -1639,6 +1691,20 @@ function goBack() {
   font-size: 14px;
   color: var(--color-text-primary, #1c1917);
   font-weight: 500;
+}
+
+.chat-message__summary :deep(.chat-summary-images) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.chat-message__summary :deep(.chat-summary-img) {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
 }
 
 /* ── 常用地址快速填入 ── */
