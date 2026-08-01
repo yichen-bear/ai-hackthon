@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const prisma = require('../utils/prismaClient')
-const { maskName } = require('../utils/maskName')
 
 // ═══ 叫車訂單 ═══
 
@@ -62,9 +61,8 @@ router.get('/pending', async (req, res) => {
       where: { status: 'pending' },
       orderBy: { creTime: 'asc' },
     })
-    // 廠商端顯示脫敏名字
-    const result = orders.map(o => ({ ...o, passengerName: maskName(o.passengerName) }))
-    res.json(result)
+    // 廠商端顯示完整乘客資訊
+    res.json(orders)
   } catch (err) {
     console.error('GET /api/rides/pending error:', err)
     res.status(500).json({ error: 'Failed to fetch pending rides' })
@@ -79,8 +77,7 @@ router.get('/active', async (req, res) => {
       orderBy: { creTime: 'desc' },
       include: { driver: { select: { name: true, plateNumber: true, carModel: true } } },
     })
-    const result = orders.map(o => ({ ...o, passengerName: maskName(o.passengerName) }))
-    res.json(result)
+    res.json(orders)
   } catch (err) {
     console.error('GET /api/rides/active error:', err)
     res.status(500).json({ error: 'Failed to fetch active rides' })
@@ -96,8 +93,7 @@ router.get('/completed', async (req, res) => {
       take: 50,
       include: { driver: { select: { name: true, plateNumber: true } } },
     })
-    const result = orders.map(o => ({ ...o, passengerName: maskName(o.passengerName) }))
-    res.json(result)
+    res.json(orders)
   } catch (err) {
     console.error('GET /api/rides/completed error:', err)
     res.status(500).json({ error: 'Failed to fetch completed rides' })
