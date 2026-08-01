@@ -42,7 +42,7 @@ onMounted(() => { fetchGroups() })
 
 // 篩選邏輯：未選全列、選了至少一個匹配
 const sortedGroups = computed(() => {
-  let list = dbGroups.value.length > 0 ? dbGroups.value : props.matchedGroups
+  let list = dbGroups.value
   if (localInterests.value.length > 0) {
     list = list.filter(g => g.tags && g.tags.some((t: string) => localInterests.value.includes(t)))
   }
@@ -51,16 +51,22 @@ const sortedGroups = computed(() => {
 
 // ─── 加入 ───
 async function joinGroup(group: any) {
+  if (group.isJoined) return
   try {
     await $fetch('/api/groups/join', { method: 'POST', body: { groupId: group.id, userId: currentUserId, userName: currentUserName } })
     joinedGroups.value.add(group.id)
     group.isJoined = true
     if (group.memberCount != null) group.memberCount++
     emit('join-group', { groupId: group.id, matchScore: group.matchScore || 50 })
-  } catch { joinedGroups.value.add(group.id) }
+  } catch { joinedGroups.value.add(group.id); group.isJoined = true }
 }
 
-// ─── 聊天 ───
+// 導向會員中心社群
+function goToMemberGroups() {
+  navigateTo('/member?tab=groups')
+}
+
+// ─── 聊天（興趣模組不開聊天室，僅保留給會員中心） ───
 const showGroupChat = ref(false)
 const activeGroup = ref<any | null>(null)
 const chatMessages = ref<{ author: string; content: string; time: string; isPinned?: boolean }[]>([])
@@ -153,15 +159,15 @@ async function createGroup() {
           <h3 class="match-name">{{ group.name }}</h3>
           <span class="match-score">🎯 {{ group.matchScore }}%</span>
         </div>
-        <p class="match-meta">{{ group.date }} {{ group.time }} · {{ group.location }}</p>
-        <p class="match-participants">已有 {{ group.memberCount || group.participants }} 人加入</p>
+        <p class="match-meta">{{ group.activityDate || group.date }} {{ group.activityTime || group.time }} · {{ group.activityLocation || group.location }}</p>
+        <p class="match-participants">👥 {{ group.memberCount || group.participants }} 人加入</p>
         <div class="match-footer">
           <div class="match-tags">
             <span v-for="tag in group.tags" :key="tag" class="tag-pill" :class="{ highlighted: isMatchedTag(tag) }">{{ tag }}</span>
           </div>
-          <!-- 已加入 → 進入群組 -->
-          <button v-if="joinedGroups.has(group.id)" class="btn-enter" @click="openGroupChat(group)">
-            💬 進入群組
+          <!-- 已加入 → 前往會員中心 -->
+          <button v-if="joinedGroups.has(group.id) || group.isJoined" class="btn-enter" @click="goToMemberGroups">
+            ✅ 已加入 → 前往社群
           </button>
           <!-- 未加入 -->
           <button v-else class="btn-join" @click="joinGroup(group)">加入</button>
@@ -188,11 +194,6 @@ async function createGroup() {
               <h3 class="chat-group-name">{{ activeGroup?.name }}</h3>
               <span class="chat-member-count">{{ activeGroup?.memberCount || activeGroup?.participants }} 位成員</span>
             </div>
-          </div>
-          <!-- 團長功能 -->
-          <div v-if="isCreator(activeGroup)" class="chat-leader-actions">
-            <button class="chat-leader-btn" @click="sendAnnouncement">📢 發公告</button>
-            <button class="chat-leader-btn chat-leader-btn--danger" @click="disbandGroup">🗑️ 解散</button>
           </div>
 
           <!-- 訊息列表 -->

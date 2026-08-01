@@ -128,6 +128,7 @@ interface MyGroup {
   icon: string; memberCount: number; unreadCount: number
   lastMessage?: string; lastMessageTime?: string
   activityDate?: string; activityTime?: string; activityLocation?: string
+  creatorId?: string
 }
 const myGroups = ref<MyGroup[]>([])
 
@@ -145,6 +146,7 @@ async function fetchMyGroups() {
       memberCount: g.memberCount || 0, unreadCount: g.unreadCount || 0,
       lastMessage: g.lastMessage || '', lastMessageTime: g.lastMessageTime || '',
       activityDate: g.activityDate, activityTime: g.activityTime, activityLocation: g.activityLocation,
+      creatorId: g.creatorId,
     }))
   } catch { myGroups.value = [] }
 }
@@ -189,6 +191,21 @@ async function leaveGroup(group: MyGroup) {
 function closeGroupChatOverlay() {
   showGroupChat.value = false
   activeGroupChat.value = null
+}
+
+async function sendGroupAnnouncement() {
+  if (!activeGroupChat.value) return
+  const msg = prompt('輸入團長公告：')
+  if (!msg) return
+  groupChatMessages.value.push({ author: '📌 團長公告', content: msg, time: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }), isPinned: true })
+  try { await $fetch(`/api/groups/${activeGroupChat.value.id}/messages`, { method: 'POST', body: { senderId: currentUserId, senderName: '📌 團長公告', content: msg } }) } catch {}
+}
+
+async function disbandGroupFromMember() {
+  if (!activeGroupChat.value || !confirm(`確定解散「${activeGroupChat.value.name}」？`)) return
+  try { await $fetch('/api/groups/leave', { method: 'POST', body: { groupId: activeGroupChat.value.id, userId: currentUserId, userName: currentUserName } }) } catch {}
+  myGroups.value = myGroups.value.filter(g => g.id !== activeGroupChat.value!.id)
+  closeGroupChatOverlay()
 }
 
 // ─── OPEN POINT 資料 ───
@@ -636,6 +653,7 @@ const allBadges = ref([
               <span class="group-type" :class="group.type === 'course' ? 'group-type--course' : 'group-type--interest'">{{ group.type === 'course' ? '📚 課程' : '💡 興趣' }}</span>
             </div>
             <p class="group-last-msg">{{ group.lastMessage || '暫無訊息' }}</p>
+            <span class="group-member-count">👥 {{ group.memberCount }} 人</span>
           </div>
         </div>
         <div class="group-card-right">
@@ -654,6 +672,11 @@ const allBadges = ref([
             <span class="chat-title">{{ activeGroupChat.name }}</span>
             <span class="chat-members">👥 {{ activeGroupChat.memberCount }}</span>
           </header>
+          <!-- 團長功能（僅在會員中心顯示） -->
+          <div v-if="activeGroupChat.creatorId === currentUserId" class="chat-leader-bar">
+            <button class="chat-leader-btn" @click="sendGroupAnnouncement">📢 發公告</button>
+            <button class="chat-leader-btn chat-leader-btn--danger" @click="disbandGroupFromMember">🗑️ 解散社群</button>
+          </div>
           <!-- 聊天訊息 -->
           <div class="chat-activity-card">
             <div class="chat-activity-icon">{{ activeGroupChat.icon }}</div>
@@ -887,6 +910,7 @@ const allBadges = ref([
 .group-type--interest { background: #fdf2f8; color: #ec4899; }
 .group-type--course { background: #f5f3ff; color: #8b5cf6; }
 .group-last-msg { margin: 2px 0 0; font-size: 12px; color: #78716c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+.group-member-count { font-size: 10px; color: #9ca3af; }
 .group-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
 .group-unread { background: #ec4899; color: #fff; font-size: 10px; font-weight: 700; min-width: 18px; height: 18px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
 .group-time { font-size: 10px; color: #78716c; }
@@ -902,6 +926,9 @@ const allBadges = ref([
 .chat-back { background: none; border: none; font-size: 14px; cursor: pointer; color: #78716c; }
 .chat-title { font-size: 14px; font-weight: 700; color: #1c1917; }
 .chat-members { font-size: 11px; color: #78716c; }
+.chat-leader-bar { display: flex; gap: 6px; padding: 6px 16px; border-bottom: 1px solid #e2e8f0; }
+.chat-leader-btn { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #ec4899; border-radius: 8px; background: transparent; color: #ec4899; cursor: pointer; }
+.chat-leader-btn--danger { border-color: #e11d48; color: #e11d48; }
 .chat-activity-card { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: #fdf2f8; border-bottom: 1px solid #fce7f3; }
 .chat-activity-icon { font-size: 24px; }
 .chat-activity-info { display: flex; flex-direction: column; gap: 2px; }
