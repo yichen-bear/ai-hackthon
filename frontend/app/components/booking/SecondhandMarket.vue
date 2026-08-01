@@ -236,6 +236,23 @@ async function handleReserve() {
   isReserving.value = false
 }
 
+// ─── 收藏 ───
+const savedIds = ref<Set<string>>(new Set())
+
+function toggleSave(item: SecondhandItem) {
+  if (savedIds.value.has(item.id)) {
+    savedIds.value.delete(item.id)
+    showToast('已取消收藏')
+  } else {
+    savedIds.value.add(item.id)
+    showToast('❤️ 已加入收藏')
+  }
+}
+
+function isSaved(id: string): boolean {
+  return savedIds.value.has(id)
+}
+
 // 統計
 const totalTransactions = 128
 const totalCarbonSaved = 42.5
@@ -325,6 +342,7 @@ function timeAgo(iso: string): string {
           <div class="sh__card-actions">
             <button class="sh__action sh__action--msg" @click="openMsgModal(item)">💬 私訊賣家</button>
             <button class="sh__action sh__action--reserve" @click="openReserveModal(item)">🤝 預約面交</button>
+            <button class="sh__action sh__action--save" :class="{ 'sh__action--saved': isSaved(item.id) }" @click="toggleSave(item)">{{ isSaved(item.id) ? '❤️' : '🤍' }}</button>
           </div>
         </div>
       </div>
@@ -508,6 +526,8 @@ function timeAgo(iso: string): string {
 .sh__action { flex: 1; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; text-align: center; border: none; }
 .sh__action--msg { background: #fff; border: 1.5px solid #16a34a; color: #16a34a; }
 .sh__action--reserve { background: #16a34a; color: #fff; }
+.sh__action--save { flex: none; width: 36px; padding: 8px; background: #fff; border: 1px solid #e2e8f0; font-size: 16px; }
+.sh__action--saved { border-color: #e11d48; background: #fff1f2; }
 
 /* Overlay */
 .sh__overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; }
