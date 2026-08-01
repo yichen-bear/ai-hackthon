@@ -570,6 +570,31 @@ async function buildFormFeedbackPayload(session, userId, prismaClient = defaultP
 
   const feedbackContent = buildFeedbackContent(collectedFields);
   const contactInput = extractContactInputFromCollectedFields(collectedFields);
+
+  // 若聯絡欄位為空且使用者已登入，自動從會員資料補上
+  if (userId && (!contactInput.contactName || !contactInput.contactMobile || !contactInput.contactEmail)) {
+    try {
+      const account = await prismaClient.memberAccount.findUnique({
+        where: { id: userId },
+        select: { name: true, email: true, phone: true },
+      });
+      if (account) {
+        const { decryptField } = require('../utils/crypto');
+        if (!contactInput.contactName && account.name) {
+          contactInput.contactName = decryptField(account.name);
+        }
+        if (!contactInput.contactMobile && account.phone) {
+          contactInput.contactMobile = decryptField(account.phone);
+        }
+        if (!contactInput.contactEmail && account.email) {
+          contactInput.contactEmail = decryptField(account.email);
+        }
+      }
+    } catch (_) {
+      // 取得會員資料失敗不影響送出
+    }
+  }
+
   const contactFields = buildContactFields(contactInput);
 
   const serviceId = await resolveServiceId(form.serviceVendorId, prismaClient);
@@ -743,6 +768,110 @@ function buildTopicQuestionText(topic) {
  * @param {Record<string, FieldValue>} collectedFields - 已收集欄位
  * @returns {string} 摘要文字
  */
+/**
+ * 智慧題目提示：若下一題與前面收集的資料有關聯，附上計算建議值
+ * 目前支援：
+ * - 體重 → 建議每日飲水量（體重 × 30ml）
+ * - 症狀 → 建議看診科別
+ */
+function buildSmartTopicQuestion(nextTopic, topics, collectedFields) {
+  const baseText = buildTopicQuestionText(nextTopic);
+  const title = (nextTopic.title || '').toLowerCase();
+
+  // 偵測「體重」題目，提示使用者填寫可獲得建議飲水量
+  if (title.includes('體重')) {
+    return `${baseText}\n\n💡 填寫體重以獲得建議每日飲水量`;
+  }
+
+  // 偵測「飲水」相關題目，嘗試從已收集的體重計算建議值
+  if (title.includes('飲水') || title.includes('喝水')) {
+    const weightTopic = topics.find((t) => {
+      const tTitle = (t.title || '').toLowerCase();
+      return tTitle.includes('體重');
+    });
+    if (weightTopic) {
+      const weightField = (collectedFields || {})[String(weightTopic.id)];
+      if (weightField) {
+        const weightValue = typeof weightField === 'object' ? weightField.value : weightField;
+        const weight = parseFloat(weightValue);
+        if (!isNaN(weight) && weight > 0) {
+          const recommended = Math.round(weight * 30);
+          return `${baseText}\n\n💡 根據您的體重 ${weight}kg，建議每日飲水量為 ${recommended}ml（體重×30ml）。您可以直接使用建議值，或自行輸入。`;
+        }
+      }
+    }
+  }
+
+  // 偵測「科別」相關題目，嘗試從已收集的症狀推薦看診科別
+  if ((title.includes('科別') || title === '建議看診科別') && !title.includes('診所') && !title.includes('醫院') && !title.includes('日期') && !title.includes('時段')) {
+    // 找到症狀相關題目的答案
+    const symptomTopic = topics.find((t) => {
+      const tTitle = (t.title || '').toLowerCase();
+      return tTitle.includes('症狀') || tTitle.includes('不適') || tTitle.includes('問題描述');
+    });
+    if (symptomTopic) {
+      const symptomField = (collectedFields || {})[String(symptomTopic.id)];
+      if (symptomField) {
+        const symptomValue = typeof symptomField === 'object' ? symptomField.value : symptomField;
+        if (symptomValue && typeof symptomValue === 'string') {
+          const recommended = recommendDepartment(symptomValue);
+          if (recommended) {
+            return `${baseText}\n\n💡 根據您描述的症狀「${symptomValue}」，建議看診科別為「${recommended}」。您可以直接使用建議值，或自行輸入。`;
+          }
+        }
+      }
+    }
+  }
+
+  return baseText;
+}
+
+/**
+ * 根據症狀描述推薦看診科別
+ */
+function recommendDepartment(symptoms) {
+  const s = symptoms.toLowerCase();
+
+  if (s.includes('咳嗽') || s.includes('感冒') || s.includes('發燒') || s.includes('喉嚨') || s.includes('流鼻') || s.includes('頭痛')) {
+    return '家醫科 / 耳鼻喉科';
+  }
+  if (s.includes('肚子') || s.includes('腹痛') || s.includes('拉肚子') || s.includes('腹瀉') || s.includes('胃') || s.includes('噁心') || s.includes('嘔吐')) {
+    return '腸胃科 / 內科';
+  }
+  if (s.includes('皮膚') || s.includes('過敏') || s.includes('紅疹') || s.includes('搔癢') || s.includes('濕疹') || s.includes('痘')) {
+    return '皮膚科';
+  }
+  if (s.includes('眼睛') || s.includes('視力') || s.includes('紅眼') || s.includes('乾眼')) {
+    return '眼科';
+  }
+  if (s.includes('牙') || s.includes('口腔') || s.includes('牙齦')) {
+    return '牙科';
+  }
+  if (s.includes('骨') || s.includes('關節') || s.includes('扭傷') || s.includes('腰痛') || s.includes('背痛') || s.includes('肌肉')) {
+    return '骨科 / 復健科';
+  }
+  if (s.includes('心') || s.includes('胸悶') || s.includes('胸痛') || s.includes('血壓') || s.includes('心悸')) {
+    return '心臟內科';
+  }
+  if (s.includes('失眠') || s.includes('焦慮') || s.includes('憂鬱') || s.includes('壓力') || s.includes('情緒')) {
+    return '身心科 / 精神科';
+  }
+  if (s.includes('泌尿') || s.includes('頻尿') || s.includes('尿') || s.includes('腎')) {
+    return '泌尿科';
+  }
+  if (s.includes('婦') || s.includes('月經') || s.includes('經期') || s.includes('懷孕')) {
+    return '婦產科';
+  }
+  if (s.includes('小孩') || s.includes('兒童') || s.includes('嬰兒')) {
+    return '小兒科';
+  }
+  if (s.includes('耳') || s.includes('鼻') || s.includes('喉') || s.includes('聽力')) {
+    return '耳鼻喉科';
+  }
+
+  return '家醫科';
+}
+
 function buildSummaryText(topics, collectedFields) {
   const lines = (topics || [])
     .map((topic) => {
@@ -1097,7 +1226,7 @@ async function handleFieldExtractionOrOffTopic(session, formMatchingService, llm
       updated.stage === 'confirming'
         ? buildSummaryText(topics, updated.collectedFields)
         : nextTopic
-          ? `好的，已跳過此題。\n\n接下來請回答：${buildTopicQuestionText(nextTopic)}`
+          ? `好的，已跳過此題。\n\n接下來請回答：${buildSmartTopicQuestion(nextTopic, topics, updated.collectedFields)}`
           : '好的，已跳過此題。所有題目皆已完成。';
 
     return appendAssistantMessage(updated, replyText);
@@ -1141,8 +1270,40 @@ async function handleFieldExtractionOrOffTopic(session, formMatchingService, llm
         updated.stage === 'confirming'
           ? buildSummaryText(topics, updated.collectedFields)
           : nextTopic2
-            ? `好的，您選擇了${matchedOption.optionName}。\n\n接下來請回答：${buildTopicQuestionText(nextTopic2)}`
+            ? `好的，您選擇了${matchedOption.optionName}。\n\n接下來請回答：${buildSmartTopicQuestion(nextTopic2, topics, updated.collectedFields)}`
             : `好的，您選擇了${matchedOption.optionName}。所有題目皆已完成。`;
+
+      return appendAssistantMessage(updated, replyText);
+    }
+  }
+
+  // 若題目為數字型（或題目標題含數字單位提示）且使用者輸入為純數字，直接接受（不經 LLM）
+  const isNumberLikeTopic = currentTopic.type === TOPIC_TYPE.NUMBER
+    || /\((?:kg|ml|cm|g|公斤|毫升|公分)\)/.test(currentTopic.title || '');
+  if (isNumberLikeTopic && lastUserMsg && typeof lastUserMsg.text === 'string') {
+    const userText = lastUserMsg.text.trim();
+    const numValue = parseFloat(userText);
+    if (!isNaN(numValue) && /^[\d.]+$/.test(userText)) {
+      let updated = applyFieldExtraction(session, {
+        success: true,
+        fields: {
+          [String(currentTopic.id)]: { topicId: currentTopic.id, value: userText },
+        },
+      });
+
+      const nextTopic2 = formMatchingService.selectNextTopic(topics, updated.collectedFields);
+      updated = { ...updated, currentTopicId: nextTopic2 ? nextTopic2.id : null };
+
+      if (!nextTopic2) {
+        updated = applyCompletionCheck(updated, topics);
+      }
+
+      const replyText =
+        updated.stage === 'confirming'
+          ? buildSummaryText(topics, updated.collectedFields)
+          : nextTopic2
+            ? buildSmartTopicQuestion(nextTopic2, topics, updated.collectedFields)
+            : '所有題目皆已完成。';
 
       return appendAssistantMessage(updated, replyText);
     }
@@ -1220,7 +1381,7 @@ async function handleFieldExtractionOrOffTopic(session, formMatchingService, llm
     updated.stage === 'confirming'
       ? buildSummaryText(topics, updated.collectedFields)
       : nextTopic
-        ? buildTopicQuestionText(nextTopic)
+        ? buildSmartTopicQuestion(nextTopic, topics, updated.collectedFields)
         : (structured.reply_text || '所有題目皆已完成，感謝您的填寫。');
 
   return appendAssistantMessage(updated, replyText);

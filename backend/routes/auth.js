@@ -177,28 +177,27 @@ router.get('/me', verifyToken, async (req, res) => {
       result.vendorId = vendorId;
     }
 
-    // 查詢用戶名稱（Bytes 欄位）並解密
-    let name = null;
+    // 查詢用戶資料（Bytes 欄位）並解密
     if (role === 'member') {
       const account = await prisma.memberAccount.findUnique({
         where: { id: userId },
-        select: { name: true },
+        select: { name: true, email: true, phone: true, creTime: true },
       });
-      if (account && account.name) {
-        name = decryptField(account.name);
+      if (account) {
+        try { if (account.name) result.name = decryptField(account.name); } catch (e) { console.error('[/me] decrypt name failed:', e.message); }
+        try { if (account.email) result.email = decryptField(account.email); } catch (e) { console.error('[/me] decrypt email failed:', e.message); }
+        try { if (account.phone) result.phone = decryptField(account.phone); } catch (e) { console.error('[/me] decrypt phone failed:', e.message); }
+        if (account.creTime) result.createdAt = account.creTime;
       }
     } else if (role === 'vendor') {
       const vendor = await prisma.vendorUser.findUnique({
         where: { id: userId },
-        select: { name: true },
+        select: { name: true, email: true },
       });
-      if (vendor && vendor.name) {
-        name = decryptField(vendor.name);
+      if (vendor) {
+        try { if (vendor.name) result.name = decryptField(vendor.name); } catch (e) { console.error('[/me] decrypt name failed:', e.message); }
+        try { if (vendor.email) result.email = decryptField(vendor.email); } catch (e) { console.error('[/me] decrypt email failed:', e.message); }
       }
-    }
-
-    if (name) {
-      result.name = name;
     }
 
     return res.status(200).json(result);
