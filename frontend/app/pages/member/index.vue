@@ -327,7 +327,6 @@ const allBadges = ref([
       <button class="tab-btn" :class="{ active: activeTab === 'points' }" @click="activeTab = 'points'">點數</button>
       <button class="tab-btn" :class="{ active: activeTab === 'barcode' }" @click="activeTab = 'barcode'">條碼/錢包</button>
       <button class="tab-btn" :class="{ active: activeTab === 'tickets' }" @click="activeTab = 'tickets'">活動票券</button>
-      <button class="tab-btn" :class="{ active: activeTab === 'badges' }" @click="activeTab = 'badges'">獎章</button>
       <button class="tab-btn" :class="{ active: activeTab === 'messages' }" @click="activeTab = 'messages'; fetchConversations()">
         私訊
         <span v-if="msgUnreadTotal > 0" class="unread-dot"></span>
@@ -336,6 +335,7 @@ const allBadges = ref([
         社群
         <span v-if="myGroups.reduce((s, g) => s + g.unreadCount, 0) > 0" class="unread-dot"></span>
       </button>
+      <button class="tab-btn" :class="{ active: activeTab === 'badges' }" @click="activeTab = 'badges'">獎章</button>
     </nav>
 
     <!-- ═══ 點數專區 ═══ -->
