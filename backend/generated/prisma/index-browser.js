@@ -364,22 +364,8 @@ exports.Prisma.MemberAccountScalarFieldEnum = {
   creId: 'creId',
   creTime: 'creTime',
   updId: 'updId',
-  updTime: 'updTime'
-};
-
-exports.Prisma.MemberAddressScalarFieldEnum = {
-  id: 'id',
-  memberId: 'memberId',
-  type: 'type',
-  label: 'label',
-  countyCode: 'countyCode',
-  districtCode: 'districtCode',
-  addressDetail: 'addressDetail',
-  addressHash: 'addressHash',
-  isDefault: 'isDefault',
-  isDeleted: 'isDeleted',
-  creTime: 'creTime',
-  updTime: 'updTime'
+  updTime: 'updTime',
+  community_nickname: 'community_nickname'
 };
 
 exports.Prisma.VendorUserScalarFieldEnum = {
@@ -398,6 +384,169 @@ exports.Prisma.VendorUserScalarFieldEnum = {
   updId: 'updId',
   updTime: 'updTime',
   companyName: 'companyName'
+};
+
+exports.Prisma.SecondhandListingScalarFieldEnum = {
+  id: 'id',
+  sellerId: 'sellerId',
+  sellerName: 'sellerName',
+  sellerPhone: 'sellerPhone',
+  productName: 'productName',
+  description: 'description',
+  price: 'price',
+  isFree: 'isFree',
+  category: 'category',
+  imageUrl: 'imageUrl',
+  pickupStore: 'pickupStore',
+  pickupMethod: 'pickupMethod',
+  carbonSaved: 'carbonSaved',
+  status: 'status',
+  isDeleted: 'isDeleted',
+  creTime: 'creTime',
+  updTime: 'updTime'
+};
+
+exports.Prisma.ChatMessageScalarFieldEnum = {
+  id: 'id',
+  senderId: 'senderId',
+  senderName: 'senderName',
+  receiverId: 'receiverId',
+  receiverName: 'receiverName',
+  listingId: 'listingId',
+  content: 'content',
+  messageType: 'messageType',
+  isRead: 'isRead',
+  creTime: 'creTime',
+  group_id: 'group_id'
+};
+
+exports.Prisma.PickupReservationScalarFieldEnum = {
+  id: 'id',
+  listingId: 'listingId',
+  buyerId: 'buyerId',
+  buyerName: 'buyerName',
+  buyerPhone: 'buyerPhone',
+  sellerId: 'sellerId',
+  sellerName: 'sellerName',
+  pickupStore: 'pickupStore',
+  pickupMethod: 'pickupMethod',
+  status: 'status',
+  scheduledAt: 'scheduledAt',
+  creTime: 'creTime',
+  updTime: 'updTime',
+  pickupDeadline: 'pickupDeadline',
+  stored_at: 'stored_at'
+};
+
+exports.Prisma.Community_groupScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  icon: 'icon',
+  tags: 'tags',
+  description: 'description',
+  max_members: 'max_members',
+  activity_date: 'activity_date',
+  activity_time: 'activity_time',
+  activity_location: 'activity_location',
+  creator_id: 'creator_id',
+  creator_name: 'creator_name',
+  is_deleted: 'is_deleted',
+  cre_time: 'cre_time',
+  upd_time: 'upd_time'
+};
+
+exports.Prisma.Group_memberScalarFieldEnum = {
+  id: 'id',
+  group_id: 'group_id',
+  user_id: 'user_id',
+  user_name: 'user_name',
+  joined_at: 'joined_at'
+};
+
+exports.Prisma.Member_addressScalarFieldEnum = {
+  id: 'id',
+  member_id: 'member_id',
+  type: 'type',
+  label: 'label',
+  county_code: 'county_code',
+  district_code: 'district_code',
+  address_detail: 'address_detail',
+  address_detail_hash: 'address_detail_hash',
+  is_default: 'is_default',
+  is_deleted: 'is_deleted',
+  cre_time: 'cre_time',
+  upd_time: 'upd_time'
+};
+
+exports.Prisma.Activity_registrationScalarFieldEnum = {
+  id: 'id',
+  activity_id: 'activity_id',
+  user_id: 'user_id',
+  user_name: 'user_name',
+  user_phone: 'user_phone',
+  status: 'status',
+  registered_at: 'registered_at'
+};
+
+exports.Prisma.Community_activityScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  category: 'category',
+  location: 'location',
+  activity_date: 'activity_date',
+  activity_end_date: 'activity_end_date',
+  max_participants: 'max_participants',
+  status: 'status',
+  image_url: 'image_url',
+  organizer_id: 'organizer_id',
+  organizer_name: 'organizer_name',
+  is_deleted: 'is_deleted',
+  cre_time: 'cre_time',
+  upd_time: 'upd_time'
+};
+
+exports.Prisma.Community_questionScalarFieldEnum = {
+  id: 'id',
+  asker_id: 'asker_id',
+  asker_name: 'asker_name',
+  content: 'content',
+  category: 'category',
+  is_anonymous: 'is_anonymous',
+  reply_content: 'reply_content',
+  replied_at: 'replied_at',
+  replied_by: 'replied_by',
+  status: 'status',
+  is_deleted: 'is_deleted',
+  cre_time: 'cre_time'
+};
+
+exports.Prisma.RestaurantQueueScalarFieldEnum = {
+  id: 'id',
+  placeId: 'placeId',
+  name: 'name',
+  totalTables: 'totalTables',
+  emptyTables: 'emptyTables',
+  waitingGroups: 'waitingGroups',
+  estimatedMinutes: 'estimatedMinutes',
+  avgServiceMinutes: 'avgServiceMinutes',
+  isOpen: 'isOpen',
+  updTime: 'updTime',
+  creTime: 'creTime'
+};
+
+exports.Prisma.QueueEntryScalarFieldEnum = {
+  id: 'id',
+  queueId: 'queueId',
+  ticketNumber: 'ticketNumber',
+  partySize: 'partySize',
+  customerName: 'customerName',
+  customerPhone: 'customerPhone',
+  note: 'note',
+  status: 'status',
+  creTime: 'creTime',
+  updTime: 'updTime'
 };
 
 exports.Prisma.SortOrder = {
@@ -446,8 +595,18 @@ exports.Prisma.ModelName = {
   PmsFormFeedback: 'PmsFormFeedback',
   MmsOrderRecord: 'MmsOrderRecord',
   MemberAccount: 'MemberAccount',
-  MemberAddress: 'MemberAddress',
-  VendorUser: 'VendorUser'
+  VendorUser: 'VendorUser',
+  SecondhandListing: 'SecondhandListing',
+  ChatMessage: 'ChatMessage',
+  PickupReservation: 'PickupReservation',
+  community_group: 'community_group',
+  group_member: 'group_member',
+  member_address: 'member_address',
+  activity_registration: 'activity_registration',
+  community_activity: 'community_activity',
+  community_question: 'community_question',
+  RestaurantQueue: 'RestaurantQueue',
+  QueueEntry: 'QueueEntry'
 };
 
 /**

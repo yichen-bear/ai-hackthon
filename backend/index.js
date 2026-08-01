@@ -15,6 +15,7 @@ const truckScheduleRouter = require('./routes/truckSchedule');
 const garbageRouter = require('./routes/garbage');
 const midpointRouter = require('./routes/midpoint');
 const foodRouter = require('./routes/food');
+const queueRouter = require('./routes/queue');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -66,6 +67,13 @@ app.use('/api/midpoint', midpointRouter);
 
 // 掛載附近餐廳推薦路由（想吃什麼）
 app.use('/api/food', foodRouter);
+
+// 掛載餐廳候位系統路由
+app.use('/api/queue', queueRouter);
+
+// 掛載附近醫療資源路由（門診掛號 Google Maps）
+const nearbyClinicRouter = require('./routes/nearbyClinic');
+app.use('/api/nearby-clinic', nearbyClinicRouter);
 
 // 掛載 AI 診斷與掛號路由
 const diagnosisRouter = require('./routes/diagnosis');

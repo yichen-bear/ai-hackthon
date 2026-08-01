@@ -43,7 +43,9 @@ function handleGoQueue(restaurant: Restaurant) {
   selectedRestaurant.value = restaurant
   queuePartySize.value = 2
   queueNote.value = ''
+  queueTicketResult.value = null
   currentView.value = 'queue'
+  fetchQueueStatus(restaurant.id)
 }
 
 function handleGoMenu(restaurant: Restaurant) {
@@ -165,19 +167,70 @@ function submitReserve() {
 /* ─── 候位 Sub-view 狀態 ─── */
 const queuePartySize = ref(2)
 const queueNote = ref('')
-const queueData = {
-  waitingGroups: 3,
-  estimatedMinutes: 15,
-  emptyTables: 2,
+const queueLoading = ref(false)
+const queueError = ref<string | null>(null)
+const queueData = ref({
+  waitingGroups: 0,
+  estimatedMinutes: 0,
+  emptyTables: 0,
+})
+const queueTicketResult = ref<{ ticketNumber: number; waitingAhead: number; estimatedMinutes: number } | null>(null)
+
+/** 共用的候位連動餐廳 ID（與廠商端同步） */
+const LINKED_PLACE_ID = 'linked_restaurant_01'
+
+async function fetchQueueStatus(placeId: string) {
+  queueLoading.value = true
+  queueError.value = null
+  queueTicketResult.value = null
+  try {
+    // 先嘗試用餐廳自身 placeId 查詢，若無資料則用連動 ID
+    let res = await $fetch<{ success: boolean; data: { waitingGroups: number; estimatedMinutes: number; emptyTables: number; notRegistered?: boolean } }>(`http://localhost:3001/api/queue/status/${encodeURIComponent(placeId)}`)
+    if (res.success && res.data.notRegistered) {
+      // 這間餐廳沒有候位系統，用共用連動的餐廳
+      res = await $fetch<{ success: boolean; data: { waitingGroups: number; estimatedMinutes: number; emptyTables: number } }>(`http://localhost:3001/api/queue/status/${LINKED_PLACE_ID}`)
+    }
+    if (res.success) {
+      queueData.value = {
+        waitingGroups: res.data.waitingGroups,
+        estimatedMinutes: res.data.estimatedMinutes,
+        emptyTables: res.data.emptyTables,
+      }
+    }
+  } catch {
+    queueError.value = '無法取得候位資訊'
+  } finally {
+    queueLoading.value = false
+  }
 }
 
-function submitQueue() {
-  console.log('候位抽號：', {
-    restaurant: selectedRestaurant.value?.name,
-    partySize: queuePartySize.value,
-    note: queueNote.value,
-  })
-  goBack()
+async function submitQueue() {
+  if (!selectedRestaurant.value) return
+  queueLoading.value = true
+  queueError.value = null
+  try {
+    const res = await $fetch<{ success: boolean; data: { ticketNumber: number; waitingAhead: number; estimatedMinutes: number }; error?: string }>('http://localhost:3001/api/queue/take-number', {
+      method: 'POST',
+      body: {
+        placeId: LINKED_PLACE_ID,
+        partySize: queuePartySize.value,
+        customerName: userName,
+        customerPhone: userPhone,
+        note: queueNote.value || undefined,
+      },
+    })
+    if (res.success) {
+      queueTicketResult.value = res.data
+      // 刷新看板數據
+      await fetchQueueStatus(selectedRestaurant.value.id)
+    } else {
+      queueError.value = res.error || '抽號失敗'
+    }
+  } catch {
+    queueError.value = '抽號失敗，請稍後再試'
+  } finally {
+    queueLoading.value = false
+  }
 }
 
 /* ─── 點餐 Sub-view 狀態 ─── */
@@ -577,50 +630,75 @@ const passportBadges = [
 
           <!-- AI 提示列 -->
           <div class="subview__ai-hint">
-            ✨ AI 已為你預估現場等候時間
+            ✨ 即時候位資訊由餐廳端同步更新
+          </div>
+
+          <!-- Loading -->
+          <div v-if="queueLoading && !queueTicketResult" class="subview__form-loading">
+            <div class="subview__form-spinner" />
+            <span>載入候位資訊...</span>
+          </div>
+
+          <!-- Error -->
+          <div v-else-if="queueError && !queueTicketResult" class="subview__form-error">
+            {{ queueError }}
+          </div>
+
+          <!-- 抽號成功結果 -->
+          <div v-if="queueTicketResult" class="subview__queue-success">
+            <span class="subview__queue-success-icon">🎫</span>
+            <p class="subview__queue-success-title">您的號碼牌：#{{ queueTicketResult.ticketNumber }}</p>
+            <p class="subview__queue-success-desc">前方還有 {{ queueTicketResult.waitingAhead }} 組，預估等候約 {{ queueTicketResult.estimatedMinutes }} 分鐘</p>
+            <button class="subview__submit-btn subview__submit-btn--green" @click="goBack">返回餐廳列表</button>
           </div>
 
           <!-- 實時候位看板 -->
-          <div class="subview__queue-board">
-            <div class="subview__queue-item">
-              <span class="subview__queue-value">{{ queueData.waitingGroups }} 組</span>
-              <span class="subview__queue-label">目前候位</span>
+          <template v-if="!queueTicketResult">
+            <div class="subview__queue-board">
+              <div class="subview__queue-item">
+                <span class="subview__queue-value">{{ queueData.waitingGroups }} 組</span>
+                <span class="subview__queue-label">目前候位</span>
+              </div>
+              <div class="subview__queue-item">
+                <span class="subview__queue-value">約 {{ queueData.estimatedMinutes }} 分鐘</span>
+                <span class="subview__queue-label">預估等候</span>
+              </div>
+              <div class="subview__queue-item">
+                <span class="subview__queue-value">{{ queueData.emptyTables }} 桌</span>
+                <span class="subview__queue-label">現場空桌</span>
+              </div>
             </div>
-            <div class="subview__queue-item">
-              <span class="subview__queue-value">約 {{ queueData.estimatedMinutes }} 分鐘</span>
-              <span class="subview__queue-label">預估等候</span>
-            </div>
-            <div class="subview__queue-item">
-              <span class="subview__queue-value">{{ queueData.emptyTables }} 桌</span>
-              <span class="subview__queue-label">現場空桌</span>
-            </div>
-          </div>
 
-          <!-- 表單區：用餐人數 -->
-          <div class="subview__section">
-            <span class="subview__info-label">🍴 用餐人數</span>
-            <div class="subview__stepper">
-              <button class="subview__stepper-btn" :disabled="queuePartySize <= 1" @click="queuePartySize--">−</button>
-              <span class="subview__stepper-val">{{ queuePartySize }} 人</span>
-              <button class="subview__stepper-btn" :disabled="queuePartySize >= 10" @click="queuePartySize++">＋</button>
+            <!-- 表單區：用餐人數 -->
+            <div class="subview__section">
+              <span class="subview__info-label">🍴 用餐人數</span>
+              <div class="subview__stepper">
+                <button class="subview__stepper-btn" :disabled="queuePartySize <= 1" @click="queuePartySize--">−</button>
+                <span class="subview__stepper-val">{{ queuePartySize }} 人</span>
+                <button class="subview__stepper-btn" :disabled="queuePartySize >= 10" @click="queuePartySize++">＋</button>
+              </div>
             </div>
-          </div>
 
-          <!-- 表單區：特殊備註 -->
-          <div class="subview__section">
-            <span class="subview__info-label">📝 特殊備註</span>
-            <textarea
-              v-model="queueNote"
-              class="subview__textarea"
-              placeholder="例如：需要嬰兒椅 / 輪椅空間"
-              rows="3"
-            />
-          </div>
+            <!-- 表單區：特殊備註 -->
+            <div class="subview__section">
+              <span class="subview__info-label">📝 特殊備註</span>
+              <textarea
+                v-model="queueNote"
+                class="subview__textarea"
+                placeholder="例如：需要嬰兒椅 / 輪椅空間"
+                rows="3"
+              />
+            </div>
 
-          <!-- 底部按鈕 -->
-          <button class="subview__submit-btn subview__submit-btn--orange" @click="submitQueue">
-            抽取線上候位號碼牌
-          </button>
+            <!-- 底部按鈕 -->
+            <button
+              class="subview__submit-btn subview__submit-btn--orange"
+              :disabled="queueLoading"
+              @click="submitQueue"
+            >
+              {{ queueLoading ? '處理中...' : '抽取線上候位號碼牌' }}
+            </button>
+          </template>
         </div>
 
         <!-- ═══ Sub-view: 外帶/外送點餐頁 ═══ -->
@@ -2602,6 +2680,33 @@ const passportBadges = [
 
 .subview__queue-label {
   font-size: 11px;
+  color: #78716c;
+}
+
+/* ─── 候位抽號成功 ─── */
+.subview__queue-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 24px 0;
+  text-align: center;
+}
+
+.subview__queue-success-icon {
+  font-size: 44px;
+}
+
+.subview__queue-success-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1c1917;
+}
+
+.subview__queue-success-desc {
+  margin: 0;
+  font-size: 13px;
   color: #78716c;
 }
 

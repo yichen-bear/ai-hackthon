@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import HealthTracker from '~/components/medical/HealthTracker.vue'
 import DiagnosisFlow from '~/components/medical/DiagnosisFlow.vue'
+import { useNearbyClinic } from '~/composables/useNearbyClinic'
 
 useHead({
   htmlAttrs: { lang: 'zh-TW' },
@@ -126,62 +127,76 @@ function startAnalysis() {
 
 const recommendedDept = ref('耳鼻喉科')
 
+// 從 AI 診斷跳轉：帶入推薦科別
 function goToClinicTab() {
-  selectedDept.value = recommendedDept.value
   activeTab.value = 'clinic'
   currentAppointmentView.value = 'list'
+  // 搜尋推薦科別
+  selectedDept.value = '全部'
+  searchNearby(recommendedDept.value)
 }
 
-/* ─── Tab 3: 門診掛號 ─── */
-type AppointmentView = 'list' | 'form'
+// 開啟 Google Maps 導航
+function openGoogleMaps(clinic: any) {
+  const url = clinic.googleMapsUrl || `https://www.google.com/maps/place/?q=place_id:${clinic.placeId}`
+  window.open(url, '_blank')
+}
+
+/* ─── Tab 3: 門診掛號（Google Maps 附近醫療資源） ─── */
+type AppointmentView = 'list' | 'form' | 'detail'
 const currentAppointmentView = ref<AppointmentView>('list')
 
-const deptOptions = ['耳鼻喉科', '一般內科', '家醫科', '皮膚科', '小兒科']
-const selectedDept = ref('耳鼻喉科')
+const {
+  clinics: nearbyClinics,
+  loading: clinicLoading,
+  error: clinicError,
+  availableDepartments,
+  searchNearby,
+  getClinicDetail,
+  filterByDepartment,
+  getStatusLabel,
+  getStatusClass,
+} = useNearbyClinic()
 
-interface Clinic {
-  name: string
-  dept: string
-  status: string
-  distance: string
-  currentNumber: number
-  waitingCount: number
-}
+const selectedDept = ref('全部')
+const clinicDetailData = ref<any>(null)
+const clinicDetailLoading = ref(false)
 
-const clinicList = ref<Clinic[]>([
-  { name: '信義耳鼻喉科診所', dept: '耳鼻喉科', status: '🟢 看診中', distance: '450m', currentNumber: 28, waitingCount: 3 },
-  { name: '康健家醫診所', dept: '家醫科', status: '🟢 看診中', distance: '600m', currentNumber: 15, waitingCount: 5 },
-  { name: '仁愛內科診所', dept: '一般內科', status: '🟢 看診中', distance: '800m', currentNumber: 22, waitingCount: 2 },
-  { name: '美麗皮膚科診所', dept: '皮膚科', status: '🟢 看診中', distance: '1.2km', currentNumber: 10, waitingCount: 4 },
-  { name: '安心小兒科', dept: '小兒科', status: '🟢 看診中', distance: '950m', currentNumber: 8, waitingCount: 6 },
-])
-
+// 依科別篩選的診所列表
 const filteredClinics = computed(() => {
-  return clinicList.value.filter(c => c.dept === selectedDept.value)
+  return filterByDepartment(selectedDept.value)
 })
 
-// 預約表單
-const selectedClinic = ref<Clinic | null>(null)
-const selectedDoctor = ref('張醫師 (耳鼻喉專科)')
-const visitType = ref<'revisit' | 'first'>('revisit')
-const appointmentDate = ref('')
-const appointmentSlot = ref('早診 09:00')
-const appointmentConfirmed = ref(false)
-const appointmentNumber = ref(12)
+// 進入頁面時自動搜尋
+onMounted(() => {
+  if (activeTab.value === 'clinic') {
+    searchNearby()
+  }
+})
 
-const doctorOptions = ['張醫師 (耳鼻喉專科)', '李醫師 (一般內科)', '王醫師 (家醫科)']
-const slotOptions = ['早診 09:00', '午診 14:00', '晚診 18:30']
+// 切到門診掛號 tab 時自動搜尋
+watch(activeTab, (tab) => {
+  if (tab === 'clinic' && nearbyClinics.value.length === 0 && !clinicLoading.value) {
+    searchNearby()
+  }
+})
 
-function openAppointmentForm(clinic: Clinic) {
-  selectedClinic.value = clinic
-  appointmentConfirmed.value = false
-  currentAppointmentView.value = 'form'
+// 查看詳情
+async function openClinicDetail(placeId: string) {
+  clinicDetailLoading.value = true
+  clinicDetailData.value = null
+  currentAppointmentView.value = 'detail'
+  const detail = await getClinicDetail(placeId)
+  clinicDetailData.value = detail
+  clinicDetailLoading.value = false
+}
+
+function openAppointmentForm(clinic: any) {
+  openClinicDetail(clinic.placeId)
 }
 
 function confirmAppointment() {
-  appointmentNumber.value = Math.floor(Math.random() * 20) + 5
-  appointmentConfirmed.value = true
-  toastMessage.value = `掛號成功！您的掛號號碼為 ${appointmentNumber.value} 號`
+  toastMessage.value = '已開啟 Google Maps 查看診所位置'
   showToast.value = true
   setTimeout(() => { showToast.value = false }, 3000)
 }
@@ -535,19 +550,35 @@ function addToTracking(drug: DrugItem) {
       <!-- ═══ Tab 2: AI 智慧症狀分析 ═══ -->
       <section v-else-if="activeTab === 'symptom'" class="tab-content">
         <DiagnosisFlow />
+
+        <!-- 撥打緊急電話卡片 -->
+        <div class="emergency-call-card">
+          <h4 class="emergency-call-card__title">撥打緊急電話</h4>
+          <div class="emergency-call-card__actions">
+            <a href="tel:119" class="emergency-call-btn emergency-call-btn--119">119</a>
+            <a href="tel:" class="emergency-call-btn emergency-call-btn--contact">緊急聯絡人</a>
+          </div>
+        </div>
       </section>
 
-      <!-- ═══ Tab 3: 門診掛號 ═══ -->
+      <!-- ═══ Tab 3: 門診掛號（附近醫療資源） ═══ -->
       <section v-else-if="activeTab === 'clinic'" class="tab-content">
 
-        <!-- 列表視圖 -->
         <Transition name="page-slide" mode="out-in">
+          <!-- 列表視圖 -->
           <div v-if="currentAppointmentView === 'list'" key="list" class="appointment-list-view">
 
+            <!-- 搜尋操作列 -->
+            <div class="clinic-search-bar">
+              <button class="clinic-search-btn" :disabled="clinicLoading" @click="searchNearby()">
+                {{ clinicLoading ? '搜尋中...' : '🔍 搜尋附近醫療資源' }}
+              </button>
+            </div>
+
             <!-- 科別篩選 Pill Bar -->
-            <div class="dept-pill-bar">
+            <div v-if="nearbyClinics.length > 0" class="dept-pill-bar">
               <button
-                v-for="dept in deptOptions"
+                v-for="dept in availableDepartments"
                 :key="dept"
                 class="dept-pill"
                 :class="{ 'dept-pill--active': selectedDept === dept }"
@@ -557,135 +588,135 @@ function addToTracking(drug: DrugItem) {
               </button>
             </div>
 
+            <!-- 載入中 -->
+            <div v-if="clinicLoading" class="clinic-loading-state">
+              <div class="clinic-loading-spinner" />
+              <p class="clinic-loading-text">正在定位並搜尋附近醫療資源...</p>
+            </div>
+
+            <!-- 錯誤 -->
+            <div v-else-if="clinicError" class="clinic-error-state">
+              <p class="clinic-error-text">{{ clinicError }}</p>
+              <button class="clinic-retry-btn" @click="searchNearby()">重新搜尋</button>
+            </div>
+
             <!-- 診所卡片清單 -->
-            <div v-for="clinic in filteredClinics" :key="clinic.name" class="clinic-card-v2">
-              <div class="clinic-card-v2__top">
-                <div class="clinic-card-v2__info">
-                  <h4 class="clinic-card-v2__name">🏥 {{ clinic.name }}</h4>
-                  <div class="clinic-card-v2__meta">
-                    <span class="clinic-card-v2__status">{{ clinic.status }}</span>
-                    <span class="clinic-card-v2__distance">📍 {{ clinic.distance }}</span>
+            <template v-else>
+              <div v-for="clinic in filteredClinics" :key="clinic.placeId" class="clinic-card-v2">
+                <div class="clinic-card-v2__top">
+                  <div class="clinic-card-v2__info">
+                    <h4 class="clinic-card-v2__name">🏥 {{ clinic.name }}</h4>
+                    <div class="clinic-card-v2__meta">
+                      <span
+                        class="clinic-card-v2__status"
+                        :class="getStatusClass(clinic.isOpen)"
+                      >
+                        {{ clinic.isOpen === true ? '🟢' : clinic.isOpen === false ? '🔴' : '⚪' }}
+                        {{ getStatusLabel(clinic.isOpen) }}
+                      </span>
+                      <span class="clinic-card-v2__distance">📍 {{ clinic.distanceLabel }}</span>
+                    </div>
                   </div>
                 </div>
+                <div class="clinic-card-v2__badges">
+                  <span class="clinic-badge clinic-badge--dept">{{ clinic.department }}</span>
+                  <span v-if="clinic.rating" class="clinic-badge clinic-badge--rating">⭐ {{ clinic.rating }}</span>
+                </div>
+                <p class="clinic-card-v2__address">{{ clinic.address }}</p>
+                <div class="clinic-card-v2__actions">
+                  <button class="clinic-action-btn clinic-action-btn--secondary" @click="openClinicDetail(clinic.placeId)">
+                    📋 詳細資訊
+                  </button>
+                  <button class="clinic-action-btn clinic-action-btn--primary" @click="openGoogleMaps(clinic)">
+                    🗺️ 導航前往
+                  </button>
+                </div>
               </div>
-              <div class="clinic-card-v2__badges">
-                <span class="clinic-badge">目前叫號：{{ clinic.currentNumber }} 號</span>
-                <span class="clinic-badge">現場等候：{{ clinic.waitingCount }} 人</span>
-              </div>
-              <div class="clinic-card-v2__actions">
-                <button class="clinic-action-btn clinic-action-btn--secondary">
-                  📋 實時叫號
-                </button>
-                <button class="clinic-action-btn clinic-action-btn--primary" @click="openAppointmentForm(clinic)">
-                  🗓️ 門診預約
-                </button>
-              </div>
-            </div>
 
-            <p v-if="filteredClinics.length === 0" class="no-clinic-text">
-              目前此科別無可預約診所
-            </p>
+              <p v-if="filteredClinics.length === 0 && !clinicLoading" class="no-clinic-text">
+                目前此科別無搜尋結果，請嘗試其他科別或擴大搜尋範圍
+              </p>
+            </template>
           </div>
 
-          <!-- 預約表單視圖 -->
-          <div v-else key="form" class="appointment-form-view">
-
-            <!-- 頂部導覽 -->
+          <!-- 詳情視圖 -->
+          <div v-else-if="currentAppointmentView === 'detail'" key="detail" class="clinic-detail-view">
             <div class="form-nav">
               <button class="form-nav__back" @click="currentAppointmentView = 'list'">
-                ← 返回
+                ← 返回列表
               </button>
-              <span class="form-nav__title">🏥 {{ selectedClinic?.name }}</span>
+              <span class="form-nav__title">📋 診所詳情</span>
             </div>
 
-            <!-- AI 提示列 -->
-            <div class="ai-prefill-hint">
-              🤖 AI 已為您預填病歷資料與建議科別
+            <div v-if="clinicDetailLoading" class="clinic-loading-state">
+              <div class="clinic-loading-spinner" />
+              <p class="clinic-loading-text">載入詳情中...</p>
             </div>
 
-            <!-- 就診人資料 -->
-            <div class="patient-info-card">
-              <h4 class="patient-info-card__title">👤 就診人資料</h4>
-              <div class="patient-info-card__rows">
-                <div class="patient-row">
-                  <span class="patient-row__label">就診姓名</span>
-                  <span class="patient-row__value">王小明</span>
-                </div>
-                <div class="patient-row">
-                  <span class="patient-row__label">身分證字號</span>
-                  <span class="patient-row__value">A123***789</span>
-                </div>
-                <div class="patient-row">
-                  <span class="patient-row__label">電話</span>
-                  <span class="patient-row__value">0912-345-678</span>
-                </div>
+            <div v-else-if="clinicDetailData" class="clinic-detail-card">
+              <h3 class="clinic-detail-card__name">🏥 {{ clinicDetailData.name }}</h3>
+
+              <!-- 營業狀態 -->
+              <div class="clinic-detail-card__status-row">
+                <span
+                  class="clinic-status-badge"
+                  :class="getStatusClass(clinicDetailData.openingHours?.isOpen)"
+                >
+                  {{ clinicDetailData.openingHours?.isOpen === true ? '🟢 營業中' : clinicDetailData.openingHours?.isOpen === false ? '🔴 已休息' : '⚪ 狀態未知' }}
+                </span>
               </div>
-            </div>
 
-            <!-- 門診選項卡片 -->
-            <div class="appointment-options-card">
-              <h4 class="appointment-options-card__title">📋 門診選項</h4>
-
-              <!-- 選擇醫師 -->
-              <label class="form-field">
-                <span class="form-field__label">選擇醫師</span>
-                <select v-model="selectedDoctor" class="form-field__select">
-                  <option v-for="doc in doctorOptions" :key="doc" :value="doc">{{ doc }}</option>
-                </select>
-              </label>
-
-              <!-- 就診類別 -->
-              <div class="form-field">
-                <span class="form-field__label">就診類別</span>
-                <div class="visit-type-group">
-                  <button
-                    class="visit-type-btn"
-                    :class="{ 'visit-type-btn--active': visitType === 'revisit' }"
-                    @click="visitType = 'revisit'"
-                  >複診</button>
-                  <button
-                    class="visit-type-btn"
-                    :class="{ 'visit-type-btn--active': visitType === 'first' }"
-                    @click="visitType = 'first'"
-                  >初診</button>
+              <!-- 基本資訊 -->
+              <div class="clinic-detail-card__info-list">
+                <div class="detail-info-row">
+                  <span class="detail-info-row__label">📍 地址</span>
+                  <span class="detail-info-row__value">{{ clinicDetailData.address }}</span>
+                </div>
+                <div v-if="clinicDetailData.phone" class="detail-info-row">
+                  <span class="detail-info-row__label">📞 電話</span>
+                  <a :href="'tel:' + clinicDetailData.phone" class="detail-info-row__value detail-info-row__value--link">
+                    {{ clinicDetailData.phone }}
+                  </a>
+                </div>
+                <div v-if="clinicDetailData.rating" class="detail-info-row">
+                  <span class="detail-info-row__label">⭐ 評分</span>
+                  <span class="detail-info-row__value">{{ clinicDetailData.rating }} ({{ clinicDetailData.userRatingsTotal }} 則評論)</span>
+                </div>
+                <div v-if="clinicDetailData.website" class="detail-info-row">
+                  <span class="detail-info-row__label">🌐 網站</span>
+                  <a :href="clinicDetailData.website" target="_blank" class="detail-info-row__value detail-info-row__value--link">
+                    前往官網
+                  </a>
                 </div>
               </div>
 
-              <!-- 選擇日期 -->
-              <label class="form-field">
-                <span class="form-field__label">選擇日期</span>
-                <input v-model="appointmentDate" type="date" class="form-field__input" />
-              </label>
+              <!-- 營業時間 -->
+              <div v-if="clinicDetailData.openingHours?.weekdayText?.length" class="clinic-detail-card__hours">
+                <h4 class="clinic-detail-card__hours-title">🕐 營業時間</h4>
+                <ul class="hours-list">
+                  <li v-for="(text, idx) in clinicDetailData.openingHours.weekdayText" :key="idx" class="hours-list__item">
+                    {{ text }}
+                  </li>
+                </ul>
+              </div>
 
-              <!-- 選擇時段 -->
-              <div class="form-field">
-                <span class="form-field__label">選擇時段</span>
-                <div class="slot-group">
-                  <button
-                    v-for="slot in slotOptions"
-                    :key="slot"
-                    class="slot-btn"
-                    :class="{ 'slot-btn--active': appointmentSlot === slot }"
-                    @click="appointmentSlot = slot"
-                  >{{ slot }}</button>
-                </div>
+              <!-- 操作按鈕 -->
+              <div class="clinic-detail-card__actions">
+                <button
+                  class="clinic-action-btn clinic-action-btn--primary clinic-action-btn--full"
+                  @click="openGoogleMaps(clinicDetailData)"
+                >
+                  🗺️ 在 Google Maps 導航
+                </button>
+                <a
+                  v-if="clinicDetailData.phone"
+                  :href="'tel:' + clinicDetailData.phone"
+                  class="clinic-action-btn clinic-action-btn--secondary clinic-action-btn--full"
+                >
+                  📞 撥打電話預約
+                </a>
               </div>
             </div>
-
-            <!-- 確認送出 -->
-            <button class="confirm-appointment-btn" @click="confirmAppointment">
-              ✅ 確認送出預約掛號
-            </button>
-
-            <!-- 預約成功提示 -->
-            <Transition name="result-slide">
-              <div v-if="appointmentConfirmed" class="appointment-success">
-                <span class="appointment-success__icon">🎉</span>
-                <p class="appointment-success__text">
-                  掛號成功！您的掛號號碼為 <strong>{{ appointmentNumber }} 號</strong>
-                </p>
-              </div>
-            </Transition>
           </div>
         </Transition>
 
@@ -1936,11 +1967,248 @@ function addToTracking(drug: DrugItem) {
   background: var(--color-primary-dark);
 }
 
+.clinic-action-btn--full {
+  display: block;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+}
+
 .no-clinic-text {
   text-align: center;
   font-size: 13px;
   color: #a8a29e;
   padding: 20px;
+}
+
+/* 診所搜尋列 */
+.clinic-search-bar {
+  display: flex;
+  gap: 8px;
+}
+
+.clinic-search-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 12px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.clinic-search-btn:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+}
+.clinic-search-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 載入中 */
+.clinic-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 20px;
+}
+
+.clinic-loading-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #e2e8f0;
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.clinic-loading-text {
+  font-size: 13px;
+  color: #78716c;
+}
+
+/* 錯誤 */
+.clinic-error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 30px 20px;
+}
+
+.clinic-error-text {
+  font-size: 13px;
+  color: #dc2626;
+  text-align: center;
+}
+
+.clinic-retry-btn {
+  padding: 10px 20px;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.clinic-retry-btn:hover {
+  background: var(--color-primary-light);
+}
+
+/* 營業狀態 */
+.status--open {
+  color: #16a34a;
+}
+.status--closed {
+  color: #dc2626;
+}
+.status--unknown {
+  color: #a8a29e;
+}
+
+/* 科別 badge */
+.clinic-badge--dept {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.clinic-badge--rating {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* 地址文字 */
+.clinic-card-v2__address {
+  font-size: 12px;
+  color: #78716c;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* 詳情視圖 */
+.clinic-detail-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.clinic-detail-card {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.clinic-detail-card__name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1c1917;
+}
+
+.clinic-detail-card__status-row {
+  display: flex;
+  align-items: center;
+}
+
+.clinic-status-badge {
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.clinic-status-badge.status--open {
+  background: #dcfce7;
+  color: #166534;
+}
+.clinic-status-badge.status--closed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.clinic-status-badge.status--unknown {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.clinic-detail-card__info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.detail-info-row {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.detail-info-row__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #44403c;
+  min-width: 70px;
+  flex-shrink: 0;
+}
+
+.detail-info-row__value {
+  font-size: 13px;
+  color: #1c1917;
+  word-break: break-all;
+}
+
+.detail-info-row__value--link {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.clinic-detail-card__hours {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.clinic-detail-card__hours-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1c1917;
+}
+
+.hours-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hours-list__item {
+  font-size: 12px;
+  color: #44403c;
+  padding: 4px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.clinic-detail-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
 }
 
 /* 頁面轉場動畫 */
