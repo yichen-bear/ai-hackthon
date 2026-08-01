@@ -86,7 +86,7 @@ router.post('/', async (req, res) => {
         countyCode,
         districtCode,
         addressDetail: encrypted,
-        addressHash: hashed,
+        addressDetailHash: hashed,
         isDefault: Boolean(isDefault),
       },
     });
@@ -138,7 +138,7 @@ router.put('/:id', async (req, res) => {
     }
     if (addressDetail) {
       updateData.addressDetail = encryptField(addressDetail.trim());
-      updateData.addressHash = hashContactField(addressDetail.trim());
+      updateData.addressDetailHash = hashContactField(addressDetail.trim());
     }
     if (isDefault !== undefined) {
       updateData.isDefault = Boolean(isDefault);

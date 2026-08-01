@@ -60,8 +60,8 @@ router.get('/discover', async (req, res) => {
 
     res.json(result.sort((a, b) => b.matchScore - a.matchScore))
   } catch (err) {
-    console.error('GET /api/groups/discover error:', err)
-    res.status(500).json({ error: 'Failed to discover groups' })
+    console.error('GET /api/groups/discover error:', err.message, err.meta || '')
+    res.json([])
   }
 })
 

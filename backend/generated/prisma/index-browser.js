@@ -364,8 +364,7 @@ exports.Prisma.MemberAccountScalarFieldEnum = {
   creId: 'creId',
   creTime: 'creTime',
   updId: 'updId',
-  updTime: 'updTime',
-  communityNickname: 'communityNickname'
+  updTime: 'updTime'
 };
 
 exports.Prisma.MemberAddressScalarFieldEnum = {
@@ -435,24 +434,6 @@ exports.Prisma.ChatMessageScalarFieldEnum = {
   groupId: 'groupId'
 };
 
-exports.Prisma.PickupReservationScalarFieldEnum = {
-  id: 'id',
-  listingId: 'listingId',
-  buyerId: 'buyerId',
-  buyerName: 'buyerName',
-  buyerPhone: 'buyerPhone',
-  sellerId: 'sellerId',
-  sellerName: 'sellerName',
-  pickupStore: 'pickupStore',
-  pickupMethod: 'pickupMethod',
-  status: 'status',
-  scheduledAt: 'scheduledAt',
-  creTime: 'creTime',
-  updTime: 'updTime',
-  pickupDeadline: 'pickupDeadline',
-  storedAt: 'storedAt'
-};
-
 exports.Prisma.CommunityGroupScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -479,79 +460,21 @@ exports.Prisma.GroupMemberScalarFieldEnum = {
   joinedAt: 'joinedAt'
 };
 
-exports.Prisma.CommunityActivityScalarFieldEnum = {
+exports.Prisma.PickupReservationScalarFieldEnum = {
   id: 'id',
-  title: 'title',
-  description: 'description',
-  category: 'category',
-  location: 'location',
-  activityDate: 'activityDate',
-  activityEndDate: 'activityEndDate',
-  maxParticipants: 'maxParticipants',
+  listingId: 'listingId',
+  buyerId: 'buyerId',
+  buyerName: 'buyerName',
+  buyerPhone: 'buyerPhone',
+  sellerId: 'sellerId',
+  sellerName: 'sellerName',
+  pickupStore: 'pickupStore',
+  pickupMethod: 'pickupMethod',
   status: 'status',
-  imageUrl: 'imageUrl',
-  organizerId: 'organizerId',
-  organizerName: 'organizerName',
-  isDeleted: 'isDeleted',
+  scheduledAt: 'scheduledAt',
   creTime: 'creTime',
   updTime: 'updTime',
-  extraParticipants: 'extraParticipants',
-  volunteersAssigned: 'volunteersAssigned',
-  volunteersNeeded: 'volunteersNeeded'
-};
-
-exports.Prisma.ActivityRegistrationScalarFieldEnum = {
-  id: 'id',
-  activityId: 'activityId',
-  userId: 'userId',
-  userName: 'userName',
-  userPhone: 'userPhone',
-  status: 'status',
-  registeredAt: 'registeredAt',
-  source: 'source',
-  special_needs: 'special_needs'
-};
-
-exports.Prisma.CommunityQuestionScalarFieldEnum = {
-  id: 'id',
-  askerId: 'askerId',
-  askerName: 'askerName',
-  content: 'content',
-  category: 'category',
-  isAnonymous: 'isAnonymous',
-  replyContent: 'replyContent',
-  repliedAt: 'repliedAt',
-  repliedBy: 'repliedBy',
-  status: 'status',
-  isDeleted: 'isDeleted',
-  creTime: 'creTime'
-};
-
-exports.Prisma.RestaurantQueueScalarFieldEnum = {
-  id: 'id',
-  placeId: 'placeId',
-  name: 'name',
-  totalTables: 'totalTables',
-  emptyTables: 'emptyTables',
-  waitingGroups: 'waitingGroups',
-  estimatedMinutes: 'estimatedMinutes',
-  avgServiceMinutes: 'avgServiceMinutes',
-  isOpen: 'isOpen',
-  creTime: 'creTime',
-  updTime: 'updTime'
-};
-
-exports.Prisma.QueueEntryScalarFieldEnum = {
-  id: 'id',
-  queueId: 'queueId',
-  ticketNumber: 'ticketNumber',
-  partySize: 'partySize',
-  customerName: 'customerName',
-  customerPhone: 'customerPhone',
-  note: 'note',
-  status: 'status',
-  creTime: 'creTime',
-  updTime: 'updTime'
+  pickupDeadline: 'pickupDeadline'
 };
 
 exports.Prisma.SortOrder = {
@@ -604,14 +527,9 @@ exports.Prisma.ModelName = {
   VendorUser: 'VendorUser',
   SecondhandListing: 'SecondhandListing',
   ChatMessage: 'ChatMessage',
-  PickupReservation: 'PickupReservation',
   CommunityGroup: 'CommunityGroup',
   GroupMember: 'GroupMember',
-  CommunityActivity: 'CommunityActivity',
-  ActivityRegistration: 'ActivityRegistration',
-  CommunityQuestion: 'CommunityQuestion',
-  RestaurantQueue: 'RestaurantQueue',
-  QueueEntry: 'QueueEntry'
+  PickupReservation: 'PickupReservation'
 };
 
 /**

@@ -296,22 +296,21 @@ model MmsOrderRecord {
 }
 
 model MemberAccount {
-  id                String          @id @default(uuid()) @db.Uuid
-  email             Bytes?
-  emailHash         String?         @unique @map("email_hash") @db.VarChar(64)
-  phone             Bytes?
-  phoneHash         String?         @unique @map("phone_hash") @db.VarChar(64)
-  name              Bytes?
-  nameHash          String?         @map("name_hash") @db.VarChar(64)
-  passwordHash      String          @map("password_hash") @db.VarChar(255)
-  status            String          @default("01") @map("status") @db.VarChar(2)
-  isDeleted         Boolean         @default(false) @map("is_deleted")
-  creId             String          @map("cre_id") @db.Uuid
-  creTime           DateTime        @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updId             String          @map("upd_id") @db.Uuid
-  updTime           DateTime        @default(now()) @map("upd_time") @db.Timestamptz(6)
-  communityNickname String?         @map("community_nickname") @db.VarChar(30)
-  addresses         MemberAddress[]
+  id           String          @id @default(uuid()) @db.Uuid
+  email        Bytes?
+  emailHash    String?         @unique @map("email_hash") @db.VarChar(64)
+  phone        Bytes?
+  phoneHash    String?         @unique @map("phone_hash") @db.VarChar(64)
+  name         Bytes?
+  nameHash     String?         @map("name_hash") @db.VarChar(64)
+  passwordHash String          @map("password_hash") @db.VarChar(255)
+  status       String          @default("01") @map("status") @db.VarChar(2)
+  isDeleted    Boolean         @default(false) @map("is_deleted")
+  creId        String          @map("cre_id") @db.Uuid
+  creTime      DateTime        @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updId        String          @map("upd_id") @db.Uuid
+  updTime      DateTime        @default(now()) @map("upd_time") @db.Timestamptz(6)
+  addresses    MemberAddress[]
 
   @@map("member_account")
 }
@@ -401,27 +400,6 @@ model ChatMessage {
   @@map("chat_message")
 }
 
-model PickupReservation {
-  id             String            @id @default(uuid()) @db.Uuid
-  listingId      String            @map("listing_id") @db.Uuid
-  buyerId        String            @map("buyer_id") @db.Uuid
-  buyerName      String            @map("buyer_name") @db.VarChar(50)
-  buyerPhone     String?           @map("buyer_phone") @db.VarChar(20)
-  sellerId       String            @map("seller_id") @db.Uuid
-  sellerName     String            @map("seller_name") @db.VarChar(50)
-  pickupStore    String            @map("pickup_store") @db.VarChar(50)
-  pickupMethod   String            @map("pickup_method") @db.VarChar(20)
-  status         String            @default("PENDING_SELLER_APPROVAL") @db.VarChar(30)
-  scheduledAt    DateTime?         @map("scheduled_at") @db.Timestamptz(6)
-  creTime        DateTime          @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updTime        DateTime          @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
-  pickupDeadline DateTime?         @map("pickup_deadline") @db.Timestamptz(6)
-  storedAt       DateTime?         @map("stored_at") @db.Timestamptz(6)
-  listing        SecondhandListing @relation(fields: [listingId], references: [id])
-
-  @@map("pickup_reservation")
-}
-
 model CommunityGroup {
   id               String        @id @default(uuid()) @db.Uuid
   name             String        @db.VarChar(50)
@@ -456,92 +434,22 @@ model GroupMember {
   @@map("group_member")
 }
 
-model CommunityActivity {
-  id                 String                 @id @default(uuid()) @db.Uuid
-  title              String                 @db.VarChar(100)
-  description        String?                @db.VarChar(500)
-  category           String                 @default("general") @db.VarChar(20)
-  location           String?                @db.VarChar(100)
-  activityDate       DateTime               @map("activity_date") @db.Timestamptz(6)
-  activityEndDate    DateTime?              @map("activity_end_date") @db.Timestamptz(6)
-  maxParticipants    Int                    @default(50) @map("max_participants")
-  status             String                 @default("open") @db.VarChar(20)
-  imageUrl           String?                @map("image_url")
-  organizerId        String                 @map("organizer_id") @db.Uuid
-  organizerName      String                 @map("organizer_name") @db.VarChar(50)
-  isDeleted          Boolean                @default(false) @map("is_deleted")
-  creTime            DateTime               @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updTime            DateTime               @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
-  extraParticipants  Int                    @default(0) @map("extra_participants")
-  volunteersAssigned Int                    @default(0) @map("volunteers_assigned")
-  volunteersNeeded   Int                    @default(0) @map("volunteers_needed")
-  registrations      ActivityRegistration[]
+model PickupReservation {
+  id             String            @id @default(uuid()) @db.Uuid
+  listingId      String            @map("listing_id") @db.Uuid
+  buyerId        String            @map("buyer_id") @db.Uuid
+  buyerName      String            @map("buyer_name") @db.VarChar(50)
+  buyerPhone     String?           @map("buyer_phone") @db.VarChar(20)
+  sellerId       String            @map("seller_id") @db.Uuid
+  sellerName     String            @map("seller_name") @db.VarChar(50)
+  pickupStore    String            @map("pickup_store") @db.VarChar(50)
+  pickupMethod   String            @map("pickup_method") @db.VarChar(20)
+  status         String            @default("PENDING_SELLER_APPROVAL") @db.VarChar(30)
+  scheduledAt    DateTime?         @map("scheduled_at") @db.Timestamptz(6)
+  creTime        DateTime          @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updTime        DateTime          @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
+  pickupDeadline DateTime?         @map("pickup_deadline") @db.Timestamptz(6)
+  listing        SecondhandListing @relation(fields: [listingId], references: [id])
 
-  @@map("community_activity")
-}
-
-model ActivityRegistration {
-  id            String            @id @default(uuid()) @db.Uuid
-  activityId    String            @map("activity_id") @db.Uuid
-  userId        String            @map("user_id") @db.Uuid
-  userName      String            @map("user_name") @db.VarChar(50)
-  userPhone     String?           @map("user_phone") @db.VarChar(20)
-  status        String            @default("registered") @db.VarChar(20)
-  registeredAt  DateTime          @default(now()) @map("registered_at") @db.Timestamptz(6)
-  source        String            @default("app") @db.VarChar(20)
-  special_needs String?           @db.VarChar(200)
-  activity      CommunityActivity @relation(fields: [activityId], references: [id])
-
-  @@unique([activityId, userId])
-  @@map("activity_registration")
-}
-
-model CommunityQuestion {
-  id           String    @id @default(uuid()) @db.Uuid
-  askerId      String    @map("asker_id") @db.Uuid
-  askerName    String    @map("asker_name") @db.VarChar(50)
-  content      String    @db.VarChar(500)
-  category     String    @default("general") @db.VarChar(20)
-  isAnonymous  Boolean   @default(false) @map("is_anonymous")
-  replyContent String?   @map("reply_content") @db.VarChar(500)
-  repliedAt    DateTime? @map("replied_at") @db.Timestamptz(6)
-  repliedBy    String?   @map("replied_by") @db.VarChar(50)
-  status       String    @default("pending") @db.VarChar(20)
-  isDeleted    Boolean   @default(false) @map("is_deleted")
-  creTime      DateTime  @default(now()) @map("cre_time") @db.Timestamptz(6)
-
-  @@map("community_question")
-}
-
-model RestaurantQueue {
-  id                Int          @id @default(autoincrement())
-  placeId           String       @unique @map("place_id") @db.VarChar(100)
-  name              String       @db.VarChar(100)
-  totalTables       Int          @default(10) @map("total_tables")
-  emptyTables       Int          @default(0) @map("empty_tables")
-  waitingGroups     Int          @default(0) @map("waiting_groups")
-  estimatedMinutes  Int          @default(0) @map("estimated_minutes")
-  avgServiceMinutes Int          @default(30) @map("avg_service_minutes")
-  isOpen            Boolean      @default(true) @map("is_open")
-  creTime           DateTime     @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updTime           DateTime     @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
-  entries           QueueEntry[]
-
-  @@map("restaurant_queue")
-}
-
-model QueueEntry {
-  id            Int             @id @default(autoincrement())
-  queueId       Int             @map("queue_id")
-  ticketNumber  Int             @map("ticket_number")
-  partySize     Int             @map("party_size")
-  customerName  String?         @map("customer_name") @db.VarChar(50)
-  customerPhone String?         @map("customer_phone") @db.VarChar(20)
-  note          String?         @db.VarChar(200)
-  status        String          @default("waiting") @db.VarChar(20)
-  creTime       DateTime        @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updTime       DateTime        @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
-  queue         RestaurantQueue @relation(fields: [queueId], references: [id])
-
-  @@map("queue_entry")
+  @@map("pickup_reservation")
 }
