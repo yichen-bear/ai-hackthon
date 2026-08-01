@@ -116,7 +116,17 @@ router.get('/:id/messages', async (req, res) => {
       orderBy: { creTime: 'asc' },
       take: 100,
     })
-    res.json(messages)
+    // 社群訊息：以 community_nickname 顯示（查詢 member_account）
+    const senderIds = [...new Set(messages.filter(m => m.senderId !== '00000000-0000-0000-0000-ffffffffffff').map(m => m.senderId))]
+    const accounts = senderIds.length > 0
+      ? await prisma.memberAccount.findMany({ where: { id: { in: senderIds } }, select: { id: true, communityNickname: true } })
+      : []
+    const nicknameMap = Object.fromEntries(accounts.map(a => [a.id, a.communityNickname]))
+    const result = messages.map(m => ({
+      ...m,
+      senderName: nicknameMap[m.senderId] || m.senderName,
+    }))
+    res.json(result)
   } catch (err) {
     console.error('GET /api/groups/:id/messages error:', err)
     res.status(500).json({ error: 'Failed to fetch messages' })
@@ -130,8 +140,13 @@ router.post('/:id/messages', async (req, res) => {
     const { senderId, senderName, content } = req.body
     if (!senderId || !content) return res.status(400).json({ error: 'senderId, content required' })
 
+    // 社群訊息以 nickname 存入
+    let displayName = senderName || '使用者'
+    const account = await prisma.memberAccount.findUnique({ where: { id: senderId }, select: { communityNickname: true } })
+    if (account && account.communityNickname) displayName = account.communityNickname
+
     const message = await prisma.chatMessage.create({
-      data: { senderId, senderName: senderName || '使用者', groupId: id, content, messageType: 'text' },
+      data: { senderId, senderName: displayName, groupId: id, content, messageType: 'text' },
     })
     res.status(201).json(message)
   } catch (err) {

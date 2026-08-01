@@ -296,21 +296,22 @@ model MmsOrderRecord {
 }
 
 model MemberAccount {
-  id           String          @id @default(uuid()) @db.Uuid
-  email        Bytes?
-  emailHash    String?         @unique @map("email_hash") @db.VarChar(64)
-  phone        Bytes?
-  phoneHash    String?         @unique @map("phone_hash") @db.VarChar(64)
-  name         Bytes?
-  nameHash     String?         @map("name_hash") @db.VarChar(64)
-  passwordHash String          @map("password_hash") @db.VarChar(255)
-  status       String          @default("01") @map("status") @db.VarChar(2)
-  isDeleted    Boolean         @default(false) @map("is_deleted")
-  creId        String          @map("cre_id") @db.Uuid
-  creTime      DateTime        @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updId        String          @map("upd_id") @db.Uuid
-  updTime      DateTime        @default(now()) @map("upd_time") @db.Timestamptz(6)
-  addresses    MemberAddress[]
+  id                String          @id @default(uuid()) @db.Uuid
+  email             Bytes?
+  emailHash         String?         @unique @map("email_hash") @db.VarChar(64)
+  phone             Bytes?
+  phoneHash         String?         @unique @map("phone_hash") @db.VarChar(64)
+  name              Bytes?
+  nameHash          String?         @map("name_hash") @db.VarChar(64)
+  passwordHash      String          @map("password_hash") @db.VarChar(255)
+  communityNickname String?         @map("community_nickname") @db.VarChar(30)
+  status            String          @default("01") @map("status") @db.VarChar(2)
+  isDeleted         Boolean         @default(false) @map("is_deleted")
+  creId             String          @map("cre_id") @db.Uuid
+  creTime           DateTime        @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updId             String          @map("upd_id") @db.Uuid
+  updTime           DateTime        @default(now()) @map("upd_time") @db.Timestamptz(6)
+  addresses         MemberAddress[]
 
   @@map("member_account")
 }

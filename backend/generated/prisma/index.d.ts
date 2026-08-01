@@ -19565,6 +19565,7 @@ export namespace Prisma {
     name: Bytes | null
     nameHash: string | null
     passwordHash: string | null
+    communityNickname: string | null
     status: string | null
     isDeleted: boolean | null
     creId: string | null
@@ -19582,6 +19583,7 @@ export namespace Prisma {
     name: Bytes | null
     nameHash: string | null
     passwordHash: string | null
+    communityNickname: string | null
     status: string | null
     isDeleted: boolean | null
     creId: string | null
@@ -19599,6 +19601,7 @@ export namespace Prisma {
     name: number
     nameHash: number
     passwordHash: number
+    communityNickname: number
     status: number
     isDeleted: number
     creId: number
@@ -19618,6 +19621,7 @@ export namespace Prisma {
     name?: true
     nameHash?: true
     passwordHash?: true
+    communityNickname?: true
     status?: true
     isDeleted?: true
     creId?: true
@@ -19635,6 +19639,7 @@ export namespace Prisma {
     name?: true
     nameHash?: true
     passwordHash?: true
+    communityNickname?: true
     status?: true
     isDeleted?: true
     creId?: true
@@ -19652,6 +19657,7 @@ export namespace Prisma {
     name?: true
     nameHash?: true
     passwordHash?: true
+    communityNickname?: true
     status?: true
     isDeleted?: true
     creId?: true
@@ -19742,6 +19748,7 @@ export namespace Prisma {
     name: Bytes | null
     nameHash: string | null
     passwordHash: string
+    communityNickname: string | null
     status: string
     isDeleted: boolean
     creId: string
@@ -19776,6 +19783,7 @@ export namespace Prisma {
     name?: boolean
     nameHash?: boolean
     passwordHash?: boolean
+    communityNickname?: boolean
     status?: boolean
     isDeleted?: boolean
     creId?: boolean
@@ -19795,6 +19803,7 @@ export namespace Prisma {
     name?: boolean
     nameHash?: boolean
     passwordHash?: boolean
+    communityNickname?: boolean
     status?: boolean
     isDeleted?: boolean
     creId?: boolean
@@ -19812,6 +19821,7 @@ export namespace Prisma {
     name?: boolean
     nameHash?: boolean
     passwordHash?: boolean
+    communityNickname?: boolean
     status?: boolean
     isDeleted?: boolean
     creId?: boolean
@@ -19829,6 +19839,7 @@ export namespace Prisma {
     name?: boolean
     nameHash?: boolean
     passwordHash?: boolean
+    communityNickname?: boolean
     status?: boolean
     isDeleted?: boolean
     creId?: boolean
@@ -19837,7 +19848,7 @@ export namespace Prisma {
     updTime?: boolean
   }
 
-  export type MemberAccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "emailHash" | "phone" | "phoneHash" | "name" | "nameHash" | "passwordHash" | "status" | "isDeleted" | "creId" | "creTime" | "updId" | "updTime", ExtArgs["result"]["memberAccount"]>
+  export type MemberAccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "emailHash" | "phone" | "phoneHash" | "name" | "nameHash" | "passwordHash" | "communityNickname" | "status" | "isDeleted" | "creId" | "creTime" | "updId" | "updTime", ExtArgs["result"]["memberAccount"]>
   export type MemberAccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     addresses?: boolean | MemberAccount$addressesArgs<ExtArgs>
     _count?: boolean | MemberAccountCountOutputTypeDefaultArgs<ExtArgs>
@@ -19859,6 +19870,7 @@ export namespace Prisma {
       name: Prisma.Bytes | null
       nameHash: string | null
       passwordHash: string
+      communityNickname: string | null
       status: string
       isDeleted: boolean
       creId: string
@@ -20297,6 +20309,7 @@ export namespace Prisma {
     readonly name: FieldRef<"MemberAccount", 'Bytes'>
     readonly nameHash: FieldRef<"MemberAccount", 'String'>
     readonly passwordHash: FieldRef<"MemberAccount", 'String'>
+    readonly communityNickname: FieldRef<"MemberAccount", 'String'>
     readonly status: FieldRef<"MemberAccount", 'String'>
     readonly isDeleted: FieldRef<"MemberAccount", 'Boolean'>
     readonly creId: FieldRef<"MemberAccount", 'String'>
@@ -29401,6 +29414,7 @@ export namespace Prisma {
     name: 'name',
     nameHash: 'nameHash',
     passwordHash: 'passwordHash',
+    communityNickname: 'communityNickname',
     status: 'status',
     isDeleted: 'isDeleted',
     creId: 'creId',
@@ -31155,6 +31169,7 @@ export namespace Prisma {
     name?: BytesNullableFilter<"MemberAccount"> | Bytes | null
     nameHash?: StringNullableFilter<"MemberAccount"> | string | null
     passwordHash?: StringFilter<"MemberAccount"> | string
+    communityNickname?: StringNullableFilter<"MemberAccount"> | string | null
     status?: StringFilter<"MemberAccount"> | string
     isDeleted?: BoolFilter<"MemberAccount"> | boolean
     creId?: UuidFilter<"MemberAccount"> | string
@@ -31173,6 +31188,7 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     nameHash?: SortOrderInput | SortOrder
     passwordHash?: SortOrder
+    communityNickname?: SortOrderInput | SortOrder
     status?: SortOrder
     isDeleted?: SortOrder
     creId?: SortOrder
@@ -31194,6 +31210,7 @@ export namespace Prisma {
     name?: BytesNullableFilter<"MemberAccount"> | Bytes | null
     nameHash?: StringNullableFilter<"MemberAccount"> | string | null
     passwordHash?: StringFilter<"MemberAccount"> | string
+    communityNickname?: StringNullableFilter<"MemberAccount"> | string | null
     status?: StringFilter<"MemberAccount"> | string
     isDeleted?: BoolFilter<"MemberAccount"> | boolean
     creId?: UuidFilter<"MemberAccount"> | string
@@ -31212,6 +31229,7 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     nameHash?: SortOrderInput | SortOrder
     passwordHash?: SortOrder
+    communityNickname?: SortOrderInput | SortOrder
     status?: SortOrder
     isDeleted?: SortOrder
     creId?: SortOrder
@@ -31235,6 +31253,7 @@ export namespace Prisma {
     name?: BytesNullableWithAggregatesFilter<"MemberAccount"> | Bytes | null
     nameHash?: StringNullableWithAggregatesFilter<"MemberAccount"> | string | null
     passwordHash?: StringWithAggregatesFilter<"MemberAccount"> | string
+    communityNickname?: StringNullableWithAggregatesFilter<"MemberAccount"> | string | null
     status?: StringWithAggregatesFilter<"MemberAccount"> | string
     isDeleted?: BoolWithAggregatesFilter<"MemberAccount"> | boolean
     creId?: UuidWithAggregatesFilter<"MemberAccount"> | string
@@ -33572,6 +33591,7 @@ export namespace Prisma {
     name?: Bytes | null
     nameHash?: string | null
     passwordHash: string
+    communityNickname?: string | null
     status?: string
     isDeleted?: boolean
     creId: string
@@ -33590,6 +33610,7 @@ export namespace Prisma {
     name?: Bytes | null
     nameHash?: string | null
     passwordHash: string
+    communityNickname?: string | null
     status?: string
     isDeleted?: boolean
     creId: string
@@ -33608,6 +33629,7 @@ export namespace Prisma {
     name?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     nameHash?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
+    communityNickname?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     creId?: StringFieldUpdateOperationsInput | string
@@ -33626,6 +33648,7 @@ export namespace Prisma {
     name?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     nameHash?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
+    communityNickname?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     creId?: StringFieldUpdateOperationsInput | string
@@ -33644,6 +33667,7 @@ export namespace Prisma {
     name?: Bytes | null
     nameHash?: string | null
     passwordHash: string
+    communityNickname?: string | null
     status?: string
     isDeleted?: boolean
     creId: string
@@ -33661,6 +33685,7 @@ export namespace Prisma {
     name?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     nameHash?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
+    communityNickname?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     creId?: StringFieldUpdateOperationsInput | string
@@ -33678,6 +33703,7 @@ export namespace Prisma {
     name?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     nameHash?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
+    communityNickname?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     creId?: StringFieldUpdateOperationsInput | string
@@ -35887,6 +35913,7 @@ export namespace Prisma {
     name?: SortOrder
     nameHash?: SortOrder
     passwordHash?: SortOrder
+    communityNickname?: SortOrder
     status?: SortOrder
     isDeleted?: SortOrder
     creId?: SortOrder
@@ -35904,6 +35931,7 @@ export namespace Prisma {
     name?: SortOrder
     nameHash?: SortOrder
     passwordHash?: SortOrder
+    communityNickname?: SortOrder
     status?: SortOrder
     isDeleted?: SortOrder
     creId?: SortOrder
@@ -35921,6 +35949,7 @@ export namespace Prisma {
     name?: SortOrder
     nameHash?: SortOrder
     passwordHash?: SortOrder
+    communityNickname?: SortOrder
     status?: SortOrder
     isDeleted?: SortOrder
     creId?: SortOrder
@@ -40341,6 +40370,7 @@ export namespace Prisma {
     name?: Bytes | null
     nameHash?: string | null
     passwordHash: string
+    communityNickname?: string | null
     status?: string
     isDeleted?: boolean
     creId: string
@@ -40358,6 +40388,7 @@ export namespace Prisma {
     name?: Bytes | null
     nameHash?: string | null
     passwordHash: string
+    communityNickname?: string | null
     status?: string
     isDeleted?: boolean
     creId: string
@@ -40461,6 +40492,7 @@ export namespace Prisma {
     name?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     nameHash?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
+    communityNickname?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     creId?: StringFieldUpdateOperationsInput | string
@@ -40478,6 +40510,7 @@ export namespace Prisma {
     name?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     nameHash?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
+    communityNickname?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     creId?: StringFieldUpdateOperationsInput | string
