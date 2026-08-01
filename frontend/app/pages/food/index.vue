@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import FoodBookingCard from '~/components/food/BookingCard.vue'
+import { useFormApi } from '~/composables/useFormApi'
+import type { FeedbackAnswer } from '~/composables/useFormApi'
 
 /* ─── Tab 定義 ─── */
 type TabKey = 'eat' | 'group' | 'calorie' | 'passport'
@@ -18,7 +20,7 @@ const tabs: { key: TabKey; label: string }[] = [
 const eatMode = ref<'dine_in' | 'takeout' | 'delivery'>('dine_in')
 
 /* Sub-view 狀態 */
-const currentView = ref<'list' | 'reserve' | 'queue' | 'menu'>('list')
+const currentView = ref<'list' | 'reserve' | 'queue' | 'menu' | 'form'>('list')
 
 interface Restaurant {
   id: string
@@ -60,6 +62,80 @@ function handleGoMenu(restaurant: Restaurant) {
   selectedRestaurant.value = restaurant
   menuItems.value.forEach(item => (item.qty = 0))
   currentView.value = 'menu'
+}
+
+/* ─── 動態表單 Sub-view 狀態 ─── */
+const { formData, loading: formLoading, error: formError, submitting: formSubmitting, submitSuccess: formSubmitSuccess, fetchForm, submitFeedback } = useFormApi()
+const formAnswers = ref<Record<number, { optionIds: number[]; value: string | null }>>({})
+const formContactName = ref(userName)
+const formContactPhone = ref(userPhone)
+
+function handleGoForm(restaurant: Restaurant) {
+  selectedRestaurant.value = restaurant
+  formAnswers.value = {}
+  formSubmitSuccess.value = false
+  formError.value = null
+  currentView.value = 'form'
+  fetchForm(1010)
+}
+
+// 初始化表單答案
+watch(() => formData.value, (form) => {
+  if (!form) return
+  for (const group of form.groups) {
+    for (const topic of group.topics) {
+      if (!formAnswers.value[topic.id]) {
+        formAnswers.value[topic.id] = { optionIds: [], value: null }
+      }
+    }
+  }
+})
+
+function formHandleSingleSelect(topicId: number, optionId: number) {
+  formAnswers.value[topicId] = { optionIds: [optionId], value: null }
+}
+
+function formHandleMultiSelect(topicId: number, optionId: number, checked: boolean) {
+  const current = formAnswers.value[topicId]?.optionIds || []
+  if (checked) {
+    formAnswers.value[topicId] = { optionIds: [...current, optionId], value: null }
+  } else {
+    formAnswers.value[topicId] = { optionIds: current.filter(id => id !== optionId), value: null }
+  }
+}
+
+function formHandleValueInput(topicId: number, value: string) {
+  formAnswers.value[topicId] = { optionIds: [], value }
+}
+
+function getTopicInputType(type: string): string {
+  switch (type) {
+    case '01': return 'text'
+    case '02': return 'number'
+    case '03': return 'radio'
+    case '04': return 'checkbox'
+    case '05': return 'date'
+    case '06': return 'image'
+    case '08': return 'contact'
+    case '09': return 'datetime'
+    case '10': return 'contact-full'
+    default: return 'text'
+  }
+}
+
+async function submitFormFeedback() {
+  const feedbackAnswers: FeedbackAnswer[] = Object.entries(formAnswers.value).map(([topicId, ans]) => ({
+    topicId: Number(topicId),
+    optionIds: ans.optionIds,
+    value: ans.value,
+  }))
+
+  await submitFeedback(1010, {
+    feedbackContent: { answers: feedbackAnswers },
+    contactName: formContactName.value || undefined,
+    contactMobile: formContactPhone.value || undefined,
+    description: selectedRestaurant.value ? `餐廳：${selectedRestaurant.value.name}` : undefined,
+  })
 }
 
 /* ─── 訂位 Sub-view 狀態 ─── */
@@ -371,6 +447,7 @@ const passportBadges = [
           @go-reserve="handleGoReserve"
           @go-queue="handleGoQueue"
           @go-menu="handleGoMenu"
+          @go-form="handleGoForm"
         />
 
         <!-- ═══ Sub-view: 訂位表單頁 ═══ -->
@@ -563,6 +640,190 @@ const passportBadges = [
             :disabled="menuSubtotal === 0"
             @click="submitOrder"
           >確認送出訂單</button>
+        </div>
+
+        <!-- ═══ Sub-view: 動態表單（填寫需求）═══ -->
+        <div v-if="currentView === 'form' && selectedRestaurant" class="subview">
+          <!-- 頂部導覽 -->
+          <div class="subview__header">
+            <button class="subview__back-btn" @click="goBack">← 返回</button>
+            <div class="subview__title-row">
+              <span class="subview__emoji">{{ selectedRestaurant.image }}</span>
+              <span class="subview__name">{{ selectedRestaurant.name }}</span>
+              <span class="subview__mode-tag">填寫需求</span>
+            </div>
+          </div>
+
+          <!-- Loading -->
+          <div v-if="formLoading" class="subview__form-loading">
+            <div class="subview__form-spinner" />
+            <span>載入表單中...</span>
+          </div>
+
+          <!-- 錯誤 -->
+          <div v-else-if="formError && !formData" class="subview__form-error">
+            {{ formError }}
+          </div>
+
+          <!-- 送出成功 -->
+          <div v-else-if="formSubmitSuccess" class="subview__form-success">
+            <span class="subview__form-success-icon">✅</span>
+            <p class="subview__form-success-title">需求已送出！</p>
+            <p class="subview__form-success-desc">我們會盡快為您安排</p>
+            <button class="subview__submit-btn subview__submit-btn--green" @click="goBack">返回餐廳列表</button>
+          </div>
+
+          <!-- 表單主體 -->
+          <template v-else-if="formData">
+            <!-- AI 提示列 -->
+            <div class="subview__ai-hint">
+              ✨ AI 已載入「{{ formData.name }}」動態表單
+            </div>
+
+            <!-- 表單說明 -->
+            <p v-if="formData.introContent" class="subview__form-intro">{{ formData.introContent }}</p>
+            <div v-if="formData.noticeContent" class="subview__form-notice">⚠️ {{ formData.noticeContent }}</div>
+
+            <!-- 群組 → 題目 → 選項 -->
+            <div
+              v-for="group in formData.groups"
+              :key="group.id"
+              class="subview__form-group"
+            >
+              <h3 class="subview__form-group-title">{{ group.name }}</h3>
+
+              <div
+                v-for="topic in group.topics"
+                :key="topic.id"
+                class="subview__form-topic"
+              >
+                <label class="subview__form-topic-label">
+                  {{ topic.title }}
+                  <span v-if="topic.isRequired === '1'" class="subview__form-required">*</span>
+                </label>
+                <p v-if="topic.remark" class="subview__form-topic-remark">{{ topic.remark }}</p>
+
+                <!-- 單選 (radio) — type 03 -->
+                <div v-if="getTopicInputType(topic.type) === 'radio'" class="subview__form-options">
+                  <label
+                    v-for="option in topic.options"
+                    :key="option.id"
+                    class="subview__form-option"
+                    :class="{ 'subview__form-option--selected': formAnswers[topic.id]?.optionIds.includes(option.id) }"
+                  >
+                    <input
+                      type="radio"
+                      :name="`topic-${topic.id}`"
+                      :value="option.id"
+                      :checked="formAnswers[topic.id]?.optionIds.includes(option.id)"
+                      class="subview__form-option-input"
+                      @change="formHandleSingleSelect(topic.id, option.id)"
+                    />
+                    <span class="subview__form-option-text">{{ option.optionName }}</span>
+                    <span v-if="option.unitPrice != null" class="subview__form-option-price">${{ option.unitPrice }}</span>
+                  </label>
+                </div>
+
+                <!-- 多選 (checkbox) — type 04 -->
+                <div v-else-if="getTopicInputType(topic.type) === 'checkbox'" class="subview__form-options">
+                  <label
+                    v-for="option in topic.options"
+                    :key="option.id"
+                    class="subview__form-option"
+                    :class="{ 'subview__form-option--selected': formAnswers[topic.id]?.optionIds.includes(option.id) }"
+                  >
+                    <input
+                      type="checkbox"
+                      :value="option.id"
+                      :checked="formAnswers[topic.id]?.optionIds.includes(option.id)"
+                      class="subview__form-option-input"
+                      @change="formHandleMultiSelect(topic.id, option.id, ($event.target as HTMLInputElement).checked)"
+                    />
+                    <span class="subview__form-option-text">{{ option.optionName }}</span>
+                    <span v-if="option.unitPrice != null" class="subview__form-option-price">${{ option.unitPrice }}</span>
+                  </label>
+                </div>
+
+                <!-- 文字輸入 — type 01 -->
+                <input
+                  v-else-if="getTopicInputType(topic.type) === 'text'"
+                  type="text"
+                  class="subview__form-text-input"
+                  :placeholder="topic.remark || '請輸入'"
+                  :value="formAnswers[topic.id]?.value || ''"
+                  @input="formHandleValueInput(topic.id, ($event.target as HTMLInputElement).value)"
+                />
+
+                <!-- 數字輸入 — type 02 -->
+                <input
+                  v-else-if="getTopicInputType(topic.type) === 'number'"
+                  type="number"
+                  class="subview__form-text-input"
+                  :placeholder="topic.remark || '請輸入數字'"
+                  :value="formAnswers[topic.id]?.value || ''"
+                  @input="formHandleValueInput(topic.id, ($event.target as HTMLInputElement).value)"
+                />
+
+                <!-- 日期 — type 05 -->
+                <input
+                  v-else-if="getTopicInputType(topic.type) === 'date'"
+                  type="date"
+                  class="subview__form-text-input"
+                  :value="formAnswers[topic.id]?.value || ''"
+                  @input="formHandleValueInput(topic.id, ($event.target as HTMLInputElement).value)"
+                />
+
+                <!-- 日期時間 — type 09 -->
+                <input
+                  v-else-if="getTopicInputType(topic.type) === 'datetime'"
+                  type="datetime-local"
+                  class="subview__form-text-input"
+                  :value="formAnswers[topic.id]?.value || ''"
+                  @input="formHandleValueInput(topic.id, ($event.target as HTMLInputElement).value)"
+                />
+
+                <!-- 其他（fallback 為文字框） -->
+                <input
+                  v-else
+                  type="text"
+                  class="subview__form-text-input"
+                  :placeholder="topic.remark || '請輸入'"
+                  :value="formAnswers[topic.id]?.value || ''"
+                  @input="formHandleValueInput(topic.id, ($event.target as HTMLInputElement).value)"
+                />
+              </div>
+            </div>
+
+            <!-- 聯絡資訊（預填） -->
+            <div class="subview__form-group">
+              <h3 class="subview__form-group-title">聯絡資訊</h3>
+              <div class="subview__form-topic">
+                <label class="subview__form-topic-label">聯絡人姓名</label>
+                <input v-model="formContactName" type="text" class="subview__form-text-input" placeholder="請輸入姓名" />
+              </div>
+              <div class="subview__form-topic">
+                <label class="subview__form-topic-label">手機號碼</label>
+                <input v-model="formContactPhone" type="tel" class="subview__form-text-input" placeholder="0912345678" />
+              </div>
+            </div>
+
+            <!-- 條款 -->
+            <div v-if="formData.termsContent" class="subview__form-terms">
+              {{ formData.termsContent }}
+            </div>
+
+            <!-- 錯誤提示 -->
+            <p v-if="formError" class="subview__form-error-inline">{{ formError }}</p>
+
+            <!-- 送出按鈕 -->
+            <button
+              class="subview__submit-btn subview__submit-btn--green"
+              :disabled="formSubmitting"
+              @click="submitFormFeedback"
+            >
+              {{ formSubmitting ? '送出中...' : '確認送出需求' }}
+            </button>
+          </template>
         </div>
       </section>
 
@@ -2042,5 +2303,197 @@ const passportBadges = [
 .result-slide-leave-to {
   opacity: 0;
   transform: translateY(-10px);
+}
+
+/* ═══ 動態表單 Sub-view 樣式 ═══ */
+.subview__form-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 40px 0;
+  font-size: 13px;
+  color: #78716c;
+}
+
+.subview__form-spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid #f1f5f9;
+  border-top-color: var(--color-secondary, #00a86b);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.subview__form-error {
+  font-size: 13px;
+  color: #dc2626;
+  background: #fef2f2;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+}
+
+.subview__form-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 0;
+  text-align: center;
+}
+
+.subview__form-success-icon {
+  font-size: 40px;
+}
+
+.subview__form-success-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #1c1917;
+}
+
+.subview__form-success-desc {
+  margin: 0;
+  font-size: 13px;
+  color: #78716c;
+}
+
+.subview__submit-btn--green {
+  background: var(--color-secondary, #00a86b);
+}
+
+.subview__form-intro {
+  margin: 0;
+  font-size: 13px;
+  color: #78716c;
+  line-height: 1.6;
+}
+
+.subview__form-notice {
+  font-size: 12px;
+  color: #9a3412;
+  background: #fff7ed;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.subview__form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.subview__form-group-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1c1917;
+}
+
+.subview__form-topic {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.subview__form-topic-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1c1917;
+}
+
+.subview__form-required {
+  color: #ef4444;
+  margin-left: 2px;
+}
+
+.subview__form-topic-remark {
+  margin: 0;
+  font-size: 11px;
+  color: #78716c;
+}
+
+.subview__form-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.subview__form-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.subview__form-option:hover {
+  border-color: var(--color-secondary, #00a86b);
+  background: var(--color-secondary-light, #d1fae5);
+}
+
+.subview__form-option--selected {
+  border-color: var(--color-secondary, #00a86b);
+  background: var(--color-secondary-light, #d1fae5);
+}
+
+.subview__form-option-input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-secondary, #00a86b);
+  flex-shrink: 0;
+}
+
+.subview__form-option-text {
+  flex: 1;
+  font-size: 13px;
+  color: #1c1917;
+}
+
+.subview__form-option-price {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary, #ff5252);
+}
+
+.subview__form-text-input {
+  padding: 10px 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+  color: #1c1917;
+}
+.subview__form-text-input:focus {
+  border-color: var(--color-secondary, #00a86b);
+}
+
+.subview__form-terms {
+  font-size: 11px;
+  color: #64748b;
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 10px 12px;
+  line-height: 1.6;
+}
+
+.subview__form-error-inline {
+  margin: 0;
+  font-size: 12px;
+  color: #dc2626;
+  text-align: center;
 }
 </style>

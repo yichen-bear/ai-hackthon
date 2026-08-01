@@ -26,6 +26,7 @@ const emit = defineEmits<{
   'go-reserve': [restaurant: Restaurant]
   'go-queue': [restaurant: Restaurant]
   'go-menu': [restaurant: Restaurant]
+  'go-form': [restaurant: Restaurant]
 }>()
 
 /* ─── Mock 餐廳資料 ─── */
@@ -144,7 +145,7 @@ function badgeStyle(type?: string) {
               :style="badgeStyle(r.badge)"
             >{{ r.badgeLabel }}</span>
 
-            <!-- 內用模式：兩個按鈕 -->
+            <!-- 內用模式：三個按鈕 -->
             <div v-if="props.eatMode === 'dine_in'" class="bc__footer-btns">
               <button
                 class="bc__action-btn bc__action-btn--sm"
@@ -154,21 +155,35 @@ function badgeStyle(type?: string) {
                 class="bc__action-btn bc__action-btn--sm bc__action-btn--outline"
                 @click="emit('go-reserve', r)"
               >訂位</button>
+              <button
+                class="bc__action-btn bc__action-btn--sm bc__action-btn--green"
+                @click="emit('go-form', r)"
+              >填寫需求</button>
             </div>
 
             <!-- 外帶模式 -->
-            <button
-              v-else-if="props.eatMode === 'takeout'"
-              class="bc__action-btn"
-              @click="emit('go-menu', r)"
-            >點餐</button>
+            <div v-else-if="props.eatMode === 'takeout'" class="bc__footer-btns">
+              <button
+                class="bc__action-btn bc__action-btn--sm"
+                @click="emit('go-menu', r)"
+              >點餐</button>
+              <button
+                class="bc__action-btn bc__action-btn--sm bc__action-btn--green"
+                @click="emit('go-form', r)"
+              >填寫需求</button>
+            </div>
 
             <!-- 外送模式 -->
-            <button
-              v-else
-              class="bc__action-btn"
-              @click="emit('go-menu', r)"
-            >點餐</button>
+            <div v-else class="bc__footer-btns">
+              <button
+                class="bc__action-btn bc__action-btn--sm"
+                @click="emit('go-menu', r)"
+              >點餐</button>
+              <button
+                class="bc__action-btn bc__action-btn--sm bc__action-btn--green"
+                @click="emit('go-form', r)"
+              >填寫需求</button>
+            </div>
           </div>
         </div>
       </div>
@@ -377,5 +392,15 @@ function badgeStyle(type?: string) {
   background: #fff1f2;
   background: var(--color-primary-light, #fff1f2);
   opacity: 1;
+}
+
+.bc__action-btn--green {
+  background: #00a86b;
+  border-color: #00a86b;
+  color: #ffffff;
+}
+
+.bc__action-btn--green:hover {
+  opacity: 0.88;
 }
 </style>

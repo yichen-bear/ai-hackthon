@@ -1,5 +1,5 @@
 <script setup lang="ts">
-definePageMeta({ layout: false })
+definePageMeta({ layout: 'admin' })
 
 useHead({
   htmlAttrs: { lang: 'zh-TW' },
@@ -34,9 +34,6 @@ interface TakeoutOrder {
   note: string
   status: 'preparing' | 'ready' | 'delivering' | 'completed'
 }
-
-// ─── Header 狀態 ───
-const isHeaderExpanded = ref(false)
 
 // ─── Tab 狀態 ───
 const activeTab = ref<'orders' | 'menu' | 'dispatch'>('orders')
@@ -328,64 +325,11 @@ function completeOrder(order: TakeoutOrder) {
   order.status = 'completed'
   showToast(`✅ 訂單已完成：${order.customerName}`)
 }
-
-// ─── 六大模組導航 ───
-const modules = [
-  { label: '食', path: '/food' },
-  { label: '醫', path: '/medical' },
-  { label: '住', path: '/housing' },
-  { label: '行', path: '/transport' },
-  { label: '預', path: '/booking' },
-  { label: '樂', path: '/entertainment' },
-]
 </script>
 
 <template>
-  <!-- ═══ 全頁外層：slate-100 背景 + 置中 430px 手機容器 ═══ -->
-  <div class="min-h-screen bg-slate-100 flex justify-center">
-    <div class="w-full max-w-[430px] min-h-screen bg-white shadow-xl relative pb-12">
-
-      <!-- ═══ Top Header (Layer 1) ═══ -->
-      <header class="sticky top-0 z-40 h-[50px] bg-white border-b border-slate-200 flex items-center justify-between px-4 shadow-sm">
-        <div class="flex items-center gap-1 text-sm font-semibold text-slate-900 truncate">
-          <span>👤 小明 (店家後台)</span>
-          <span class="text-slate-300">|</span>
-          <span>📍 台北市</span>
-        </div>
-        <button
-          class="flex items-center gap-1 px-3 py-1.5 bg-orange-50 text-orange-600 text-sm font-bold rounded-lg border border-orange-200 cursor-pointer hover:bg-orange-100 active:scale-95 transition-all"
-          @click="isHeaderExpanded = !isHeaderExpanded"
-        >
-          ⚙️ 選單 {{ isHeaderExpanded ? '🔼' : '🔽' }}
-        </button>
-      </header>
-
-      <!-- ═══ Sub Header (Layer 2) — Collapsible Panel ═══ -->
-      <div
-        class="overflow-hidden transition-all duration-300 ease-in-out bg-orange-50 border-b border-orange-100"
-        :style="{ maxHeight: isHeaderExpanded ? '200px' : '0px', opacity: isHeaderExpanded ? 1 : 0 }"
-      >
-        <div class="px-4 py-3 flex flex-col gap-3">
-          <!-- 六大模組導航 -->
-          <div class="flex justify-between gap-1.5">
-            <NuxtLink
-              v-for="mod in modules"
-              :key="mod.label"
-              :to="mod.path"
-              class="flex-1 py-2 text-center text-sm font-bold rounded-xl bg-white border border-slate-200 no-underline text-slate-800 hover:bg-orange-100 hover:border-orange-300 hover:text-orange-600 transition-all shadow-sm"
-            >
-              {{ mod.label }}
-            </NuxtLink>
-          </div>
-          <!-- 切換至用戶端 -->
-          <NuxtLink
-            class="w-full py-2.5 bg-white text-orange-500 font-bold rounded-xl border border-orange-200 text-center block no-underline hover:bg-orange-50 transition-colors shadow-sm"
-            to="/food"
-          >
-            📱 切換至用戶端 (食)
-          </NuxtLink>
-        </div>
-      </div>
+  <!-- ═══ Admin Page Container ═══ -->
+  <div class="admin-page pb-12">
 
       <!-- ═══ 主內容區 ═══ -->
       <main class="flex flex-col gap-4 p-4">
@@ -768,7 +712,6 @@ const modules = [
         </div>
       </Transition>
 
-    </div>
   </div>
 </template>
 

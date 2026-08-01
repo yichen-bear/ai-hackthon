@@ -78,11 +78,27 @@ onMounted(() => {
   getLocation() // 自動定位
 })
 
-// ---------- 登入者（保留不變） ----------
+// ---------- 登入者（從 API 取得） ----------
 const user = ref({
-  name: '王小明',
+  name: '',
   avatar: '',
-  isLogin: true,
+  isLogin: false,
+})
+
+async function fetchUser() {
+  try {
+    const res = await $fetch<{ name?: string; role?: string }>('/api/auth/me', {
+      credentials: 'include',
+    })
+    user.value.isLogin = true
+    user.value.name = res.name || '會員'
+  } catch {
+    user.value.isLogin = false
+  }
+}
+
+onMounted(() => {
+  fetchUser()
 })
 
 // ---------- 下拉選單狀態 ----------

@@ -2,7 +2,7 @@
   <div class="profile-page">
     <!-- 頭部 -->
     <header class="address-header">
-      <button class="back-btn" @click="navigateTo('/profile')">← 返回</button>
+      <button class="back-btn" @click="navigateTo('/member/profile')">← 返回</button>
       <h1 class="page-title">常用地址管理</h1>
     </header>
 

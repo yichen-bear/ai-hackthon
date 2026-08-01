@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import HealthTracker from '~/components/medical/HealthTracker.vue'
+import DiagnosisFlow from '~/components/medical/DiagnosisFlow.vue'
 
 useHead({
   htmlAttrs: { lang: 'zh-TW' },
@@ -85,6 +87,11 @@ function saveSupplements() {
   toastMessage.value = '保健品清單已儲存並連動鬧鐘！'
   showToast.value = true
   setTimeout(() => { showToast.value = false }, 2000)
+}
+
+/* ─── AI 健康追蹤同步 ─── */
+function handleHealthDataUpdated() {
+  // 當 AI 資料更新時，同步更新本地飲水設定
 }
 
 /* ─── Tab 2: AI 智慧症狀分析 ─── */
@@ -362,6 +369,9 @@ function addToTracking(drug: DrugItem) {
       <!-- ═══ Tab 1: 今日健康紀錄 ═══ -->
       <section v-if="activeTab === 'daily'" class="tab-content">
 
+        <!-- AI 同步健康追蹤卡片 -->
+        <HealthTracker @data-updated="handleHealthDataUpdated" />
+
         <!-- 🥤 今日飲水追蹤 -->
         <div class="med-card med-card--rounded">
           <div class="med-card__header">
@@ -519,115 +529,7 @@ function addToTracking(drug: DrugItem) {
 
       <!-- ═══ Tab 2: AI 智慧症狀分析 ═══ -->
       <section v-else-if="activeTab === 'symptom'" class="tab-content">
-
-        <!-- 1. 頂部症狀輸入區 -->
-        <div class="symptom-input-card">
-          <h3 class="symptom-input-card__title">🩺 AI 智慧症狀初步分析</h3>
-          <p class="symptom-input-card__subtitle">
-            請描述您的不適症狀，AI 將為您評估可能原因與推薦科別
-          </p>
-
-          <!-- 語音/相機快捷按鈕 -->
-          <div class="input-shortcuts">
-            <button class="shortcut-btn">🎙️ 語音描述</button>
-            <button class="shortcut-btn">📷 上傳患部照片</button>
-          </div>
-
-          <!-- 文字輸入框 -->
-          <textarea
-            v-model="symptomText"
-            class="symptom-textarea"
-            placeholder="例如：從昨天晚上開始頭痛、喉嚨痛，體溫約 37.8 度..."
-            rows="4"
-          />
-
-          <!-- 熱門症狀 Pill -->
-          <div class="symptom-pills">
-            <button
-              v-for="pill in symptomPills"
-              :key="pill.label"
-              class="symptom-pill"
-              @click="appendSymptom(pill.text)"
-            >
-              {{ pill.label }}
-            </button>
-          </div>
-
-          <!-- 分析按鈕 -->
-          <button
-            class="analyze-btn"
-            :class="{ 'analyze-btn--loading': isAnalyzing }"
-            :disabled="isAnalyzing || !symptomText.trim()"
-            @click="startAnalysis"
-          >
-            <span v-if="isAnalyzing" class="analyze-btn__spinner" />
-            {{ isAnalyzing ? 'AI 分析中...' : '🔬 開始 AI 智慧症狀分析' }}
-          </button>
-        </div>
-
-        <!-- 2. AI 分析結果卡片 -->
-        <Transition name="result-slide">
-          <div v-if="analysisComplete" class="ai-result-card">
-            <h3 class="ai-result-card__title">🤖 AI 分析結果</h3>
-
-            <!-- 可能原因機率條 -->
-            <div class="diagnosis-list">
-              <div class="diagnosis-item">
-                <div class="diagnosis-item__header">
-                  <span class="diagnosis-item__name">上呼吸道感染</span>
-                  <span class="diagnosis-item__pct">85%</span>
-                </div>
-                <div class="diagnosis-bar">
-                  <div class="diagnosis-bar__fill" style="width: 85%" />
-                </div>
-              </div>
-              <div class="diagnosis-item">
-                <div class="diagnosis-item__header">
-                  <span class="diagnosis-item__name">急性咽喉炎</span>
-                  <span class="diagnosis-item__pct">60%</span>
-                </div>
-                <div class="diagnosis-bar">
-                  <div class="diagnosis-bar__fill diagnosis-bar__fill--secondary" style="width: 60%" />
-                </div>
-              </div>
-            </div>
-
-            <!-- 推薦科別 Badge -->
-            <div class="recommended-dept">
-              <span class="recommended-dept__label">推薦科別：</span>
-              <span class="recommended-dept__badge">耳鼻喉科</span>
-              <span class="recommended-dept__badge recommended-dept__badge--alt">一般內科</span>
-            </div>
-
-            <!-- AI 照護建議 -->
-            <div class="ai-advice">
-              <p class="ai-advice__title">💡 AI 衛教建議</p>
-              <p class="ai-advice__text">
-                多喝溫開水、充足休息。若持續高燒不退或呼吸困難，請立即就醫。
-              </p>
-            </div>
-
-            <!-- 一鍵跳轉門診掛號 -->
-            <button class="goto-clinic-btn" @click="goToClinicTab">
-              ➔ 前往『門診掛號』選擇診所與時段
-            </button>
-          </div>
-        </Transition>
-
-        <!-- 4. 頁面底部警語 -->
-        <div class="disclaimer-section">
-          <p class="disclaimer-text">
-            ⚠️ 注意：本 AI 分析結果僅供衛教資訊與就醫參考，不可作為正式醫療診斷依據。如有緊急狀況請撥打 119。
-          </p>
-          <div class="emergency-call-card">
-            <h4 class="emergency-call-card__title">📞 一鍵撥打電話</h4>
-            <div class="emergency-call-card__actions">
-              <a href="tel:119" class="emergency-call-btn emergency-call-btn--119">119</a>
-              <a href="tel:" class="emergency-call-btn emergency-call-btn--contact">緊急聯絡人</a>
-            </div>
-          </div>
-        </div>
-
+        <DiagnosisFlow />
       </section>
 
       <!-- ═══ Tab 3: 門診掛號 ═══ -->

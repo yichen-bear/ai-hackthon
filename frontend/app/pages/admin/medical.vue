@@ -1,11 +1,18 @@
 <script setup lang="ts">
-definePageMeta({ layout: false })
+definePageMeta({ layout: 'admin' })
 
 // --- State ---
-const menuOpen = ref(false)
 const currentRole = ref<'clinic' | 'pharmacy' | 'delivery'>('clinic')
 const roleBarCollapsed = ref(false)
 const activeFeature = ref('calling')
+
+// Watch for role query parameter from side nav
+const route = useRoute()
+watch(() => route.query.role, (newRole) => {
+  if (newRole && ['clinic', 'pharmacy', 'delivery'].includes(newRole as string)) {
+    currentRole.value = newRole as 'clinic' | 'pharmacy' | 'delivery'
+  }
+}, { immediate: true })
 
 // --- Role / Feature Definitions ---
 const roleFeatures = {
@@ -269,89 +276,11 @@ function advanceDeliveryStage(id: number) {
   if (idx < stages.length - 1) order.stage = stages[idx + 1]
 }
 
-// --- Menu Modules ---
-const menuModules = [
-  { icon: '🍽️', label: '食' },
-  { icon: '👗', label: '衣' },
-  { icon: '🏠', label: '住' },
-  { icon: '🚗', label: '行' },
-  { icon: '📚', label: '育' },
-  { icon: '🏥', label: '醫' },
-]
+
 </script>
 
 <template>
-  <div class="w-full max-w-[430px] min-h-screen bg-white shadow-xl relative pb-10 mx-auto">
-    <!-- Top Header -->
-    <header class="h-[50px] bg-teal-600 text-white flex items-center justify-between px-4 sticky top-0 z-50">
-      <div class="flex items-center gap-2 text-sm">
-        <span>📍 台北市</span>
-        <span class="opacity-60">|</span>
-        <span>👤 醫護後台</span>
-      </div>
-      <button
-        class="flex items-center gap-1 text-sm hover:opacity-80 transition-opacity"
-        @click="menuOpen = !menuOpen"
-      >
-        ⚙️ 選單 🔽
-      </button>
-    </header>
-
-    <!-- Menu Dropdown -->
-    <div
-      v-if="menuOpen"
-      class="absolute top-[50px] right-2 z-50 w-56 bg-white rounded-xl shadow-lg border border-teal-100 p-3 transition-all"
-    >
-      <div class="grid grid-cols-3 gap-2 mb-3">
-        <button
-          v-for="mod in menuModules"
-          :key="mod.label"
-          class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-teal-50 transition-colors"
-        >
-          <span class="text-2xl">{{ mod.icon }}</span>
-          <span class="text-xs text-gray-600">{{ mod.label }}</span>
-        </button>
-      </div>
-      <button class="w-full py-2 bg-teal-500 hover:bg-teal-600 text-white text-sm rounded-lg transition-colors">
-        跳轉用戶端
-      </button>
-    </div>
-
-    <!-- Bar 1: Vendor Role Bar -->
-    <div class="bg-teal-50 border-b border-teal-100">
-      <div v-if="!roleBarCollapsed" class="flex items-center gap-2 p-2">
-        <button
-          class="flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors"
-          :class="currentRole === 'clinic' ? 'bg-teal-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-          @click="currentRole = 'clinic'"
-        >
-           診所身分
-        </button>
-        <button
-          class="flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors"
-          :class="currentRole === 'pharmacy' ? 'bg-teal-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-          @click="currentRole = 'pharmacy'"
-        >
-           藥局身分
-        </button>
-        <button
-          class="flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors"
-          :class="currentRole === 'delivery' ? 'bg-teal-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-          @click="currentRole = 'delivery'"
-        >
-           送藥身分
-        </button>
-      </div>
-      <div class="flex justify-center">
-        <button
-          class="text-xs text-teal-600 py-1 hover:text-teal-800 transition-colors"
-          @click="roleBarCollapsed = !roleBarCollapsed"
-        >
-          {{ roleBarCollapsed ? '🔻 展開角色' : '🔺 收合' }}
-        </button>
-      </div>
-    </div>
-
+  <div class="admin-page pb-10">
     <!-- Bar 2: Feature Bar -->
     <div class="overflow-x-auto flex gap-2 p-2 border-b border-gray-100 bg-white">
       <button
