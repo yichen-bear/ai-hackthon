@@ -40,68 +40,66 @@ watch(currentRole, (newRole) => {
 // --- Appointment Management State ---
 const appointmentFilter = ref<'pending' | 'today' | 'completed'>('pending')
 
-const mockAppointments = ref([
-  {
-    id: 1,
-    name: '王小明',
-    age: 35,
-    gender: '男',
-    phone: '0912-345-678',
-    visitType: '複診',
-    date: '2026/08/01 (六)',
-    session: '早診',
-    time: '09:30',
-    aiReferral: '耳鼻喉科',
-    chiefComplaint: '喉嚨痛、發燒 38.2°C (已持續 2 天)',
-    assignedNumber: 12,
-    status: 'pending',
-  },
-  {
-    id: 2,
-    name: '林美華',
-    age: 42,
-    gender: '女',
-    phone: '0923-456-789',
-    visitType: '初診',
-    date: '2026/08/01 (六)',
-    session: '早診',
-    time: '10:00',
-    aiReferral: '內科',
-    chiefComplaint: '胸悶、呼吸不順 (已持續 1 週)',
-    assignedNumber: 13,
-    status: 'pending',
-  },
-  {
-    id: 3,
-    name: '陳大明',
-    age: 58,
-    gender: '男',
-    phone: '0934-567-890',
-    visitType: '複診',
-    date: '2026/08/01 (六)',
-    session: '午診',
-    time: '14:00',
-    aiReferral: '心臟內科',
-    chiefComplaint: '血壓控制不穩、頭暈 (回診追蹤)',
-    assignedNumber: 14,
-    status: 'pending',
-  },
-])
+interface AdminAppointment {
+  id: number
+  name: string
+  age: string
+  phone: string
+  nationalId: string
+  date: string
+  session: string
+  clinicName: string
+  status: 'pending' | 'approved' | 'completed'
+  createdAt: string
+}
+
+const appointments = ref<AdminAppointment[]>([])
+const appointmentsLoading = ref(false)
+const appointmentsError = ref('')
+
+// 狀態映射
+function mapStatus(rawStatus: string): 'pending' | 'approved' | 'completed' {
+  if (rawStatus === '02') return 'approved'
+  if (rawStatus === '03') return 'completed'
+  return 'pending'
+}
+
+async function fetchAppointments() {
+  appointmentsLoading.value = true
+  appointmentsError.value = ''
+  try {
+    const res = await $fetch<{ success: boolean; data: any[] }>('http://localhost:3001/api/diagnosis/appointments')
+    if (res.success) {
+      appointments.value = res.data.map(item => ({
+        ...item,
+        status: mapStatus(item.status),
+      }))
+    }
+  } catch (err: any) {
+    appointmentsError.value = '載入預約資料失敗，請重試'
+  } finally {
+    appointmentsLoading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchAppointments()
+})
 
 const appointmentCounts = computed(() => ({
-  pending: mockAppointments.value.filter((a) => a.status === 'pending').length,
-  today: mockAppointments.value.filter((a) => a.status === 'approved').length,
-  completed: mockAppointments.value.filter((a) => a.status === 'completed').length,
+  pending: appointments.value.filter((a) => a.status === 'pending').length,
+  today: appointments.value.filter((a) => a.status === 'approved').length,
+  completed: appointments.value.filter((a) => a.status === 'completed').length,
 }))
 
 const filteredAppointments = computed(() => {
-  if (appointmentFilter.value === 'pending') return mockAppointments.value.filter((a) => a.status === 'pending')
-  if (appointmentFilter.value === 'today') return mockAppointments.value.filter((a) => a.status === 'approved')
-  return mockAppointments.value.filter((a) => a.status === 'completed')
+  if (appointmentFilter.value === 'pending') return appointments.value.filter((a) => a.status === 'pending')
+  if (appointmentFilter.value === 'today') return appointments.value.filter((a) => a.status === 'approved')
+  return appointments.value.filter((a) => a.status === 'completed')
 })
 
 function approveAppointment(id: number) {
-  const item = mockAppointments.value.find((a) => a.id === id)
+  const item = appointments.value.find((a) => a.id === id)
   if (item) item.status = 'approved'
 }
 
@@ -345,6 +343,18 @@ function advanceDeliveryStage(id: number) {
 
       <!-- Clinic: Appointment Management -->
       <div v-if="currentRole === 'clinic' && activeFeature === 'appointment'">
+        <!-- Header with Refresh Button -->
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-lg font-semibold text-blue-700">📋 預約掛號管理</h2>
+          <button
+            class="px-3 py-1.5 text-xs font-medium bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
+            :disabled="appointmentsLoading"
+            @click="fetchAppointments"
+          >
+            {{ appointmentsLoading ? '載入中...' : '🔄 重新整理' }}
+          </button>
+        </div>
+
         <!-- Status Filter Bar -->
         <div class="flex gap-2 mb-4">
           <button
@@ -370,8 +380,14 @@ function advanceDeliveryStage(id: number) {
           </button>
         </div>
 
+        <!-- Error State -->
+        <div v-if="appointmentsError" class="text-center py-8 text-red-500 text-sm">
+          <p>{{ appointmentsError }}</p>
+          <button class="mt-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium" @click="fetchAppointments">重試</button>
+        </div>
+
         <!-- Appointment Cards -->
-        <div class="space-y-4">
+        <div v-else class="space-y-4">
           <div
             v-for="appt in filteredAppointments"
             :key="appt.id"
@@ -382,14 +398,22 @@ function advanceDeliveryStage(id: number) {
               <div class="flex items-center justify-between">
                 <h3 class="text-base font-bold text-gray-800">
                   {{ appt.name }}
-                  <span class="text-sm font-normal text-gray-500 ml-1">({{ appt.age }}歲 / {{ appt.gender }})</span>
+                  <span class="text-sm font-normal text-gray-500 ml-1">({{ appt.age }}歲)</span>
                 </h3>
-                <span class="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-medium">
-                  {{ appt.visitType === '初診' ? '🆕 初診' : '🔄 複診' }}
+                <span
+                  class="text-xs px-2 py-0.5 rounded-full font-medium"
+                  :class="{
+                    'bg-yellow-100 text-yellow-700': appt.status === 'pending',
+                    'bg-green-100 text-green-700': appt.status === 'approved',
+                    'bg-gray-100 text-gray-600': appt.status === 'completed',
+                  }"
+                >
+                  {{ appt.status === 'pending' ? '⏳ 待確認' : appt.status === 'approved' ? '✅ 已確認' : '🏁 已完成' }}
                 </span>
               </div>
-              <div class="text-xs text-gray-500 mt-1 flex items-center gap-2">
+              <div class="text-xs text-gray-500 mt-1 flex items-center gap-3">
                 <span>📞 {{ appt.phone }}</span>
+                <span>🪪 {{ appt.nationalId }}</span>
               </div>
             </div>
 
@@ -397,20 +421,15 @@ function advanceDeliveryStage(id: number) {
             <div class="px-4 py-2 bg-blue-50/40">
               <div class="flex items-center gap-2 text-sm text-blue-800 font-medium">
                 <span>📅</span>
-                <span>{{ appt.date }} {{ appt.session }} {{ appt.time }}</span>
+                <span>{{ appt.date }} {{ appt.session }}</span>
               </div>
             </div>
 
-            <!-- AI Triage Card -->
+            <!-- Clinic Info -->
             <div class="mx-4 my-3 p-3 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
-              <div class="flex items-center gap-1 mb-1.5">
-                <span class="text-xs font-semibold text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full">🤖 AI 診前標註</span>
-              </div>
-              <div class="text-sm text-indigo-800 font-medium mb-1">
-                AI 轉診建議：{{ appt.aiReferral }}
-              </div>
-              <div class="text-sm text-gray-600">
-                 患者主訴：{{ appt.chiefComplaint }}
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-semibold text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full">🏥 預約診所</span>
+                <span class="text-sm text-indigo-800 font-medium">{{ appt.clinicName }}</span>
               </div>
             </div>
 
@@ -420,13 +439,13 @@ function advanceDeliveryStage(id: number) {
                 class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold transition-colors shadow-sm"
                 @click="approveAppointment(appt.id)"
               >
-                ✅ 批准預約（自動分配號碼：{{ appt.assignedNumber }} 號）
+                ✅ 批准預約
               </button>
               <button
                 class="w-full py-2.5 bg-white hover:bg-gray-50 text-blue-700 border border-blue-200 rounded-xl text-sm font-medium transition-colors"
                 @click="contactPatient(appt.id)"
               >
-                 聯繫患者 / 改期
+                📞 聯繫患者 / 改期
               </button>
             </div>
 
@@ -436,7 +455,7 @@ function advanceDeliveryStage(id: number) {
                 class="w-full py-2.5 text-center rounded-xl text-sm font-semibold"
                 :class="appt.status === 'approved' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-gray-50 text-gray-500 border border-gray-200'"
               >
-                {{ appt.status === 'approved' ? `✅ 已確認 — ${appt.assignedNumber} 號` : '🏁 看診完成' }}
+                {{ appt.status === 'approved' ? '✅ 已確認' : '🏁 看診完成' }}
               </div>
             </div>
           </div>

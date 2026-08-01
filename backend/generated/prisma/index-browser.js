@@ -509,7 +509,7 @@ exports.Prisma.ActivityRegistrationScalarFieldEnum = {
   status: 'status',
   registeredAt: 'registeredAt',
   source: 'source',
-  special_needs: 'special_needs'
+  specialNeeds: 'specialNeeds'
 };
 
 exports.Prisma.CommunityQuestionScalarFieldEnum = {
@@ -527,6 +527,41 @@ exports.Prisma.CommunityQuestionScalarFieldEnum = {
   creTime: 'creTime'
 };
 
+exports.Prisma.DriverScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  phone: 'phone',
+  plateNumber: 'plateNumber',
+  carModel: 'carModel',
+  carType: 'carType',
+  rating: 'rating',
+  totalTrips: 'totalTrips',
+  status: 'status',
+  isDeleted: 'isDeleted',
+  creTime: 'creTime'
+};
+
+exports.Prisma.RideOrderScalarFieldEnum = {
+  id: 'id',
+  passengerId: 'passengerId',
+  passengerName: 'passengerName',
+  passengerPhone: 'passengerPhone',
+  pickup: 'pickup',
+  destination: 'destination',
+  carType: 'carType',
+  mode: 'mode',
+  scheduledAt: 'scheduledAt',
+  status: 'status',
+  driverId: 'driverId',
+  fare: 'fare',
+  distance: 'distance',
+  rating: 'rating',
+  ratingComment: 'ratingComment',
+  creTime: 'creTime',
+  updTime: 'updTime',
+  completedAt: 'completedAt'
+};
+
 exports.Prisma.RestaurantQueueScalarFieldEnum = {
   id: 'id',
   placeId: 'placeId',
@@ -537,8 +572,8 @@ exports.Prisma.RestaurantQueueScalarFieldEnum = {
   estimatedMinutes: 'estimatedMinutes',
   avgServiceMinutes: 'avgServiceMinutes',
   isOpen: 'isOpen',
-  creTime: 'creTime',
-  updTime: 'updTime'
+  updTime: 'updTime',
+  creTime: 'creTime'
 };
 
 exports.Prisma.QueueEntryScalarFieldEnum = {
@@ -551,6 +586,28 @@ exports.Prisma.QueueEntryScalarFieldEnum = {
   note: 'note',
   status: 'status',
   creTime: 'creTime',
+  updTime: 'updTime'
+};
+
+exports.Prisma.ReservationScalarFieldEnum = {
+  id: 'id',
+  placeId: 'placeId',
+  customerName: 'customerName',
+  customerPhone: 'customerPhone',
+  partySize: 'partySize',
+  date: 'date',
+  time: 'time',
+  status: 'status',
+  note: 'note',
+  creTime: 'creTime',
+  updTime: 'updTime'
+};
+
+exports.Prisma.SlotCapacityScalarFieldEnum = {
+  id: 'id',
+  placeId: 'placeId',
+  time: 'time',
+  totalTables: 'totalTables',
   updTime: 'updTime'
 };
 
@@ -610,8 +667,12 @@ exports.Prisma.ModelName = {
   CommunityActivity: 'CommunityActivity',
   ActivityRegistration: 'ActivityRegistration',
   CommunityQuestion: 'CommunityQuestion',
+  Driver: 'Driver',
+  RideOrder: 'RideOrder',
   RestaurantQueue: 'RestaurantQueue',
-  QueueEntry: 'QueueEntry'
+  QueueEntry: 'QueueEntry',
+  Reservation: 'Reservation',
+  SlotCapacity: 'SlotCapacity'
 };
 
 /**

@@ -553,3 +553,65 @@ model RideOrder {
 
   @@map("ride_order")
 }
+
+/// 餐廳即時座位與候位狀態（廠商端控制）
+model RestaurantQueue {
+  id                Int          @id @default(autoincrement())
+  placeId           String       @unique @map("place_id") @db.VarChar(300)
+  name              String       @db.VarChar(100)
+  totalTables       Int          @default(10) @map("total_tables")
+  emptyTables       Int          @default(5) @map("empty_tables")
+  waitingGroups     Int          @default(0) @map("waiting_groups")
+  estimatedMinutes  Int          @default(0) @map("estimated_minutes")
+  avgServiceMinutes Int          @default(30) @map("avg_service_minutes")
+  isOpen            Boolean      @default(true) @map("is_open")
+  updTime           DateTime     @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
+  creTime           DateTime     @default(now()) @map("cre_time") @db.Timestamptz(6)
+  entries           QueueEntry[]
+
+  @@map("restaurant_queue")
+}
+
+/// 個別候位紀錄（客戶端抽號）
+model QueueEntry {
+  id            Int             @id @default(autoincrement())
+  queueId       Int             @map("queue_id")
+  ticketNumber  Int             @map("ticket_number")
+  partySize     Int             @default(2) @map("party_size")
+  customerName  String?         @map("customer_name") @db.VarChar(50)
+  customerPhone String?         @map("customer_phone") @db.VarChar(20)
+  note          String?         @db.VarChar(200)
+  status        String          @default("waiting") @db.VarChar(20)
+  creTime       DateTime        @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updTime       DateTime        @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
+  queue         RestaurantQueue @relation(fields: [queueId], references: [id])
+
+  @@map("queue_entry")
+}
+
+model Reservation {
+  id            Int      @id @default(autoincrement())
+  placeId       String   @map("place_id") @db.VarChar(300)
+  customerName  String   @map("customer_name") @db.VarChar(50)
+  customerPhone String   @map("customer_phone") @db.VarChar(20)
+  partySize     Int      @default(2) @map("party_size")
+  date          String   @db.VarChar(10)
+  time          String   @db.VarChar(5)
+  status        String   @default("confirmed") @db.VarChar(20)
+  note          String?  @db.VarChar(200)
+  creTime       DateTime @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updTime       DateTime @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
+
+  @@map("reservation")
+}
+
+model SlotCapacity {
+  id          Int      @id @default(autoincrement())
+  placeId     String   @map("place_id") @db.VarChar(300)
+  time        String   @db.VarChar(5)
+  totalTables Int      @default(4) @map("total_tables")
+  updTime     DateTime @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
+
+  @@unique([placeId, time])
+  @@map("slot_capacity")
+}

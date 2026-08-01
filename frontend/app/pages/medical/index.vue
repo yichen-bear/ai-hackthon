@@ -96,44 +96,29 @@ function handleHealthDataUpdated() {
 }
 
 /* ─── Tab 2: AI 智慧症狀分析 ─── */
-const symptomText = ref('')
-const isAnalyzing = ref(false)
-const analysisComplete = ref(false)
-
-const symptomPills = [
-  { label: '發燒', text: '發燒，體溫約 38 度' },
-  { label: '咳嗽/喉嚨痛', text: '咳嗽、喉嚨痛' },
-  { label: '頭痛頭暈', text: '頭痛、頭暈' },
-  { label: '腸胃不適', text: '腸胃不適、噁心想吐' },
-  { label: '皮膚紅疹', text: '皮膚出現紅疹' },
-]
-
-function appendSymptom(text: string) {
-  if (symptomText.value && !symptomText.value.endsWith('、') && !symptomText.value.endsWith('，')) {
-    symptomText.value += '、'
-  }
-  symptomText.value += text
-}
-
-function startAnalysis() {
-  if (!symptomText.value.trim()) return
-  isAnalyzing.value = true
-  analysisComplete.value = false
-  setTimeout(() => {
-    isAnalyzing.value = false
-    analysisComplete.value = true
-  }, 1500)
-}
-
-const recommendedDept = ref('耳鼻喉科')
+const aiRecommendDept = ref<string | null>(null)
+const showAiRecommendBadge = ref(false)
 
 // 從 AI 診斷跳轉：帶入推薦科別
-function goToClinicTab() {
+function goToClinicTab(department: string) {
   activeTab.value = 'clinic'
   currentAppointmentView.value = 'list'
-  // 搜尋推薦科別
-  selectedDept.value = '全部'
-  searchNearby(recommendedDept.value)
+  selectedDept.value = department
+  aiRecommendDept.value = department
+  showAiRecommendBadge.value = true
+  searchNearby(department)
+}
+
+function dismissAiRecommendBadge() {
+  showAiRecommendBadge.value = false
+  aiRecommendDept.value = null
+}
+
+function selectDept(dept: string) {
+  selectedDept.value = dept
+  if (dept !== aiRecommendDept.value) {
+    showAiRecommendBadge.value = false
+  }
 }
 
 // 開啟 Google Maps 導航
@@ -143,8 +128,9 @@ function openGoogleMaps(clinic: any) {
 }
 
 /* ─── Tab 3: 門診掛號（Google Maps 附近醫療資源） ─── */
-type AppointmentView = 'list' | 'form' | 'detail'
+type AppointmentView = 'list' | 'form' | 'detail' | 'booking'
 const currentAppointmentView = ref<AppointmentView>('list')
+const bookingClinicName = ref('')
 
 const {
   clinics: nearbyClinics,
@@ -199,6 +185,91 @@ function confirmAppointment() {
   toastMessage.value = '已開啟 Google Maps 查看診所位置'
   showToast.value = true
   setTimeout(() => { showToast.value = false }, 3000)
+}
+
+// 預約表單資料
+interface BookingFormData {
+  patientName: string
+  phone: string
+  nationalId: string
+  age: number
+  date: string
+  session: '早診' | '午診' | '晚診' | ''
+}
+
+function generateRandomAge(): number {
+  return Math.floor(Math.random() * (65 - 25 + 1)) + 25
+}
+
+function generateRandomNationalId(): string {
+  const letter = String.fromCharCode(65 + Math.floor(Math.random() * 26))
+  const digits = Array.from({ length: 9 }, () => Math.floor(Math.random() * 10)).join('')
+  return letter + digits
+}
+
+const bookingForm = ref<BookingFormData>({
+  patientName: '王小明',
+  phone: '0912-345-678',
+  nationalId: generateRandomNationalId(),
+  age: generateRandomAge(),
+  date: '',
+  session: '',
+})
+
+// 表單錯誤
+const bookingErrors = ref<Record<string, string>>({})
+const bookingSubmitting = ref(false)
+
+function validateBookingForm(): boolean {
+  const errors: Record<string, string> = {}
+  if (!bookingForm.value.patientName.trim()) errors.patientName = '請填寫姓名'
+  if (!bookingForm.value.phone.trim()) errors.phone = '請填寫電話'
+  if (!bookingForm.value.date) errors.date = '請選擇就診日期'
+  if (!bookingForm.value.session) errors.session = '請選擇門診時段'
+  bookingErrors.value = errors
+  return Object.keys(errors).length === 0
+}
+
+async function submitBooking() {
+  if (!validateBookingForm()) return
+  bookingSubmitting.value = true
+  try {
+    const res = await $fetch<{ success: boolean; data: { feedbackNo: string; appointmentNumber: number } }>('http://localhost:3001/api/diagnosis/appointment', {
+      method: 'POST',
+      body: {
+        patientName: bookingForm.value.patientName,
+        phone: bookingForm.value.phone,
+        nationalId: bookingForm.value.nationalId,
+        age: bookingForm.value.age,
+        date: bookingForm.value.date,
+        session: bookingForm.value.session,
+        clinicName: bookingClinicName.value,
+        appointmentTime: `${bookingForm.value.date} ${bookingForm.value.session}`,
+      },
+    })
+    if (res.success) {
+      toastMessage.value = `預約成功！掛號號碼：${res.data.appointmentNumber} 號`
+      showToast.value = true
+      setTimeout(() => { showToast.value = false }, 3000)
+      currentAppointmentView.value = 'detail'
+    }
+  } catch (err: any) {
+    const statusCode = err?.response?.status || err?.statusCode
+    if (statusCode === 400) {
+      toastMessage.value = err?.data?.message || '缺少必要的掛號資料'
+    } else {
+      toastMessage.value = '系統錯誤，請稍後再試'
+    }
+    showToast.value = true
+    setTimeout(() => { showToast.value = false }, 3000)
+  } finally {
+    bookingSubmitting.value = false
+  }
+}
+
+function openBookingForm() {
+  bookingClinicName.value = clinicDetailData.value?.name || ''
+  currentAppointmentView.value = 'booking'
 }
 
 /* ─── Tab 4: 處方簽與送藥 ─── */
@@ -549,7 +620,7 @@ function addToTracking(drug: DrugItem) {
 
       <!-- ═══ Tab 2: AI 智慧症狀分析 ═══ -->
       <section v-else-if="activeTab === 'symptom'" class="tab-content">
-        <DiagnosisFlow />
+        <DiagnosisFlow @go-to-clinic="goToClinicTab" />
 
         <!-- 撥打緊急電話卡片 -->
         <div class="emergency-call-card">
@@ -575,6 +646,12 @@ function addToTracking(drug: DrugItem) {
               </button>
             </div>
 
+            <!-- AI 推薦 Badge -->
+            <div v-if="showAiRecommendBadge && aiRecommendDept" class="ai-recommend-badge">
+              <span class="ai-recommend-badge__text">🤖 AI 建議科別：{{ aiRecommendDept }}</span>
+              <button class="ai-recommend-badge__close" aria-label="關閉 AI 推薦提示" @click="dismissAiRecommendBadge">✕</button>
+            </div>
+
             <!-- 科別篩選 Pill Bar -->
             <div v-if="nearbyClinics.length > 0" class="dept-pill-bar">
               <button
@@ -582,7 +659,7 @@ function addToTracking(drug: DrugItem) {
                 :key="dept"
                 class="dept-pill"
                 :class="{ 'dept-pill--active': selectedDept === dept }"
-                @click="selectedDept = dept"
+                @click="selectDept(dept)"
               >
                 {{ dept }}
               </button>
@@ -708,14 +785,93 @@ function addToTracking(drug: DrugItem) {
                 >
                   🗺️ 在 Google Maps 導航
                 </button>
-                <a
-                  v-if="clinicDetailData.phone"
-                  :href="'tel:' + clinicDetailData.phone"
+                <button
                   class="clinic-action-btn clinic-action-btn--secondary clinic-action-btn--full"
+                  @click="openBookingForm"
                 >
-                  📞 撥打電話預約
-                </a>
+                  🤖 AI 自動填入預約表單
+                </button>
               </div>
+            </div>
+          </div>
+
+          <!-- 預約表單視圖 -->
+          <div v-else-if="currentAppointmentView === 'booking'" key="booking" class="booking-form-view">
+            <div class="form-nav">
+              <button class="form-nav__back" @click="currentAppointmentView = 'detail'">
+                ← 返回診所詳情
+              </button>
+              <span class="form-nav__title">📝 預約掛號表單</span>
+            </div>
+
+            <!-- 診所資訊 -->
+            <div class="booking-clinic-info">
+              <span class="booking-clinic-info__label">預約診所：</span>
+              <span class="booking-clinic-info__name">{{ bookingClinicName }}</span>
+            </div>
+
+            <!-- 表單卡片 -->
+            <div class="booking-card">
+              <h3 class="booking-card__title">🤖 AI 已自動填入您的資料</h3>
+
+              <div class="booking-field">
+                <label class="booking-field__label">姓名</label>
+                <input v-model="bookingForm.patientName" type="text" class="booking-field__input" placeholder="請輸入姓名" />
+                <p v-if="bookingErrors.patientName" class="booking-field__error">{{ bookingErrors.patientName }}</p>
+              </div>
+
+              <div class="booking-field">
+                <label class="booking-field__label">電話</label>
+                <input v-model="bookingForm.phone" type="tel" class="booking-field__input" placeholder="請輸入電話" />
+                <p v-if="bookingErrors.phone" class="booking-field__error">{{ bookingErrors.phone }}</p>
+              </div>
+
+              <div class="booking-field">
+                <label class="booking-field__label">年齡</label>
+                <input v-model.number="bookingForm.age" type="number" min="1" max="120" class="booking-field__input" />
+              </div>
+
+              <div class="booking-field">
+                <label class="booking-field__label">身分證字號</label>
+                <input v-model="bookingForm.nationalId" type="text" class="booking-field__input" maxlength="10" placeholder="如 A123456789" />
+              </div>
+
+              <div class="booking-field">
+                <label class="booking-field__label">就診日期</label>
+                <input v-model="bookingForm.date" type="date" class="booking-field__input" />
+                <p v-if="bookingErrors.date" class="booking-field__error">{{ bookingErrors.date }}</p>
+              </div>
+
+              <div class="booking-field">
+                <label class="booking-field__label">門診時段</label>
+                <div class="booking-session-group">
+                  <button
+                    class="booking-session-btn"
+                    :class="{ 'booking-session-btn--active': bookingForm.session === '早診' }"
+                    @click="bookingForm.session = '早診'"
+                  >☀️ 早診</button>
+                  <button
+                    class="booking-session-btn"
+                    :class="{ 'booking-session-btn--active': bookingForm.session === '午診' }"
+                    @click="bookingForm.session = '午診'"
+                  >🌤️ 午診</button>
+                  <button
+                    class="booking-session-btn"
+                    :class="{ 'booking-session-btn--active': bookingForm.session === '晚診' }"
+                    @click="bookingForm.session = '晚診'"
+                  >🌙 晚診</button>
+                </div>
+                <p v-if="bookingErrors.session" class="booking-field__error">{{ bookingErrors.session }}</p>
+              </div>
+
+              <!-- 提交按鈕 -->
+              <button
+                class="booking-submit-btn"
+                :disabled="bookingSubmitting"
+                @click="submitBooking"
+              >
+                {{ bookingSubmitting ? '送出中...' : '✅ 確認送出預約掛號' }}
+              </button>
             </div>
           </div>
         </Transition>
@@ -2008,6 +2164,42 @@ function addToTracking(drug: DrugItem) {
   cursor: not-allowed;
 }
 
+/* AI 推薦 Badge */
+.ai-recommend-badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #f0fdfa, #ecfdf5);
+  border: 1.5px solid #99f6e4;
+  border-radius: 12px;
+}
+
+.ai-recommend-badge__text {
+  font-size: 13px;
+  font-weight: 600;
+  color: #115e59;
+}
+
+.ai-recommend-badge__close {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(13, 148, 136, 0.1);
+  color: #0d9488;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.ai-recommend-badge__close:hover {
+  background: rgba(13, 148, 136, 0.2);
+}
+
 /* 載入中 */
 .clinic-loading-state {
   display: flex;
@@ -3181,5 +3373,132 @@ function addToTracking(drug: DrugItem) {
 .pharmacy-action-btn:hover {
   border-color: var(--color-primary);
   color: var(--color-primary);
+}
+
+/* ═══ Booking Form ═══ */
+.booking-form-view {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.booking-clinic-info {
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #f0fdfa, #ecfdf5);
+  border: 1px solid #99f6e4;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.booking-clinic-info__label {
+  font-size: 13px;
+  color: #78716c;
+}
+
+.booking-clinic-info__name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #115e59;
+}
+
+.booking-card {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 20px 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.booking-card__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1c1917;
+}
+
+.booking-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.booking-field__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #44403c;
+}
+
+.booking-field__input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.booking-field__input:focus {
+  border-color: var(--color-primary);
+}
+
+.booking-field__error {
+  font-size: 12px;
+  color: #dc2626;
+}
+
+.booking-session-group {
+  display: flex;
+  gap: 8px;
+}
+
+.booking-session-btn {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  color: #78716c;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.booking-session-btn--active {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+  color: var(--color-primary-dark);
+}
+
+.booking-submit-btn {
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0d9488, #14b8a6);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.booking-submit-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(13, 148, 136, 0.35);
+}
+
+.booking-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 </style>

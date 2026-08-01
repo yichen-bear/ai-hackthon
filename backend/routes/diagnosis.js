@@ -97,17 +97,39 @@ router.get('/clinics', async (req, res) => {
  */
 router.post('/appointment', async (req, res) => {
   try {
-    const { symptoms, department, clinicName, appointmentTime, visitType, patientName, phone, nationalId } = req.body;
+    const { symptoms, department, clinicName, appointmentTime, visitType, patientName, phone, nationalId, age, date, session } = req.body;
 
     if (!clinicName || !appointmentTime || !patientName || !phone) {
       return res.status(400).json({ success: false, message: '缺少必要的掛號資料' });
     }
 
     const FORM_ID = 1020;
-    const form = await prisma.pmsForm.findUnique({ where: { id: FORM_ID }, select: { type: true } });
-    if (!form) {
-      return res.status(404).json({ success: false, message: '找不到表單' });
-    }
+
+    // 確保 service vendor 存在
+    await prisma.cmsHomepageServiceVendor.upsert({
+      where: { id: 1 },
+      update: {},
+      create: { id: 1, name: '醫療服務' },
+    });
+
+    // 確保表單存在（hackathon 用途：自動建立）
+    const form = await prisma.pmsForm.upsert({
+      where: { id: FORM_ID },
+      update: {},
+      create: {
+        id: FORM_ID,
+        serviceVendorId: 1,
+        type: '01',
+        subType: '01',
+        name: '門診掛號預約',
+        reviewStatus: '02',
+        isEnable: '1',
+        isDeleted: '0',
+        updTime: new Date(),
+        creTime: new Date(),
+      },
+      select: { type: true },
+    });
 
     const feedbackContent = {
       '4028': { topicId: 4028, value: symptoms || '' },
@@ -118,11 +140,14 @@ router.post('/appointment', async (req, res) => {
       '4033': { topicId: 4033, value: patientName },
       '4034': { topicId: 4034, value: phone },
       '4035': { topicId: 4035, value: nationalId || '' },
+      '4036': { topicId: 4036, value: age != null ? String(age) : '' },
+      '4037': { topicId: 4037, value: date || '' },
+      '4038': { topicId: 4038, value: session || '' },
     };
 
     const now = new Date();
     const ts = now.getFullYear().toString() + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0') + String(now.getHours()).padStart(2, '0') + String(now.getMinutes()).padStart(2, '0') + String(now.getSeconds()).padStart(2, '0');
-    const feedbackNo = 'DX' + ts.slice(2) + Math.random().toString(36).slice(2, 6);
+    const feedbackNo = 'DX' + ts.slice(4) + Math.random().toString(36).slice(2, 6);
 
     const created = await prisma.pmsFormFeedback.create({
       data: {
@@ -147,8 +172,8 @@ router.post('/appointment', async (req, res) => {
       data: { feedbackNo: created.feedbackNo, appointmentNumber: Math.floor(Math.random() * 20) + 5 },
     });
   } catch (err) {
-    console.error('[POST /api/diagnosis/appointment] error:', err.message);
-    return res.status(500).json({ success: false, message: '系統錯誤' });
+    console.error('[POST /api/diagnosis/appointment] error:', err.message, err.stack);
+    return res.status(500).json({ success: false, message: '系統錯誤，請稍後再試' });
   }
 });
 
@@ -205,6 +230,50 @@ router.get('/latest-appointment', async (req, res) => {
     });
   } catch (err) {
     console.error('[GET /api/diagnosis/latest-appointment] error:', err.message);
+    return res.status(500).json({ success: false, message: '系統錯誤' });
+  }
+});
+
+/**
+ * GET /api/diagnosis/appointments
+ * 取得所有掛號預約記錄（供管理後台使用）
+ */
+router.get('/appointments', async (req, res) => {
+  try {
+    const feedbacks = await prisma.pmsFormFeedback.findMany({
+      where: { formId: 1020 },
+      orderBy: { creTime: 'desc' },
+    });
+
+    const data = feedbacks.map(fb => {
+      const c = fb.feedbackContent || {};
+      const getValue = (key) => {
+        const entry = c[key];
+        return entry && typeof entry === 'object' && 'value' in entry ? entry.value : (entry || '');
+      };
+
+      let nationalId = getValue('4035');
+      if (nationalId.length >= 6) {
+        nationalId = nationalId.slice(0, 4) + '***' + nationalId.slice(-3);
+      }
+
+      return {
+        id: fb.feedbackNo,
+        name: getValue('4033'),
+        age: getValue('4036'),
+        phone: getValue('4034'),
+        nationalId,
+        date: getValue('4037'),
+        session: getValue('4038'),
+        clinicName: getValue('4030'),
+        status: fb.status,
+        createdAt: fb.creTime ? fb.creTime.toISOString() : '',
+      };
+    });
+
+    return res.status(200).json({ success: true, data });
+  } catch (err) {
+    console.error('[GET /api/diagnosis/appointments] error:', err.message);
     return res.status(500).json({ success: false, message: '系統錯誤' });
   }
 });

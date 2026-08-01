@@ -134,15 +134,35 @@ export type ActivityRegistration = $Result.DefaultSelection<Prisma.$ActivityRegi
  */
 export type CommunityQuestion = $Result.DefaultSelection<Prisma.$CommunityQuestionPayload>
 /**
- * Model RestaurantQueue
+ * Model Driver
  * 
+ */
+export type Driver = $Result.DefaultSelection<Prisma.$DriverPayload>
+/**
+ * Model RideOrder
+ * 
+ */
+export type RideOrder = $Result.DefaultSelection<Prisma.$RideOrderPayload>
+/**
+ * Model RestaurantQueue
+ * 餐廳即時座位與候位狀態（廠商端控制）
  */
 export type RestaurantQueue = $Result.DefaultSelection<Prisma.$RestaurantQueuePayload>
 /**
  * Model QueueEntry
- * 
+ * 個別候位紀錄（客戶端抽號）
  */
 export type QueueEntry = $Result.DefaultSelection<Prisma.$QueueEntryPayload>
+/**
+ * Model Reservation
+ * 
+ */
+export type Reservation = $Result.DefaultSelection<Prisma.$ReservationPayload>
+/**
+ * Model SlotCapacity
+ * 
+ */
+export type SlotCapacity = $Result.DefaultSelection<Prisma.$SlotCapacityPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -506,6 +526,26 @@ export class PrismaClient<
   get communityQuestion(): Prisma.CommunityQuestionDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.driver`: Exposes CRUD operations for the **Driver** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Drivers
+    * const drivers = await prisma.driver.findMany()
+    * ```
+    */
+  get driver(): Prisma.DriverDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.rideOrder`: Exposes CRUD operations for the **RideOrder** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RideOrders
+    * const rideOrders = await prisma.rideOrder.findMany()
+    * ```
+    */
+  get rideOrder(): Prisma.RideOrderDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.restaurantQueue`: Exposes CRUD operations for the **RestaurantQueue** model.
     * Example usage:
     * ```ts
@@ -524,6 +564,26 @@ export class PrismaClient<
     * ```
     */
   get queueEntry(): Prisma.QueueEntryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.reservation`: Exposes CRUD operations for the **Reservation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Reservations
+    * const reservations = await prisma.reservation.findMany()
+    * ```
+    */
+  get reservation(): Prisma.ReservationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.slotCapacity`: Exposes CRUD operations for the **SlotCapacity** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SlotCapacities
+    * const slotCapacities = await prisma.slotCapacity.findMany()
+    * ```
+    */
+  get slotCapacity(): Prisma.SlotCapacityDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -995,8 +1055,12 @@ export namespace Prisma {
     CommunityActivity: 'CommunityActivity',
     ActivityRegistration: 'ActivityRegistration',
     CommunityQuestion: 'CommunityQuestion',
+    Driver: 'Driver',
+    RideOrder: 'RideOrder',
     RestaurantQueue: 'RestaurantQueue',
-    QueueEntry: 'QueueEntry'
+    QueueEntry: 'QueueEntry',
+    Reservation: 'Reservation',
+    SlotCapacity: 'SlotCapacity'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1012,7 +1076,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "cmsHomepageServiceVendor" | "cmsHomepageService" | "serviceType" | "sysCounty" | "sysDistrict" | "pmsForm" | "pmsFormGroup" | "pmsFormTopic" | "pmsTopicOption" | "pmsTopicMedia" | "pmsTopicCountyDistrictRelation" | "pmsFormFeedback" | "mmsOrderRecord" | "memberAccount" | "memberAddress" | "vendorUser" | "secondhandListing" | "chatMessage" | "pickupReservation" | "communityGroup" | "groupMember" | "communityActivity" | "activityRegistration" | "communityQuestion" | "restaurantQueue" | "queueEntry"
+      modelProps: "cmsHomepageServiceVendor" | "cmsHomepageService" | "serviceType" | "sysCounty" | "sysDistrict" | "pmsForm" | "pmsFormGroup" | "pmsFormTopic" | "pmsTopicOption" | "pmsTopicMedia" | "pmsTopicCountyDistrictRelation" | "pmsFormFeedback" | "mmsOrderRecord" | "memberAccount" | "memberAddress" | "vendorUser" | "secondhandListing" | "chatMessage" | "pickupReservation" | "communityGroup" | "groupMember" | "communityActivity" | "activityRegistration" | "communityQuestion" | "driver" | "rideOrder" | "restaurantQueue" | "queueEntry" | "reservation" | "slotCapacity"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2792,6 +2856,154 @@ export namespace Prisma {
           }
         }
       }
+      Driver: {
+        payload: Prisma.$DriverPayload<ExtArgs>
+        fields: Prisma.DriverFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DriverFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DriverFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload>
+          }
+          findFirst: {
+            args: Prisma.DriverFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DriverFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload>
+          }
+          findMany: {
+            args: Prisma.DriverFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload>[]
+          }
+          create: {
+            args: Prisma.DriverCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload>
+          }
+          createMany: {
+            args: Prisma.DriverCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DriverCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload>[]
+          }
+          delete: {
+            args: Prisma.DriverDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload>
+          }
+          update: {
+            args: Prisma.DriverUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload>
+          }
+          deleteMany: {
+            args: Prisma.DriverDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DriverUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DriverUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload>[]
+          }
+          upsert: {
+            args: Prisma.DriverUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload>
+          }
+          aggregate: {
+            args: Prisma.DriverAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDriver>
+          }
+          groupBy: {
+            args: Prisma.DriverGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DriverGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DriverCountArgs<ExtArgs>
+            result: $Utils.Optional<DriverCountAggregateOutputType> | number
+          }
+        }
+      }
+      RideOrder: {
+        payload: Prisma.$RideOrderPayload<ExtArgs>
+        fields: Prisma.RideOrderFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RideOrderFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RideOrderFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload>
+          }
+          findFirst: {
+            args: Prisma.RideOrderFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RideOrderFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload>
+          }
+          findMany: {
+            args: Prisma.RideOrderFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload>[]
+          }
+          create: {
+            args: Prisma.RideOrderCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload>
+          }
+          createMany: {
+            args: Prisma.RideOrderCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RideOrderCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload>[]
+          }
+          delete: {
+            args: Prisma.RideOrderDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload>
+          }
+          update: {
+            args: Prisma.RideOrderUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload>
+          }
+          deleteMany: {
+            args: Prisma.RideOrderDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RideOrderUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RideOrderUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload>[]
+          }
+          upsert: {
+            args: Prisma.RideOrderUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload>
+          }
+          aggregate: {
+            args: Prisma.RideOrderAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRideOrder>
+          }
+          groupBy: {
+            args: Prisma.RideOrderGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RideOrderGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RideOrderCountArgs<ExtArgs>
+            result: $Utils.Optional<RideOrderCountAggregateOutputType> | number
+          }
+        }
+      }
       RestaurantQueue: {
         payload: Prisma.$RestaurantQueuePayload<ExtArgs>
         fields: Prisma.RestaurantQueueFieldRefs
@@ -2937,6 +3149,154 @@ export namespace Prisma {
           count: {
             args: Prisma.QueueEntryCountArgs<ExtArgs>
             result: $Utils.Optional<QueueEntryCountAggregateOutputType> | number
+          }
+        }
+      }
+      Reservation: {
+        payload: Prisma.$ReservationPayload<ExtArgs>
+        fields: Prisma.ReservationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ReservationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReservationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ReservationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReservationPayload>
+          }
+          findFirst: {
+            args: Prisma.ReservationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReservationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ReservationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReservationPayload>
+          }
+          findMany: {
+            args: Prisma.ReservationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReservationPayload>[]
+          }
+          create: {
+            args: Prisma.ReservationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReservationPayload>
+          }
+          createMany: {
+            args: Prisma.ReservationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ReservationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReservationPayload>[]
+          }
+          delete: {
+            args: Prisma.ReservationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReservationPayload>
+          }
+          update: {
+            args: Prisma.ReservationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReservationPayload>
+          }
+          deleteMany: {
+            args: Prisma.ReservationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ReservationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ReservationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReservationPayload>[]
+          }
+          upsert: {
+            args: Prisma.ReservationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReservationPayload>
+          }
+          aggregate: {
+            args: Prisma.ReservationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateReservation>
+          }
+          groupBy: {
+            args: Prisma.ReservationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ReservationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ReservationCountArgs<ExtArgs>
+            result: $Utils.Optional<ReservationCountAggregateOutputType> | number
+          }
+        }
+      }
+      SlotCapacity: {
+        payload: Prisma.$SlotCapacityPayload<ExtArgs>
+        fields: Prisma.SlotCapacityFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SlotCapacityFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlotCapacityPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SlotCapacityFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlotCapacityPayload>
+          }
+          findFirst: {
+            args: Prisma.SlotCapacityFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlotCapacityPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SlotCapacityFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlotCapacityPayload>
+          }
+          findMany: {
+            args: Prisma.SlotCapacityFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlotCapacityPayload>[]
+          }
+          create: {
+            args: Prisma.SlotCapacityCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlotCapacityPayload>
+          }
+          createMany: {
+            args: Prisma.SlotCapacityCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SlotCapacityCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlotCapacityPayload>[]
+          }
+          delete: {
+            args: Prisma.SlotCapacityDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlotCapacityPayload>
+          }
+          update: {
+            args: Prisma.SlotCapacityUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlotCapacityPayload>
+          }
+          deleteMany: {
+            args: Prisma.SlotCapacityDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SlotCapacityUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SlotCapacityUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlotCapacityPayload>[]
+          }
+          upsert: {
+            args: Prisma.SlotCapacityUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlotCapacityPayload>
+          }
+          aggregate: {
+            args: Prisma.SlotCapacityAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSlotCapacity>
+          }
+          groupBy: {
+            args: Prisma.SlotCapacityGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SlotCapacityGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SlotCapacityCountArgs<ExtArgs>
+            result: $Utils.Optional<SlotCapacityCountAggregateOutputType> | number
           }
         }
       }
@@ -3087,8 +3447,12 @@ export namespace Prisma {
     communityActivity?: CommunityActivityOmit
     activityRegistration?: ActivityRegistrationOmit
     communityQuestion?: CommunityQuestionOmit
+    driver?: DriverOmit
+    rideOrder?: RideOrderOmit
     restaurantQueue?: RestaurantQueueOmit
     queueEntry?: QueueEntryOmit
+    reservation?: ReservationOmit
+    slotCapacity?: SlotCapacityOmit
   }
 
   /* Types for Logging */
@@ -3601,6 +3965,37 @@ export namespace Prisma {
    */
   export type CommunityActivityCountOutputTypeCountRegistrationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ActivityRegistrationWhereInput
+  }
+
+
+  /**
+   * Count Type DriverCountOutputType
+   */
+
+  export type DriverCountOutputType = {
+    rideOrders: number
+  }
+
+  export type DriverCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    rideOrders?: boolean | DriverCountOutputTypeCountRideOrdersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * DriverCountOutputType without action
+   */
+  export type DriverCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DriverCountOutputType
+     */
+    select?: DriverCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DriverCountOutputType without action
+   */
+  export type DriverCountOutputTypeCountRideOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RideOrderWhereInput
   }
 
 
@@ -30948,7 +31343,7 @@ export namespace Prisma {
     status: string | null
     registeredAt: Date | null
     source: string | null
-    special_needs: string | null
+    specialNeeds: string | null
   }
 
   export type ActivityRegistrationMaxAggregateOutputType = {
@@ -30960,7 +31355,7 @@ export namespace Prisma {
     status: string | null
     registeredAt: Date | null
     source: string | null
-    special_needs: string | null
+    specialNeeds: string | null
   }
 
   export type ActivityRegistrationCountAggregateOutputType = {
@@ -30972,7 +31367,7 @@ export namespace Prisma {
     status: number
     registeredAt: number
     source: number
-    special_needs: number
+    specialNeeds: number
     _all: number
   }
 
@@ -30986,7 +31381,7 @@ export namespace Prisma {
     status?: true
     registeredAt?: true
     source?: true
-    special_needs?: true
+    specialNeeds?: true
   }
 
   export type ActivityRegistrationMaxAggregateInputType = {
@@ -30998,7 +31393,7 @@ export namespace Prisma {
     status?: true
     registeredAt?: true
     source?: true
-    special_needs?: true
+    specialNeeds?: true
   }
 
   export type ActivityRegistrationCountAggregateInputType = {
@@ -31010,7 +31405,7 @@ export namespace Prisma {
     status?: true
     registeredAt?: true
     source?: true
-    special_needs?: true
+    specialNeeds?: true
     _all?: true
   }
 
@@ -31095,7 +31490,7 @@ export namespace Prisma {
     status: string
     registeredAt: Date
     source: string
-    special_needs: string | null
+    specialNeeds: string | null
     _count: ActivityRegistrationCountAggregateOutputType | null
     _min: ActivityRegistrationMinAggregateOutputType | null
     _max: ActivityRegistrationMaxAggregateOutputType | null
@@ -31124,7 +31519,7 @@ export namespace Prisma {
     status?: boolean
     registeredAt?: boolean
     source?: boolean
-    special_needs?: boolean
+    specialNeeds?: boolean
     activity?: boolean | CommunityActivityDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["activityRegistration"]>
 
@@ -31137,7 +31532,7 @@ export namespace Prisma {
     status?: boolean
     registeredAt?: boolean
     source?: boolean
-    special_needs?: boolean
+    specialNeeds?: boolean
     activity?: boolean | CommunityActivityDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["activityRegistration"]>
 
@@ -31150,7 +31545,7 @@ export namespace Prisma {
     status?: boolean
     registeredAt?: boolean
     source?: boolean
-    special_needs?: boolean
+    specialNeeds?: boolean
     activity?: boolean | CommunityActivityDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["activityRegistration"]>
 
@@ -31163,10 +31558,10 @@ export namespace Prisma {
     status?: boolean
     registeredAt?: boolean
     source?: boolean
-    special_needs?: boolean
+    specialNeeds?: boolean
   }
 
-  export type ActivityRegistrationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "activityId" | "userId" | "userName" | "userPhone" | "status" | "registeredAt" | "source" | "special_needs", ExtArgs["result"]["activityRegistration"]>
+  export type ActivityRegistrationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "activityId" | "userId" | "userName" | "userPhone" | "status" | "registeredAt" | "source" | "specialNeeds", ExtArgs["result"]["activityRegistration"]>
   export type ActivityRegistrationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     activity?: boolean | CommunityActivityDefaultArgs<ExtArgs>
   }
@@ -31191,7 +31586,7 @@ export namespace Prisma {
       status: string
       registeredAt: Date
       source: string
-      special_needs: string | null
+      specialNeeds: string | null
     }, ExtArgs["result"]["activityRegistration"]>
     composites: {}
   }
@@ -31624,7 +32019,7 @@ export namespace Prisma {
     readonly status: FieldRef<"ActivityRegistration", 'String'>
     readonly registeredAt: FieldRef<"ActivityRegistration", 'DateTime'>
     readonly source: FieldRef<"ActivityRegistration", 'String'>
-    readonly special_needs: FieldRef<"ActivityRegistration", 'String'>
+    readonly specialNeeds: FieldRef<"ActivityRegistration", 'String'>
   }
     
 
@@ -33136,6 +33531,2490 @@ export namespace Prisma {
 
 
   /**
+   * Model Driver
+   */
+
+  export type AggregateDriver = {
+    _count: DriverCountAggregateOutputType | null
+    _avg: DriverAvgAggregateOutputType | null
+    _sum: DriverSumAggregateOutputType | null
+    _min: DriverMinAggregateOutputType | null
+    _max: DriverMaxAggregateOutputType | null
+  }
+
+  export type DriverAvgAggregateOutputType = {
+    rating: Decimal | null
+    totalTrips: number | null
+  }
+
+  export type DriverSumAggregateOutputType = {
+    rating: Decimal | null
+    totalTrips: number | null
+  }
+
+  export type DriverMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    phone: string | null
+    plateNumber: string | null
+    carModel: string | null
+    carType: string | null
+    rating: Decimal | null
+    totalTrips: number | null
+    status: string | null
+    isDeleted: boolean | null
+    creTime: Date | null
+  }
+
+  export type DriverMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    phone: string | null
+    plateNumber: string | null
+    carModel: string | null
+    carType: string | null
+    rating: Decimal | null
+    totalTrips: number | null
+    status: string | null
+    isDeleted: boolean | null
+    creTime: Date | null
+  }
+
+  export type DriverCountAggregateOutputType = {
+    id: number
+    name: number
+    phone: number
+    plateNumber: number
+    carModel: number
+    carType: number
+    rating: number
+    totalTrips: number
+    status: number
+    isDeleted: number
+    creTime: number
+    _all: number
+  }
+
+
+  export type DriverAvgAggregateInputType = {
+    rating?: true
+    totalTrips?: true
+  }
+
+  export type DriverSumAggregateInputType = {
+    rating?: true
+    totalTrips?: true
+  }
+
+  export type DriverMinAggregateInputType = {
+    id?: true
+    name?: true
+    phone?: true
+    plateNumber?: true
+    carModel?: true
+    carType?: true
+    rating?: true
+    totalTrips?: true
+    status?: true
+    isDeleted?: true
+    creTime?: true
+  }
+
+  export type DriverMaxAggregateInputType = {
+    id?: true
+    name?: true
+    phone?: true
+    plateNumber?: true
+    carModel?: true
+    carType?: true
+    rating?: true
+    totalTrips?: true
+    status?: true
+    isDeleted?: true
+    creTime?: true
+  }
+
+  export type DriverCountAggregateInputType = {
+    id?: true
+    name?: true
+    phone?: true
+    plateNumber?: true
+    carModel?: true
+    carType?: true
+    rating?: true
+    totalTrips?: true
+    status?: true
+    isDeleted?: true
+    creTime?: true
+    _all?: true
+  }
+
+  export type DriverAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Driver to aggregate.
+     */
+    where?: DriverWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Drivers to fetch.
+     */
+    orderBy?: DriverOrderByWithRelationInput | DriverOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DriverWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Drivers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Drivers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Drivers
+    **/
+    _count?: true | DriverCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DriverAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DriverSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DriverMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DriverMaxAggregateInputType
+  }
+
+  export type GetDriverAggregateType<T extends DriverAggregateArgs> = {
+        [P in keyof T & keyof AggregateDriver]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDriver[P]>
+      : GetScalarType<T[P], AggregateDriver[P]>
+  }
+
+
+
+
+  export type DriverGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DriverWhereInput
+    orderBy?: DriverOrderByWithAggregationInput | DriverOrderByWithAggregationInput[]
+    by: DriverScalarFieldEnum[] | DriverScalarFieldEnum
+    having?: DriverScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DriverCountAggregateInputType | true
+    _avg?: DriverAvgAggregateInputType
+    _sum?: DriverSumAggregateInputType
+    _min?: DriverMinAggregateInputType
+    _max?: DriverMaxAggregateInputType
+  }
+
+  export type DriverGroupByOutputType = {
+    id: string
+    name: string
+    phone: string
+    plateNumber: string
+    carModel: string
+    carType: string
+    rating: Decimal
+    totalTrips: number
+    status: string
+    isDeleted: boolean
+    creTime: Date
+    _count: DriverCountAggregateOutputType | null
+    _avg: DriverAvgAggregateOutputType | null
+    _sum: DriverSumAggregateOutputType | null
+    _min: DriverMinAggregateOutputType | null
+    _max: DriverMaxAggregateOutputType | null
+  }
+
+  type GetDriverGroupByPayload<T extends DriverGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DriverGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DriverGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DriverGroupByOutputType[P]>
+            : GetScalarType<T[P], DriverGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DriverSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    phone?: boolean
+    plateNumber?: boolean
+    carModel?: boolean
+    carType?: boolean
+    rating?: boolean
+    totalTrips?: boolean
+    status?: boolean
+    isDeleted?: boolean
+    creTime?: boolean
+    rideOrders?: boolean | Driver$rideOrdersArgs<ExtArgs>
+    _count?: boolean | DriverCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["driver"]>
+
+  export type DriverSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    phone?: boolean
+    plateNumber?: boolean
+    carModel?: boolean
+    carType?: boolean
+    rating?: boolean
+    totalTrips?: boolean
+    status?: boolean
+    isDeleted?: boolean
+    creTime?: boolean
+  }, ExtArgs["result"]["driver"]>
+
+  export type DriverSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    phone?: boolean
+    plateNumber?: boolean
+    carModel?: boolean
+    carType?: boolean
+    rating?: boolean
+    totalTrips?: boolean
+    status?: boolean
+    isDeleted?: boolean
+    creTime?: boolean
+  }, ExtArgs["result"]["driver"]>
+
+  export type DriverSelectScalar = {
+    id?: boolean
+    name?: boolean
+    phone?: boolean
+    plateNumber?: boolean
+    carModel?: boolean
+    carType?: boolean
+    rating?: boolean
+    totalTrips?: boolean
+    status?: boolean
+    isDeleted?: boolean
+    creTime?: boolean
+  }
+
+  export type DriverOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phone" | "plateNumber" | "carModel" | "carType" | "rating" | "totalTrips" | "status" | "isDeleted" | "creTime", ExtArgs["result"]["driver"]>
+  export type DriverInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    rideOrders?: boolean | Driver$rideOrdersArgs<ExtArgs>
+    _count?: boolean | DriverCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type DriverIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type DriverIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $DriverPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Driver"
+    objects: {
+      rideOrders: Prisma.$RideOrderPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      phone: string
+      plateNumber: string
+      carModel: string
+      carType: string
+      rating: Prisma.Decimal
+      totalTrips: number
+      status: string
+      isDeleted: boolean
+      creTime: Date
+    }, ExtArgs["result"]["driver"]>
+    composites: {}
+  }
+
+  type DriverGetPayload<S extends boolean | null | undefined | DriverDefaultArgs> = $Result.GetResult<Prisma.$DriverPayload, S>
+
+  type DriverCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DriverFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DriverCountAggregateInputType | true
+    }
+
+  export interface DriverDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Driver'], meta: { name: 'Driver' } }
+    /**
+     * Find zero or one Driver that matches the filter.
+     * @param {DriverFindUniqueArgs} args - Arguments to find a Driver
+     * @example
+     * // Get one Driver
+     * const driver = await prisma.driver.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DriverFindUniqueArgs>(args: SelectSubset<T, DriverFindUniqueArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Driver that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DriverFindUniqueOrThrowArgs} args - Arguments to find a Driver
+     * @example
+     * // Get one Driver
+     * const driver = await prisma.driver.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DriverFindUniqueOrThrowArgs>(args: SelectSubset<T, DriverFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Driver that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DriverFindFirstArgs} args - Arguments to find a Driver
+     * @example
+     * // Get one Driver
+     * const driver = await prisma.driver.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DriverFindFirstArgs>(args?: SelectSubset<T, DriverFindFirstArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Driver that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DriverFindFirstOrThrowArgs} args - Arguments to find a Driver
+     * @example
+     * // Get one Driver
+     * const driver = await prisma.driver.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DriverFindFirstOrThrowArgs>(args?: SelectSubset<T, DriverFindFirstOrThrowArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Drivers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DriverFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Drivers
+     * const drivers = await prisma.driver.findMany()
+     * 
+     * // Get first 10 Drivers
+     * const drivers = await prisma.driver.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const driverWithIdOnly = await prisma.driver.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DriverFindManyArgs>(args?: SelectSubset<T, DriverFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Driver.
+     * @param {DriverCreateArgs} args - Arguments to create a Driver.
+     * @example
+     * // Create one Driver
+     * const Driver = await prisma.driver.create({
+     *   data: {
+     *     // ... data to create a Driver
+     *   }
+     * })
+     * 
+     */
+    create<T extends DriverCreateArgs>(args: SelectSubset<T, DriverCreateArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Drivers.
+     * @param {DriverCreateManyArgs} args - Arguments to create many Drivers.
+     * @example
+     * // Create many Drivers
+     * const driver = await prisma.driver.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DriverCreateManyArgs>(args?: SelectSubset<T, DriverCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Drivers and returns the data saved in the database.
+     * @param {DriverCreateManyAndReturnArgs} args - Arguments to create many Drivers.
+     * @example
+     * // Create many Drivers
+     * const driver = await prisma.driver.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Drivers and only return the `id`
+     * const driverWithIdOnly = await prisma.driver.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DriverCreateManyAndReturnArgs>(args?: SelectSubset<T, DriverCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Driver.
+     * @param {DriverDeleteArgs} args - Arguments to delete one Driver.
+     * @example
+     * // Delete one Driver
+     * const Driver = await prisma.driver.delete({
+     *   where: {
+     *     // ... filter to delete one Driver
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DriverDeleteArgs>(args: SelectSubset<T, DriverDeleteArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Driver.
+     * @param {DriverUpdateArgs} args - Arguments to update one Driver.
+     * @example
+     * // Update one Driver
+     * const driver = await prisma.driver.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DriverUpdateArgs>(args: SelectSubset<T, DriverUpdateArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Drivers.
+     * @param {DriverDeleteManyArgs} args - Arguments to filter Drivers to delete.
+     * @example
+     * // Delete a few Drivers
+     * const { count } = await prisma.driver.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DriverDeleteManyArgs>(args?: SelectSubset<T, DriverDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Drivers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DriverUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Drivers
+     * const driver = await prisma.driver.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DriverUpdateManyArgs>(args: SelectSubset<T, DriverUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Drivers and returns the data updated in the database.
+     * @param {DriverUpdateManyAndReturnArgs} args - Arguments to update many Drivers.
+     * @example
+     * // Update many Drivers
+     * const driver = await prisma.driver.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Drivers and only return the `id`
+     * const driverWithIdOnly = await prisma.driver.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DriverUpdateManyAndReturnArgs>(args: SelectSubset<T, DriverUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Driver.
+     * @param {DriverUpsertArgs} args - Arguments to update or create a Driver.
+     * @example
+     * // Update or create a Driver
+     * const driver = await prisma.driver.upsert({
+     *   create: {
+     *     // ... data to create a Driver
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Driver we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DriverUpsertArgs>(args: SelectSubset<T, DriverUpsertArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Drivers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DriverCountArgs} args - Arguments to filter Drivers to count.
+     * @example
+     * // Count the number of Drivers
+     * const count = await prisma.driver.count({
+     *   where: {
+     *     // ... the filter for the Drivers we want to count
+     *   }
+     * })
+    **/
+    count<T extends DriverCountArgs>(
+      args?: Subset<T, DriverCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DriverCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Driver.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DriverAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DriverAggregateArgs>(args: Subset<T, DriverAggregateArgs>): Prisma.PrismaPromise<GetDriverAggregateType<T>>
+
+    /**
+     * Group by Driver.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DriverGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DriverGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DriverGroupByArgs['orderBy'] }
+        : { orderBy?: DriverGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DriverGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDriverGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Driver model
+   */
+  readonly fields: DriverFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Driver.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DriverClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    rideOrders<T extends Driver$rideOrdersArgs<ExtArgs> = {}>(args?: Subset<T, Driver$rideOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Driver model
+   */
+  interface DriverFieldRefs {
+    readonly id: FieldRef<"Driver", 'String'>
+    readonly name: FieldRef<"Driver", 'String'>
+    readonly phone: FieldRef<"Driver", 'String'>
+    readonly plateNumber: FieldRef<"Driver", 'String'>
+    readonly carModel: FieldRef<"Driver", 'String'>
+    readonly carType: FieldRef<"Driver", 'String'>
+    readonly rating: FieldRef<"Driver", 'Decimal'>
+    readonly totalTrips: FieldRef<"Driver", 'Int'>
+    readonly status: FieldRef<"Driver", 'String'>
+    readonly isDeleted: FieldRef<"Driver", 'Boolean'>
+    readonly creTime: FieldRef<"Driver", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Driver findUnique
+   */
+  export type DriverFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    /**
+     * Filter, which Driver to fetch.
+     */
+    where: DriverWhereUniqueInput
+  }
+
+  /**
+   * Driver findUniqueOrThrow
+   */
+  export type DriverFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    /**
+     * Filter, which Driver to fetch.
+     */
+    where: DriverWhereUniqueInput
+  }
+
+  /**
+   * Driver findFirst
+   */
+  export type DriverFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    /**
+     * Filter, which Driver to fetch.
+     */
+    where?: DriverWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Drivers to fetch.
+     */
+    orderBy?: DriverOrderByWithRelationInput | DriverOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Drivers.
+     */
+    cursor?: DriverWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Drivers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Drivers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Drivers.
+     */
+    distinct?: DriverScalarFieldEnum | DriverScalarFieldEnum[]
+  }
+
+  /**
+   * Driver findFirstOrThrow
+   */
+  export type DriverFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    /**
+     * Filter, which Driver to fetch.
+     */
+    where?: DriverWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Drivers to fetch.
+     */
+    orderBy?: DriverOrderByWithRelationInput | DriverOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Drivers.
+     */
+    cursor?: DriverWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Drivers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Drivers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Drivers.
+     */
+    distinct?: DriverScalarFieldEnum | DriverScalarFieldEnum[]
+  }
+
+  /**
+   * Driver findMany
+   */
+  export type DriverFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    /**
+     * Filter, which Drivers to fetch.
+     */
+    where?: DriverWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Drivers to fetch.
+     */
+    orderBy?: DriverOrderByWithRelationInput | DriverOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Drivers.
+     */
+    cursor?: DriverWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Drivers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Drivers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Drivers.
+     */
+    distinct?: DriverScalarFieldEnum | DriverScalarFieldEnum[]
+  }
+
+  /**
+   * Driver create
+   */
+  export type DriverCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Driver.
+     */
+    data: XOR<DriverCreateInput, DriverUncheckedCreateInput>
+  }
+
+  /**
+   * Driver createMany
+   */
+  export type DriverCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Drivers.
+     */
+    data: DriverCreateManyInput | DriverCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Driver createManyAndReturn
+   */
+  export type DriverCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * The data used to create many Drivers.
+     */
+    data: DriverCreateManyInput | DriverCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Driver update
+   */
+  export type DriverUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Driver.
+     */
+    data: XOR<DriverUpdateInput, DriverUncheckedUpdateInput>
+    /**
+     * Choose, which Driver to update.
+     */
+    where: DriverWhereUniqueInput
+  }
+
+  /**
+   * Driver updateMany
+   */
+  export type DriverUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Drivers.
+     */
+    data: XOR<DriverUpdateManyMutationInput, DriverUncheckedUpdateManyInput>
+    /**
+     * Filter which Drivers to update
+     */
+    where?: DriverWhereInput
+    /**
+     * Limit how many Drivers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Driver updateManyAndReturn
+   */
+  export type DriverUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * The data used to update Drivers.
+     */
+    data: XOR<DriverUpdateManyMutationInput, DriverUncheckedUpdateManyInput>
+    /**
+     * Filter which Drivers to update
+     */
+    where?: DriverWhereInput
+    /**
+     * Limit how many Drivers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Driver upsert
+   */
+  export type DriverUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Driver to update in case it exists.
+     */
+    where: DriverWhereUniqueInput
+    /**
+     * In case the Driver found by the `where` argument doesn't exist, create a new Driver with this data.
+     */
+    create: XOR<DriverCreateInput, DriverUncheckedCreateInput>
+    /**
+     * In case the Driver was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DriverUpdateInput, DriverUncheckedUpdateInput>
+  }
+
+  /**
+   * Driver delete
+   */
+  export type DriverDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    /**
+     * Filter which Driver to delete.
+     */
+    where: DriverWhereUniqueInput
+  }
+
+  /**
+   * Driver deleteMany
+   */
+  export type DriverDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Drivers to delete
+     */
+    where?: DriverWhereInput
+    /**
+     * Limit how many Drivers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Driver.rideOrders
+   */
+  export type Driver$rideOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RideOrder
+     */
+    select?: RideOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RideOrder
+     */
+    omit?: RideOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RideOrderInclude<ExtArgs> | null
+    where?: RideOrderWhereInput
+    orderBy?: RideOrderOrderByWithRelationInput | RideOrderOrderByWithRelationInput[]
+    cursor?: RideOrderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RideOrderScalarFieldEnum | RideOrderScalarFieldEnum[]
+  }
+
+  /**
+   * Driver without action
+   */
+  export type DriverDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model RideOrder
+   */
+
+  export type AggregateRideOrder = {
+    _count: RideOrderCountAggregateOutputType | null
+    _avg: RideOrderAvgAggregateOutputType | null
+    _sum: RideOrderSumAggregateOutputType | null
+    _min: RideOrderMinAggregateOutputType | null
+    _max: RideOrderMaxAggregateOutputType | null
+  }
+
+  export type RideOrderAvgAggregateOutputType = {
+    fare: number | null
+    distance: Decimal | null
+    rating: number | null
+  }
+
+  export type RideOrderSumAggregateOutputType = {
+    fare: number | null
+    distance: Decimal | null
+    rating: number | null
+  }
+
+  export type RideOrderMinAggregateOutputType = {
+    id: string | null
+    passengerId: string | null
+    passengerName: string | null
+    passengerPhone: string | null
+    pickup: string | null
+    destination: string | null
+    carType: string | null
+    mode: string | null
+    scheduledAt: Date | null
+    status: string | null
+    driverId: string | null
+    fare: number | null
+    distance: Decimal | null
+    rating: number | null
+    ratingComment: string | null
+    creTime: Date | null
+    updTime: Date | null
+    completedAt: Date | null
+  }
+
+  export type RideOrderMaxAggregateOutputType = {
+    id: string | null
+    passengerId: string | null
+    passengerName: string | null
+    passengerPhone: string | null
+    pickup: string | null
+    destination: string | null
+    carType: string | null
+    mode: string | null
+    scheduledAt: Date | null
+    status: string | null
+    driverId: string | null
+    fare: number | null
+    distance: Decimal | null
+    rating: number | null
+    ratingComment: string | null
+    creTime: Date | null
+    updTime: Date | null
+    completedAt: Date | null
+  }
+
+  export type RideOrderCountAggregateOutputType = {
+    id: number
+    passengerId: number
+    passengerName: number
+    passengerPhone: number
+    pickup: number
+    destination: number
+    carType: number
+    mode: number
+    scheduledAt: number
+    status: number
+    driverId: number
+    fare: number
+    distance: number
+    rating: number
+    ratingComment: number
+    creTime: number
+    updTime: number
+    completedAt: number
+    _all: number
+  }
+
+
+  export type RideOrderAvgAggregateInputType = {
+    fare?: true
+    distance?: true
+    rating?: true
+  }
+
+  export type RideOrderSumAggregateInputType = {
+    fare?: true
+    distance?: true
+    rating?: true
+  }
+
+  export type RideOrderMinAggregateInputType = {
+    id?: true
+    passengerId?: true
+    passengerName?: true
+    passengerPhone?: true
+    pickup?: true
+    destination?: true
+    carType?: true
+    mode?: true
+    scheduledAt?: true
+    status?: true
+    driverId?: true
+    fare?: true
+    distance?: true
+    rating?: true
+    ratingComment?: true
+    creTime?: true
+    updTime?: true
+    completedAt?: true
+  }
+
+  export type RideOrderMaxAggregateInputType = {
+    id?: true
+    passengerId?: true
+    passengerName?: true
+    passengerPhone?: true
+    pickup?: true
+    destination?: true
+    carType?: true
+    mode?: true
+    scheduledAt?: true
+    status?: true
+    driverId?: true
+    fare?: true
+    distance?: true
+    rating?: true
+    ratingComment?: true
+    creTime?: true
+    updTime?: true
+    completedAt?: true
+  }
+
+  export type RideOrderCountAggregateInputType = {
+    id?: true
+    passengerId?: true
+    passengerName?: true
+    passengerPhone?: true
+    pickup?: true
+    destination?: true
+    carType?: true
+    mode?: true
+    scheduledAt?: true
+    status?: true
+    driverId?: true
+    fare?: true
+    distance?: true
+    rating?: true
+    ratingComment?: true
+    creTime?: true
+    updTime?: true
+    completedAt?: true
+    _all?: true
+  }
+
+  export type RideOrderAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RideOrder to aggregate.
+     */
+    where?: RideOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RideOrders to fetch.
+     */
+    orderBy?: RideOrderOrderByWithRelationInput | RideOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RideOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RideOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RideOrders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RideOrders
+    **/
+    _count?: true | RideOrderCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RideOrderAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RideOrderSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RideOrderMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RideOrderMaxAggregateInputType
+  }
+
+  export type GetRideOrderAggregateType<T extends RideOrderAggregateArgs> = {
+        [P in keyof T & keyof AggregateRideOrder]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRideOrder[P]>
+      : GetScalarType<T[P], AggregateRideOrder[P]>
+  }
+
+
+
+
+  export type RideOrderGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RideOrderWhereInput
+    orderBy?: RideOrderOrderByWithAggregationInput | RideOrderOrderByWithAggregationInput[]
+    by: RideOrderScalarFieldEnum[] | RideOrderScalarFieldEnum
+    having?: RideOrderScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RideOrderCountAggregateInputType | true
+    _avg?: RideOrderAvgAggregateInputType
+    _sum?: RideOrderSumAggregateInputType
+    _min?: RideOrderMinAggregateInputType
+    _max?: RideOrderMaxAggregateInputType
+  }
+
+  export type RideOrderGroupByOutputType = {
+    id: string
+    passengerId: string
+    passengerName: string
+    passengerPhone: string | null
+    pickup: string
+    destination: string
+    carType: string
+    mode: string
+    scheduledAt: Date | null
+    status: string
+    driverId: string | null
+    fare: number | null
+    distance: Decimal | null
+    rating: number | null
+    ratingComment: string | null
+    creTime: Date
+    updTime: Date
+    completedAt: Date | null
+    _count: RideOrderCountAggregateOutputType | null
+    _avg: RideOrderAvgAggregateOutputType | null
+    _sum: RideOrderSumAggregateOutputType | null
+    _min: RideOrderMinAggregateOutputType | null
+    _max: RideOrderMaxAggregateOutputType | null
+  }
+
+  type GetRideOrderGroupByPayload<T extends RideOrderGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RideOrderGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RideOrderGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RideOrderGroupByOutputType[P]>
+            : GetScalarType<T[P], RideOrderGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RideOrderSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    passengerId?: boolean
+    passengerName?: boolean
+    passengerPhone?: boolean
+    pickup?: boolean
+    destination?: boolean
+    carType?: boolean
+    mode?: boolean
+    scheduledAt?: boolean
+    status?: boolean
+    driverId?: boolean
+    fare?: boolean
+    distance?: boolean
+    rating?: boolean
+    ratingComment?: boolean
+    creTime?: boolean
+    updTime?: boolean
+    completedAt?: boolean
+    driver?: boolean | RideOrder$driverArgs<ExtArgs>
+  }, ExtArgs["result"]["rideOrder"]>
+
+  export type RideOrderSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    passengerId?: boolean
+    passengerName?: boolean
+    passengerPhone?: boolean
+    pickup?: boolean
+    destination?: boolean
+    carType?: boolean
+    mode?: boolean
+    scheduledAt?: boolean
+    status?: boolean
+    driverId?: boolean
+    fare?: boolean
+    distance?: boolean
+    rating?: boolean
+    ratingComment?: boolean
+    creTime?: boolean
+    updTime?: boolean
+    completedAt?: boolean
+    driver?: boolean | RideOrder$driverArgs<ExtArgs>
+  }, ExtArgs["result"]["rideOrder"]>
+
+  export type RideOrderSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    passengerId?: boolean
+    passengerName?: boolean
+    passengerPhone?: boolean
+    pickup?: boolean
+    destination?: boolean
+    carType?: boolean
+    mode?: boolean
+    scheduledAt?: boolean
+    status?: boolean
+    driverId?: boolean
+    fare?: boolean
+    distance?: boolean
+    rating?: boolean
+    ratingComment?: boolean
+    creTime?: boolean
+    updTime?: boolean
+    completedAt?: boolean
+    driver?: boolean | RideOrder$driverArgs<ExtArgs>
+  }, ExtArgs["result"]["rideOrder"]>
+
+  export type RideOrderSelectScalar = {
+    id?: boolean
+    passengerId?: boolean
+    passengerName?: boolean
+    passengerPhone?: boolean
+    pickup?: boolean
+    destination?: boolean
+    carType?: boolean
+    mode?: boolean
+    scheduledAt?: boolean
+    status?: boolean
+    driverId?: boolean
+    fare?: boolean
+    distance?: boolean
+    rating?: boolean
+    ratingComment?: boolean
+    creTime?: boolean
+    updTime?: boolean
+    completedAt?: boolean
+  }
+
+  export type RideOrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "passengerId" | "passengerName" | "passengerPhone" | "pickup" | "destination" | "carType" | "mode" | "scheduledAt" | "status" | "driverId" | "fare" | "distance" | "rating" | "ratingComment" | "creTime" | "updTime" | "completedAt", ExtArgs["result"]["rideOrder"]>
+  export type RideOrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    driver?: boolean | RideOrder$driverArgs<ExtArgs>
+  }
+  export type RideOrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    driver?: boolean | RideOrder$driverArgs<ExtArgs>
+  }
+  export type RideOrderIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    driver?: boolean | RideOrder$driverArgs<ExtArgs>
+  }
+
+  export type $RideOrderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RideOrder"
+    objects: {
+      driver: Prisma.$DriverPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      passengerId: string
+      passengerName: string
+      passengerPhone: string | null
+      pickup: string
+      destination: string
+      carType: string
+      mode: string
+      scheduledAt: Date | null
+      status: string
+      driverId: string | null
+      fare: number | null
+      distance: Prisma.Decimal | null
+      rating: number | null
+      ratingComment: string | null
+      creTime: Date
+      updTime: Date
+      completedAt: Date | null
+    }, ExtArgs["result"]["rideOrder"]>
+    composites: {}
+  }
+
+  type RideOrderGetPayload<S extends boolean | null | undefined | RideOrderDefaultArgs> = $Result.GetResult<Prisma.$RideOrderPayload, S>
+
+  type RideOrderCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RideOrderFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RideOrderCountAggregateInputType | true
+    }
+
+  export interface RideOrderDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RideOrder'], meta: { name: 'RideOrder' } }
+    /**
+     * Find zero or one RideOrder that matches the filter.
+     * @param {RideOrderFindUniqueArgs} args - Arguments to find a RideOrder
+     * @example
+     * // Get one RideOrder
+     * const rideOrder = await prisma.rideOrder.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RideOrderFindUniqueArgs>(args: SelectSubset<T, RideOrderFindUniqueArgs<ExtArgs>>): Prisma__RideOrderClient<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RideOrder that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RideOrderFindUniqueOrThrowArgs} args - Arguments to find a RideOrder
+     * @example
+     * // Get one RideOrder
+     * const rideOrder = await prisma.rideOrder.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RideOrderFindUniqueOrThrowArgs>(args: SelectSubset<T, RideOrderFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RideOrderClient<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RideOrder that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RideOrderFindFirstArgs} args - Arguments to find a RideOrder
+     * @example
+     * // Get one RideOrder
+     * const rideOrder = await prisma.rideOrder.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RideOrderFindFirstArgs>(args?: SelectSubset<T, RideOrderFindFirstArgs<ExtArgs>>): Prisma__RideOrderClient<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RideOrder that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RideOrderFindFirstOrThrowArgs} args - Arguments to find a RideOrder
+     * @example
+     * // Get one RideOrder
+     * const rideOrder = await prisma.rideOrder.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RideOrderFindFirstOrThrowArgs>(args?: SelectSubset<T, RideOrderFindFirstOrThrowArgs<ExtArgs>>): Prisma__RideOrderClient<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RideOrders that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RideOrderFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RideOrders
+     * const rideOrders = await prisma.rideOrder.findMany()
+     * 
+     * // Get first 10 RideOrders
+     * const rideOrders = await prisma.rideOrder.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const rideOrderWithIdOnly = await prisma.rideOrder.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RideOrderFindManyArgs>(args?: SelectSubset<T, RideOrderFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RideOrder.
+     * @param {RideOrderCreateArgs} args - Arguments to create a RideOrder.
+     * @example
+     * // Create one RideOrder
+     * const RideOrder = await prisma.rideOrder.create({
+     *   data: {
+     *     // ... data to create a RideOrder
+     *   }
+     * })
+     * 
+     */
+    create<T extends RideOrderCreateArgs>(args: SelectSubset<T, RideOrderCreateArgs<ExtArgs>>): Prisma__RideOrderClient<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RideOrders.
+     * @param {RideOrderCreateManyArgs} args - Arguments to create many RideOrders.
+     * @example
+     * // Create many RideOrders
+     * const rideOrder = await prisma.rideOrder.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RideOrderCreateManyArgs>(args?: SelectSubset<T, RideOrderCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many RideOrders and returns the data saved in the database.
+     * @param {RideOrderCreateManyAndReturnArgs} args - Arguments to create many RideOrders.
+     * @example
+     * // Create many RideOrders
+     * const rideOrder = await prisma.rideOrder.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many RideOrders and only return the `id`
+     * const rideOrderWithIdOnly = await prisma.rideOrder.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RideOrderCreateManyAndReturnArgs>(args?: SelectSubset<T, RideOrderCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a RideOrder.
+     * @param {RideOrderDeleteArgs} args - Arguments to delete one RideOrder.
+     * @example
+     * // Delete one RideOrder
+     * const RideOrder = await prisma.rideOrder.delete({
+     *   where: {
+     *     // ... filter to delete one RideOrder
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RideOrderDeleteArgs>(args: SelectSubset<T, RideOrderDeleteArgs<ExtArgs>>): Prisma__RideOrderClient<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RideOrder.
+     * @param {RideOrderUpdateArgs} args - Arguments to update one RideOrder.
+     * @example
+     * // Update one RideOrder
+     * const rideOrder = await prisma.rideOrder.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RideOrderUpdateArgs>(args: SelectSubset<T, RideOrderUpdateArgs<ExtArgs>>): Prisma__RideOrderClient<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RideOrders.
+     * @param {RideOrderDeleteManyArgs} args - Arguments to filter RideOrders to delete.
+     * @example
+     * // Delete a few RideOrders
+     * const { count } = await prisma.rideOrder.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RideOrderDeleteManyArgs>(args?: SelectSubset<T, RideOrderDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RideOrders.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RideOrderUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RideOrders
+     * const rideOrder = await prisma.rideOrder.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RideOrderUpdateManyArgs>(args: SelectSubset<T, RideOrderUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RideOrders and returns the data updated in the database.
+     * @param {RideOrderUpdateManyAndReturnArgs} args - Arguments to update many RideOrders.
+     * @example
+     * // Update many RideOrders
+     * const rideOrder = await prisma.rideOrder.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more RideOrders and only return the `id`
+     * const rideOrderWithIdOnly = await prisma.rideOrder.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RideOrderUpdateManyAndReturnArgs>(args: SelectSubset<T, RideOrderUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one RideOrder.
+     * @param {RideOrderUpsertArgs} args - Arguments to update or create a RideOrder.
+     * @example
+     * // Update or create a RideOrder
+     * const rideOrder = await prisma.rideOrder.upsert({
+     *   create: {
+     *     // ... data to create a RideOrder
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RideOrder we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RideOrderUpsertArgs>(args: SelectSubset<T, RideOrderUpsertArgs<ExtArgs>>): Prisma__RideOrderClient<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RideOrders.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RideOrderCountArgs} args - Arguments to filter RideOrders to count.
+     * @example
+     * // Count the number of RideOrders
+     * const count = await prisma.rideOrder.count({
+     *   where: {
+     *     // ... the filter for the RideOrders we want to count
+     *   }
+     * })
+    **/
+    count<T extends RideOrderCountArgs>(
+      args?: Subset<T, RideOrderCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RideOrderCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RideOrder.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RideOrderAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RideOrderAggregateArgs>(args: Subset<T, RideOrderAggregateArgs>): Prisma.PrismaPromise<GetRideOrderAggregateType<T>>
+
+    /**
+     * Group by RideOrder.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RideOrderGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RideOrderGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RideOrderGroupByArgs['orderBy'] }
+        : { orderBy?: RideOrderGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RideOrderGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRideOrderGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RideOrder model
+   */
+  readonly fields: RideOrderFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RideOrder.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RideOrderClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    driver<T extends RideOrder$driverArgs<ExtArgs> = {}>(args?: Subset<T, RideOrder$driverArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RideOrder model
+   */
+  interface RideOrderFieldRefs {
+    readonly id: FieldRef<"RideOrder", 'String'>
+    readonly passengerId: FieldRef<"RideOrder", 'String'>
+    readonly passengerName: FieldRef<"RideOrder", 'String'>
+    readonly passengerPhone: FieldRef<"RideOrder", 'String'>
+    readonly pickup: FieldRef<"RideOrder", 'String'>
+    readonly destination: FieldRef<"RideOrder", 'String'>
+    readonly carType: FieldRef<"RideOrder", 'String'>
+    readonly mode: FieldRef<"RideOrder", 'String'>
+    readonly scheduledAt: FieldRef<"RideOrder", 'DateTime'>
+    readonly status: FieldRef<"RideOrder", 'String'>
+    readonly driverId: FieldRef<"RideOrder", 'String'>
+    readonly fare: FieldRef<"RideOrder", 'Int'>
+    readonly distance: FieldRef<"RideOrder", 'Decimal'>
+    readonly rating: FieldRef<"RideOrder", 'Int'>
+    readonly ratingComment: FieldRef<"RideOrder", 'String'>
+    readonly creTime: FieldRef<"RideOrder", 'DateTime'>
+    readonly updTime: FieldRef<"RideOrder", 'DateTime'>
+    readonly completedAt: FieldRef<"RideOrder", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RideOrder findUnique
+   */
+  export type RideOrderFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RideOrder
+     */
+    select?: RideOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RideOrder
+     */
+    omit?: RideOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RideOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which RideOrder to fetch.
+     */
+    where: RideOrderWhereUniqueInput
+  }
+
+  /**
+   * RideOrder findUniqueOrThrow
+   */
+  export type RideOrderFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RideOrder
+     */
+    select?: RideOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RideOrder
+     */
+    omit?: RideOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RideOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which RideOrder to fetch.
+     */
+    where: RideOrderWhereUniqueInput
+  }
+
+  /**
+   * RideOrder findFirst
+   */
+  export type RideOrderFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RideOrder
+     */
+    select?: RideOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RideOrder
+     */
+    omit?: RideOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RideOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which RideOrder to fetch.
+     */
+    where?: RideOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RideOrders to fetch.
+     */
+    orderBy?: RideOrderOrderByWithRelationInput | RideOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RideOrders.
+     */
+    cursor?: RideOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RideOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RideOrders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RideOrders.
+     */
+    distinct?: RideOrderScalarFieldEnum | RideOrderScalarFieldEnum[]
+  }
+
+  /**
+   * RideOrder findFirstOrThrow
+   */
+  export type RideOrderFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RideOrder
+     */
+    select?: RideOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RideOrder
+     */
+    omit?: RideOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RideOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which RideOrder to fetch.
+     */
+    where?: RideOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RideOrders to fetch.
+     */
+    orderBy?: RideOrderOrderByWithRelationInput | RideOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RideOrders.
+     */
+    cursor?: RideOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RideOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RideOrders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RideOrders.
+     */
+    distinct?: RideOrderScalarFieldEnum | RideOrderScalarFieldEnum[]
+  }
+
+  /**
+   * RideOrder findMany
+   */
+  export type RideOrderFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RideOrder
+     */
+    select?: RideOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RideOrder
+     */
+    omit?: RideOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RideOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which RideOrders to fetch.
+     */
+    where?: RideOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RideOrders to fetch.
+     */
+    orderBy?: RideOrderOrderByWithRelationInput | RideOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RideOrders.
+     */
+    cursor?: RideOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RideOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RideOrders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RideOrders.
+     */
+    distinct?: RideOrderScalarFieldEnum | RideOrderScalarFieldEnum[]
+  }
+
+  /**
+   * RideOrder create
+   */
+  export type RideOrderCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RideOrder
+     */
+    select?: RideOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RideOrder
+     */
+    omit?: RideOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RideOrderInclude<ExtArgs> | null
+    /**
+     * The data needed to create a RideOrder.
+     */
+    data: XOR<RideOrderCreateInput, RideOrderUncheckedCreateInput>
+  }
+
+  /**
+   * RideOrder createMany
+   */
+  export type RideOrderCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RideOrders.
+     */
+    data: RideOrderCreateManyInput | RideOrderCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RideOrder createManyAndReturn
+   */
+  export type RideOrderCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RideOrder
+     */
+    select?: RideOrderSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RideOrder
+     */
+    omit?: RideOrderOmit<ExtArgs> | null
+    /**
+     * The data used to create many RideOrders.
+     */
+    data: RideOrderCreateManyInput | RideOrderCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RideOrderIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RideOrder update
+   */
+  export type RideOrderUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RideOrder
+     */
+    select?: RideOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RideOrder
+     */
+    omit?: RideOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RideOrderInclude<ExtArgs> | null
+    /**
+     * The data needed to update a RideOrder.
+     */
+    data: XOR<RideOrderUpdateInput, RideOrderUncheckedUpdateInput>
+    /**
+     * Choose, which RideOrder to update.
+     */
+    where: RideOrderWhereUniqueInput
+  }
+
+  /**
+   * RideOrder updateMany
+   */
+  export type RideOrderUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RideOrders.
+     */
+    data: XOR<RideOrderUpdateManyMutationInput, RideOrderUncheckedUpdateManyInput>
+    /**
+     * Filter which RideOrders to update
+     */
+    where?: RideOrderWhereInput
+    /**
+     * Limit how many RideOrders to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RideOrder updateManyAndReturn
+   */
+  export type RideOrderUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RideOrder
+     */
+    select?: RideOrderSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RideOrder
+     */
+    omit?: RideOrderOmit<ExtArgs> | null
+    /**
+     * The data used to update RideOrders.
+     */
+    data: XOR<RideOrderUpdateManyMutationInput, RideOrderUncheckedUpdateManyInput>
+    /**
+     * Filter which RideOrders to update
+     */
+    where?: RideOrderWhereInput
+    /**
+     * Limit how many RideOrders to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RideOrderIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RideOrder upsert
+   */
+  export type RideOrderUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RideOrder
+     */
+    select?: RideOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RideOrder
+     */
+    omit?: RideOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RideOrderInclude<ExtArgs> | null
+    /**
+     * The filter to search for the RideOrder to update in case it exists.
+     */
+    where: RideOrderWhereUniqueInput
+    /**
+     * In case the RideOrder found by the `where` argument doesn't exist, create a new RideOrder with this data.
+     */
+    create: XOR<RideOrderCreateInput, RideOrderUncheckedCreateInput>
+    /**
+     * In case the RideOrder was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RideOrderUpdateInput, RideOrderUncheckedUpdateInput>
+  }
+
+  /**
+   * RideOrder delete
+   */
+  export type RideOrderDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RideOrder
+     */
+    select?: RideOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RideOrder
+     */
+    omit?: RideOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RideOrderInclude<ExtArgs> | null
+    /**
+     * Filter which RideOrder to delete.
+     */
+    where: RideOrderWhereUniqueInput
+  }
+
+  /**
+   * RideOrder deleteMany
+   */
+  export type RideOrderDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RideOrders to delete
+     */
+    where?: RideOrderWhereInput
+    /**
+     * Limit how many RideOrders to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RideOrder.driver
+   */
+  export type RideOrder$driverArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    where?: DriverWhereInput
+  }
+
+  /**
+   * RideOrder without action
+   */
+  export type RideOrderDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RideOrder
+     */
+    select?: RideOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RideOrder
+     */
+    omit?: RideOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RideOrderInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model RestaurantQueue
    */
 
@@ -33175,8 +36054,8 @@ export namespace Prisma {
     estimatedMinutes: number | null
     avgServiceMinutes: number | null
     isOpen: boolean | null
-    creTime: Date | null
     updTime: Date | null
+    creTime: Date | null
   }
 
   export type RestaurantQueueMaxAggregateOutputType = {
@@ -33189,8 +36068,8 @@ export namespace Prisma {
     estimatedMinutes: number | null
     avgServiceMinutes: number | null
     isOpen: boolean | null
-    creTime: Date | null
     updTime: Date | null
+    creTime: Date | null
   }
 
   export type RestaurantQueueCountAggregateOutputType = {
@@ -33203,8 +36082,8 @@ export namespace Prisma {
     estimatedMinutes: number
     avgServiceMinutes: number
     isOpen: number
-    creTime: number
     updTime: number
+    creTime: number
     _all: number
   }
 
@@ -33237,8 +36116,8 @@ export namespace Prisma {
     estimatedMinutes?: true
     avgServiceMinutes?: true
     isOpen?: true
-    creTime?: true
     updTime?: true
+    creTime?: true
   }
 
   export type RestaurantQueueMaxAggregateInputType = {
@@ -33251,8 +36130,8 @@ export namespace Prisma {
     estimatedMinutes?: true
     avgServiceMinutes?: true
     isOpen?: true
-    creTime?: true
     updTime?: true
+    creTime?: true
   }
 
   export type RestaurantQueueCountAggregateInputType = {
@@ -33265,8 +36144,8 @@ export namespace Prisma {
     estimatedMinutes?: true
     avgServiceMinutes?: true
     isOpen?: true
-    creTime?: true
     updTime?: true
+    creTime?: true
     _all?: true
   }
 
@@ -33366,8 +36245,8 @@ export namespace Prisma {
     estimatedMinutes: number
     avgServiceMinutes: number
     isOpen: boolean
-    creTime: Date
     updTime: Date
+    creTime: Date
     _count: RestaurantQueueCountAggregateOutputType | null
     _avg: RestaurantQueueAvgAggregateOutputType | null
     _sum: RestaurantQueueSumAggregateOutputType | null
@@ -33399,8 +36278,8 @@ export namespace Prisma {
     estimatedMinutes?: boolean
     avgServiceMinutes?: boolean
     isOpen?: boolean
-    creTime?: boolean
     updTime?: boolean
+    creTime?: boolean
     entries?: boolean | RestaurantQueue$entriesArgs<ExtArgs>
     _count?: boolean | RestaurantQueueCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["restaurantQueue"]>
@@ -33415,8 +36294,8 @@ export namespace Prisma {
     estimatedMinutes?: boolean
     avgServiceMinutes?: boolean
     isOpen?: boolean
-    creTime?: boolean
     updTime?: boolean
+    creTime?: boolean
   }, ExtArgs["result"]["restaurantQueue"]>
 
   export type RestaurantQueueSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -33429,8 +36308,8 @@ export namespace Prisma {
     estimatedMinutes?: boolean
     avgServiceMinutes?: boolean
     isOpen?: boolean
-    creTime?: boolean
     updTime?: boolean
+    creTime?: boolean
   }, ExtArgs["result"]["restaurantQueue"]>
 
   export type RestaurantQueueSelectScalar = {
@@ -33443,11 +36322,11 @@ export namespace Prisma {
     estimatedMinutes?: boolean
     avgServiceMinutes?: boolean
     isOpen?: boolean
-    creTime?: boolean
     updTime?: boolean
+    creTime?: boolean
   }
 
-  export type RestaurantQueueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "placeId" | "name" | "totalTables" | "emptyTables" | "waitingGroups" | "estimatedMinutes" | "avgServiceMinutes" | "isOpen" | "creTime" | "updTime", ExtArgs["result"]["restaurantQueue"]>
+  export type RestaurantQueueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "placeId" | "name" | "totalTables" | "emptyTables" | "waitingGroups" | "estimatedMinutes" | "avgServiceMinutes" | "isOpen" | "updTime" | "creTime", ExtArgs["result"]["restaurantQueue"]>
   export type RestaurantQueueInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     entries?: boolean | RestaurantQueue$entriesArgs<ExtArgs>
     _count?: boolean | RestaurantQueueCountOutputTypeDefaultArgs<ExtArgs>
@@ -33470,8 +36349,8 @@ export namespace Prisma {
       estimatedMinutes: number
       avgServiceMinutes: number
       isOpen: boolean
-      creTime: Date
       updTime: Date
+      creTime: Date
     }, ExtArgs["result"]["restaurantQueue"]>
     composites: {}
   }
@@ -33905,8 +36784,8 @@ export namespace Prisma {
     readonly estimatedMinutes: FieldRef<"RestaurantQueue", 'Int'>
     readonly avgServiceMinutes: FieldRef<"RestaurantQueue", 'Int'>
     readonly isOpen: FieldRef<"RestaurantQueue", 'Boolean'>
-    readonly creTime: FieldRef<"RestaurantQueue", 'DateTime'>
     readonly updTime: FieldRef<"RestaurantQueue", 'DateTime'>
+    readonly creTime: FieldRef<"RestaurantQueue", 'DateTime'>
   }
     
 
@@ -35517,6 +38396,2160 @@ export namespace Prisma {
 
 
   /**
+   * Model Reservation
+   */
+
+  export type AggregateReservation = {
+    _count: ReservationCountAggregateOutputType | null
+    _avg: ReservationAvgAggregateOutputType | null
+    _sum: ReservationSumAggregateOutputType | null
+    _min: ReservationMinAggregateOutputType | null
+    _max: ReservationMaxAggregateOutputType | null
+  }
+
+  export type ReservationAvgAggregateOutputType = {
+    id: number | null
+    partySize: number | null
+  }
+
+  export type ReservationSumAggregateOutputType = {
+    id: number | null
+    partySize: number | null
+  }
+
+  export type ReservationMinAggregateOutputType = {
+    id: number | null
+    placeId: string | null
+    customerName: string | null
+    customerPhone: string | null
+    partySize: number | null
+    date: string | null
+    time: string | null
+    status: string | null
+    note: string | null
+    creTime: Date | null
+    updTime: Date | null
+  }
+
+  export type ReservationMaxAggregateOutputType = {
+    id: number | null
+    placeId: string | null
+    customerName: string | null
+    customerPhone: string | null
+    partySize: number | null
+    date: string | null
+    time: string | null
+    status: string | null
+    note: string | null
+    creTime: Date | null
+    updTime: Date | null
+  }
+
+  export type ReservationCountAggregateOutputType = {
+    id: number
+    placeId: number
+    customerName: number
+    customerPhone: number
+    partySize: number
+    date: number
+    time: number
+    status: number
+    note: number
+    creTime: number
+    updTime: number
+    _all: number
+  }
+
+
+  export type ReservationAvgAggregateInputType = {
+    id?: true
+    partySize?: true
+  }
+
+  export type ReservationSumAggregateInputType = {
+    id?: true
+    partySize?: true
+  }
+
+  export type ReservationMinAggregateInputType = {
+    id?: true
+    placeId?: true
+    customerName?: true
+    customerPhone?: true
+    partySize?: true
+    date?: true
+    time?: true
+    status?: true
+    note?: true
+    creTime?: true
+    updTime?: true
+  }
+
+  export type ReservationMaxAggregateInputType = {
+    id?: true
+    placeId?: true
+    customerName?: true
+    customerPhone?: true
+    partySize?: true
+    date?: true
+    time?: true
+    status?: true
+    note?: true
+    creTime?: true
+    updTime?: true
+  }
+
+  export type ReservationCountAggregateInputType = {
+    id?: true
+    placeId?: true
+    customerName?: true
+    customerPhone?: true
+    partySize?: true
+    date?: true
+    time?: true
+    status?: true
+    note?: true
+    creTime?: true
+    updTime?: true
+    _all?: true
+  }
+
+  export type ReservationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Reservation to aggregate.
+     */
+    where?: ReservationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Reservations to fetch.
+     */
+    orderBy?: ReservationOrderByWithRelationInput | ReservationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ReservationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Reservations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Reservations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Reservations
+    **/
+    _count?: true | ReservationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ReservationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ReservationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ReservationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ReservationMaxAggregateInputType
+  }
+
+  export type GetReservationAggregateType<T extends ReservationAggregateArgs> = {
+        [P in keyof T & keyof AggregateReservation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateReservation[P]>
+      : GetScalarType<T[P], AggregateReservation[P]>
+  }
+
+
+
+
+  export type ReservationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReservationWhereInput
+    orderBy?: ReservationOrderByWithAggregationInput | ReservationOrderByWithAggregationInput[]
+    by: ReservationScalarFieldEnum[] | ReservationScalarFieldEnum
+    having?: ReservationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ReservationCountAggregateInputType | true
+    _avg?: ReservationAvgAggregateInputType
+    _sum?: ReservationSumAggregateInputType
+    _min?: ReservationMinAggregateInputType
+    _max?: ReservationMaxAggregateInputType
+  }
+
+  export type ReservationGroupByOutputType = {
+    id: number
+    placeId: string
+    customerName: string
+    customerPhone: string
+    partySize: number
+    date: string
+    time: string
+    status: string
+    note: string | null
+    creTime: Date
+    updTime: Date
+    _count: ReservationCountAggregateOutputType | null
+    _avg: ReservationAvgAggregateOutputType | null
+    _sum: ReservationSumAggregateOutputType | null
+    _min: ReservationMinAggregateOutputType | null
+    _max: ReservationMaxAggregateOutputType | null
+  }
+
+  type GetReservationGroupByPayload<T extends ReservationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ReservationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ReservationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ReservationGroupByOutputType[P]>
+            : GetScalarType<T[P], ReservationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ReservationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    placeId?: boolean
+    customerName?: boolean
+    customerPhone?: boolean
+    partySize?: boolean
+    date?: boolean
+    time?: boolean
+    status?: boolean
+    note?: boolean
+    creTime?: boolean
+    updTime?: boolean
+  }, ExtArgs["result"]["reservation"]>
+
+  export type ReservationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    placeId?: boolean
+    customerName?: boolean
+    customerPhone?: boolean
+    partySize?: boolean
+    date?: boolean
+    time?: boolean
+    status?: boolean
+    note?: boolean
+    creTime?: boolean
+    updTime?: boolean
+  }, ExtArgs["result"]["reservation"]>
+
+  export type ReservationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    placeId?: boolean
+    customerName?: boolean
+    customerPhone?: boolean
+    partySize?: boolean
+    date?: boolean
+    time?: boolean
+    status?: boolean
+    note?: boolean
+    creTime?: boolean
+    updTime?: boolean
+  }, ExtArgs["result"]["reservation"]>
+
+  export type ReservationSelectScalar = {
+    id?: boolean
+    placeId?: boolean
+    customerName?: boolean
+    customerPhone?: boolean
+    partySize?: boolean
+    date?: boolean
+    time?: boolean
+    status?: boolean
+    note?: boolean
+    creTime?: boolean
+    updTime?: boolean
+  }
+
+  export type ReservationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "placeId" | "customerName" | "customerPhone" | "partySize" | "date" | "time" | "status" | "note" | "creTime" | "updTime", ExtArgs["result"]["reservation"]>
+
+  export type $ReservationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Reservation"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      placeId: string
+      customerName: string
+      customerPhone: string
+      partySize: number
+      date: string
+      time: string
+      status: string
+      note: string | null
+      creTime: Date
+      updTime: Date
+    }, ExtArgs["result"]["reservation"]>
+    composites: {}
+  }
+
+  type ReservationGetPayload<S extends boolean | null | undefined | ReservationDefaultArgs> = $Result.GetResult<Prisma.$ReservationPayload, S>
+
+  type ReservationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ReservationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ReservationCountAggregateInputType | true
+    }
+
+  export interface ReservationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Reservation'], meta: { name: 'Reservation' } }
+    /**
+     * Find zero or one Reservation that matches the filter.
+     * @param {ReservationFindUniqueArgs} args - Arguments to find a Reservation
+     * @example
+     * // Get one Reservation
+     * const reservation = await prisma.reservation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ReservationFindUniqueArgs>(args: SelectSubset<T, ReservationFindUniqueArgs<ExtArgs>>): Prisma__ReservationClient<$Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Reservation that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ReservationFindUniqueOrThrowArgs} args - Arguments to find a Reservation
+     * @example
+     * // Get one Reservation
+     * const reservation = await prisma.reservation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ReservationFindUniqueOrThrowArgs>(args: SelectSubset<T, ReservationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ReservationClient<$Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Reservation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReservationFindFirstArgs} args - Arguments to find a Reservation
+     * @example
+     * // Get one Reservation
+     * const reservation = await prisma.reservation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ReservationFindFirstArgs>(args?: SelectSubset<T, ReservationFindFirstArgs<ExtArgs>>): Prisma__ReservationClient<$Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Reservation that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReservationFindFirstOrThrowArgs} args - Arguments to find a Reservation
+     * @example
+     * // Get one Reservation
+     * const reservation = await prisma.reservation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ReservationFindFirstOrThrowArgs>(args?: SelectSubset<T, ReservationFindFirstOrThrowArgs<ExtArgs>>): Prisma__ReservationClient<$Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Reservations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReservationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Reservations
+     * const reservations = await prisma.reservation.findMany()
+     * 
+     * // Get first 10 Reservations
+     * const reservations = await prisma.reservation.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const reservationWithIdOnly = await prisma.reservation.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ReservationFindManyArgs>(args?: SelectSubset<T, ReservationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Reservation.
+     * @param {ReservationCreateArgs} args - Arguments to create a Reservation.
+     * @example
+     * // Create one Reservation
+     * const Reservation = await prisma.reservation.create({
+     *   data: {
+     *     // ... data to create a Reservation
+     *   }
+     * })
+     * 
+     */
+    create<T extends ReservationCreateArgs>(args: SelectSubset<T, ReservationCreateArgs<ExtArgs>>): Prisma__ReservationClient<$Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Reservations.
+     * @param {ReservationCreateManyArgs} args - Arguments to create many Reservations.
+     * @example
+     * // Create many Reservations
+     * const reservation = await prisma.reservation.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ReservationCreateManyArgs>(args?: SelectSubset<T, ReservationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Reservations and returns the data saved in the database.
+     * @param {ReservationCreateManyAndReturnArgs} args - Arguments to create many Reservations.
+     * @example
+     * // Create many Reservations
+     * const reservation = await prisma.reservation.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Reservations and only return the `id`
+     * const reservationWithIdOnly = await prisma.reservation.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ReservationCreateManyAndReturnArgs>(args?: SelectSubset<T, ReservationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Reservation.
+     * @param {ReservationDeleteArgs} args - Arguments to delete one Reservation.
+     * @example
+     * // Delete one Reservation
+     * const Reservation = await prisma.reservation.delete({
+     *   where: {
+     *     // ... filter to delete one Reservation
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ReservationDeleteArgs>(args: SelectSubset<T, ReservationDeleteArgs<ExtArgs>>): Prisma__ReservationClient<$Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Reservation.
+     * @param {ReservationUpdateArgs} args - Arguments to update one Reservation.
+     * @example
+     * // Update one Reservation
+     * const reservation = await prisma.reservation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ReservationUpdateArgs>(args: SelectSubset<T, ReservationUpdateArgs<ExtArgs>>): Prisma__ReservationClient<$Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Reservations.
+     * @param {ReservationDeleteManyArgs} args - Arguments to filter Reservations to delete.
+     * @example
+     * // Delete a few Reservations
+     * const { count } = await prisma.reservation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ReservationDeleteManyArgs>(args?: SelectSubset<T, ReservationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Reservations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReservationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Reservations
+     * const reservation = await prisma.reservation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ReservationUpdateManyArgs>(args: SelectSubset<T, ReservationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Reservations and returns the data updated in the database.
+     * @param {ReservationUpdateManyAndReturnArgs} args - Arguments to update many Reservations.
+     * @example
+     * // Update many Reservations
+     * const reservation = await prisma.reservation.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Reservations and only return the `id`
+     * const reservationWithIdOnly = await prisma.reservation.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ReservationUpdateManyAndReturnArgs>(args: SelectSubset<T, ReservationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Reservation.
+     * @param {ReservationUpsertArgs} args - Arguments to update or create a Reservation.
+     * @example
+     * // Update or create a Reservation
+     * const reservation = await prisma.reservation.upsert({
+     *   create: {
+     *     // ... data to create a Reservation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Reservation we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ReservationUpsertArgs>(args: SelectSubset<T, ReservationUpsertArgs<ExtArgs>>): Prisma__ReservationClient<$Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Reservations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReservationCountArgs} args - Arguments to filter Reservations to count.
+     * @example
+     * // Count the number of Reservations
+     * const count = await prisma.reservation.count({
+     *   where: {
+     *     // ... the filter for the Reservations we want to count
+     *   }
+     * })
+    **/
+    count<T extends ReservationCountArgs>(
+      args?: Subset<T, ReservationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ReservationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Reservation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReservationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ReservationAggregateArgs>(args: Subset<T, ReservationAggregateArgs>): Prisma.PrismaPromise<GetReservationAggregateType<T>>
+
+    /**
+     * Group by Reservation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReservationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ReservationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ReservationGroupByArgs['orderBy'] }
+        : { orderBy?: ReservationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ReservationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReservationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Reservation model
+   */
+  readonly fields: ReservationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Reservation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ReservationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Reservation model
+   */
+  interface ReservationFieldRefs {
+    readonly id: FieldRef<"Reservation", 'Int'>
+    readonly placeId: FieldRef<"Reservation", 'String'>
+    readonly customerName: FieldRef<"Reservation", 'String'>
+    readonly customerPhone: FieldRef<"Reservation", 'String'>
+    readonly partySize: FieldRef<"Reservation", 'Int'>
+    readonly date: FieldRef<"Reservation", 'String'>
+    readonly time: FieldRef<"Reservation", 'String'>
+    readonly status: FieldRef<"Reservation", 'String'>
+    readonly note: FieldRef<"Reservation", 'String'>
+    readonly creTime: FieldRef<"Reservation", 'DateTime'>
+    readonly updTime: FieldRef<"Reservation", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Reservation findUnique
+   */
+  export type ReservationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reservation
+     */
+    select?: ReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reservation
+     */
+    omit?: ReservationOmit<ExtArgs> | null
+    /**
+     * Filter, which Reservation to fetch.
+     */
+    where: ReservationWhereUniqueInput
+  }
+
+  /**
+   * Reservation findUniqueOrThrow
+   */
+  export type ReservationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reservation
+     */
+    select?: ReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reservation
+     */
+    omit?: ReservationOmit<ExtArgs> | null
+    /**
+     * Filter, which Reservation to fetch.
+     */
+    where: ReservationWhereUniqueInput
+  }
+
+  /**
+   * Reservation findFirst
+   */
+  export type ReservationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reservation
+     */
+    select?: ReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reservation
+     */
+    omit?: ReservationOmit<ExtArgs> | null
+    /**
+     * Filter, which Reservation to fetch.
+     */
+    where?: ReservationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Reservations to fetch.
+     */
+    orderBy?: ReservationOrderByWithRelationInput | ReservationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Reservations.
+     */
+    cursor?: ReservationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Reservations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Reservations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Reservations.
+     */
+    distinct?: ReservationScalarFieldEnum | ReservationScalarFieldEnum[]
+  }
+
+  /**
+   * Reservation findFirstOrThrow
+   */
+  export type ReservationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reservation
+     */
+    select?: ReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reservation
+     */
+    omit?: ReservationOmit<ExtArgs> | null
+    /**
+     * Filter, which Reservation to fetch.
+     */
+    where?: ReservationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Reservations to fetch.
+     */
+    orderBy?: ReservationOrderByWithRelationInput | ReservationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Reservations.
+     */
+    cursor?: ReservationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Reservations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Reservations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Reservations.
+     */
+    distinct?: ReservationScalarFieldEnum | ReservationScalarFieldEnum[]
+  }
+
+  /**
+   * Reservation findMany
+   */
+  export type ReservationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reservation
+     */
+    select?: ReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reservation
+     */
+    omit?: ReservationOmit<ExtArgs> | null
+    /**
+     * Filter, which Reservations to fetch.
+     */
+    where?: ReservationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Reservations to fetch.
+     */
+    orderBy?: ReservationOrderByWithRelationInput | ReservationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Reservations.
+     */
+    cursor?: ReservationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Reservations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Reservations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Reservations.
+     */
+    distinct?: ReservationScalarFieldEnum | ReservationScalarFieldEnum[]
+  }
+
+  /**
+   * Reservation create
+   */
+  export type ReservationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reservation
+     */
+    select?: ReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reservation
+     */
+    omit?: ReservationOmit<ExtArgs> | null
+    /**
+     * The data needed to create a Reservation.
+     */
+    data: XOR<ReservationCreateInput, ReservationUncheckedCreateInput>
+  }
+
+  /**
+   * Reservation createMany
+   */
+  export type ReservationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Reservations.
+     */
+    data: ReservationCreateManyInput | ReservationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Reservation createManyAndReturn
+   */
+  export type ReservationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reservation
+     */
+    select?: ReservationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reservation
+     */
+    omit?: ReservationOmit<ExtArgs> | null
+    /**
+     * The data used to create many Reservations.
+     */
+    data: ReservationCreateManyInput | ReservationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Reservation update
+   */
+  export type ReservationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reservation
+     */
+    select?: ReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reservation
+     */
+    omit?: ReservationOmit<ExtArgs> | null
+    /**
+     * The data needed to update a Reservation.
+     */
+    data: XOR<ReservationUpdateInput, ReservationUncheckedUpdateInput>
+    /**
+     * Choose, which Reservation to update.
+     */
+    where: ReservationWhereUniqueInput
+  }
+
+  /**
+   * Reservation updateMany
+   */
+  export type ReservationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Reservations.
+     */
+    data: XOR<ReservationUpdateManyMutationInput, ReservationUncheckedUpdateManyInput>
+    /**
+     * Filter which Reservations to update
+     */
+    where?: ReservationWhereInput
+    /**
+     * Limit how many Reservations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Reservation updateManyAndReturn
+   */
+  export type ReservationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reservation
+     */
+    select?: ReservationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reservation
+     */
+    omit?: ReservationOmit<ExtArgs> | null
+    /**
+     * The data used to update Reservations.
+     */
+    data: XOR<ReservationUpdateManyMutationInput, ReservationUncheckedUpdateManyInput>
+    /**
+     * Filter which Reservations to update
+     */
+    where?: ReservationWhereInput
+    /**
+     * Limit how many Reservations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Reservation upsert
+   */
+  export type ReservationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reservation
+     */
+    select?: ReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reservation
+     */
+    omit?: ReservationOmit<ExtArgs> | null
+    /**
+     * The filter to search for the Reservation to update in case it exists.
+     */
+    where: ReservationWhereUniqueInput
+    /**
+     * In case the Reservation found by the `where` argument doesn't exist, create a new Reservation with this data.
+     */
+    create: XOR<ReservationCreateInput, ReservationUncheckedCreateInput>
+    /**
+     * In case the Reservation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ReservationUpdateInput, ReservationUncheckedUpdateInput>
+  }
+
+  /**
+   * Reservation delete
+   */
+  export type ReservationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reservation
+     */
+    select?: ReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reservation
+     */
+    omit?: ReservationOmit<ExtArgs> | null
+    /**
+     * Filter which Reservation to delete.
+     */
+    where: ReservationWhereUniqueInput
+  }
+
+  /**
+   * Reservation deleteMany
+   */
+  export type ReservationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Reservations to delete
+     */
+    where?: ReservationWhereInput
+    /**
+     * Limit how many Reservations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Reservation without action
+   */
+  export type ReservationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reservation
+     */
+    select?: ReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reservation
+     */
+    omit?: ReservationOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SlotCapacity
+   */
+
+  export type AggregateSlotCapacity = {
+    _count: SlotCapacityCountAggregateOutputType | null
+    _avg: SlotCapacityAvgAggregateOutputType | null
+    _sum: SlotCapacitySumAggregateOutputType | null
+    _min: SlotCapacityMinAggregateOutputType | null
+    _max: SlotCapacityMaxAggregateOutputType | null
+  }
+
+  export type SlotCapacityAvgAggregateOutputType = {
+    id: number | null
+    totalTables: number | null
+  }
+
+  export type SlotCapacitySumAggregateOutputType = {
+    id: number | null
+    totalTables: number | null
+  }
+
+  export type SlotCapacityMinAggregateOutputType = {
+    id: number | null
+    placeId: string | null
+    time: string | null
+    totalTables: number | null
+    updTime: Date | null
+  }
+
+  export type SlotCapacityMaxAggregateOutputType = {
+    id: number | null
+    placeId: string | null
+    time: string | null
+    totalTables: number | null
+    updTime: Date | null
+  }
+
+  export type SlotCapacityCountAggregateOutputType = {
+    id: number
+    placeId: number
+    time: number
+    totalTables: number
+    updTime: number
+    _all: number
+  }
+
+
+  export type SlotCapacityAvgAggregateInputType = {
+    id?: true
+    totalTables?: true
+  }
+
+  export type SlotCapacitySumAggregateInputType = {
+    id?: true
+    totalTables?: true
+  }
+
+  export type SlotCapacityMinAggregateInputType = {
+    id?: true
+    placeId?: true
+    time?: true
+    totalTables?: true
+    updTime?: true
+  }
+
+  export type SlotCapacityMaxAggregateInputType = {
+    id?: true
+    placeId?: true
+    time?: true
+    totalTables?: true
+    updTime?: true
+  }
+
+  export type SlotCapacityCountAggregateInputType = {
+    id?: true
+    placeId?: true
+    time?: true
+    totalTables?: true
+    updTime?: true
+    _all?: true
+  }
+
+  export type SlotCapacityAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SlotCapacity to aggregate.
+     */
+    where?: SlotCapacityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SlotCapacities to fetch.
+     */
+    orderBy?: SlotCapacityOrderByWithRelationInput | SlotCapacityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SlotCapacityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SlotCapacities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SlotCapacities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SlotCapacities
+    **/
+    _count?: true | SlotCapacityCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SlotCapacityAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SlotCapacitySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SlotCapacityMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SlotCapacityMaxAggregateInputType
+  }
+
+  export type GetSlotCapacityAggregateType<T extends SlotCapacityAggregateArgs> = {
+        [P in keyof T & keyof AggregateSlotCapacity]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSlotCapacity[P]>
+      : GetScalarType<T[P], AggregateSlotCapacity[P]>
+  }
+
+
+
+
+  export type SlotCapacityGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SlotCapacityWhereInput
+    orderBy?: SlotCapacityOrderByWithAggregationInput | SlotCapacityOrderByWithAggregationInput[]
+    by: SlotCapacityScalarFieldEnum[] | SlotCapacityScalarFieldEnum
+    having?: SlotCapacityScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SlotCapacityCountAggregateInputType | true
+    _avg?: SlotCapacityAvgAggregateInputType
+    _sum?: SlotCapacitySumAggregateInputType
+    _min?: SlotCapacityMinAggregateInputType
+    _max?: SlotCapacityMaxAggregateInputType
+  }
+
+  export type SlotCapacityGroupByOutputType = {
+    id: number
+    placeId: string
+    time: string
+    totalTables: number
+    updTime: Date
+    _count: SlotCapacityCountAggregateOutputType | null
+    _avg: SlotCapacityAvgAggregateOutputType | null
+    _sum: SlotCapacitySumAggregateOutputType | null
+    _min: SlotCapacityMinAggregateOutputType | null
+    _max: SlotCapacityMaxAggregateOutputType | null
+  }
+
+  type GetSlotCapacityGroupByPayload<T extends SlotCapacityGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SlotCapacityGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SlotCapacityGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SlotCapacityGroupByOutputType[P]>
+            : GetScalarType<T[P], SlotCapacityGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SlotCapacitySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    placeId?: boolean
+    time?: boolean
+    totalTables?: boolean
+    updTime?: boolean
+  }, ExtArgs["result"]["slotCapacity"]>
+
+  export type SlotCapacitySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    placeId?: boolean
+    time?: boolean
+    totalTables?: boolean
+    updTime?: boolean
+  }, ExtArgs["result"]["slotCapacity"]>
+
+  export type SlotCapacitySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    placeId?: boolean
+    time?: boolean
+    totalTables?: boolean
+    updTime?: boolean
+  }, ExtArgs["result"]["slotCapacity"]>
+
+  export type SlotCapacitySelectScalar = {
+    id?: boolean
+    placeId?: boolean
+    time?: boolean
+    totalTables?: boolean
+    updTime?: boolean
+  }
+
+  export type SlotCapacityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "placeId" | "time" | "totalTables" | "updTime", ExtArgs["result"]["slotCapacity"]>
+
+  export type $SlotCapacityPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SlotCapacity"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      placeId: string
+      time: string
+      totalTables: number
+      updTime: Date
+    }, ExtArgs["result"]["slotCapacity"]>
+    composites: {}
+  }
+
+  type SlotCapacityGetPayload<S extends boolean | null | undefined | SlotCapacityDefaultArgs> = $Result.GetResult<Prisma.$SlotCapacityPayload, S>
+
+  type SlotCapacityCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SlotCapacityFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SlotCapacityCountAggregateInputType | true
+    }
+
+  export interface SlotCapacityDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SlotCapacity'], meta: { name: 'SlotCapacity' } }
+    /**
+     * Find zero or one SlotCapacity that matches the filter.
+     * @param {SlotCapacityFindUniqueArgs} args - Arguments to find a SlotCapacity
+     * @example
+     * // Get one SlotCapacity
+     * const slotCapacity = await prisma.slotCapacity.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SlotCapacityFindUniqueArgs>(args: SelectSubset<T, SlotCapacityFindUniqueArgs<ExtArgs>>): Prisma__SlotCapacityClient<$Result.GetResult<Prisma.$SlotCapacityPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SlotCapacity that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SlotCapacityFindUniqueOrThrowArgs} args - Arguments to find a SlotCapacity
+     * @example
+     * // Get one SlotCapacity
+     * const slotCapacity = await prisma.slotCapacity.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SlotCapacityFindUniqueOrThrowArgs>(args: SelectSubset<T, SlotCapacityFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SlotCapacityClient<$Result.GetResult<Prisma.$SlotCapacityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SlotCapacity that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SlotCapacityFindFirstArgs} args - Arguments to find a SlotCapacity
+     * @example
+     * // Get one SlotCapacity
+     * const slotCapacity = await prisma.slotCapacity.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SlotCapacityFindFirstArgs>(args?: SelectSubset<T, SlotCapacityFindFirstArgs<ExtArgs>>): Prisma__SlotCapacityClient<$Result.GetResult<Prisma.$SlotCapacityPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SlotCapacity that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SlotCapacityFindFirstOrThrowArgs} args - Arguments to find a SlotCapacity
+     * @example
+     * // Get one SlotCapacity
+     * const slotCapacity = await prisma.slotCapacity.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SlotCapacityFindFirstOrThrowArgs>(args?: SelectSubset<T, SlotCapacityFindFirstOrThrowArgs<ExtArgs>>): Prisma__SlotCapacityClient<$Result.GetResult<Prisma.$SlotCapacityPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SlotCapacities that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SlotCapacityFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SlotCapacities
+     * const slotCapacities = await prisma.slotCapacity.findMany()
+     * 
+     * // Get first 10 SlotCapacities
+     * const slotCapacities = await prisma.slotCapacity.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const slotCapacityWithIdOnly = await prisma.slotCapacity.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SlotCapacityFindManyArgs>(args?: SelectSubset<T, SlotCapacityFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SlotCapacityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SlotCapacity.
+     * @param {SlotCapacityCreateArgs} args - Arguments to create a SlotCapacity.
+     * @example
+     * // Create one SlotCapacity
+     * const SlotCapacity = await prisma.slotCapacity.create({
+     *   data: {
+     *     // ... data to create a SlotCapacity
+     *   }
+     * })
+     * 
+     */
+    create<T extends SlotCapacityCreateArgs>(args: SelectSubset<T, SlotCapacityCreateArgs<ExtArgs>>): Prisma__SlotCapacityClient<$Result.GetResult<Prisma.$SlotCapacityPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SlotCapacities.
+     * @param {SlotCapacityCreateManyArgs} args - Arguments to create many SlotCapacities.
+     * @example
+     * // Create many SlotCapacities
+     * const slotCapacity = await prisma.slotCapacity.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SlotCapacityCreateManyArgs>(args?: SelectSubset<T, SlotCapacityCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SlotCapacities and returns the data saved in the database.
+     * @param {SlotCapacityCreateManyAndReturnArgs} args - Arguments to create many SlotCapacities.
+     * @example
+     * // Create many SlotCapacities
+     * const slotCapacity = await prisma.slotCapacity.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SlotCapacities and only return the `id`
+     * const slotCapacityWithIdOnly = await prisma.slotCapacity.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SlotCapacityCreateManyAndReturnArgs>(args?: SelectSubset<T, SlotCapacityCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SlotCapacityPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SlotCapacity.
+     * @param {SlotCapacityDeleteArgs} args - Arguments to delete one SlotCapacity.
+     * @example
+     * // Delete one SlotCapacity
+     * const SlotCapacity = await prisma.slotCapacity.delete({
+     *   where: {
+     *     // ... filter to delete one SlotCapacity
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SlotCapacityDeleteArgs>(args: SelectSubset<T, SlotCapacityDeleteArgs<ExtArgs>>): Prisma__SlotCapacityClient<$Result.GetResult<Prisma.$SlotCapacityPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SlotCapacity.
+     * @param {SlotCapacityUpdateArgs} args - Arguments to update one SlotCapacity.
+     * @example
+     * // Update one SlotCapacity
+     * const slotCapacity = await prisma.slotCapacity.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SlotCapacityUpdateArgs>(args: SelectSubset<T, SlotCapacityUpdateArgs<ExtArgs>>): Prisma__SlotCapacityClient<$Result.GetResult<Prisma.$SlotCapacityPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SlotCapacities.
+     * @param {SlotCapacityDeleteManyArgs} args - Arguments to filter SlotCapacities to delete.
+     * @example
+     * // Delete a few SlotCapacities
+     * const { count } = await prisma.slotCapacity.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SlotCapacityDeleteManyArgs>(args?: SelectSubset<T, SlotCapacityDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SlotCapacities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SlotCapacityUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SlotCapacities
+     * const slotCapacity = await prisma.slotCapacity.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SlotCapacityUpdateManyArgs>(args: SelectSubset<T, SlotCapacityUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SlotCapacities and returns the data updated in the database.
+     * @param {SlotCapacityUpdateManyAndReturnArgs} args - Arguments to update many SlotCapacities.
+     * @example
+     * // Update many SlotCapacities
+     * const slotCapacity = await prisma.slotCapacity.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SlotCapacities and only return the `id`
+     * const slotCapacityWithIdOnly = await prisma.slotCapacity.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SlotCapacityUpdateManyAndReturnArgs>(args: SelectSubset<T, SlotCapacityUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SlotCapacityPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SlotCapacity.
+     * @param {SlotCapacityUpsertArgs} args - Arguments to update or create a SlotCapacity.
+     * @example
+     * // Update or create a SlotCapacity
+     * const slotCapacity = await prisma.slotCapacity.upsert({
+     *   create: {
+     *     // ... data to create a SlotCapacity
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SlotCapacity we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SlotCapacityUpsertArgs>(args: SelectSubset<T, SlotCapacityUpsertArgs<ExtArgs>>): Prisma__SlotCapacityClient<$Result.GetResult<Prisma.$SlotCapacityPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SlotCapacities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SlotCapacityCountArgs} args - Arguments to filter SlotCapacities to count.
+     * @example
+     * // Count the number of SlotCapacities
+     * const count = await prisma.slotCapacity.count({
+     *   where: {
+     *     // ... the filter for the SlotCapacities we want to count
+     *   }
+     * })
+    **/
+    count<T extends SlotCapacityCountArgs>(
+      args?: Subset<T, SlotCapacityCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SlotCapacityCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SlotCapacity.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SlotCapacityAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SlotCapacityAggregateArgs>(args: Subset<T, SlotCapacityAggregateArgs>): Prisma.PrismaPromise<GetSlotCapacityAggregateType<T>>
+
+    /**
+     * Group by SlotCapacity.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SlotCapacityGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SlotCapacityGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SlotCapacityGroupByArgs['orderBy'] }
+        : { orderBy?: SlotCapacityGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SlotCapacityGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSlotCapacityGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SlotCapacity model
+   */
+  readonly fields: SlotCapacityFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SlotCapacity.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SlotCapacityClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SlotCapacity model
+   */
+  interface SlotCapacityFieldRefs {
+    readonly id: FieldRef<"SlotCapacity", 'Int'>
+    readonly placeId: FieldRef<"SlotCapacity", 'String'>
+    readonly time: FieldRef<"SlotCapacity", 'String'>
+    readonly totalTables: FieldRef<"SlotCapacity", 'Int'>
+    readonly updTime: FieldRef<"SlotCapacity", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SlotCapacity findUnique
+   */
+  export type SlotCapacityFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SlotCapacity
+     */
+    select?: SlotCapacitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SlotCapacity
+     */
+    omit?: SlotCapacityOmit<ExtArgs> | null
+    /**
+     * Filter, which SlotCapacity to fetch.
+     */
+    where: SlotCapacityWhereUniqueInput
+  }
+
+  /**
+   * SlotCapacity findUniqueOrThrow
+   */
+  export type SlotCapacityFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SlotCapacity
+     */
+    select?: SlotCapacitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SlotCapacity
+     */
+    omit?: SlotCapacityOmit<ExtArgs> | null
+    /**
+     * Filter, which SlotCapacity to fetch.
+     */
+    where: SlotCapacityWhereUniqueInput
+  }
+
+  /**
+   * SlotCapacity findFirst
+   */
+  export type SlotCapacityFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SlotCapacity
+     */
+    select?: SlotCapacitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SlotCapacity
+     */
+    omit?: SlotCapacityOmit<ExtArgs> | null
+    /**
+     * Filter, which SlotCapacity to fetch.
+     */
+    where?: SlotCapacityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SlotCapacities to fetch.
+     */
+    orderBy?: SlotCapacityOrderByWithRelationInput | SlotCapacityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SlotCapacities.
+     */
+    cursor?: SlotCapacityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SlotCapacities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SlotCapacities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SlotCapacities.
+     */
+    distinct?: SlotCapacityScalarFieldEnum | SlotCapacityScalarFieldEnum[]
+  }
+
+  /**
+   * SlotCapacity findFirstOrThrow
+   */
+  export type SlotCapacityFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SlotCapacity
+     */
+    select?: SlotCapacitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SlotCapacity
+     */
+    omit?: SlotCapacityOmit<ExtArgs> | null
+    /**
+     * Filter, which SlotCapacity to fetch.
+     */
+    where?: SlotCapacityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SlotCapacities to fetch.
+     */
+    orderBy?: SlotCapacityOrderByWithRelationInput | SlotCapacityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SlotCapacities.
+     */
+    cursor?: SlotCapacityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SlotCapacities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SlotCapacities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SlotCapacities.
+     */
+    distinct?: SlotCapacityScalarFieldEnum | SlotCapacityScalarFieldEnum[]
+  }
+
+  /**
+   * SlotCapacity findMany
+   */
+  export type SlotCapacityFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SlotCapacity
+     */
+    select?: SlotCapacitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SlotCapacity
+     */
+    omit?: SlotCapacityOmit<ExtArgs> | null
+    /**
+     * Filter, which SlotCapacities to fetch.
+     */
+    where?: SlotCapacityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SlotCapacities to fetch.
+     */
+    orderBy?: SlotCapacityOrderByWithRelationInput | SlotCapacityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SlotCapacities.
+     */
+    cursor?: SlotCapacityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SlotCapacities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SlotCapacities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SlotCapacities.
+     */
+    distinct?: SlotCapacityScalarFieldEnum | SlotCapacityScalarFieldEnum[]
+  }
+
+  /**
+   * SlotCapacity create
+   */
+  export type SlotCapacityCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SlotCapacity
+     */
+    select?: SlotCapacitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SlotCapacity
+     */
+    omit?: SlotCapacityOmit<ExtArgs> | null
+    /**
+     * The data needed to create a SlotCapacity.
+     */
+    data: XOR<SlotCapacityCreateInput, SlotCapacityUncheckedCreateInput>
+  }
+
+  /**
+   * SlotCapacity createMany
+   */
+  export type SlotCapacityCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SlotCapacities.
+     */
+    data: SlotCapacityCreateManyInput | SlotCapacityCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SlotCapacity createManyAndReturn
+   */
+  export type SlotCapacityCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SlotCapacity
+     */
+    select?: SlotCapacitySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SlotCapacity
+     */
+    omit?: SlotCapacityOmit<ExtArgs> | null
+    /**
+     * The data used to create many SlotCapacities.
+     */
+    data: SlotCapacityCreateManyInput | SlotCapacityCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SlotCapacity update
+   */
+  export type SlotCapacityUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SlotCapacity
+     */
+    select?: SlotCapacitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SlotCapacity
+     */
+    omit?: SlotCapacityOmit<ExtArgs> | null
+    /**
+     * The data needed to update a SlotCapacity.
+     */
+    data: XOR<SlotCapacityUpdateInput, SlotCapacityUncheckedUpdateInput>
+    /**
+     * Choose, which SlotCapacity to update.
+     */
+    where: SlotCapacityWhereUniqueInput
+  }
+
+  /**
+   * SlotCapacity updateMany
+   */
+  export type SlotCapacityUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SlotCapacities.
+     */
+    data: XOR<SlotCapacityUpdateManyMutationInput, SlotCapacityUncheckedUpdateManyInput>
+    /**
+     * Filter which SlotCapacities to update
+     */
+    where?: SlotCapacityWhereInput
+    /**
+     * Limit how many SlotCapacities to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SlotCapacity updateManyAndReturn
+   */
+  export type SlotCapacityUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SlotCapacity
+     */
+    select?: SlotCapacitySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SlotCapacity
+     */
+    omit?: SlotCapacityOmit<ExtArgs> | null
+    /**
+     * The data used to update SlotCapacities.
+     */
+    data: XOR<SlotCapacityUpdateManyMutationInput, SlotCapacityUncheckedUpdateManyInput>
+    /**
+     * Filter which SlotCapacities to update
+     */
+    where?: SlotCapacityWhereInput
+    /**
+     * Limit how many SlotCapacities to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SlotCapacity upsert
+   */
+  export type SlotCapacityUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SlotCapacity
+     */
+    select?: SlotCapacitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SlotCapacity
+     */
+    omit?: SlotCapacityOmit<ExtArgs> | null
+    /**
+     * The filter to search for the SlotCapacity to update in case it exists.
+     */
+    where: SlotCapacityWhereUniqueInput
+    /**
+     * In case the SlotCapacity found by the `where` argument doesn't exist, create a new SlotCapacity with this data.
+     */
+    create: XOR<SlotCapacityCreateInput, SlotCapacityUncheckedCreateInput>
+    /**
+     * In case the SlotCapacity was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SlotCapacityUpdateInput, SlotCapacityUncheckedUpdateInput>
+  }
+
+  /**
+   * SlotCapacity delete
+   */
+  export type SlotCapacityDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SlotCapacity
+     */
+    select?: SlotCapacitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SlotCapacity
+     */
+    omit?: SlotCapacityOmit<ExtArgs> | null
+    /**
+     * Filter which SlotCapacity to delete.
+     */
+    where: SlotCapacityWhereUniqueInput
+  }
+
+  /**
+   * SlotCapacity deleteMany
+   */
+  export type SlotCapacityDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SlotCapacities to delete
+     */
+    where?: SlotCapacityWhereInput
+    /**
+     * Limit how many SlotCapacities to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SlotCapacity without action
+   */
+  export type SlotCapacityDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SlotCapacity
+     */
+    select?: SlotCapacitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SlotCapacity
+     */
+    omit?: SlotCapacityOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -35985,7 +41018,7 @@ export namespace Prisma {
     status: 'status',
     registeredAt: 'registeredAt',
     source: 'source',
-    special_needs: 'special_needs'
+    specialNeeds: 'specialNeeds'
   };
 
   export type ActivityRegistrationScalarFieldEnum = (typeof ActivityRegistrationScalarFieldEnum)[keyof typeof ActivityRegistrationScalarFieldEnum]
@@ -36009,6 +41042,47 @@ export namespace Prisma {
   export type CommunityQuestionScalarFieldEnum = (typeof CommunityQuestionScalarFieldEnum)[keyof typeof CommunityQuestionScalarFieldEnum]
 
 
+  export const DriverScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    phone: 'phone',
+    plateNumber: 'plateNumber',
+    carModel: 'carModel',
+    carType: 'carType',
+    rating: 'rating',
+    totalTrips: 'totalTrips',
+    status: 'status',
+    isDeleted: 'isDeleted',
+    creTime: 'creTime'
+  };
+
+  export type DriverScalarFieldEnum = (typeof DriverScalarFieldEnum)[keyof typeof DriverScalarFieldEnum]
+
+
+  export const RideOrderScalarFieldEnum: {
+    id: 'id',
+    passengerId: 'passengerId',
+    passengerName: 'passengerName',
+    passengerPhone: 'passengerPhone',
+    pickup: 'pickup',
+    destination: 'destination',
+    carType: 'carType',
+    mode: 'mode',
+    scheduledAt: 'scheduledAt',
+    status: 'status',
+    driverId: 'driverId',
+    fare: 'fare',
+    distance: 'distance',
+    rating: 'rating',
+    ratingComment: 'ratingComment',
+    creTime: 'creTime',
+    updTime: 'updTime',
+    completedAt: 'completedAt'
+  };
+
+  export type RideOrderScalarFieldEnum = (typeof RideOrderScalarFieldEnum)[keyof typeof RideOrderScalarFieldEnum]
+
+
   export const RestaurantQueueScalarFieldEnum: {
     id: 'id',
     placeId: 'placeId',
@@ -36019,8 +41093,8 @@ export namespace Prisma {
     estimatedMinutes: 'estimatedMinutes',
     avgServiceMinutes: 'avgServiceMinutes',
     isOpen: 'isOpen',
-    creTime: 'creTime',
-    updTime: 'updTime'
+    updTime: 'updTime',
+    creTime: 'creTime'
   };
 
   export type RestaurantQueueScalarFieldEnum = (typeof RestaurantQueueScalarFieldEnum)[keyof typeof RestaurantQueueScalarFieldEnum]
@@ -36040,6 +41114,34 @@ export namespace Prisma {
   };
 
   export type QueueEntryScalarFieldEnum = (typeof QueueEntryScalarFieldEnum)[keyof typeof QueueEntryScalarFieldEnum]
+
+
+  export const ReservationScalarFieldEnum: {
+    id: 'id',
+    placeId: 'placeId',
+    customerName: 'customerName',
+    customerPhone: 'customerPhone',
+    partySize: 'partySize',
+    date: 'date',
+    time: 'time',
+    status: 'status',
+    note: 'note',
+    creTime: 'creTime',
+    updTime: 'updTime'
+  };
+
+  export type ReservationScalarFieldEnum = (typeof ReservationScalarFieldEnum)[keyof typeof ReservationScalarFieldEnum]
+
+
+  export const SlotCapacityScalarFieldEnum: {
+    id: 'id',
+    placeId: 'placeId',
+    time: 'time',
+    totalTables: 'totalTables',
+    updTime: 'updTime'
+  };
+
+  export type SlotCapacityScalarFieldEnum = (typeof SlotCapacityScalarFieldEnum)[keyof typeof SlotCapacityScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -38561,7 +43663,7 @@ export namespace Prisma {
     status?: StringFilter<"ActivityRegistration"> | string
     registeredAt?: DateTimeFilter<"ActivityRegistration"> | Date | string
     source?: StringFilter<"ActivityRegistration"> | string
-    special_needs?: StringNullableFilter<"ActivityRegistration"> | string | null
+    specialNeeds?: StringNullableFilter<"ActivityRegistration"> | string | null
     activity?: XOR<CommunityActivityScalarRelationFilter, CommunityActivityWhereInput>
   }
 
@@ -38574,7 +43676,7 @@ export namespace Prisma {
     status?: SortOrder
     registeredAt?: SortOrder
     source?: SortOrder
-    special_needs?: SortOrderInput | SortOrder
+    specialNeeds?: SortOrderInput | SortOrder
     activity?: CommunityActivityOrderByWithRelationInput
   }
 
@@ -38591,7 +43693,7 @@ export namespace Prisma {
     status?: StringFilter<"ActivityRegistration"> | string
     registeredAt?: DateTimeFilter<"ActivityRegistration"> | Date | string
     source?: StringFilter<"ActivityRegistration"> | string
-    special_needs?: StringNullableFilter<"ActivityRegistration"> | string | null
+    specialNeeds?: StringNullableFilter<"ActivityRegistration"> | string | null
     activity?: XOR<CommunityActivityScalarRelationFilter, CommunityActivityWhereInput>
   }, "id" | "activityId_userId">
 
@@ -38604,7 +43706,7 @@ export namespace Prisma {
     status?: SortOrder
     registeredAt?: SortOrder
     source?: SortOrder
-    special_needs?: SortOrderInput | SortOrder
+    specialNeeds?: SortOrderInput | SortOrder
     _count?: ActivityRegistrationCountOrderByAggregateInput
     _max?: ActivityRegistrationMaxOrderByAggregateInput
     _min?: ActivityRegistrationMinOrderByAggregateInput
@@ -38622,7 +43724,7 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"ActivityRegistration"> | string
     registeredAt?: DateTimeWithAggregatesFilter<"ActivityRegistration"> | Date | string
     source?: StringWithAggregatesFilter<"ActivityRegistration"> | string
-    special_needs?: StringNullableWithAggregatesFilter<"ActivityRegistration"> | string | null
+    specialNeeds?: StringNullableWithAggregatesFilter<"ActivityRegistration"> | string | null
   }
 
   export type CommunityQuestionWhereInput = {
@@ -38712,6 +43814,215 @@ export namespace Prisma {
     creTime?: DateTimeWithAggregatesFilter<"CommunityQuestion"> | Date | string
   }
 
+  export type DriverWhereInput = {
+    AND?: DriverWhereInput | DriverWhereInput[]
+    OR?: DriverWhereInput[]
+    NOT?: DriverWhereInput | DriverWhereInput[]
+    id?: UuidFilter<"Driver"> | string
+    name?: StringFilter<"Driver"> | string
+    phone?: StringFilter<"Driver"> | string
+    plateNumber?: StringFilter<"Driver"> | string
+    carModel?: StringFilter<"Driver"> | string
+    carType?: StringFilter<"Driver"> | string
+    rating?: DecimalFilter<"Driver"> | Decimal | DecimalJsLike | number | string
+    totalTrips?: IntFilter<"Driver"> | number
+    status?: StringFilter<"Driver"> | string
+    isDeleted?: BoolFilter<"Driver"> | boolean
+    creTime?: DateTimeFilter<"Driver"> | Date | string
+    rideOrders?: RideOrderListRelationFilter
+  }
+
+  export type DriverOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    plateNumber?: SortOrder
+    carModel?: SortOrder
+    carType?: SortOrder
+    rating?: SortOrder
+    totalTrips?: SortOrder
+    status?: SortOrder
+    isDeleted?: SortOrder
+    creTime?: SortOrder
+    rideOrders?: RideOrderOrderByRelationAggregateInput
+  }
+
+  export type DriverWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DriverWhereInput | DriverWhereInput[]
+    OR?: DriverWhereInput[]
+    NOT?: DriverWhereInput | DriverWhereInput[]
+    name?: StringFilter<"Driver"> | string
+    phone?: StringFilter<"Driver"> | string
+    plateNumber?: StringFilter<"Driver"> | string
+    carModel?: StringFilter<"Driver"> | string
+    carType?: StringFilter<"Driver"> | string
+    rating?: DecimalFilter<"Driver"> | Decimal | DecimalJsLike | number | string
+    totalTrips?: IntFilter<"Driver"> | number
+    status?: StringFilter<"Driver"> | string
+    isDeleted?: BoolFilter<"Driver"> | boolean
+    creTime?: DateTimeFilter<"Driver"> | Date | string
+    rideOrders?: RideOrderListRelationFilter
+  }, "id">
+
+  export type DriverOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    plateNumber?: SortOrder
+    carModel?: SortOrder
+    carType?: SortOrder
+    rating?: SortOrder
+    totalTrips?: SortOrder
+    status?: SortOrder
+    isDeleted?: SortOrder
+    creTime?: SortOrder
+    _count?: DriverCountOrderByAggregateInput
+    _avg?: DriverAvgOrderByAggregateInput
+    _max?: DriverMaxOrderByAggregateInput
+    _min?: DriverMinOrderByAggregateInput
+    _sum?: DriverSumOrderByAggregateInput
+  }
+
+  export type DriverScalarWhereWithAggregatesInput = {
+    AND?: DriverScalarWhereWithAggregatesInput | DriverScalarWhereWithAggregatesInput[]
+    OR?: DriverScalarWhereWithAggregatesInput[]
+    NOT?: DriverScalarWhereWithAggregatesInput | DriverScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"Driver"> | string
+    name?: StringWithAggregatesFilter<"Driver"> | string
+    phone?: StringWithAggregatesFilter<"Driver"> | string
+    plateNumber?: StringWithAggregatesFilter<"Driver"> | string
+    carModel?: StringWithAggregatesFilter<"Driver"> | string
+    carType?: StringWithAggregatesFilter<"Driver"> | string
+    rating?: DecimalWithAggregatesFilter<"Driver"> | Decimal | DecimalJsLike | number | string
+    totalTrips?: IntWithAggregatesFilter<"Driver"> | number
+    status?: StringWithAggregatesFilter<"Driver"> | string
+    isDeleted?: BoolWithAggregatesFilter<"Driver"> | boolean
+    creTime?: DateTimeWithAggregatesFilter<"Driver"> | Date | string
+  }
+
+  export type RideOrderWhereInput = {
+    AND?: RideOrderWhereInput | RideOrderWhereInput[]
+    OR?: RideOrderWhereInput[]
+    NOT?: RideOrderWhereInput | RideOrderWhereInput[]
+    id?: UuidFilter<"RideOrder"> | string
+    passengerId?: UuidFilter<"RideOrder"> | string
+    passengerName?: StringFilter<"RideOrder"> | string
+    passengerPhone?: StringNullableFilter<"RideOrder"> | string | null
+    pickup?: StringFilter<"RideOrder"> | string
+    destination?: StringFilter<"RideOrder"> | string
+    carType?: StringFilter<"RideOrder"> | string
+    mode?: StringFilter<"RideOrder"> | string
+    scheduledAt?: DateTimeNullableFilter<"RideOrder"> | Date | string | null
+    status?: StringFilter<"RideOrder"> | string
+    driverId?: UuidNullableFilter<"RideOrder"> | string | null
+    fare?: IntNullableFilter<"RideOrder"> | number | null
+    distance?: DecimalNullableFilter<"RideOrder"> | Decimal | DecimalJsLike | number | string | null
+    rating?: IntNullableFilter<"RideOrder"> | number | null
+    ratingComment?: StringNullableFilter<"RideOrder"> | string | null
+    creTime?: DateTimeFilter<"RideOrder"> | Date | string
+    updTime?: DateTimeFilter<"RideOrder"> | Date | string
+    completedAt?: DateTimeNullableFilter<"RideOrder"> | Date | string | null
+    driver?: XOR<DriverNullableScalarRelationFilter, DriverWhereInput> | null
+  }
+
+  export type RideOrderOrderByWithRelationInput = {
+    id?: SortOrder
+    passengerId?: SortOrder
+    passengerName?: SortOrder
+    passengerPhone?: SortOrderInput | SortOrder
+    pickup?: SortOrder
+    destination?: SortOrder
+    carType?: SortOrder
+    mode?: SortOrder
+    scheduledAt?: SortOrderInput | SortOrder
+    status?: SortOrder
+    driverId?: SortOrderInput | SortOrder
+    fare?: SortOrderInput | SortOrder
+    distance?: SortOrderInput | SortOrder
+    rating?: SortOrderInput | SortOrder
+    ratingComment?: SortOrderInput | SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    driver?: DriverOrderByWithRelationInput
+  }
+
+  export type RideOrderWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: RideOrderWhereInput | RideOrderWhereInput[]
+    OR?: RideOrderWhereInput[]
+    NOT?: RideOrderWhereInput | RideOrderWhereInput[]
+    passengerId?: UuidFilter<"RideOrder"> | string
+    passengerName?: StringFilter<"RideOrder"> | string
+    passengerPhone?: StringNullableFilter<"RideOrder"> | string | null
+    pickup?: StringFilter<"RideOrder"> | string
+    destination?: StringFilter<"RideOrder"> | string
+    carType?: StringFilter<"RideOrder"> | string
+    mode?: StringFilter<"RideOrder"> | string
+    scheduledAt?: DateTimeNullableFilter<"RideOrder"> | Date | string | null
+    status?: StringFilter<"RideOrder"> | string
+    driverId?: UuidNullableFilter<"RideOrder"> | string | null
+    fare?: IntNullableFilter<"RideOrder"> | number | null
+    distance?: DecimalNullableFilter<"RideOrder"> | Decimal | DecimalJsLike | number | string | null
+    rating?: IntNullableFilter<"RideOrder"> | number | null
+    ratingComment?: StringNullableFilter<"RideOrder"> | string | null
+    creTime?: DateTimeFilter<"RideOrder"> | Date | string
+    updTime?: DateTimeFilter<"RideOrder"> | Date | string
+    completedAt?: DateTimeNullableFilter<"RideOrder"> | Date | string | null
+    driver?: XOR<DriverNullableScalarRelationFilter, DriverWhereInput> | null
+  }, "id">
+
+  export type RideOrderOrderByWithAggregationInput = {
+    id?: SortOrder
+    passengerId?: SortOrder
+    passengerName?: SortOrder
+    passengerPhone?: SortOrderInput | SortOrder
+    pickup?: SortOrder
+    destination?: SortOrder
+    carType?: SortOrder
+    mode?: SortOrder
+    scheduledAt?: SortOrderInput | SortOrder
+    status?: SortOrder
+    driverId?: SortOrderInput | SortOrder
+    fare?: SortOrderInput | SortOrder
+    distance?: SortOrderInput | SortOrder
+    rating?: SortOrderInput | SortOrder
+    ratingComment?: SortOrderInput | SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    _count?: RideOrderCountOrderByAggregateInput
+    _avg?: RideOrderAvgOrderByAggregateInput
+    _max?: RideOrderMaxOrderByAggregateInput
+    _min?: RideOrderMinOrderByAggregateInput
+    _sum?: RideOrderSumOrderByAggregateInput
+  }
+
+  export type RideOrderScalarWhereWithAggregatesInput = {
+    AND?: RideOrderScalarWhereWithAggregatesInput | RideOrderScalarWhereWithAggregatesInput[]
+    OR?: RideOrderScalarWhereWithAggregatesInput[]
+    NOT?: RideOrderScalarWhereWithAggregatesInput | RideOrderScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"RideOrder"> | string
+    passengerId?: UuidWithAggregatesFilter<"RideOrder"> | string
+    passengerName?: StringWithAggregatesFilter<"RideOrder"> | string
+    passengerPhone?: StringNullableWithAggregatesFilter<"RideOrder"> | string | null
+    pickup?: StringWithAggregatesFilter<"RideOrder"> | string
+    destination?: StringWithAggregatesFilter<"RideOrder"> | string
+    carType?: StringWithAggregatesFilter<"RideOrder"> | string
+    mode?: StringWithAggregatesFilter<"RideOrder"> | string
+    scheduledAt?: DateTimeNullableWithAggregatesFilter<"RideOrder"> | Date | string | null
+    status?: StringWithAggregatesFilter<"RideOrder"> | string
+    driverId?: UuidNullableWithAggregatesFilter<"RideOrder"> | string | null
+    fare?: IntNullableWithAggregatesFilter<"RideOrder"> | number | null
+    distance?: DecimalNullableWithAggregatesFilter<"RideOrder"> | Decimal | DecimalJsLike | number | string | null
+    rating?: IntNullableWithAggregatesFilter<"RideOrder"> | number | null
+    ratingComment?: StringNullableWithAggregatesFilter<"RideOrder"> | string | null
+    creTime?: DateTimeWithAggregatesFilter<"RideOrder"> | Date | string
+    updTime?: DateTimeWithAggregatesFilter<"RideOrder"> | Date | string
+    completedAt?: DateTimeNullableWithAggregatesFilter<"RideOrder"> | Date | string | null
+  }
+
   export type RestaurantQueueWhereInput = {
     AND?: RestaurantQueueWhereInput | RestaurantQueueWhereInput[]
     OR?: RestaurantQueueWhereInput[]
@@ -38725,8 +44036,8 @@ export namespace Prisma {
     estimatedMinutes?: IntFilter<"RestaurantQueue"> | number
     avgServiceMinutes?: IntFilter<"RestaurantQueue"> | number
     isOpen?: BoolFilter<"RestaurantQueue"> | boolean
-    creTime?: DateTimeFilter<"RestaurantQueue"> | Date | string
     updTime?: DateTimeFilter<"RestaurantQueue"> | Date | string
+    creTime?: DateTimeFilter<"RestaurantQueue"> | Date | string
     entries?: QueueEntryListRelationFilter
   }
 
@@ -38740,8 +44051,8 @@ export namespace Prisma {
     estimatedMinutes?: SortOrder
     avgServiceMinutes?: SortOrder
     isOpen?: SortOrder
-    creTime?: SortOrder
     updTime?: SortOrder
+    creTime?: SortOrder
     entries?: QueueEntryOrderByRelationAggregateInput
   }
 
@@ -38758,8 +44069,8 @@ export namespace Prisma {
     estimatedMinutes?: IntFilter<"RestaurantQueue"> | number
     avgServiceMinutes?: IntFilter<"RestaurantQueue"> | number
     isOpen?: BoolFilter<"RestaurantQueue"> | boolean
-    creTime?: DateTimeFilter<"RestaurantQueue"> | Date | string
     updTime?: DateTimeFilter<"RestaurantQueue"> | Date | string
+    creTime?: DateTimeFilter<"RestaurantQueue"> | Date | string
     entries?: QueueEntryListRelationFilter
   }, "id" | "placeId">
 
@@ -38773,8 +44084,8 @@ export namespace Prisma {
     estimatedMinutes?: SortOrder
     avgServiceMinutes?: SortOrder
     isOpen?: SortOrder
-    creTime?: SortOrder
     updTime?: SortOrder
+    creTime?: SortOrder
     _count?: RestaurantQueueCountOrderByAggregateInput
     _avg?: RestaurantQueueAvgOrderByAggregateInput
     _max?: RestaurantQueueMaxOrderByAggregateInput
@@ -38795,8 +44106,8 @@ export namespace Prisma {
     estimatedMinutes?: IntWithAggregatesFilter<"RestaurantQueue"> | number
     avgServiceMinutes?: IntWithAggregatesFilter<"RestaurantQueue"> | number
     isOpen?: BoolWithAggregatesFilter<"RestaurantQueue"> | boolean
-    creTime?: DateTimeWithAggregatesFilter<"RestaurantQueue"> | Date | string
     updTime?: DateTimeWithAggregatesFilter<"RestaurantQueue"> | Date | string
+    creTime?: DateTimeWithAggregatesFilter<"RestaurantQueue"> | Date | string
   }
 
   export type QueueEntryWhereInput = {
@@ -38879,6 +44190,145 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"QueueEntry"> | string
     creTime?: DateTimeWithAggregatesFilter<"QueueEntry"> | Date | string
     updTime?: DateTimeWithAggregatesFilter<"QueueEntry"> | Date | string
+  }
+
+  export type ReservationWhereInput = {
+    AND?: ReservationWhereInput | ReservationWhereInput[]
+    OR?: ReservationWhereInput[]
+    NOT?: ReservationWhereInput | ReservationWhereInput[]
+    id?: IntFilter<"Reservation"> | number
+    placeId?: StringFilter<"Reservation"> | string
+    customerName?: StringFilter<"Reservation"> | string
+    customerPhone?: StringFilter<"Reservation"> | string
+    partySize?: IntFilter<"Reservation"> | number
+    date?: StringFilter<"Reservation"> | string
+    time?: StringFilter<"Reservation"> | string
+    status?: StringFilter<"Reservation"> | string
+    note?: StringNullableFilter<"Reservation"> | string | null
+    creTime?: DateTimeFilter<"Reservation"> | Date | string
+    updTime?: DateTimeFilter<"Reservation"> | Date | string
+  }
+
+  export type ReservationOrderByWithRelationInput = {
+    id?: SortOrder
+    placeId?: SortOrder
+    customerName?: SortOrder
+    customerPhone?: SortOrder
+    partySize?: SortOrder
+    date?: SortOrder
+    time?: SortOrder
+    status?: SortOrder
+    note?: SortOrderInput | SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+  }
+
+  export type ReservationWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: ReservationWhereInput | ReservationWhereInput[]
+    OR?: ReservationWhereInput[]
+    NOT?: ReservationWhereInput | ReservationWhereInput[]
+    placeId?: StringFilter<"Reservation"> | string
+    customerName?: StringFilter<"Reservation"> | string
+    customerPhone?: StringFilter<"Reservation"> | string
+    partySize?: IntFilter<"Reservation"> | number
+    date?: StringFilter<"Reservation"> | string
+    time?: StringFilter<"Reservation"> | string
+    status?: StringFilter<"Reservation"> | string
+    note?: StringNullableFilter<"Reservation"> | string | null
+    creTime?: DateTimeFilter<"Reservation"> | Date | string
+    updTime?: DateTimeFilter<"Reservation"> | Date | string
+  }, "id">
+
+  export type ReservationOrderByWithAggregationInput = {
+    id?: SortOrder
+    placeId?: SortOrder
+    customerName?: SortOrder
+    customerPhone?: SortOrder
+    partySize?: SortOrder
+    date?: SortOrder
+    time?: SortOrder
+    status?: SortOrder
+    note?: SortOrderInput | SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+    _count?: ReservationCountOrderByAggregateInput
+    _avg?: ReservationAvgOrderByAggregateInput
+    _max?: ReservationMaxOrderByAggregateInput
+    _min?: ReservationMinOrderByAggregateInput
+    _sum?: ReservationSumOrderByAggregateInput
+  }
+
+  export type ReservationScalarWhereWithAggregatesInput = {
+    AND?: ReservationScalarWhereWithAggregatesInput | ReservationScalarWhereWithAggregatesInput[]
+    OR?: ReservationScalarWhereWithAggregatesInput[]
+    NOT?: ReservationScalarWhereWithAggregatesInput | ReservationScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Reservation"> | number
+    placeId?: StringWithAggregatesFilter<"Reservation"> | string
+    customerName?: StringWithAggregatesFilter<"Reservation"> | string
+    customerPhone?: StringWithAggregatesFilter<"Reservation"> | string
+    partySize?: IntWithAggregatesFilter<"Reservation"> | number
+    date?: StringWithAggregatesFilter<"Reservation"> | string
+    time?: StringWithAggregatesFilter<"Reservation"> | string
+    status?: StringWithAggregatesFilter<"Reservation"> | string
+    note?: StringNullableWithAggregatesFilter<"Reservation"> | string | null
+    creTime?: DateTimeWithAggregatesFilter<"Reservation"> | Date | string
+    updTime?: DateTimeWithAggregatesFilter<"Reservation"> | Date | string
+  }
+
+  export type SlotCapacityWhereInput = {
+    AND?: SlotCapacityWhereInput | SlotCapacityWhereInput[]
+    OR?: SlotCapacityWhereInput[]
+    NOT?: SlotCapacityWhereInput | SlotCapacityWhereInput[]
+    id?: IntFilter<"SlotCapacity"> | number
+    placeId?: StringFilter<"SlotCapacity"> | string
+    time?: StringFilter<"SlotCapacity"> | string
+    totalTables?: IntFilter<"SlotCapacity"> | number
+    updTime?: DateTimeFilter<"SlotCapacity"> | Date | string
+  }
+
+  export type SlotCapacityOrderByWithRelationInput = {
+    id?: SortOrder
+    placeId?: SortOrder
+    time?: SortOrder
+    totalTables?: SortOrder
+    updTime?: SortOrder
+  }
+
+  export type SlotCapacityWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    placeId_time?: SlotCapacityPlaceIdTimeCompoundUniqueInput
+    AND?: SlotCapacityWhereInput | SlotCapacityWhereInput[]
+    OR?: SlotCapacityWhereInput[]
+    NOT?: SlotCapacityWhereInput | SlotCapacityWhereInput[]
+    placeId?: StringFilter<"SlotCapacity"> | string
+    time?: StringFilter<"SlotCapacity"> | string
+    totalTables?: IntFilter<"SlotCapacity"> | number
+    updTime?: DateTimeFilter<"SlotCapacity"> | Date | string
+  }, "id" | "placeId_time">
+
+  export type SlotCapacityOrderByWithAggregationInput = {
+    id?: SortOrder
+    placeId?: SortOrder
+    time?: SortOrder
+    totalTables?: SortOrder
+    updTime?: SortOrder
+    _count?: SlotCapacityCountOrderByAggregateInput
+    _avg?: SlotCapacityAvgOrderByAggregateInput
+    _max?: SlotCapacityMaxOrderByAggregateInput
+    _min?: SlotCapacityMinOrderByAggregateInput
+    _sum?: SlotCapacitySumOrderByAggregateInput
+  }
+
+  export type SlotCapacityScalarWhereWithAggregatesInput = {
+    AND?: SlotCapacityScalarWhereWithAggregatesInput | SlotCapacityScalarWhereWithAggregatesInput[]
+    OR?: SlotCapacityScalarWhereWithAggregatesInput[]
+    NOT?: SlotCapacityScalarWhereWithAggregatesInput | SlotCapacityScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"SlotCapacity"> | number
+    placeId?: StringWithAggregatesFilter<"SlotCapacity"> | string
+    time?: StringWithAggregatesFilter<"SlotCapacity"> | string
+    totalTables?: IntWithAggregatesFilter<"SlotCapacity"> | number
+    updTime?: DateTimeWithAggregatesFilter<"SlotCapacity"> | Date | string
   }
 
   export type CmsHomepageServiceVendorCreateInput = {
@@ -41592,7 +47042,7 @@ export namespace Prisma {
     status?: string
     registeredAt?: Date | string
     source?: string
-    special_needs?: string | null
+    specialNeeds?: string | null
     activity: CommunityActivityCreateNestedOneWithoutRegistrationsInput
   }
 
@@ -41605,7 +47055,7 @@ export namespace Prisma {
     status?: string
     registeredAt?: Date | string
     source?: string
-    special_needs?: string | null
+    specialNeeds?: string | null
   }
 
   export type ActivityRegistrationUpdateInput = {
@@ -41616,7 +47066,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     source?: StringFieldUpdateOperationsInput | string
-    special_needs?: NullableStringFieldUpdateOperationsInput | string | null
+    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
     activity?: CommunityActivityUpdateOneRequiredWithoutRegistrationsNestedInput
   }
 
@@ -41629,7 +47079,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     source?: StringFieldUpdateOperationsInput | string
-    special_needs?: NullableStringFieldUpdateOperationsInput | string | null
+    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ActivityRegistrationCreateManyInput = {
@@ -41641,7 +47091,7 @@ export namespace Prisma {
     status?: string
     registeredAt?: Date | string
     source?: string
-    special_needs?: string | null
+    specialNeeds?: string | null
   }
 
   export type ActivityRegistrationUpdateManyMutationInput = {
@@ -41652,7 +47102,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     source?: StringFieldUpdateOperationsInput | string
-    special_needs?: NullableStringFieldUpdateOperationsInput | string | null
+    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ActivityRegistrationUncheckedUpdateManyInput = {
@@ -41664,7 +47114,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     source?: StringFieldUpdateOperationsInput | string
-    special_needs?: NullableStringFieldUpdateOperationsInput | string | null
+    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CommunityQuestionCreateInput = {
@@ -41772,6 +47222,254 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DriverCreateInput = {
+    id?: string
+    name: string
+    phone: string
+    plateNumber: string
+    carModel: string
+    carType?: string
+    rating?: Decimal | DecimalJsLike | number | string
+    totalTrips?: number
+    status?: string
+    isDeleted?: boolean
+    creTime?: Date | string
+    rideOrders?: RideOrderCreateNestedManyWithoutDriverInput
+  }
+
+  export type DriverUncheckedCreateInput = {
+    id?: string
+    name: string
+    phone: string
+    plateNumber: string
+    carModel: string
+    carType?: string
+    rating?: Decimal | DecimalJsLike | number | string
+    totalTrips?: number
+    status?: string
+    isDeleted?: boolean
+    creTime?: Date | string
+    rideOrders?: RideOrderUncheckedCreateNestedManyWithoutDriverInput
+  }
+
+  export type DriverUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    plateNumber?: StringFieldUpdateOperationsInput | string
+    carModel?: StringFieldUpdateOperationsInput | string
+    carType?: StringFieldUpdateOperationsInput | string
+    rating?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalTrips?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    rideOrders?: RideOrderUpdateManyWithoutDriverNestedInput
+  }
+
+  export type DriverUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    plateNumber?: StringFieldUpdateOperationsInput | string
+    carModel?: StringFieldUpdateOperationsInput | string
+    carType?: StringFieldUpdateOperationsInput | string
+    rating?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalTrips?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    rideOrders?: RideOrderUncheckedUpdateManyWithoutDriverNestedInput
+  }
+
+  export type DriverCreateManyInput = {
+    id?: string
+    name: string
+    phone: string
+    plateNumber: string
+    carModel: string
+    carType?: string
+    rating?: Decimal | DecimalJsLike | number | string
+    totalTrips?: number
+    status?: string
+    isDeleted?: boolean
+    creTime?: Date | string
+  }
+
+  export type DriverUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    plateNumber?: StringFieldUpdateOperationsInput | string
+    carModel?: StringFieldUpdateOperationsInput | string
+    carType?: StringFieldUpdateOperationsInput | string
+    rating?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalTrips?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DriverUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    plateNumber?: StringFieldUpdateOperationsInput | string
+    carModel?: StringFieldUpdateOperationsInput | string
+    carType?: StringFieldUpdateOperationsInput | string
+    rating?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalTrips?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RideOrderCreateInput = {
+    id?: string
+    passengerId: string
+    passengerName: string
+    passengerPhone?: string | null
+    pickup: string
+    destination: string
+    carType?: string
+    mode?: string
+    scheduledAt?: Date | string | null
+    status?: string
+    fare?: number | null
+    distance?: Decimal | DecimalJsLike | number | string | null
+    rating?: number | null
+    ratingComment?: string | null
+    creTime?: Date | string
+    updTime?: Date | string
+    completedAt?: Date | string | null
+    driver?: DriverCreateNestedOneWithoutRideOrdersInput
+  }
+
+  export type RideOrderUncheckedCreateInput = {
+    id?: string
+    passengerId: string
+    passengerName: string
+    passengerPhone?: string | null
+    pickup: string
+    destination: string
+    carType?: string
+    mode?: string
+    scheduledAt?: Date | string | null
+    status?: string
+    driverId?: string | null
+    fare?: number | null
+    distance?: Decimal | DecimalJsLike | number | string | null
+    rating?: number | null
+    ratingComment?: string | null
+    creTime?: Date | string
+    updTime?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type RideOrderUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    passengerId?: StringFieldUpdateOperationsInput | string
+    passengerName?: StringFieldUpdateOperationsInput | string
+    passengerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    pickup?: StringFieldUpdateOperationsInput | string
+    destination?: StringFieldUpdateOperationsInput | string
+    carType?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    fare?: NullableIntFieldUpdateOperationsInput | number | null
+    distance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    ratingComment?: NullableStringFieldUpdateOperationsInput | string | null
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    driver?: DriverUpdateOneWithoutRideOrdersNestedInput
+  }
+
+  export type RideOrderUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    passengerId?: StringFieldUpdateOperationsInput | string
+    passengerName?: StringFieldUpdateOperationsInput | string
+    passengerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    pickup?: StringFieldUpdateOperationsInput | string
+    destination?: StringFieldUpdateOperationsInput | string
+    carType?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    driverId?: NullableStringFieldUpdateOperationsInput | string | null
+    fare?: NullableIntFieldUpdateOperationsInput | number | null
+    distance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    ratingComment?: NullableStringFieldUpdateOperationsInput | string | null
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type RideOrderCreateManyInput = {
+    id?: string
+    passengerId: string
+    passengerName: string
+    passengerPhone?: string | null
+    pickup: string
+    destination: string
+    carType?: string
+    mode?: string
+    scheduledAt?: Date | string | null
+    status?: string
+    driverId?: string | null
+    fare?: number | null
+    distance?: Decimal | DecimalJsLike | number | string | null
+    rating?: number | null
+    ratingComment?: string | null
+    creTime?: Date | string
+    updTime?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type RideOrderUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    passengerId?: StringFieldUpdateOperationsInput | string
+    passengerName?: StringFieldUpdateOperationsInput | string
+    passengerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    pickup?: StringFieldUpdateOperationsInput | string
+    destination?: StringFieldUpdateOperationsInput | string
+    carType?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    fare?: NullableIntFieldUpdateOperationsInput | number | null
+    distance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    ratingComment?: NullableStringFieldUpdateOperationsInput | string | null
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type RideOrderUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    passengerId?: StringFieldUpdateOperationsInput | string
+    passengerName?: StringFieldUpdateOperationsInput | string
+    passengerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    pickup?: StringFieldUpdateOperationsInput | string
+    destination?: StringFieldUpdateOperationsInput | string
+    carType?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    driverId?: NullableStringFieldUpdateOperationsInput | string | null
+    fare?: NullableIntFieldUpdateOperationsInput | number | null
+    distance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    ratingComment?: NullableStringFieldUpdateOperationsInput | string | null
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type RestaurantQueueCreateInput = {
     placeId: string
     name: string
@@ -41781,8 +47479,8 @@ export namespace Prisma {
     estimatedMinutes?: number
     avgServiceMinutes?: number
     isOpen?: boolean
-    creTime?: Date | string
     updTime?: Date | string
+    creTime?: Date | string
     entries?: QueueEntryCreateNestedManyWithoutQueueInput
   }
 
@@ -41796,8 +47494,8 @@ export namespace Prisma {
     estimatedMinutes?: number
     avgServiceMinutes?: number
     isOpen?: boolean
-    creTime?: Date | string
     updTime?: Date | string
+    creTime?: Date | string
     entries?: QueueEntryUncheckedCreateNestedManyWithoutQueueInput
   }
 
@@ -41810,8 +47508,8 @@ export namespace Prisma {
     estimatedMinutes?: IntFieldUpdateOperationsInput | number
     avgServiceMinutes?: IntFieldUpdateOperationsInput | number
     isOpen?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     entries?: QueueEntryUpdateManyWithoutQueueNestedInput
   }
 
@@ -41825,8 +47523,8 @@ export namespace Prisma {
     estimatedMinutes?: IntFieldUpdateOperationsInput | number
     avgServiceMinutes?: IntFieldUpdateOperationsInput | number
     isOpen?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     entries?: QueueEntryUncheckedUpdateManyWithoutQueueNestedInput
   }
 
@@ -41840,8 +47538,8 @@ export namespace Prisma {
     estimatedMinutes?: number
     avgServiceMinutes?: number
     isOpen?: boolean
-    creTime?: Date | string
     updTime?: Date | string
+    creTime?: Date | string
   }
 
   export type RestaurantQueueUpdateManyMutationInput = {
@@ -41853,8 +47551,8 @@ export namespace Prisma {
     estimatedMinutes?: IntFieldUpdateOperationsInput | number
     avgServiceMinutes?: IntFieldUpdateOperationsInput | number
     isOpen?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RestaurantQueueUncheckedUpdateManyInput = {
@@ -41867,13 +47565,13 @@ export namespace Prisma {
     estimatedMinutes?: IntFieldUpdateOperationsInput | number
     avgServiceMinutes?: IntFieldUpdateOperationsInput | number
     isOpen?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type QueueEntryCreateInput = {
     ticketNumber: number
-    partySize: number
+    partySize?: number
     customerName?: string | null
     customerPhone?: string | null
     note?: string | null
@@ -41887,7 +47585,7 @@ export namespace Prisma {
     id?: number
     queueId: number
     ticketNumber: number
-    partySize: number
+    partySize?: number
     customerName?: string | null
     customerPhone?: string | null
     note?: string | null
@@ -41925,7 +47623,7 @@ export namespace Prisma {
     id?: number
     queueId: number
     ticketNumber: number
-    partySize: number
+    partySize?: number
     customerName?: string | null
     customerPhone?: string | null
     note?: string | null
@@ -41955,6 +47653,154 @@ export namespace Prisma {
     note?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReservationCreateInput = {
+    placeId: string
+    customerName: string
+    customerPhone: string
+    partySize?: number
+    date: string
+    time: string
+    status?: string
+    note?: string | null
+    creTime?: Date | string
+    updTime?: Date | string
+  }
+
+  export type ReservationUncheckedCreateInput = {
+    id?: number
+    placeId: string
+    customerName: string
+    customerPhone: string
+    partySize?: number
+    date: string
+    time: string
+    status?: string
+    note?: string | null
+    creTime?: Date | string
+    updTime?: Date | string
+  }
+
+  export type ReservationUpdateInput = {
+    placeId?: StringFieldUpdateOperationsInput | string
+    customerName?: StringFieldUpdateOperationsInput | string
+    customerPhone?: StringFieldUpdateOperationsInput | string
+    partySize?: IntFieldUpdateOperationsInput | number
+    date?: StringFieldUpdateOperationsInput | string
+    time?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReservationUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    placeId?: StringFieldUpdateOperationsInput | string
+    customerName?: StringFieldUpdateOperationsInput | string
+    customerPhone?: StringFieldUpdateOperationsInput | string
+    partySize?: IntFieldUpdateOperationsInput | number
+    date?: StringFieldUpdateOperationsInput | string
+    time?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReservationCreateManyInput = {
+    id?: number
+    placeId: string
+    customerName: string
+    customerPhone: string
+    partySize?: number
+    date: string
+    time: string
+    status?: string
+    note?: string | null
+    creTime?: Date | string
+    updTime?: Date | string
+  }
+
+  export type ReservationUpdateManyMutationInput = {
+    placeId?: StringFieldUpdateOperationsInput | string
+    customerName?: StringFieldUpdateOperationsInput | string
+    customerPhone?: StringFieldUpdateOperationsInput | string
+    partySize?: IntFieldUpdateOperationsInput | number
+    date?: StringFieldUpdateOperationsInput | string
+    time?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReservationUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    placeId?: StringFieldUpdateOperationsInput | string
+    customerName?: StringFieldUpdateOperationsInput | string
+    customerPhone?: StringFieldUpdateOperationsInput | string
+    partySize?: IntFieldUpdateOperationsInput | number
+    date?: StringFieldUpdateOperationsInput | string
+    time?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SlotCapacityCreateInput = {
+    placeId: string
+    time: string
+    totalTables?: number
+    updTime?: Date | string
+  }
+
+  export type SlotCapacityUncheckedCreateInput = {
+    id?: number
+    placeId: string
+    time: string
+    totalTables?: number
+    updTime?: Date | string
+  }
+
+  export type SlotCapacityUpdateInput = {
+    placeId?: StringFieldUpdateOperationsInput | string
+    time?: StringFieldUpdateOperationsInput | string
+    totalTables?: IntFieldUpdateOperationsInput | number
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SlotCapacityUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    placeId?: StringFieldUpdateOperationsInput | string
+    time?: StringFieldUpdateOperationsInput | string
+    totalTables?: IntFieldUpdateOperationsInput | number
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SlotCapacityCreateManyInput = {
+    id?: number
+    placeId: string
+    time: string
+    totalTables?: number
+    updTime?: Date | string
+  }
+
+  export type SlotCapacityUpdateManyMutationInput = {
+    placeId?: StringFieldUpdateOperationsInput | string
+    time?: StringFieldUpdateOperationsInput | string
+    totalTables?: IntFieldUpdateOperationsInput | number
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SlotCapacityUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    placeId?: StringFieldUpdateOperationsInput | string
+    time?: StringFieldUpdateOperationsInput | string
+    totalTables?: IntFieldUpdateOperationsInput | number
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -43960,7 +49806,7 @@ export namespace Prisma {
     status?: SortOrder
     registeredAt?: SortOrder
     source?: SortOrder
-    special_needs?: SortOrder
+    specialNeeds?: SortOrder
   }
 
   export type ActivityRegistrationMaxOrderByAggregateInput = {
@@ -43972,7 +49818,7 @@ export namespace Prisma {
     status?: SortOrder
     registeredAt?: SortOrder
     source?: SortOrder
-    special_needs?: SortOrder
+    specialNeeds?: SortOrder
   }
 
   export type ActivityRegistrationMinOrderByAggregateInput = {
@@ -43984,7 +49830,7 @@ export namespace Prisma {
     status?: SortOrder
     registeredAt?: SortOrder
     source?: SortOrder
-    special_needs?: SortOrder
+    specialNeeds?: SortOrder
   }
 
   export type CommunityQuestionCountOrderByAggregateInput = {
@@ -44032,6 +49878,175 @@ export namespace Prisma {
     creTime?: SortOrder
   }
 
+  export type RideOrderListRelationFilter = {
+    every?: RideOrderWhereInput
+    some?: RideOrderWhereInput
+    none?: RideOrderWhereInput
+  }
+
+  export type RideOrderOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DriverCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    plateNumber?: SortOrder
+    carModel?: SortOrder
+    carType?: SortOrder
+    rating?: SortOrder
+    totalTrips?: SortOrder
+    status?: SortOrder
+    isDeleted?: SortOrder
+    creTime?: SortOrder
+  }
+
+  export type DriverAvgOrderByAggregateInput = {
+    rating?: SortOrder
+    totalTrips?: SortOrder
+  }
+
+  export type DriverMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    plateNumber?: SortOrder
+    carModel?: SortOrder
+    carType?: SortOrder
+    rating?: SortOrder
+    totalTrips?: SortOrder
+    status?: SortOrder
+    isDeleted?: SortOrder
+    creTime?: SortOrder
+  }
+
+  export type DriverMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    plateNumber?: SortOrder
+    carModel?: SortOrder
+    carType?: SortOrder
+    rating?: SortOrder
+    totalTrips?: SortOrder
+    status?: SortOrder
+    isDeleted?: SortOrder
+    creTime?: SortOrder
+  }
+
+  export type DriverSumOrderByAggregateInput = {
+    rating?: SortOrder
+    totalTrips?: SortOrder
+  }
+
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type DriverNullableScalarRelationFilter = {
+    is?: DriverWhereInput | null
+    isNot?: DriverWhereInput | null
+  }
+
+  export type RideOrderCountOrderByAggregateInput = {
+    id?: SortOrder
+    passengerId?: SortOrder
+    passengerName?: SortOrder
+    passengerPhone?: SortOrder
+    pickup?: SortOrder
+    destination?: SortOrder
+    carType?: SortOrder
+    mode?: SortOrder
+    scheduledAt?: SortOrder
+    status?: SortOrder
+    driverId?: SortOrder
+    fare?: SortOrder
+    distance?: SortOrder
+    rating?: SortOrder
+    ratingComment?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type RideOrderAvgOrderByAggregateInput = {
+    fare?: SortOrder
+    distance?: SortOrder
+    rating?: SortOrder
+  }
+
+  export type RideOrderMaxOrderByAggregateInput = {
+    id?: SortOrder
+    passengerId?: SortOrder
+    passengerName?: SortOrder
+    passengerPhone?: SortOrder
+    pickup?: SortOrder
+    destination?: SortOrder
+    carType?: SortOrder
+    mode?: SortOrder
+    scheduledAt?: SortOrder
+    status?: SortOrder
+    driverId?: SortOrder
+    fare?: SortOrder
+    distance?: SortOrder
+    rating?: SortOrder
+    ratingComment?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type RideOrderMinOrderByAggregateInput = {
+    id?: SortOrder
+    passengerId?: SortOrder
+    passengerName?: SortOrder
+    passengerPhone?: SortOrder
+    pickup?: SortOrder
+    destination?: SortOrder
+    carType?: SortOrder
+    mode?: SortOrder
+    scheduledAt?: SortOrder
+    status?: SortOrder
+    driverId?: SortOrder
+    fare?: SortOrder
+    distance?: SortOrder
+    rating?: SortOrder
+    ratingComment?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type RideOrderSumOrderByAggregateInput = {
+    fare?: SortOrder
+    distance?: SortOrder
+    rating?: SortOrder
+  }
+
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
   export type QueueEntryListRelationFilter = {
     every?: QueueEntryWhereInput
     some?: QueueEntryWhereInput
@@ -44052,8 +50067,8 @@ export namespace Prisma {
     estimatedMinutes?: SortOrder
     avgServiceMinutes?: SortOrder
     isOpen?: SortOrder
-    creTime?: SortOrder
     updTime?: SortOrder
+    creTime?: SortOrder
   }
 
   export type RestaurantQueueAvgOrderByAggregateInput = {
@@ -44075,8 +50090,8 @@ export namespace Prisma {
     estimatedMinutes?: SortOrder
     avgServiceMinutes?: SortOrder
     isOpen?: SortOrder
-    creTime?: SortOrder
     updTime?: SortOrder
+    creTime?: SortOrder
   }
 
   export type RestaurantQueueMinOrderByAggregateInput = {
@@ -44089,8 +50104,8 @@ export namespace Prisma {
     estimatedMinutes?: SortOrder
     avgServiceMinutes?: SortOrder
     isOpen?: SortOrder
-    creTime?: SortOrder
     updTime?: SortOrder
+    creTime?: SortOrder
   }
 
   export type RestaurantQueueSumOrderByAggregateInput = {
@@ -44158,6 +50173,97 @@ export namespace Prisma {
     queueId?: SortOrder
     ticketNumber?: SortOrder
     partySize?: SortOrder
+  }
+
+  export type ReservationCountOrderByAggregateInput = {
+    id?: SortOrder
+    placeId?: SortOrder
+    customerName?: SortOrder
+    customerPhone?: SortOrder
+    partySize?: SortOrder
+    date?: SortOrder
+    time?: SortOrder
+    status?: SortOrder
+    note?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+  }
+
+  export type ReservationAvgOrderByAggregateInput = {
+    id?: SortOrder
+    partySize?: SortOrder
+  }
+
+  export type ReservationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    placeId?: SortOrder
+    customerName?: SortOrder
+    customerPhone?: SortOrder
+    partySize?: SortOrder
+    date?: SortOrder
+    time?: SortOrder
+    status?: SortOrder
+    note?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+  }
+
+  export type ReservationMinOrderByAggregateInput = {
+    id?: SortOrder
+    placeId?: SortOrder
+    customerName?: SortOrder
+    customerPhone?: SortOrder
+    partySize?: SortOrder
+    date?: SortOrder
+    time?: SortOrder
+    status?: SortOrder
+    note?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+  }
+
+  export type ReservationSumOrderByAggregateInput = {
+    id?: SortOrder
+    partySize?: SortOrder
+  }
+
+  export type SlotCapacityPlaceIdTimeCompoundUniqueInput = {
+    placeId: string
+    time: string
+  }
+
+  export type SlotCapacityCountOrderByAggregateInput = {
+    id?: SortOrder
+    placeId?: SortOrder
+    time?: SortOrder
+    totalTables?: SortOrder
+    updTime?: SortOrder
+  }
+
+  export type SlotCapacityAvgOrderByAggregateInput = {
+    id?: SortOrder
+    totalTables?: SortOrder
+  }
+
+  export type SlotCapacityMaxOrderByAggregateInput = {
+    id?: SortOrder
+    placeId?: SortOrder
+    time?: SortOrder
+    totalTables?: SortOrder
+    updTime?: SortOrder
+  }
+
+  export type SlotCapacityMinOrderByAggregateInput = {
+    id?: SortOrder
+    placeId?: SortOrder
+    time?: SortOrder
+    totalTables?: SortOrder
+    updTime?: SortOrder
+  }
+
+  export type SlotCapacitySumOrderByAggregateInput = {
+    id?: SortOrder
+    totalTables?: SortOrder
   }
 
   export type CmsHomepageServiceCreateNestedManyWithoutVendorInput = {
@@ -45465,6 +51571,72 @@ export namespace Prisma {
     update?: XOR<XOR<CommunityActivityUpdateToOneWithWhereWithoutRegistrationsInput, CommunityActivityUpdateWithoutRegistrationsInput>, CommunityActivityUncheckedUpdateWithoutRegistrationsInput>
   }
 
+  export type RideOrderCreateNestedManyWithoutDriverInput = {
+    create?: XOR<RideOrderCreateWithoutDriverInput, RideOrderUncheckedCreateWithoutDriverInput> | RideOrderCreateWithoutDriverInput[] | RideOrderUncheckedCreateWithoutDriverInput[]
+    connectOrCreate?: RideOrderCreateOrConnectWithoutDriverInput | RideOrderCreateOrConnectWithoutDriverInput[]
+    createMany?: RideOrderCreateManyDriverInputEnvelope
+    connect?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
+  }
+
+  export type RideOrderUncheckedCreateNestedManyWithoutDriverInput = {
+    create?: XOR<RideOrderCreateWithoutDriverInput, RideOrderUncheckedCreateWithoutDriverInput> | RideOrderCreateWithoutDriverInput[] | RideOrderUncheckedCreateWithoutDriverInput[]
+    connectOrCreate?: RideOrderCreateOrConnectWithoutDriverInput | RideOrderCreateOrConnectWithoutDriverInput[]
+    createMany?: RideOrderCreateManyDriverInputEnvelope
+    connect?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
+  }
+
+  export type RideOrderUpdateManyWithoutDriverNestedInput = {
+    create?: XOR<RideOrderCreateWithoutDriverInput, RideOrderUncheckedCreateWithoutDriverInput> | RideOrderCreateWithoutDriverInput[] | RideOrderUncheckedCreateWithoutDriverInput[]
+    connectOrCreate?: RideOrderCreateOrConnectWithoutDriverInput | RideOrderCreateOrConnectWithoutDriverInput[]
+    upsert?: RideOrderUpsertWithWhereUniqueWithoutDriverInput | RideOrderUpsertWithWhereUniqueWithoutDriverInput[]
+    createMany?: RideOrderCreateManyDriverInputEnvelope
+    set?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
+    disconnect?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
+    delete?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
+    connect?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
+    update?: RideOrderUpdateWithWhereUniqueWithoutDriverInput | RideOrderUpdateWithWhereUniqueWithoutDriverInput[]
+    updateMany?: RideOrderUpdateManyWithWhereWithoutDriverInput | RideOrderUpdateManyWithWhereWithoutDriverInput[]
+    deleteMany?: RideOrderScalarWhereInput | RideOrderScalarWhereInput[]
+  }
+
+  export type RideOrderUncheckedUpdateManyWithoutDriverNestedInput = {
+    create?: XOR<RideOrderCreateWithoutDriverInput, RideOrderUncheckedCreateWithoutDriverInput> | RideOrderCreateWithoutDriverInput[] | RideOrderUncheckedCreateWithoutDriverInput[]
+    connectOrCreate?: RideOrderCreateOrConnectWithoutDriverInput | RideOrderCreateOrConnectWithoutDriverInput[]
+    upsert?: RideOrderUpsertWithWhereUniqueWithoutDriverInput | RideOrderUpsertWithWhereUniqueWithoutDriverInput[]
+    createMany?: RideOrderCreateManyDriverInputEnvelope
+    set?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
+    disconnect?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
+    delete?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
+    connect?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
+    update?: RideOrderUpdateWithWhereUniqueWithoutDriverInput | RideOrderUpdateWithWhereUniqueWithoutDriverInput[]
+    updateMany?: RideOrderUpdateManyWithWhereWithoutDriverInput | RideOrderUpdateManyWithWhereWithoutDriverInput[]
+    deleteMany?: RideOrderScalarWhereInput | RideOrderScalarWhereInput[]
+  }
+
+  export type DriverCreateNestedOneWithoutRideOrdersInput = {
+    create?: XOR<DriverCreateWithoutRideOrdersInput, DriverUncheckedCreateWithoutRideOrdersInput>
+    connectOrCreate?: DriverCreateOrConnectWithoutRideOrdersInput
+    connect?: DriverWhereUniqueInput
+  }
+
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type DriverUpdateOneWithoutRideOrdersNestedInput = {
+    create?: XOR<DriverCreateWithoutRideOrdersInput, DriverUncheckedCreateWithoutRideOrdersInput>
+    connectOrCreate?: DriverCreateOrConnectWithoutRideOrdersInput
+    upsert?: DriverUpsertWithoutRideOrdersInput
+    disconnect?: DriverWhereInput | boolean
+    delete?: DriverWhereInput | boolean
+    connect?: DriverWhereUniqueInput
+    update?: XOR<XOR<DriverUpdateToOneWithWhereWithoutRideOrdersInput, DriverUpdateWithoutRideOrdersInput>, DriverUncheckedUpdateWithoutRideOrdersInput>
+  }
+
   export type QueueEntryCreateNestedManyWithoutQueueInput = {
     create?: XOR<QueueEntryCreateWithoutQueueInput, QueueEntryUncheckedCreateWithoutQueueInput> | QueueEntryCreateWithoutQueueInput[] | QueueEntryUncheckedCreateWithoutQueueInput[]
     connectOrCreate?: QueueEntryCreateOrConnectWithoutQueueInput | QueueEntryCreateOrConnectWithoutQueueInput[]
@@ -45887,6 +52059,33 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type CmsHomepageServiceCreateWithoutVendorInput = {
@@ -49127,7 +55326,7 @@ export namespace Prisma {
     status?: string
     registeredAt?: Date | string
     source?: string
-    special_needs?: string | null
+    specialNeeds?: string | null
   }
 
   export type ActivityRegistrationUncheckedCreateWithoutActivityInput = {
@@ -49138,7 +55337,7 @@ export namespace Prisma {
     status?: string
     registeredAt?: Date | string
     source?: string
-    special_needs?: string | null
+    specialNeeds?: string | null
   }
 
   export type ActivityRegistrationCreateOrConnectWithoutActivityInput = {
@@ -49179,7 +55378,7 @@ export namespace Prisma {
     status?: StringFilter<"ActivityRegistration"> | string
     registeredAt?: DateTimeFilter<"ActivityRegistration"> | Date | string
     source?: StringFilter<"ActivityRegistration"> | string
-    special_needs?: StringNullableFilter<"ActivityRegistration"> | string | null
+    specialNeeds?: StringNullableFilter<"ActivityRegistration"> | string | null
   }
 
   export type CommunityActivityCreateWithoutRegistrationsInput = {
@@ -49282,9 +55481,171 @@ export namespace Prisma {
     volunteersNeeded?: IntFieldUpdateOperationsInput | number
   }
 
+  export type RideOrderCreateWithoutDriverInput = {
+    id?: string
+    passengerId: string
+    passengerName: string
+    passengerPhone?: string | null
+    pickup: string
+    destination: string
+    carType?: string
+    mode?: string
+    scheduledAt?: Date | string | null
+    status?: string
+    fare?: number | null
+    distance?: Decimal | DecimalJsLike | number | string | null
+    rating?: number | null
+    ratingComment?: string | null
+    creTime?: Date | string
+    updTime?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type RideOrderUncheckedCreateWithoutDriverInput = {
+    id?: string
+    passengerId: string
+    passengerName: string
+    passengerPhone?: string | null
+    pickup: string
+    destination: string
+    carType?: string
+    mode?: string
+    scheduledAt?: Date | string | null
+    status?: string
+    fare?: number | null
+    distance?: Decimal | DecimalJsLike | number | string | null
+    rating?: number | null
+    ratingComment?: string | null
+    creTime?: Date | string
+    updTime?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type RideOrderCreateOrConnectWithoutDriverInput = {
+    where: RideOrderWhereUniqueInput
+    create: XOR<RideOrderCreateWithoutDriverInput, RideOrderUncheckedCreateWithoutDriverInput>
+  }
+
+  export type RideOrderCreateManyDriverInputEnvelope = {
+    data: RideOrderCreateManyDriverInput | RideOrderCreateManyDriverInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RideOrderUpsertWithWhereUniqueWithoutDriverInput = {
+    where: RideOrderWhereUniqueInput
+    update: XOR<RideOrderUpdateWithoutDriverInput, RideOrderUncheckedUpdateWithoutDriverInput>
+    create: XOR<RideOrderCreateWithoutDriverInput, RideOrderUncheckedCreateWithoutDriverInput>
+  }
+
+  export type RideOrderUpdateWithWhereUniqueWithoutDriverInput = {
+    where: RideOrderWhereUniqueInput
+    data: XOR<RideOrderUpdateWithoutDriverInput, RideOrderUncheckedUpdateWithoutDriverInput>
+  }
+
+  export type RideOrderUpdateManyWithWhereWithoutDriverInput = {
+    where: RideOrderScalarWhereInput
+    data: XOR<RideOrderUpdateManyMutationInput, RideOrderUncheckedUpdateManyWithoutDriverInput>
+  }
+
+  export type RideOrderScalarWhereInput = {
+    AND?: RideOrderScalarWhereInput | RideOrderScalarWhereInput[]
+    OR?: RideOrderScalarWhereInput[]
+    NOT?: RideOrderScalarWhereInput | RideOrderScalarWhereInput[]
+    id?: UuidFilter<"RideOrder"> | string
+    passengerId?: UuidFilter<"RideOrder"> | string
+    passengerName?: StringFilter<"RideOrder"> | string
+    passengerPhone?: StringNullableFilter<"RideOrder"> | string | null
+    pickup?: StringFilter<"RideOrder"> | string
+    destination?: StringFilter<"RideOrder"> | string
+    carType?: StringFilter<"RideOrder"> | string
+    mode?: StringFilter<"RideOrder"> | string
+    scheduledAt?: DateTimeNullableFilter<"RideOrder"> | Date | string | null
+    status?: StringFilter<"RideOrder"> | string
+    driverId?: UuidNullableFilter<"RideOrder"> | string | null
+    fare?: IntNullableFilter<"RideOrder"> | number | null
+    distance?: DecimalNullableFilter<"RideOrder"> | Decimal | DecimalJsLike | number | string | null
+    rating?: IntNullableFilter<"RideOrder"> | number | null
+    ratingComment?: StringNullableFilter<"RideOrder"> | string | null
+    creTime?: DateTimeFilter<"RideOrder"> | Date | string
+    updTime?: DateTimeFilter<"RideOrder"> | Date | string
+    completedAt?: DateTimeNullableFilter<"RideOrder"> | Date | string | null
+  }
+
+  export type DriverCreateWithoutRideOrdersInput = {
+    id?: string
+    name: string
+    phone: string
+    plateNumber: string
+    carModel: string
+    carType?: string
+    rating?: Decimal | DecimalJsLike | number | string
+    totalTrips?: number
+    status?: string
+    isDeleted?: boolean
+    creTime?: Date | string
+  }
+
+  export type DriverUncheckedCreateWithoutRideOrdersInput = {
+    id?: string
+    name: string
+    phone: string
+    plateNumber: string
+    carModel: string
+    carType?: string
+    rating?: Decimal | DecimalJsLike | number | string
+    totalTrips?: number
+    status?: string
+    isDeleted?: boolean
+    creTime?: Date | string
+  }
+
+  export type DriverCreateOrConnectWithoutRideOrdersInput = {
+    where: DriverWhereUniqueInput
+    create: XOR<DriverCreateWithoutRideOrdersInput, DriverUncheckedCreateWithoutRideOrdersInput>
+  }
+
+  export type DriverUpsertWithoutRideOrdersInput = {
+    update: XOR<DriverUpdateWithoutRideOrdersInput, DriverUncheckedUpdateWithoutRideOrdersInput>
+    create: XOR<DriverCreateWithoutRideOrdersInput, DriverUncheckedCreateWithoutRideOrdersInput>
+    where?: DriverWhereInput
+  }
+
+  export type DriverUpdateToOneWithWhereWithoutRideOrdersInput = {
+    where?: DriverWhereInput
+    data: XOR<DriverUpdateWithoutRideOrdersInput, DriverUncheckedUpdateWithoutRideOrdersInput>
+  }
+
+  export type DriverUpdateWithoutRideOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    plateNumber?: StringFieldUpdateOperationsInput | string
+    carModel?: StringFieldUpdateOperationsInput | string
+    carType?: StringFieldUpdateOperationsInput | string
+    rating?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalTrips?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DriverUncheckedUpdateWithoutRideOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    plateNumber?: StringFieldUpdateOperationsInput | string
+    carModel?: StringFieldUpdateOperationsInput | string
+    carType?: StringFieldUpdateOperationsInput | string
+    rating?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalTrips?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type QueueEntryCreateWithoutQueueInput = {
     ticketNumber: number
-    partySize: number
+    partySize?: number
     customerName?: string | null
     customerPhone?: string | null
     note?: string | null
@@ -49296,7 +55657,7 @@ export namespace Prisma {
   export type QueueEntryUncheckedCreateWithoutQueueInput = {
     id?: number
     ticketNumber: number
-    partySize: number
+    partySize?: number
     customerName?: string | null
     customerPhone?: string | null
     note?: string | null
@@ -49356,8 +55717,8 @@ export namespace Prisma {
     estimatedMinutes?: number
     avgServiceMinutes?: number
     isOpen?: boolean
-    creTime?: Date | string
     updTime?: Date | string
+    creTime?: Date | string
   }
 
   export type RestaurantQueueUncheckedCreateWithoutEntriesInput = {
@@ -49370,8 +55731,8 @@ export namespace Prisma {
     estimatedMinutes?: number
     avgServiceMinutes?: number
     isOpen?: boolean
-    creTime?: Date | string
     updTime?: Date | string
+    creTime?: Date | string
   }
 
   export type RestaurantQueueCreateOrConnectWithoutEntriesInput = {
@@ -49399,8 +55760,8 @@ export namespace Prisma {
     estimatedMinutes?: IntFieldUpdateOperationsInput | number
     avgServiceMinutes?: IntFieldUpdateOperationsInput | number
     isOpen?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RestaurantQueueUncheckedUpdateWithoutEntriesInput = {
@@ -49413,8 +55774,8 @@ export namespace Prisma {
     estimatedMinutes?: IntFieldUpdateOperationsInput | number
     avgServiceMinutes?: IntFieldUpdateOperationsInput | number
     isOpen?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CmsHomepageServiceCreateManyVendorInput = {
@@ -50731,7 +57092,7 @@ export namespace Prisma {
     status?: string
     registeredAt?: Date | string
     source?: string
-    special_needs?: string | null
+    specialNeeds?: string | null
   }
 
   export type ActivityRegistrationUpdateWithoutActivityInput = {
@@ -50742,7 +57103,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     source?: StringFieldUpdateOperationsInput | string
-    special_needs?: NullableStringFieldUpdateOperationsInput | string | null
+    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ActivityRegistrationUncheckedUpdateWithoutActivityInput = {
@@ -50753,7 +57114,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     source?: StringFieldUpdateOperationsInput | string
-    special_needs?: NullableStringFieldUpdateOperationsInput | string | null
+    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ActivityRegistrationUncheckedUpdateManyWithoutActivityInput = {
@@ -50764,13 +57125,93 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     source?: StringFieldUpdateOperationsInput | string
-    special_needs?: NullableStringFieldUpdateOperationsInput | string | null
+    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RideOrderCreateManyDriverInput = {
+    id?: string
+    passengerId: string
+    passengerName: string
+    passengerPhone?: string | null
+    pickup: string
+    destination: string
+    carType?: string
+    mode?: string
+    scheduledAt?: Date | string | null
+    status?: string
+    fare?: number | null
+    distance?: Decimal | DecimalJsLike | number | string | null
+    rating?: number | null
+    ratingComment?: string | null
+    creTime?: Date | string
+    updTime?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type RideOrderUpdateWithoutDriverInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    passengerId?: StringFieldUpdateOperationsInput | string
+    passengerName?: StringFieldUpdateOperationsInput | string
+    passengerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    pickup?: StringFieldUpdateOperationsInput | string
+    destination?: StringFieldUpdateOperationsInput | string
+    carType?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    fare?: NullableIntFieldUpdateOperationsInput | number | null
+    distance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    ratingComment?: NullableStringFieldUpdateOperationsInput | string | null
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type RideOrderUncheckedUpdateWithoutDriverInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    passengerId?: StringFieldUpdateOperationsInput | string
+    passengerName?: StringFieldUpdateOperationsInput | string
+    passengerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    pickup?: StringFieldUpdateOperationsInput | string
+    destination?: StringFieldUpdateOperationsInput | string
+    carType?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    fare?: NullableIntFieldUpdateOperationsInput | number | null
+    distance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    ratingComment?: NullableStringFieldUpdateOperationsInput | string | null
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type RideOrderUncheckedUpdateManyWithoutDriverInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    passengerId?: StringFieldUpdateOperationsInput | string
+    passengerName?: StringFieldUpdateOperationsInput | string
+    passengerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    pickup?: StringFieldUpdateOperationsInput | string
+    destination?: StringFieldUpdateOperationsInput | string
+    carType?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    fare?: NullableIntFieldUpdateOperationsInput | number | null
+    distance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    ratingComment?: NullableStringFieldUpdateOperationsInput | string | null
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type QueueEntryCreateManyQueueInput = {
     id?: number
     ticketNumber: number
-    partySize: number
+    partySize?: number
     customerName?: string | null
     customerPhone?: string | null
     note?: string | null

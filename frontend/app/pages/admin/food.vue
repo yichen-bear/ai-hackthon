@@ -10,6 +10,7 @@ interface TimeSlot {
   id: string
   time: string
   remainingTables: number
+  totalTables: number
   capacity: number
   status: 'open' | 'full' | 'low'
 }
@@ -131,6 +132,7 @@ async function callNextCustomer() {
 // 進入頁面時載入即時資料
 onMounted(() => {
   fetchSeatDetail()
+  fetchTimeSlots()
 })
 
 // ─── 日曆與時段管理 ───
@@ -162,25 +164,54 @@ const selectedDateStatus = computed(() => {
 
 function prevDate() {
   selectedDateOffset.value--
+  expandedSlot.value = null
+  fetchTimeSlots()
 }
 
 function nextDate() {
   selectedDateOffset.value++
+  expandedSlot.value = null
+  fetchTimeSlots()
 }
 
 // Mock time slots for the selected date
-const timeSlots = ref<TimeSlot[]>([
-  { id: 'ts-1', time: '18:00', remainingTables: 2, capacity: 4, status: 'open' },
-  { id: 'ts-2', time: '18:30', remainingTables: 0, capacity: 0, status: 'full' },
-  { id: 'ts-3', time: '19:00', remainingTables: 4, capacity: 8, status: 'open' },
-  { id: 'ts-4', time: '19:30', remainingTables: 1, capacity: 2, status: 'low' },
-])
+const timeSlots = ref<TimeSlot[]>([])
+const slotsLoading = ref(false)
 
-function closeSlot(slot: TimeSlot) {
-  slot.remainingTables = 0
-  slot.capacity = 0
-  slot.status = 'full'
-  showToast(`🔴 已關閉 ${slot.time} 時段`)
+async function fetchTimeSlots() {
+  slotsLoading.value = true
+  try {
+    const dateStr = selectedDate.value.toISOString().slice(0, 10)
+    const res = await $fetch<{ success: boolean; data: { slots: { time: string; remainingTables: number; totalTables: number; capacity: number; status: string; bookedCount: number }[] } }>(`http://localhost:3001/api/food-reservations/slots/linked_restaurant_01?date=${dateStr}`)
+    if (res.success) {
+      timeSlots.value = res.data.slots.map((s, idx) => ({
+        id: `ts-${idx}`,
+        time: s.time,
+        remainingTables: s.remainingTables,
+        totalTables: s.totalTables || 4,
+        capacity: s.capacity,
+        status: s.status as TimeSlot['status'],
+      }))
+    }
+  } catch {
+    // Fallback to empty
+    timeSlots.value = []
+  } finally {
+    slotsLoading.value = false
+  }
+}
+
+async function closeSlot(slot: TimeSlot) {
+  try {
+    await $fetch(`http://localhost:3001/api/food-reservations/slots/linked_restaurant_01`, {
+      method: 'PUT',
+      body: { time: slot.time, totalTables: 0 },
+    })
+    showToast(`🔴 已關閉 ${slot.time} 時段`)
+    await fetchTimeSlots()
+  } catch {
+    showToast('❌ 關閉失敗')
+  }
 }
 
 function addTable(slot: TimeSlot) {
@@ -192,13 +223,56 @@ function addTable(slot: TimeSlot) {
   showToast(`➕ ${slot.time} 時段已加開 1 桌`)
 }
 
-function editSlotTables(slot: TimeSlot) {
-  // Simplified: toggle between adding/removing a table
-  if (slot.remainingTables > 0) {
-    slot.remainingTables++
-    slot.capacity += 4
+const editingSlotTime = ref<string | null>(null)
+const editingSlotValue = ref(4)
+
+function startEditSlot(slot: TimeSlot) {
+  editingSlotTime.value = slot.time
+  editingSlotValue.value = slot.totalTables
+}
+
+async function saveSlotTables(slot: TimeSlot) {
+  const newTotal = Math.max(0, editingSlotValue.value)
+  try {
+    await $fetch(`http://localhost:3001/api/food-reservations/slots/linked_restaurant_01`, {
+      method: 'PUT',
+      body: { time: slot.time, totalTables: newTotal },
+    })
+    editingSlotTime.value = null
+    showToast(`✅ ${slot.time} 時段已更新為 ${newTotal} 桌`)
+    await fetchTimeSlots()
+  } catch {
+    showToast('❌ 更新失敗')
   }
-  showToast(`✏️ 已修改 ${slot.time} 時段桌數`)
+}
+
+function cancelEditSlot() {
+  editingSlotTime.value = null
+}
+
+// ─── 訂位詳情 ───
+const expandedSlot = ref<string | null>(null)
+const slotReservations = ref<{ id: number; customerName: string; customerPhone: string; partySize: number; date: string; time: string; note: string | null }[]>([])
+const slotResLoading = ref(false)
+
+async function toggleSlotDetail(slotTime: string) {
+  if (expandedSlot.value === slotTime) {
+    expandedSlot.value = null
+    return
+  }
+  expandedSlot.value = slotTime
+  slotResLoading.value = true
+  try {
+    const dateStr = selectedDate.value.toISOString().slice(0, 10)
+    const res = await $fetch<{ success: boolean; data: { bySlot: Record<string, any[]> } }>(`http://localhost:3001/api/food-reservations/linked_restaurant_01?date=${dateStr}`)
+    if (res.success) {
+      slotReservations.value = res.data.bySlot[slotTime] || []
+    }
+  } catch {
+    slotReservations.value = []
+  } finally {
+    slotResLoading.value = false
+  }
 }
 
 function getSlotStatusLabel(status: TimeSlot['status']) {
@@ -550,29 +624,74 @@ function completeOrder(order: TakeoutOrder) {
                   <span v-else class="font-bold text-red-500">剩餘 0 桌</span>
                 </div>
 
-                <!-- 操作按鈕 -->
-                <div class="flex gap-2 flex-wrap">
-                  <button
-                    v-if="slot.status !== 'full'"
-                    class="px-3 py-1.5 rounded-lg text-xs font-bold bg-red-50 text-red-600 border border-red-200 cursor-pointer hover:bg-red-100 active:scale-95 transition-all"
-                    @click="closeSlot(slot)"
-                  >
-                    關閉該時段
-                  </button>
-                  <button
-                    v-if="slot.status !== 'full'"
-                    class="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-50 text-blue-600 border border-blue-200 cursor-pointer hover:bg-blue-100 active:scale-95 transition-all"
-                    @click="editSlotTables(slot)"
-                  >
-                    修改桌數
-                  </button>
-                  <button
-                    v-if="slot.status === 'full'"
-                    class="px-3 py-1.5 rounded-lg text-xs font-bold bg-green-50 text-green-700 border border-green-200 cursor-pointer hover:bg-green-100 active:scale-95 transition-all"
-                    @click="addTable(slot)"
-                  >
-                    ➕ 加開 1 桌
-                  </button>
+                <!-- 操作按鈕 / 編輯桌數 -->
+                <div class="flex gap-2 flex-wrap items-center">
+                  <template v-if="editingSlotTime === slot.time">
+                    <div class="flex items-center gap-2 w-full">
+                      <span class="text-xs text-slate-600 font-medium">總桌數：</span>
+                      <input
+                        v-model.number="editingSlotValue"
+                        type="number"
+                        min="0"
+                        max="20"
+                        class="w-16 px-2 py-1.5 text-sm font-bold text-center border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200"
+                      />
+                      <button
+                        class="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-500 text-white border-none cursor-pointer hover:bg-blue-600 active:scale-95 transition-all"
+                        @click="saveSlotTables(slot)"
+                      >
+                        儲存
+                      </button>
+                      <button
+                        class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-600 border border-slate-200 cursor-pointer hover:bg-slate-200 active:scale-95 transition-all"
+                        @click="cancelEditSlot"
+                      >
+                        取消
+                      </button>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <button
+                      class="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-50 text-blue-600 border border-blue-200 cursor-pointer hover:bg-blue-100 active:scale-95 transition-all"
+                      @click="startEditSlot(slot)"
+                    >
+                      ✏️ 修改桌數 ({{ slot.totalTables }})
+                    </button>
+                    <button
+                      v-if="slot.status !== 'full'"
+                      class="px-3 py-1.5 rounded-lg text-xs font-bold bg-red-50 text-red-600 border border-red-200 cursor-pointer hover:bg-red-100 active:scale-95 transition-all"
+                      @click="closeSlot(slot)"
+                    >
+                      關閉時段
+                    </button>
+                  </template>
+                </div>
+
+                <!-- 點擊展開訂位明細 -->
+                <button
+                  class="w-full mt-1 py-2 text-xs font-bold text-blue-600 bg-blue-50 border border-blue-200 rounded-lg cursor-pointer hover:bg-blue-100 active:scale-95 transition-all"
+                  @click="toggleSlotDetail(slot.time)"
+                >
+                  {{ expandedSlot === slot.time ? '收合訂位明細 ▲' : '查看訂位明細 ▼' }}
+                </button>
+
+                <!-- 訂位明細展開區 -->
+                <div v-if="expandedSlot === slot.time" class="flex flex-col gap-2 mt-2">
+                  <div v-if="slotResLoading" class="text-center text-sm text-slate-400 py-3">載入中...</div>
+                  <div v-else-if="slotReservations.length === 0" class="text-center text-sm text-slate-400 py-3">此時段尚無訂位</div>
+                  <div v-else class="grid grid-cols-2 gap-2">
+                    <div
+                      v-for="r in slotReservations"
+                      :key="r.id"
+                      class="bg-white border border-blue-100 rounded-xl p-3 flex flex-col gap-1 shadow-sm"
+                    >
+                      <span class="text-sm font-bold text-slate-900">{{ r.customerName }}</span>
+                      <span class="text-xs text-slate-500">📞 {{ r.customerPhone }}</span>
+                      <span class="text-xs text-blue-700 font-semibold">{{ r.partySize }} 位 · {{ r.time }}</span>
+                      <span class="text-xs text-slate-400">{{ r.date }}</span>
+                      <span v-if="r.note" class="text-xs text-amber-600">📝 {{ r.note }}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
