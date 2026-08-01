@@ -1,7 +1,0 @@
-.git/
-.env
-__tests__/
-*.test.js
-.agents/
-.claude/
-.windsurf/
