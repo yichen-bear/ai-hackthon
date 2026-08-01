@@ -8,6 +8,11 @@ const aiChatRouter = require('./routes/aiChat');
 const addressRouter = require('./routes/address');
 const memberAddressRouter = require('./routes/memberAddress');
 const speechRouter = require('./routes/speech');
+const formRouter = require('./routes/form');
+const healthTrackerRouter = require('./routes/healthTracker');
+const wasteClassificationRouter = require('./routes/wasteClassification');
+const truckScheduleRouter = require('./routes/truckSchedule');
+const garbageRouter = require('./routes/garbage');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -38,6 +43,25 @@ app.use('/api/member/addresses', memberAddressRouter);
 
 // 掛載語音辨識路由
 app.use('/api/speech', speechRouter);
+
+// 掛載表單路由
+app.use('/api/forms', formRouter);
+
+// 掛載健康追蹤路由
+app.use('/api/health-tracker', healthTrackerRouter);
+
+// 掛載垃圾分類 AI 助手路由
+app.use('/api/waste-classification', wasteClassificationRouter);
+
+// 掛載垃圾車清運點查詢路由
+app.use('/api/truck-schedule', truckScheduleRouter);
+
+// 掛載台北市垃圾清運點公開資料 API 路由
+app.use('/api/garbage', garbageRouter);
+
+// 掛載 AI 診斷與掛號路由
+const diagnosisRouter = require('./routes/diagnosis');
+app.use('/api/diagnosis', diagnosisRouter);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Hello from backend!' });
