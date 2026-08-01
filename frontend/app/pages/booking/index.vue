@@ -20,6 +20,7 @@ const navTabs = [
   { key: 'pickup', label: '取貨' },
   { key: 'preorder', label: 'i預購' },
   { key: 'groupbuy', label: 'i划算' },
+  { key: 'secondhand', label: 'i二手' },
   { key: 'order', label: '訂單' },
   { key: 'wishlist', label: '收藏' },
 ] as const
@@ -62,12 +63,16 @@ const initialOrders: BookingOrder[] = [
   { id: 'ord-1', type: 'groupbuy', productName: '舒潔衛生紙 72包/箱', spec: '72包/箱', status: 'pending-group', currentStep: 0, totalSteps: 4, groupProgress: { current: 3, target: 5 }, pickupStore: '7-11 信義門市', createdAt: '2026-07-25' },
   { id: 'ord-2', type: 'preorder', productName: '中秋限定鳳梨酥禮盒', spec: '12入裝', status: 'shipping', currentStep: 2, totalSteps: 4, estimatedDate: '08/01', pickupStore: '7-11 松山門市', createdAt: '2026-07-20' },
   { id: 'ord-3', type: 'groupbuy', productName: '可口可樂 24罐裝', spec: '330ml × 24', status: 'ready', currentStep: 3, totalSteps: 4, pickupStore: '7-11 大安門市', createdAt: '2026-07-22' },
+  { id: 'ord-sh-1', type: 'preorder', productName: '【i二手】嬰兒推車（九成新）', spec: '門市面交 · 王媽媽', status: 'shipping', currentStep: 2, totalSteps: 4, estimatedDate: '08/05 15:30', pickupStore: '7-11 信義門市', createdAt: '2026-08-01' },
+  { id: 'ord-sh-2', type: 'preorder', productName: '【i二手】小米空氣清淨機', spec: '門市代放 · 李先生', status: 'shipping', currentStep: 2, totalSteps: 4, estimatedDate: '08/08', pickupStore: '7-11 松山門市', createdAt: '2026-08-01' },
 ]
 
 // ─── 取貨提醒 ───
 const initialPickups: PickupItem[] = [
   { id: 'pk-1', orderId: 'ord-3', productName: '可口可樂 24罐裝', pickupCode: 'PK-20260728-001', store: MOCK_STORES[0], deadline: '2026-07-30', status: 'expiring' },
   { id: 'pk-2', orderId: 'ord-x', productName: '白蘭洗衣精 4瓶裝', pickupCode: 'PK-20260725-003', store: MOCK_STORES[1], deadline: '2026-08-05', status: 'pending' },
+  { id: 'pk-sh-1', orderId: 'ord-sh-1', productName: '【i二手】嬰兒推車 · 面交', pickupCode: 'SH-20260805-001', store: MOCK_STORES[0], deadline: '2026-08-05', status: 'pending' },
+  { id: 'pk-sh-2', orderId: 'ord-sh-2', productName: '【i二手】小米空氣清淨機 · 代收', pickupCode: 'SH-20260801-002', store: MOCK_STORES[1], deadline: '2026-08-08', status: 'pending' },
 ]
 
 // ─── 收藏清單 ───
@@ -75,6 +80,7 @@ const initialWishlist: WishlistItem[] = [
   { id: 'wl-1', productId: 'po-1', productName: '2026 中秋限定 日出鳳梨酥禮盒', channel: 'preorder', currentPrice: 550, originalPrice: 580, hasPriceDrop: true, deadline: '2026-09-15', addedAt: '2026-07-20', image: 'linear-gradient(135deg, #f59e0b, #d97706)' },
   { id: 'wl-2', productId: 'gb-2', productName: '白蘭洗衣精 4瓶裝', channel: 'groupbuy', currentPrice: 389, originalPrice: 389, hasPriceDrop: false, deadline: '2026-08-03', addedAt: '2026-07-26', image: 'linear-gradient(135deg, #34d399, #10b981)' },
   { id: 'wl-3', productId: 'po-3', productName: '星巴克聯名限量咖啡禮盒', channel: 'preorder', currentPrice: 999, originalPrice: 999, hasPriceDrop: false, deadline: '2026-08-01', addedAt: '2026-07-15', image: 'linear-gradient(135deg, #10b981, #059669)' },
+  { id: 'wl-sh-1', productId: 'sh-4', productName: '【i二手】大同電鍋（10人份）$500', channel: 'groupbuy', currentPrice: 500, originalPrice: 2500, hasPriceDrop: true, deadline: '2026-08-15', addedAt: '2026-08-01', image: 'linear-gradient(135deg, #fca5a5, #ef4444)' },
 ]
 
 // ─── 響應式狀態 ───
@@ -304,6 +310,11 @@ function demoReset() {
           @confirm-purchase="handleConfirmPurchase"
           @switch-store="() => {}"
         />
+      </template>
+
+      <!-- i二手 -->
+      <template v-if="activeNav === 'secondhand'">
+        <BookingSecondhandMarket />
       </template>
 
       <!-- 訂單追蹤 -->

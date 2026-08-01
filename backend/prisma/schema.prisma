@@ -331,3 +331,70 @@ model VendorUser {
 
   @@map("vendor_user")
 }
+
+// ═══ i二手 二手市集 ═══
+
+model SecondhandListing {
+  id           String   @id @default(uuid()) @db.Uuid
+  sellerId     String   @map("seller_id") @db.Uuid
+  sellerName   String   @map("seller_name") @db.VarChar(50)
+  sellerPhone  String?  @map("seller_phone") @db.VarChar(20)
+  productName  String   @map("product_name") @db.VarChar(100)
+  description  String?  @db.VarChar(500)
+  price        Int      @default(0)
+  isFree       Boolean  @default(false) @map("is_free")
+  category     String   @db.VarChar(20)
+  imageUrl     String?  @map("image_url")
+  pickupStore  String   @map("pickup_store") @db.VarChar(50)
+  pickupMethod String   @map("pickup_method") @db.VarChar(20)
+  carbonSaved  Decimal  @default(0) @map("carbon_saved") @db.Decimal(5, 1)
+  status       String   @default("active") @db.VarChar(20)
+  isDeleted    Boolean  @default(false) @map("is_deleted")
+  creTime      DateTime @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updTime      DateTime @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
+
+  reservations PickupReservation[]
+  messages     ChatMessage[]
+
+  @@map("secondhand_listing")
+}
+
+model ChatMessage {
+  id           String   @id @default(uuid()) @db.Uuid
+  senderId     String   @map("sender_id") @db.Uuid
+  senderName   String   @map("sender_name") @db.VarChar(50)
+  receiverId   String   @map("receiver_id") @db.Uuid
+  receiverName String   @map("receiver_name") @db.VarChar(50)
+  listingId    String?  @map("listing_id") @db.Uuid
+  content      String   @db.VarChar(1000)
+  messageType  String   @default("text") @map("message_type") @db.VarChar(20)
+  isRead       Boolean  @default(false) @map("is_read")
+  creTime      DateTime @default(now()) @map("cre_time") @db.Timestamptz(6)
+
+  listing      SecondhandListing? @relation(fields: [listingId], references: [id])
+
+  @@index([senderId, receiverId])
+  @@index([receiverId, isRead])
+  @@map("chat_message")
+}
+
+model PickupReservation {
+  id             String    @id @default(uuid()) @db.Uuid
+  listingId      String    @map("listing_id") @db.Uuid
+  buyerId        String    @map("buyer_id") @db.Uuid
+  buyerName      String    @map("buyer_name") @db.VarChar(50)
+  buyerPhone     String?   @map("buyer_phone") @db.VarChar(20)
+  sellerId       String    @map("seller_id") @db.Uuid
+  sellerName     String    @map("seller_name") @db.VarChar(50)
+  pickupStore    String    @map("pickup_store") @db.VarChar(50)
+  pickupMethod   String    @map("pickup_method") @db.VarChar(20)
+  status         String    @default("PENDING_SELLER_APPROVAL") @db.VarChar(30)
+  scheduledAt    DateTime? @map("scheduled_at") @db.Timestamptz(6)
+  pickupDeadline DateTime? @map("pickup_deadline") @db.Timestamptz(6)
+  creTime        DateTime  @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updTime        DateTime  @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
+
+  listing        SecondhandListing @relation(fields: [listingId], references: [id])
+
+  @@map("pickup_reservation")
+}

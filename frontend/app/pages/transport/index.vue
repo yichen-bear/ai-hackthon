@@ -70,12 +70,12 @@ const mockSuggestions: ContextSuggestion[] = [
   },
 ]
 
-// 常用路線
-const mockFavoriteRoutes: FavoriteRoute[] = [
-  { id: 'fav-1', name: '上班通勤', origin: '家', destination: '公司', preferredMode: 'metro', lastUsed: new Date().toISOString() },
-  { id: 'fav-2', name: '回家', origin: '公司', destination: '家', preferredMode: 'metro', lastUsed: new Date(Date.now() - 86400000).toISOString() },
-  { id: 'fav-3', name: '常去餐廳', origin: '公司', destination: '鼎泰豐信義店', preferredMode: 'walk', lastUsed: new Date(Date.now() - 172800000).toISOString() },
-]
+// 常用路線（響應式，支援增刪改 + DB 寫入）
+const favoriteRoutes = ref<FavoriteRoute[]>([
+  { id: 'fav-1', name: '上班通勤', origin: '📍 我的位置', destination: '微風南山大樓', preferredMode: 'metro', lastUsed: new Date().toISOString() },
+  { id: 'fav-2', name: '回家', origin: '📍 我的位置', destination: '臺北文華東方酒店', preferredMode: 'metro', lastUsed: new Date(Date.now() - 86400000).toISOString() },
+  { id: 'fav-3', name: '常去餐廳', origin: '📍 我的位置', destination: '鼎泰豐信義店', preferredMode: 'walk', lastUsed: new Date(Date.now() - 172800000).toISOString() },
+])
 
 // 票券
 const tickets = ref<Ticket[]>([
@@ -150,16 +150,56 @@ function handleFavCallRide(route: FavoriteRoute) {
 }
 
 function handleFavAdd() {
-  // TODO: 開啟新增常用路線表單
-  console.log('新增常用路線')
+  const name = prompt('路線名稱：')
+  if (!name) return
+  const destination = prompt('目的地：')
+  if (!destination) return
+
+  const newRoute: FavoriteRoute = {
+    id: `fav-${Date.now()}`,
+    name,
+    origin: '📍 我的位置',
+    destination,
+    preferredMode: 'metro',
+    lastUsed: new Date().toISOString(),
+  }
+  favoriteRoutes.value.push(newRoute)
+  saveFavoriteRoutesToDB()
 }
 
 function handleFavEdit(route: FavoriteRoute) {
-  console.log('編輯路線', route.name)
+  const newName = prompt('修改路線名稱：', route.name)
+  if (newName === null) return
+  const newDest = prompt('修改目的地：', route.destination)
+  if (newDest === null) return
+
+  route.name = newName || route.name
+  route.destination = newDest || route.destination
+  saveFavoriteRoutesToDB()
 }
 
 function handleFavDelete(routeId: string) {
-  console.log('刪除路線', routeId)
+  if (!confirm('確定刪除此常用路線？')) return
+  favoriteRoutes.value = favoriteRoutes.value.filter(r => r.id !== routeId)
+  saveFavoriteRoutesToDB()
+}
+
+// 寫入 DB
+async function saveFavoriteRoutesToDB() {
+  try {
+    await $fetch('/api/orders', {
+      method: 'POST',
+      body: {
+        category: 'TRANSPORT',
+        serviceType: '常用路線更新',
+        source: 'MANUAL',
+        customerName: '使用者',
+        customerPhone: '',
+        storeId: 'favorite-routes',
+        details: { routes: favoriteRoutes.value, updatedAt: new Date().toISOString() },
+      },
+    })
+  } catch { /* silent */ }
 }
 
 // TicketBooking 事件
@@ -216,7 +256,7 @@ function handleTicketUse(ticketId: string) {
           @dismiss="handleDismiss"
         />
         <TransportFavoriteRoutes
-          :routes="mockFavoriteRoutes"
+          :routes="favoriteRoutes"
           @select-route="handleSelectRoute"
           @call-ride="handleFavCallRide"
           @add="handleFavAdd"

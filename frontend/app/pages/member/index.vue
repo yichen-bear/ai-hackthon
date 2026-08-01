@@ -4,9 +4,124 @@
  * 標籤：點數、條碼/錢包、活動票券、獎章
  */
 
-const activeTab = ref<'points' | 'barcode' | 'tickets' | 'badges' | 'groups'>('points')
+const activeTab = ref<'points' | 'barcode' | 'tickets' | 'badges' | 'groups' | 'messages'>('points')
 
-// ─── 我的社群 ───
+// ─── 私訊系統 ───
+const currentUserId = '00000000-0000-0000-0000-000000000001'
+const currentUserName = '沈小姐'
+
+interface ChatConversation {
+  peerId: string
+  peerName: string
+  lastMessage: string
+  lastTime: string
+  unreadCount: number
+  listingName?: string
+}
+
+const conversations = ref<ChatConversation[]>([])
+const chatMessages = ref<{ id: string; senderId: string; senderName: string; content: string; messageType: string; creTime: string }[]>([])
+const activePeer = ref<ChatConversation | null>(null)
+const showChatRoom = ref(false)
+const newChatMsg = ref('')
+const msgUnreadTotal = ref(0)
+
+async function fetchConversations() {
+  try {
+    const msgs: any[] = await $fetch('/api/messages', { params: { userId: currentUserId } })
+    // 聚合為對話列表
+    const peers = new Map<string, ChatConversation>()
+    msgs.forEach((m: any) => {
+      const peerId = m.senderId === currentUserId ? m.receiverId : m.senderId
+      const peerName = m.senderId === currentUserId ? m.receiverName : m.senderName
+      if (!peers.has(peerId)) {
+        peers.set(peerId, { peerId, peerName, lastMessage: m.content, lastTime: m.creTime, unreadCount: 0 })
+      } else {
+        const p = peers.get(peerId)!
+        if (new Date(m.creTime) > new Date(p.lastTime)) { p.lastMessage = m.content; p.lastTime = m.creTime }
+      }
+      if (m.receiverId === currentUserId && !m.isRead) {
+        const p = peers.get(peerId)!
+        p.unreadCount++
+      }
+    })
+    conversations.value = [...peers.values()].sort((a, b) => new Date(b.lastTime).getTime() - new Date(a.lastTime).getTime())
+    msgUnreadTotal.value = conversations.value.reduce((s, c) => s + c.unreadCount, 0)
+  } catch {
+    // mock fallback
+    conversations.value = [
+      { peerId: 'user-002', peerName: '王媽媽', lastMessage: '好的，那我們約週六下午 2 點在信義門市面交？', lastTime: new Date(Date.now() - 3600000).toISOString(), unreadCount: 2, listingName: '嬰兒推車' },
+      { peerId: 'user-003', peerName: '李先生', lastMessage: '🤝 沈小姐 已預約面交！', lastTime: new Date(Date.now() - 7200000).toISOString(), unreadCount: 1, listingName: '小米空氣清淨機' },
+    ]
+    msgUnreadTotal.value = 3
+  }
+}
+
+async function openChat(conv: ChatConversation) {
+  activePeer.value = conv
+  showChatRoom.value = true
+  conv.unreadCount = 0
+  msgUnreadTotal.value = conversations.value.reduce((s, c) => s + c.unreadCount, 0)
+
+  try {
+    const msgs: any[] = await $fetch('/api/messages', { params: { userId: currentUserId, peerId: conv.peerId } })
+    chatMessages.value = msgs
+    // 標記已讀
+    await $fetch('/api/messages/read', { method: 'PATCH', body: { userId: currentUserId, peerId: conv.peerId } })
+  } catch {
+    chatMessages.value = [
+      { id: '1', senderId: conv.peerId, senderName: conv.peerName, content: '你好！我對你的商品有興趣', messageType: 'text', creTime: new Date(Date.now() - 7200000).toISOString() },
+      { id: '2', senderId: currentUserId, senderName: currentUserName, content: '好的，什麼時候方便面交呢？', messageType: 'text', creTime: new Date(Date.now() - 3600000).toISOString() },
+      { id: '3', senderId: conv.peerId, senderName: conv.peerName, content: conv.lastMessage, messageType: 'text', creTime: conv.lastTime },
+    ]
+  }
+}
+
+async function sendChatMessage() {
+  if (!newChatMsg.value.trim() || !activePeer.value) return
+  const content = newChatMsg.value.trim()
+  newChatMsg.value = ''
+
+  chatMessages.value.push({ id: `msg-${Date.now()}`, senderId: currentUserId, senderName: currentUserName, content, messageType: 'text', creTime: new Date().toISOString() })
+
+  try {
+    await $fetch('/api/messages', { method: 'POST', body: { senderId: currentUserId, senderName: currentUserName, receiverId: activePeer.value.peerId, receiverName: activePeer.value.peerName, content } })
+  } catch { /* silent */ }
+}
+
+function closeChatRoom() { showChatRoom.value = false; activePeer.value = null }
+
+function formatMsgTime(iso: string): string {
+  const d = new Date(iso)
+  return d.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' })
+}
+
+// ─── 預約卡片輔助 ───
+function isJsonContent(content: string): boolean {
+  try { const p = JSON.parse(content); return p && p.type === 'reservation_card' } catch { return false }
+}
+function parseReservation(content: string): any {
+  try { return JSON.parse(content) } catch { return {} }
+}
+function formatScheduled(iso: string): string {
+  if (!iso) return ''
+  return new Date(iso).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
+}
+function getReservationStatusLabel(status: string): string {
+  const map: Record<string, string> = { PENDING_SELLER_APPROVAL: '⏳ 等待賣家確認', APPROVED_MEETUP: '✅ 已同意面交', ITEM_STORED_IN_711: '📦 已到店待取貨', COMPLETED: '🎉 交易完成', EXPIRED_RETURNED: '⚠️ 逾期退回', REJECTED: '❌ 已拒絕' }
+  return map[status] || status
+}
+async function confirmReservation(reservationId: string, newStatus: string) {
+  if (!reservationId) return
+  try {
+    await $fetch(`/api/reservations/${reservationId}`, { method: 'PATCH', body: { status: newStatus } })
+    alert(newStatus === 'APPROVED_MEETUP' ? '✅ 已同意面交！' : '❌ 已拒絕交易')
+    // 重新載入對話
+    if (activePeer.value) openChat(activePeer.value)
+  } catch (e: any) {
+    alert('操作失敗：' + (e?.data?.error || e?.message || ''))
+  }
+}
 interface ChatMsg { author: string; content: string; time: string; isPinned?: boolean }
 interface MyGroup {
   id: string; name: string; type: 'interest' | 'course'
@@ -213,6 +328,10 @@ const allBadges = ref([
       <button class="tab-btn" :class="{ active: activeTab === 'barcode' }" @click="activeTab = 'barcode'">條碼/錢包</button>
       <button class="tab-btn" :class="{ active: activeTab === 'tickets' }" @click="activeTab = 'tickets'">活動票券</button>
       <button class="tab-btn" :class="{ active: activeTab === 'badges' }" @click="activeTab = 'badges'">獎章</button>
+      <button class="tab-btn" :class="{ active: activeTab === 'messages' }" @click="activeTab = 'messages'; fetchConversations()">
+        私訊
+        <span v-if="msgUnreadTotal > 0" class="unread-dot"></span>
+      </button>
       <button class="tab-btn" :class="{ active: activeTab === 'groups' }" @click="activeTab = 'groups'">
         社群
         <span v-if="myGroups.reduce((s, g) => s + g.unreadCount, 0) > 0" class="unread-dot"></span>
@@ -421,6 +540,66 @@ const allBadges = ref([
         </button>
       </div>
     </div>
+
+    <!-- ═══ 私訊 ═══ -->
+    <div v-if="activeTab === 'messages'" class="tab-content">
+      <div v-if="conversations.length === 0" class="empty-state">
+        <p>尚無私訊對話</p>
+        <p class="empty-hint">前往 i二手 私訊賣家開始對話！</p>
+      </div>
+      <div v-for="conv in conversations" :key="conv.peerId" class="msg-conv" @click="openChat(conv)">
+        <div class="msg-conv-left">
+          <div class="msg-conv-avatar">👤</div>
+          <div class="msg-conv-info">
+            <div class="msg-conv-name-row">
+              <span class="msg-conv-name">{{ conv.peerName }}</span>
+              <span v-if="conv.listingName" class="msg-conv-listing">{{ conv.listingName }}</span>
+            </div>
+            <p class="msg-conv-last">{{ conv.lastMessage }}</p>
+          </div>
+        </div>
+        <div class="msg-conv-right">
+          <span v-if="conv.unreadCount > 0" class="msg-unread-badge">{{ conv.unreadCount }}</span>
+          <span class="msg-conv-time">{{ formatMsgTime(conv.lastTime) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 私訊聊天室 Overlay -->
+    <Teleport to="body">
+      <div v-if="showChatRoom && activePeer" class="msg-overlay" @click.self="closeChatRoom">
+        <div class="msg-panel">
+          <header class="msg-header">
+            <button class="msg-back" @click="closeChatRoom">← 返回</button>
+            <span class="msg-header-name">{{ activePeer.peerName }}</span>
+            <span class="msg-header-hint">{{ activePeer.listingName || '私訊' }}</span>
+          </header>
+          <div class="msg-body">
+            <div v-for="m in chatMessages" :key="m.id" class="msg-bubble" :class="{ 'msg-bubble--mine': m.senderId === currentUserId, 'msg-bubble--system': m.messageType === 'system' || m.messageType === 'reservation_notice' }">
+              <span v-if="m.senderId !== currentUserId && m.messageType === 'text'" class="msg-author">{{ m.senderName }}</span>
+              <!-- 預約卡片 -->
+              <div v-if="m.messageType === 'reservation_notice' && isJsonContent(m.content)" class="msg-reservation-card">
+                <p class="msg-reservation-title">🤝 面交預約</p>
+                <p class="msg-reservation-detail">📍 {{ parseReservation(m.content).pickupStore }}</p>
+                <p v-if="parseReservation(m.content).scheduledAt" class="msg-reservation-detail">⏰ {{ formatScheduled(parseReservation(m.content).scheduledAt) }}</p>
+                <p class="msg-reservation-status">{{ getReservationStatusLabel(parseReservation(m.content).status) }}</p>
+                <div v-if="parseReservation(m.content).status === 'PENDING_SELLER_APPROVAL' && m.receiverId === currentUserId" class="msg-reservation-actions">
+                  <button class="msg-confirm-btn" @click="confirmReservation(parseReservation(m.content).reservationId, 'APPROVED_MEETUP')">✅ 同意面交</button>
+                  <button class="msg-reject-btn" @click="confirmReservation(parseReservation(m.content).reservationId, 'REJECTED')">❌ 拒絕</button>
+                </div>
+              </div>
+              <!-- 普通文字 -->
+              <p v-else class="msg-text">{{ m.content }}</p>
+              <span class="msg-time">{{ formatMsgTime(m.creTime) }}</span>
+            </div>
+          </div>
+          <div class="msg-input-bar">
+            <input v-model="newChatMsg" class="msg-input" placeholder="輸入訊息..." @keydown.enter="sendChatMessage" />
+            <button class="msg-send" @click="sendChatMessage">送出</button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
 
     <!-- ═══ 我的社群 ═══ -->
     <div v-if="activeTab === 'groups'" class="tab-content">
@@ -742,4 +921,46 @@ const allBadges = ref([
 .toast-fade-enter-active, .toast-fade-leave-active { transition: all .3s ease; }
 .toast-fade-enter-from, .toast-fade-leave-to { opacity: 0; transform: translateX(-50%) translateY(16px); }
 .toast-fade-enter-to, .toast-fade-leave-from { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ═══ 私訊 ═══ */
+.msg-conv { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 8px; cursor: pointer; }
+.msg-conv:hover { border-color: #f59e0b; }
+.msg-conv-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.msg-conv-avatar { width: 36px; height: 36px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.msg-conv-info { flex: 1; min-width: 0; }
+.msg-conv-name-row { display: flex; align-items: center; gap: 6px; }
+.msg-conv-name { font-size: 13px; font-weight: 600; color: #1c1917; }
+.msg-conv-listing { font-size: 10px; color: #16a34a; background: #dcfce7; padding: 1px 6px; border-radius: 6px; }
+.msg-conv-last { margin: 2px 0 0; font-size: 12px; color: #78716c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.msg-conv-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+.msg-unread-badge { background: #ec4899; color: #fff; font-size: 10px; font-weight: 700; min-width: 18px; height: 18px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
+.msg-conv-time { font-size: 10px; color: #9ca3af; }
+
+.msg-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; }
+.msg-panel { background: #fff; border-radius: 16px 16px 0 0; width: 100%; max-width: 430px; height: 80vh; display: flex; flex-direction: column; animation: slideUp .3s ease; }
+.msg-header { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid #e2e8f0; }
+.msg-back { background: none; border: none; font-size: 14px; cursor: pointer; color: #78716c; }
+.msg-header-name { font-size: 14px; font-weight: 700; color: #1c1917; flex: 1; }
+.msg-header-hint { font-size: 11px; color: #16a34a; }
+.msg-body { flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+.msg-bubble { max-width: 80%; padding: 8px 12px; border-radius: 12px; background: #f1f5f9; color: #1c1917; }
+.msg-bubble--mine { align-self: flex-end; background: #f59e0b; color: #fff; }
+.msg-bubble--mine .msg-time { color: rgba(255,255,255,.7); }
+.msg-bubble--system { max-width: 100%; background: #ecfdf5; border: 1px solid #86efac; text-align: center; align-self: center; color: #166534; }
+.msg-author { font-size: 10px; font-weight: 600; color: #8b5cf6; display: block; margin-bottom: 2px; }
+.msg-text { margin: 0; font-size: 13px; line-height: 1.5; color: inherit; }
+.msg-time { font-size: 10px; color: #78716c; display: block; margin-top: 2px; text-align: right; }
+.msg-input-bar { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid #e2e8f0; }
+.msg-input { flex: 1; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 13px; outline: none; }
+.msg-input:focus { border-color: #f59e0b; }
+.msg-send { padding: 10px 16px; background: #f59e0b; color: #fff; border: none; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+/* Reservation Card in Chat */
+.msg-reservation-card { display: flex; flex-direction: column; gap: 4px; }
+.msg-reservation-title { margin: 0; font-size: 13px; font-weight: 700; color: #1c1917; }
+.msg-reservation-detail { margin: 0; font-size: 12px; color: #78716c; }
+.msg-reservation-status { margin: 4px 0 0; font-size: 12px; font-weight: 600; color: #0369a1; }
+.msg-reservation-actions { display: flex; gap: 8px; margin-top: 8px; }
+.msg-confirm-btn { padding: 6px 12px; border: none; border-radius: 8px; background: #16a34a; color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; }
+.msg-reject-btn { padding: 6px 12px; border: none; border-radius: 8px; background: #e11d48; color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; }
 </style>

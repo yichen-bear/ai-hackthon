@@ -62,6 +62,18 @@ app.use('/api/garbage', garbageRouter);
 // 掛載 AI 診斷與掛號路由
 const diagnosisRouter = require('./routes/diagnosis');
 app.use('/api/diagnosis', diagnosisRouter);
+// 掛載 i二手相關路由
+const listingsRouter = require('./routes/listings');
+const messagesRouter = require('./routes/messages');
+const reservationsRouter = require('./routes/reservations');
+const uploadRouter = require('./routes/upload');
+app.use('/api/listings', listingsRouter);
+app.use('/api/messages', messagesRouter);
+app.use('/api/reservations', reservationsRouter);
+app.use('/api/upload', uploadRouter);
+
+// 靜態檔案（圖片上傳）
+app.use('/uploads', express.static('public/uploads'));
 
 app.get('/', (req, res) => {
   res.json({ message: 'Hello from backend!' });
