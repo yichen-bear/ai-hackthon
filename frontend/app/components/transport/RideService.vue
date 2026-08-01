@@ -132,7 +132,10 @@ function handleConfirmRide() {
   rideState.value = 'confirming'
 }
 
-function handleDispatch() {
+const { currentUser: rideUser } = useCurrentUser()
+const currentRideId = ref<string | null>(null)
+
+async function handleDispatch() {
   const rideData: RideRequest = {
     pickup: pickupInput.value,
     destination: destinationInput.value,
@@ -141,12 +144,34 @@ function handleDispatch() {
     scheduledTime: rideMode.value === 'scheduled' ? `${scheduledDate.value}T${scheduledTime.value}` : undefined,
   }
   emit('confirm-ride', rideData)
+
+  // 寫入 DB
+  try {
+    const order: any = await $fetch('/api/rides', {
+      method: 'POST',
+      body: {
+        passengerId: rideUser.value.id,
+        passengerName: rideUser.value.name,
+        pickup: rideData.pickup,
+        destination: rideData.destination,
+        carType: rideData.carType,
+        mode: rideData.mode,
+        scheduledAt: rideData.scheduledTime || null,
+      },
+    })
+    currentRideId.value = order.id
+  } catch { /* silent */ }
+
   rideState.value = 'waiting'
   startCountdown(driverInfo.value.eta)
 }
 
-function handleCancel() {
+async async function handleCancel() {
   stopCountdown()
+  if (currentRideId.value) {
+    try { await $fetch(`/api/rides/${currentRideId.value}/cancel`, { method: 'PATCH' }) } catch {}
+  }
+  currentRideId.value = null
   rideState.value = 'idle'
 }
 
@@ -154,9 +179,36 @@ function handleComplete() {
   rideState.value = 'completed'
 }
 
+// 評分
+const ratingValue = ref(5)
+async function handleRate() {
+  if (currentRideId.value) {
+    try { await $fetch(`/api/rides/${currentRideId.value}/rate`, { method: 'POST', body: { rating: ratingValue.value } }) } catch {}
+  }
+  handleReset()
+}
+
 function handleReset() {
   rideState.value = 'idle'
   destinationInput.value = ''
+  currentRideId.value = null
+  ratingValue.value = 5
+}
+
+// ─── 歷史行程 ───
+const showHistory = ref(false)
+const rideHistory = ref<any[]>([])
+
+async function fetchHistory() {
+  try {
+    const data: any[] = await $fetch('/api/rides', { params: { userId: rideUser.value.id, status: 'completed' } })
+    rideHistory.value = data
+  } catch { rideHistory.value = [] }
+}
+
+function openHistory() {
+  fetchHistory()
+  showHistory.value = true
 }
 
 onUnmounted(() => {
@@ -358,12 +410,50 @@ onUnmounted(() => {
         <button class="complete-btn" @click="handleComplete">確認上車</button>
       </div>
 
-      <!-- completed 狀態：行程結束 -->
+      <!-- completed 狀態：行程結束 + 評分 -->
       <div v-else-if="rideState === 'completed'" class="ride-completed" aria-live="polite">
         <h4 class="state-title">行程完成</h4>
         <p class="completed-text">感謝搭乘 yoxi</p>
-        <button class="reset-btn" @click="handleReset">重新叫車</button>
+        <div class="rating-section">
+          <p class="rating-label">為這趟行程評分：</p>
+          <div class="rating-stars">
+            <button v-for="star in 5" :key="star" class="star-btn" :class="{ active: star <= ratingValue }" @click="ratingValue = star">⭐</button>
+          </div>
+          <button class="rate-btn" @click="handleRate">送出評分</button>
+        </div>
+        <button class="reset-btn" @click="handleReset">跳過，重新叫車</button>
       </div>
+
+      <!-- 歷史行程按鈕 -->
+      <div v-if="rideState === 'idle'" class="history-trigger">
+        <button class="history-btn" @click="openHistory">📋 歷史行程</button>
+      </div>
+
+      <!-- 歷史行程 Overlay -->
+      <Teleport to="body">
+        <div v-if="showHistory" class="history-overlay" @click.self="showHistory = false">
+          <div class="history-panel">
+            <header class="history-header">
+              <button @click="showHistory = false">← 返回</button>
+              <span>歷史行程</span>
+            </header>
+            <div v-if="rideHistory.length === 0" class="history-empty">暫無行程記錄</div>
+            <div v-for="ride in rideHistory" :key="ride.id" class="history-item">
+              <div class="history-route">
+                <p class="history-from">📍 {{ ride.pickup }}</p>
+                <p class="history-to">📍 {{ ride.destination }}</p>
+              </div>
+              <div class="history-meta">
+                <span>${{ ride.fare }}</span>
+                <span>{{ ride.distance }}km</span>
+                <span>{{ ride.driver?.name || '-' }}</span>
+                <span v-if="ride.rating">⭐{{ ride.rating }}</span>
+                <span class="history-date">{{ new Date(ride.completedAt || ride.creTime).toLocaleDateString('zh-TW') }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Teleport>
     </div>
   </section>
 </template>
@@ -814,4 +904,27 @@ onUnmounted(() => {
   text-align: center;
   margin: 0 0 var(--space-4, 16px) 0;
 }
+
+/* 評分 */
+.rating-section { margin: 16px 0; text-align: center; }
+.rating-label { font-size: 13px; color: #64748b; margin-bottom: 8px; }
+.rating-stars { display: flex; gap: 4px; justify-content: center; margin-bottom: 12px; }
+.star-btn { background: none; border: none; font-size: 24px; opacity: 0.3; cursor: pointer; transition: opacity 0.15s; }
+.star-btn.active { opacity: 1; }
+.rate-btn { padding: 8px 24px; background: #f59e0b; color: #fff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
+
+/* 歷史 */
+.history-trigger { margin-top: 12px; text-align: center; }
+.history-btn { padding: 8px 20px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 13px; color: #475569; cursor: pointer; }
+.history-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; display: flex; justify-content: center; align-items: flex-end; }
+.history-panel { background: #fff; border-radius: 16px 16px 0 0; width: 100%; max-width: 420px; max-height: 80vh; overflow-y: auto; padding: 16px; }
+.history-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; font-weight: 600; }
+.history-header button { background: none; border: none; font-size: 14px; cursor: pointer; }
+.history-empty { text-align: center; color: #94a3b8; padding: 32px 0; }
+.history-item { border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 8px; }
+.history-route p { margin: 2px 0; font-size: 13px; }
+.history-from { color: #059669; }
+.history-to { color: #dc2626; }
+.history-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; font-size: 12px; color: #64748b; }
+.history-date { margin-left: auto; }
 </style>
