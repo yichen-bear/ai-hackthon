@@ -38,6 +38,29 @@ const isLoading = ref(false)
 // 模擬當前用戶（使用 UUID 格式以匹配 DB）
 const currentUser = { id: '00000000-0000-0000-0000-000000000001', name: '沈小姐' }
 
+// ─── Toast 通知系統（APP 風格） ───
+const toastMsg = ref('')
+const toastType = ref<'success' | 'error' | 'info'>('success')
+let toastTimer: ReturnType<typeof setTimeout> | null = null
+function showToast(msg: string, type: 'success' | 'error' | 'info' = 'success') {
+  toastMsg.value = msg
+  toastType.value = type
+  if (toastTimer) clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => { toastMsg.value = '' }, 3000)
+}
+
+// ─── Confirm Modal（取代 browser confirm） ───
+const confirmVisible = ref(false)
+const confirmText = ref('')
+let confirmResolve: ((val: boolean) => void) | null = null
+function appConfirm(msg: string): Promise<boolean> {
+  confirmText.value = msg
+  confirmVisible.value = true
+  return new Promise(resolve => { confirmResolve = resolve })
+}
+function handleConfirmYes() { confirmVisible.value = false; confirmResolve?.(true) }
+function handleConfirmNo() { confirmVisible.value = false; confirmResolve?.(false) }
+
 // ─── 取得商品列表 ───
 async function fetchListings() {
   isLoading.value = true
@@ -114,13 +137,13 @@ async function handlePost() {
         carbonSaved: Math.round(Math.random() * 5 + 1),
       },
     })
-    alert('✅ 刊登成功！')
+    showToast('✅ 刊登成功！')
     showPostForm.value = false
     resetPostForm()
     await fetchListings()
   } catch (e: any) {
     console.error('刊登失敗:', e)
-    alert('❌ 刊登失敗：' + (e?.data?.error || e?.message || '請確認後端已啟動'))
+    showToast('❌ 刊登失敗：' + (e?.data?.error || e?.message || '請確認後端已啟動'), 'error')
   }
   isPosting.value = false
 }
@@ -131,23 +154,32 @@ function resetPostForm() {
   imageBase64.value = null
 }
 
-// ─── 私訊 ───
-async function handleMessage(item: SecondhandItem) {
+// ─── 私訊 Modal ───
+const showMsgModal = ref(false)
+const msgTarget = ref<SecondhandItem | null>(null)
+const msgContent = ref('')
+
+function openMsgModal(item: SecondhandItem) {
   if (item.sellerId === currentUser.id) {
-    alert('❌ 不可私訊自己')
+    showToast('❌ 不可私訊自己', 'error')
     return
   }
-  const msg = prompt(`發送訊息給 ${item.sellerName}：`, `您好，我對「${item.productName}」有興趣！`)
-  if (!msg) return
+  msgTarget.value = item
+  msgContent.value = `您好，我對「${item.productName}」有興趣！`
+  showMsgModal.value = true
+}
+
+async function sendMsg() {
+  if (!msgTarget.value || !msgContent.value.trim()) return
   try {
     await $fetch('/api/messages', {
       method: 'POST',
-      body: { senderId: currentUser.id, senderName: currentUser.name, receiverId: item.sellerId, receiverName: item.sellerName, listingId: item.id, content: msg },
+      body: { senderId: currentUser.id, senderName: currentUser.name, receiverId: msgTarget.value.sellerId, receiverName: msgTarget.value.sellerName, listingId: msgTarget.value.id, content: msgContent.value.trim() },
     })
-    alert('✅ 訊息已發送！可在會員中心「私訊」查看回覆。')
+    showToast('✅ 訊息已發送！可在會員中心「私訊」查看。')
+    showMsgModal.value = false
   } catch (e: any) {
-    console.error('私訊失敗:', e)
-    alert('❌ 發送失敗：' + (e?.data?.error || e?.message || '請確認後端已啟動'))
+    showToast('❌ 發送失敗：' + (e?.data?.error || e?.message || ''), 'error')
   }
 }
 
@@ -161,7 +193,7 @@ const isReserving = ref(false)
 function openReserveModal(item: SecondhandItem) {
   // 賣家不可預約自己的商品
   if (item.sellerId === currentUser.id) {
-    alert('❌ 不可預約自己刊登的商品')
+    showToast('❌ 不可預約自己刊登的商品', 'error')
     return
   }
   reserveTarget.value = item
@@ -193,13 +225,13 @@ async function handleReserve() {
         scheduledAt,
       },
     })
-    alert(`✅ 預約已送出！等待 ${item.sellerName} 確認。`)
+    showToast(`✅ 預約已送出！等待 ${item.sellerName} 確認。`)
     showReserveModal.value = false
     reserveTarget.value = null
     fetchListings()
   } catch (e: any) {
     console.error('預約失敗:', e)
-    alert('❌ 預約失敗：' + (e?.data?.error || e?.message || '請確認後端已啟動'))
+    showToast('❌ 預約失敗：' + (e?.data?.error || e?.message || ''), 'error')
   }
   isReserving.value = false
 }
@@ -224,14 +256,15 @@ async function fetchMyListings() {
 }
 
 async function cancelMyListing(item: SecondhandItem) {
-  if (!confirm(`確定要取消「${item.productName}」的刊登嗎？`)) return
+  const yes = await appConfirm(`確定要取消「${item.productName}」的刊登嗎？`)
+  if (!yes) return
   try {
     await $fetch(`/api/listings/${item.id}`, { method: 'PATCH', body: { status: 'cancelled' } })
-    alert('✅ 已取消刊登')
+    showToast('✅ 已取消刊登')
     myListings.value = myListings.value.filter(i => i.id !== item.id)
     fetchListings()
   } catch (e: any) {
-    alert('❌ 取消失敗：' + (e?.data?.error || e?.message || ''))
+    showToast('❌ 取消失敗：' + (e?.data?.error || e?.message || ''), 'error')
   }
 }
 
@@ -290,7 +323,7 @@ function timeAgo(iso: string): string {
             <span class="sh__time">{{ timeAgo(item.creTime) }}</span>
           </div>
           <div class="sh__card-actions">
-            <button class="sh__action sh__action--msg" @click="handleMessage(item)">💬 私訊賣家</button>
+            <button class="sh__action sh__action--msg" @click="openMsgModal(item)">💬 私訊賣家</button>
             <button class="sh__action sh__action--reserve" @click="openReserveModal(item)">🤝 預約面交</button>
           </div>
         </div>
@@ -375,6 +408,42 @@ function timeAgo(iso: string): string {
         </div>
       </div>
     </Teleport>
+    <!-- Toast 通知 -->
+    <Transition name="sh-toast">
+      <div v-if="toastMsg" class="sh__toast" :class="`sh__toast--${toastType}`">{{ toastMsg }}</div>
+    </Transition>
+
+    <!-- Confirm Modal -->
+    <Teleport to="body">
+      <div v-if="confirmVisible" class="sh__overlay" @click.self="handleConfirmNo">
+        <div class="sh__confirm-panel">
+          <p class="sh__confirm-text">{{ confirmText }}</p>
+          <div class="sh__confirm-actions">
+            <button class="sh__confirm-yes" @click="handleConfirmYes">確定</button>
+            <button class="sh__confirm-no" @click="handleConfirmNo">取消</button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
+
+    <!-- 私訊 Modal -->
+    <Teleport to="body">
+      <div v-if="showMsgModal && msgTarget" class="sh__overlay" @click.self="showMsgModal = false">
+        <div class="sh__form-panel">
+          <div class="sh__form-header">
+            <h3>💬 私訊 {{ msgTarget.sellerName }}</h3>
+            <button class="sh__form-close" @click="showMsgModal = false">✕</button>
+          </div>
+          <p class="sh__reserve-meta">商品：{{ msgTarget.productName }}</p>
+          <div class="sh__form-field">
+            <textarea v-model="msgContent" class="sh__form-textarea" rows="3" placeholder="輸入訊息..."></textarea>
+          </div>
+          <button class="sh__form-submit" :disabled="!msgContent.trim()" @click="sendMsg">送出訊息</button>
+          <button class="sh__form-cancel" @click="showMsgModal = false">取消</button>
+        </div>
+      </div>
+    </Teleport>
+
     <!-- 預約面交 Modal -->
     <Teleport to="body">
       <div v-if="showReserveModal && reserveTarget" class="sh__overlay" @click.self="showReserveModal = false">
@@ -472,6 +541,21 @@ function timeAgo(iso: string): string {
 
 /* 我的刊登 */
 .sh__my-btn { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; font-size: 13px; font-weight: 600; color: #1c1917; cursor: pointer; text-align: center; }
+
+/* Toast */
+.sh__toast { position: fixed; top: 60px; left: 50%; transform: translateX(-50%); z-index: 9999; padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,.15); white-space: nowrap; }
+.sh__toast--success { background: #16a34a; color: #fff; }
+.sh__toast--error { background: #e11d48; color: #fff; }
+.sh__toast--info { background: #0369a1; color: #fff; }
+.sh-toast-enter-active, .sh-toast-leave-active { transition: all .3s ease; }
+.sh-toast-enter-from, .sh-toast-leave-to { opacity: 0; transform: translateX(-50%) translateY(-16px); }
+
+/* Confirm */
+.sh__confirm-panel { background: #fff; border-radius: 16px; padding: 24px; width: 280px; text-align: center; animation: slideUp .3s ease; }
+.sh__confirm-text { margin: 0 0 16px; font-size: 14px; color: #1c1917; line-height: 1.5; }
+.sh__confirm-actions { display: flex; gap: 10px; }
+.sh__confirm-yes { flex: 1; padding: 10px; background: #e11d48; color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; }
+.sh__confirm-no { flex: 1; padding: 10px; background: #f1f5f9; color: #78716c; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; }
 .sh__my-btn:hover { background: #f8fafc; }
 .sh__my-list { margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px; }
 .sh__my-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 10px; }
