@@ -156,12 +156,7 @@ function resetDemo() { location.reload() }
 </script>
 
 <template>
-  <div class="w-full max-w-[430px] mx-auto min-h-screen bg-[#fafaf9] relative flex flex-col pb-20 shadow-xl border-x border-[#e2e8f0]">
-    <header class="cc__header">
-      <span class="cc__header-title">📚 社大教務處管理</span>
-      <NuxtLink class="cc__header-link" to="/entertainment">📱 用戶端</NuxtLink>
-    </header>
-
+  <div class="admin-page pb-20">
     <!-- 視角切換 -->
     <div class="cc__view-switch">
       <button class="cc__view-btn" :class="{ 'cc__view-btn--active': viewMode === 'overview' }" @click="viewMode = 'overview'; activeTab = 0">🏫 教務處總覽</button>
@@ -297,9 +292,6 @@ function resetDemo() { location.reload() }
 </template>
 
 <style scoped>
-.cc__header { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; height: 50px; padding: 0 16px; background: #fff; border-bottom: 1px solid #e2e8f0; }
-.cc__header-title { font-size: 13px; font-weight: 600; color: #1c1917; }
-.cc__header-link { padding: 4px 10px; font-size: 11px; font-weight: 700; color: #8b5cf6; background: #f5f3ff; border: 1px solid rgba(139,92,246,.2); border-radius: 9999px; text-decoration: none; }
 .cc__view-switch { display: flex; gap: 0; padding: 12px 16px 0; }
 .cc__view-btn { flex: 1; padding: 10px; border: 1.5px solid #e2e8f0; background: #fff; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; }
 .cc__view-btn:first-child { border-radius: 10px 0 0 10px; }

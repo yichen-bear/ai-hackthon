@@ -1,0 +1,203 @@
+/* ============================================================
+   Admin 共用樣式
+   ============================================================ */
+
+/* ── Admin 容器（430px 手機模擬器）── */
+.admin-page {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background: var(--color-bg-page, #fafaf9);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+  border-left: 1px solid var(--color-border, #e2e8f0);
+  border-right: 1px solid var(--color-border, #e2e8f0);
+}
+
+/* ── 統一按鈕基礎 ── */
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3, 12px) var(--space-4, 16px);
+  border: none;
+  border-radius: var(--radius-md, 12px);
+  font-size: var(--text-sm, 13px);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+
+.admin-btn:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.admin-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.admin-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.admin-btn--primary {
+  background: var(--color-primary, #f97316);
+  color: #ffffff;
+}
+
+.admin-btn--secondary {
+  background: var(--color-secondary, #22c55e);
+  color: #ffffff;
+}
+
+.admin-btn--outline {
+  background: transparent;
+  border: 1.5px solid var(--color-border, #e2e8f0);
+  color: var(--color-text-primary, #1c1917);
+}
+
+.admin-btn--danger {
+  background: transparent;
+  border: 1.5px solid var(--color-accent-red, #e11d48);
+  color: var(--color-accent-red, #e11d48);
+}
+
+.admin-btn--sm {
+  padding: var(--space-2, 8px) var(--space-3, 12px);
+  font-size: var(--text-xs, 11px);
+  border-radius: var(--radius-sm, 6px);
+}
+
+.admin-btn--lg {
+  padding: var(--space-4, 16px) var(--space-5, 20px);
+  font-size: var(--text-base, 15px);
+  border-radius: var(--radius-lg, 16px);
+}
+
+.admin-btn--full {
+  width: 100%;
+}
+
+/* ── 統一卡片 ── */
+.admin-card {
+  background: var(--color-bg-card, #ffffff);
+  border-radius: var(--radius-lg, 16px);
+  border: 1px solid var(--color-border, #e2e8f0);
+  padding: var(--space-4, 16px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3, 12px);
+  box-shadow: var(--shadow-card);
+}
+
+.admin-card + .admin-card {
+  margin-top: var(--space-3, 12px);
+}
+
+/* ── 統一 Badge ── */
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--radius-full, 9999px);
+  font-size: var(--text-xs, 11px);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.admin-badge--green { background: #dcfce7; color: #16a34a; }
+.admin-badge--blue { background: #e0f2fe; color: #0369a1; }
+.admin-badge--amber { background: #fef3c7; color: #d97706; }
+.admin-badge--red { background: #ffe4e6; color: #e11d48; }
+.admin-badge--gray { background: #f1f5f9; color: #64748b; }
+
+/* ── 統一 Tab 列 ── */
+.admin-tabs {
+  display: flex;
+  gap: 0;
+  background: var(--color-bg-card, #ffffff);
+  border-radius: var(--radius-md, 12px);
+  border: 1px solid var(--color-border, #e2e8f0);
+  overflow: hidden;
+}
+
+.admin-tabs__item {
+  flex: 1;
+  padding: var(--space-3, 12px) var(--space-2, 8px);
+  border: none;
+  background: transparent;
+  font-size: var(--text-sm, 13px);
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--color-text-secondary, #78716c);
+  cursor: pointer;
+  text-align: center;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.admin-tabs__item:not(:last-child) {
+  border-right: 1px solid var(--color-border, #e2e8f0);
+}
+
+.admin-tabs__item--active {
+  background: var(--color-primary, #f97316);
+  color: #ffffff;
+}
+
+/* ── 統一 Toast ── */
+.admin-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  padding: var(--space-3, 12px) var(--space-5, 20px);
+  background: #1e293b;
+  color: #ffffff;
+  font-size: var(--text-sm, 13px);
+  font-weight: 600;
+  border-radius: var(--radius-lg, 16px);
+  box-shadow: var(--shadow-float);
+  white-space: nowrap;
+}
+
+/* Toast animation */
+.toast-fade-enter-active,
+.toast-fade-leave-active {
+  transition: all 0.3s ease;
+}
+.toast-fade-enter-from,
+.toast-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-50%) translateY(16px);
+}
+.toast-fade-enter-to,
+.toast-fade-leave-from {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── 內容間距 ── */
+.admin-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4, 16px);
+  padding: var(--space-4, 16px);
+  flex: 1;
+}
+
+/* ── 空狀態 ── */
+.admin-empty {
+  text-align: center;
+  padding: var(--space-6, 24px) var(--space-4, 16px);
+  color: var(--color-text-secondary, #78716c);
+  font-size: var(--text-base, 15px);
+}

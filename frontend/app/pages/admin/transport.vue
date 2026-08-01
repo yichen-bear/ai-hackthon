@@ -340,26 +340,7 @@ function resetDemo() {
 </script>
 
 <template>
-  <!-- ═══ 430px 手機容器 ═══ -->
-  <div class="w-full max-w-[430px] mx-auto min-h-screen bg-[#fafaf9] relative flex flex-col pb-20 shadow-xl border-x border-[#e2e8f0]">
-
-    <!-- ═══ 固定 Header ═══ -->
-    <header class="ta__header">
-      <div class="ta__header-left">
-        <span>🚕 yoxi 車隊端</span>
-      </div>
-      <div class="ta__header-center">
-        <NuxtLink
-          class="px-3 py-1 bg-[#eff6ff] text-[#2563eb] border border-[#2563eb]/20 rounded-full text-xs font-bold inline-flex items-center gap-1 no-underline"
-          to="/transport"
-        >
-          📱 切換至用戶端
-        </NuxtLink>
-      </div>
-      <div class="ta__header-right">
-        <span>👤 調度中心</span>
-      </div>
-    </header>
+  <div class="admin-page pb-20">
 
     <!-- ═══ 主內容區 ═══ -->
     <main class="ta__content" role="main">
@@ -621,40 +602,6 @@ function resetDemo() {
 </template>
 
 <style scoped>
-/* ═══ 固定 Header ═══ */
-.ta__header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 50px;
-  padding: 0 var(--space-4, 16px);
-  background: var(--color-bg-card, #ffffff);
-  border-bottom: 1px solid var(--color-border, #e2e8f0);
-}
-
-.ta__header-left {
-  font-size: var(--text-sm, 13px);
-  font-weight: 600;
-  color: var(--color-text-primary, #1c1917);
-  white-space: nowrap;
-}
-
-.ta__header-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.ta__header-right {
-  font-size: var(--text-sm, 13px);
-  font-weight: 600;
-  color: var(--color-text-primary, #1c1917);
-  white-space: nowrap;
-}
-
 /* ═══ 主內容區 ═══ */
 .ta__content {
   display: flex;

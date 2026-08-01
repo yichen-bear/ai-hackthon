@@ -1,5 +1,5 @@
 <script setup lang="ts">
-definePageMeta({ layout: false })
+definePageMeta({ layout: 'admin' })
 
 useHead({
   htmlAttrs: { lang: 'zh-TW' },
@@ -20,7 +20,14 @@ type AnnCategory = 'maintenance' | 'cleaning' | 'meeting'
 const currentRole = ref<RoleTab>('property')
 const propertyTab = ref<PropertyTab>('parcel')
 const parcelSubTab = ref<ParcelSubTab>('store')
-const isHeaderExpanded = ref(false)
+
+// Watch for role query parameter from side nav
+const route = useRoute()
+watch(() => route.query.role, (newRole) => {
+  if (newRole && ['property', 'plumber', 'cleaning'].includes(newRole as string)) {
+    currentRole.value = newRole as RoleTab
+  }
+}, { immediate: true })
 
 // ─── Toast ───
 const toastMessage = ref('')
@@ -290,94 +297,14 @@ function completeCleaning(booking: CleaningBooking) {
   showToast('✅ 服務完成回報成功')
 }
 
-// ─── 六大模組導航 ───
-const modules = [
-  { label: '食', path: '/admin/food' },
-  { label: '醫', path: '/admin/medical' },
-  { label: '住', path: '/admin/housing' },
-  { label: '行', path: '/admin/transport' },
-  { label: '育', path: '/admin/education' },
-  { label: '樂', path: '/admin/entertainment' },
-]
+
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-100 flex justify-center">
-    <div class="w-full max-w-[430px] min-h-screen bg-white shadow-xl relative pb-12">
-
-      <!-- ═══ Top Header ═══ -->
-      <header class="sticky top-0 z-40 h-[50px] bg-white border-b border-slate-200 flex items-center justify-between px-4 shadow-sm">
-        <div class="flex items-center gap-1 text-sm font-semibold text-slate-900 truncate">
-          <span>🏠 住居模組</span>
-          <span class="text-slate-300">|</span>
-          <span>👤 廠商後台</span>
-        </div>
-        <button
-          class="flex items-center gap-1 px-3 py-1.5 bg-orange-50 text-orange-600 text-sm font-bold rounded-lg border border-orange-200 hover:bg-orange-100 active:scale-95 transition-all"
-          @click="isHeaderExpanded = !isHeaderExpanded"
-        >
-          ⚙️ 選單 {{ isHeaderExpanded ? '🔼' : '🔽' }}
-        </button>
-      </header>
-
-      <!-- ═══ Collapsible Menu ═══ -->
-      <div
-        class="overflow-hidden transition-all duration-300 ease-in-out bg-orange-50 border-b border-orange-100"
-        :style="{ maxHeight: isHeaderExpanded ? '200px' : '0px', opacity: isHeaderExpanded ? 1 : 0 }"
-      >
-        <div class="px-4 py-3 flex flex-col gap-3">
-          <div class="flex justify-between gap-1.5">
-            <NuxtLink
-              v-for="mod in modules"
-              :key="mod.label"
-              :to="mod.path"
-              class="flex-1 py-2 text-center text-sm font-bold rounded-xl bg-white border border-slate-200 no-underline text-slate-800 hover:bg-orange-100 hover:border-orange-300 hover:text-orange-600 transition-all shadow-sm"
-            >
-              {{ mod.label }}
-            </NuxtLink>
-          </div>
-          <NuxtLink
-            class="w-full py-2.5 bg-white text-orange-500 font-bold rounded-xl border border-orange-200 text-center block no-underline hover:bg-orange-50 transition-colors shadow-sm"
-            to="/housing"
-          >
-            📱 切換至用戶端 (住)
-          </NuxtLink>
-        </div>
-      </div>
+  <div class="admin-page pb-12">
 
       <!-- ═══ 主內容區 ═══ -->
       <main class="flex flex-col gap-4 p-4">
-
-        <!-- ═══ 角色 Tab 切換列 ═══ -->
-        <nav class="flex bg-slate-100 rounded-2xl p-1 gap-1 shadow-sm" role="tablist" aria-label="廠商角色切換">
-          <button
-            role="tab"
-            :aria-selected="currentRole === 'property'"
-            class="flex-1 py-2.5 px-2 text-sm font-bold rounded-xl cursor-pointer transition-all text-center whitespace-nowrap border-none"
-            :class="currentRole === 'property' ? 'bg-orange-500 text-white shadow-md' : 'bg-transparent text-slate-500 hover:text-slate-700'"
-            @click="currentRole = 'property'"
-          >
-            🏢 社區物業
-          </button>
-          <button
-            role="tab"
-            :aria-selected="currentRole === 'plumber'"
-            class="flex-1 py-2.5 px-2 text-sm font-bold rounded-xl cursor-pointer transition-all text-center whitespace-nowrap border-none"
-            :class="currentRole === 'plumber' ? 'bg-orange-500 text-white shadow-md' : 'bg-transparent text-slate-500 hover:text-slate-700'"
-            @click="currentRole = 'plumber'"
-          >
-            🔧 水電工程
-          </button>
-          <button
-            role="tab"
-            :aria-selected="currentRole === 'cleaning'"
-            class="flex-1 py-2.5 px-2 text-sm font-bold rounded-xl cursor-pointer transition-all text-center whitespace-nowrap border-none"
-            :class="currentRole === 'cleaning' ? 'bg-orange-500 text-white shadow-md' : 'bg-transparent text-slate-500 hover:text-slate-700'"
-            @click="currentRole = 'cleaning'"
-          >
-            🧹 家事清潔
-          </button>
-        </nav>
 
         <!-- ═══════════════════════════════════════ -->
         <!-- 一、社區物業 / 管委會端 -->
@@ -905,7 +832,6 @@ const modules = [
         </div>
       </Transition>
 
-    </div>
   </div>
 </template>
 
