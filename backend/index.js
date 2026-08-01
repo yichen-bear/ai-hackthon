@@ -41,6 +41,7 @@ app.use('/api/address', addressRouter);
 
 // 掛載會員地址管理路由
 app.use('/api/member/addresses', memberAddressRouter);
+app.use('/api/member/tickets', require('./routes/memberTickets'));
 
 // 掛載語音辨識路由
 app.use('/api/speech', speechRouter);
