@@ -379,21 +379,22 @@ model ChatMessage {
 }
 
 model PickupReservation {
-  id           String    @id @default(uuid()) @db.Uuid
-  listingId    String    @map("listing_id") @db.Uuid
-  buyerId      String    @map("buyer_id") @db.Uuid
-  buyerName    String    @map("buyer_name") @db.VarChar(50)
-  buyerPhone   String?   @map("buyer_phone") @db.VarChar(20)
-  sellerId     String    @map("seller_id") @db.Uuid
-  sellerName   String    @map("seller_name") @db.VarChar(50)
-  pickupStore  String    @map("pickup_store") @db.VarChar(50)
-  pickupMethod String    @map("pickup_method") @db.VarChar(20)
-  status       String    @default("pending") @db.VarChar(20)
-  scheduledAt  DateTime? @map("scheduled_at") @db.Timestamptz(6)
-  creTime      DateTime  @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updTime      DateTime  @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
+  id             String    @id @default(uuid()) @db.Uuid
+  listingId      String    @map("listing_id") @db.Uuid
+  buyerId        String    @map("buyer_id") @db.Uuid
+  buyerName      String    @map("buyer_name") @db.VarChar(50)
+  buyerPhone     String?   @map("buyer_phone") @db.VarChar(20)
+  sellerId       String    @map("seller_id") @db.Uuid
+  sellerName     String    @map("seller_name") @db.VarChar(50)
+  pickupStore    String    @map("pickup_store") @db.VarChar(50)
+  pickupMethod   String    @map("pickup_method") @db.VarChar(20)
+  status         String    @default("PENDING_SELLER_APPROVAL") @db.VarChar(30)
+  scheduledAt    DateTime? @map("scheduled_at") @db.Timestamptz(6)
+  pickupDeadline DateTime? @map("pickup_deadline") @db.Timestamptz(6)
+  creTime        DateTime  @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updTime        DateTime  @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
 
-  listing      SecondhandListing @relation(fields: [listingId], references: [id])
+  listing        SecondhandListing @relation(fields: [listingId], references: [id])
 
   @@map("pickup_reservation")
 }

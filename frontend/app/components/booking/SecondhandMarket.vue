@@ -147,20 +147,52 @@ async function handleMessage(item: SecondhandItem) {
   }
 }
 
-// ─── 預約面交 ───
-async function handleReserve(item: SecondhandItem) {
-  if (!confirm(`確定要預約在「${item.pickupStore}」${item.pickupMethod}「${item.productName}」嗎？`)) return
+// ─── 預約面交 Modal ───
+const showReserveModal = ref(false)
+const reserveTarget = ref<SecondhandItem | null>(null)
+const reserveDate = ref('')
+const reserveTime = ref('')
+const isReserving = ref(false)
+
+function openReserveModal(item: SecondhandItem) {
+  reserveTarget.value = item
+  reserveDate.value = ''
+  reserveTime.value = ''
+  showReserveModal.value = true
+}
+
+async function handleReserve() {
+  if (!reserveTarget.value) return
+  const item = reserveTarget.value
+  isReserving.value = true
+
+  const scheduledAt = reserveDate.value && reserveTime.value
+    ? `${reserveDate.value}T${reserveTime.value}:00`
+    : null
+
   try {
     await $fetch('/api/reservations', {
       method: 'POST',
-      body: { listingId: item.id, buyerId: currentUser.id, buyerName: currentUser.name, sellerId: item.sellerId, sellerName: item.sellerName, pickupStore: item.pickupStore, pickupMethod: item.pickupMethod },
+      body: {
+        listingId: item.id,
+        buyerId: currentUser.id,
+        buyerName: currentUser.name,
+        sellerId: item.sellerId,
+        sellerName: item.sellerName,
+        pickupStore: item.pickupStore,
+        pickupMethod: item.pickupMethod,
+        scheduledAt,
+      },
     })
-    alert(`✅ 已預約！賣家 ${item.sellerName} 會收到通知。`)
+    alert(`✅ 預約已送出！等待 ${item.sellerName} 確認。`)
+    showReserveModal.value = false
+    reserveTarget.value = null
     fetchListings()
   } catch (e: any) {
     console.error('預約失敗:', e)
     alert('❌ 預約失敗：' + (e?.data?.error || e?.message || '請確認後端已啟動'))
   }
+  isReserving.value = false
 }
 
 // 統計
@@ -210,7 +242,7 @@ function timeAgo(iso: string): string {
           </div>
           <div class="sh__card-actions">
             <button class="sh__action sh__action--msg" @click="handleMessage(item)">💬 私訊賣家</button>
-            <button class="sh__action sh__action--reserve" @click="handleReserve(item)">🤝 預約面交</button>
+            <button class="sh__action sh__action--reserve" @click="openReserveModal(item)">🤝 預約面交</button>
           </div>
         </div>
       </div>
@@ -294,6 +326,35 @@ function timeAgo(iso: string): string {
         </div>
       </div>
     </Teleport>
+    <!-- 預約面交 Modal -->
+    <Teleport to="body">
+      <div v-if="showReserveModal && reserveTarget" class="sh__overlay" @click.self="showReserveModal = false">
+        <div class="sh__form-panel">
+          <div class="sh__form-header">
+            <h3>🤝 預約{{ reserveTarget.pickupMethod }}</h3>
+            <button class="sh__form-close" @click="showReserveModal = false">✕</button>
+          </div>
+          <div class="sh__reserve-info">
+            <p class="sh__reserve-product">{{ reserveTarget.productName }}</p>
+            <p class="sh__reserve-meta">📍 {{ reserveTarget.pickupStore }} · {{ reserveTarget.pickupMethod }}</p>
+            <p class="sh__reserve-meta">👤 賣家：{{ reserveTarget.sellerName }}</p>
+          </div>
+          <div v-if="reserveTarget.pickupMethod === '門市面交'" class="sh__form-field">
+            <label class="sh__form-label">預約面交日期 *</label>
+            <input v-model="reserveDate" type="date" class="sh__form-input" />
+          </div>
+          <div v-if="reserveTarget.pickupMethod === '門市面交'" class="sh__form-field">
+            <label class="sh__form-label">預約面交時間 *</label>
+            <input v-model="reserveTime" type="time" class="sh__form-input" />
+          </div>
+          <p v-if="reserveTarget.pickupMethod === '門市代放'" class="sh__reserve-hint">📦 賣家同意後會將商品寄放至門市，您有 7 天取貨期限。</p>
+          <button class="sh__form-submit" :disabled="(reserveTarget.pickupMethod === '門市面交' && (!reserveDate || !reserveTime)) || isReserving" @click="handleReserve">
+            {{ isReserving ? '送出中...' : '送出預約' }}
+          </button>
+          <button class="sh__form-cancel" @click="showReserveModal = false">取消</button>
+        </div>
+      </div>
+    </Teleport>
   </section>
 </template>
 
@@ -353,6 +414,12 @@ function timeAgo(iso: string): string {
 .sh__form-submit { width: 100%; padding: 14px; background: #16a34a; color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 8px; }
 .sh__form-submit:disabled { opacity: .5; cursor: not-allowed; }
 .sh__form-cancel { width: 100%; padding: 12px; background: transparent; border: 1.5px solid #e2e8f0; border-radius: 12px; font-size: 13px; font-weight: 600; color: #78716c; cursor: pointer; margin-top: 8px; }
+
+/* Reserve Modal */
+.sh__reserve-info { margin-bottom: 12px; }
+.sh__reserve-product { margin: 0 0 4px; font-size: 15px; font-weight: 700; color: #1c1917; }
+.sh__reserve-meta { margin: 0 0 2px; font-size: 12px; color: #78716c; }
+.sh__reserve-hint { margin: 0; font-size: 12px; color: #0369a1; background: #e0f2fe; padding: 10px 12px; border-radius: 10px; }
 
 /* Image upload */
 .sh__image-upload { position: relative; }

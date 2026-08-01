@@ -2,7 +2,15 @@ const express = require('express')
 const router = express.Router()
 const prisma = require('../utils/prismaClient')
 
-// POST /api/reservations - 建立面交預約（同時發送通知給賣家）
+/**
+ * 狀態流程：
+ * PENDING_SELLER_APPROVAL → APPROVED_MEETUP (面交) 或 ITEM_STORED_IN_711 (代收)
+ * APPROVED_MEETUP → COMPLETED
+ * ITEM_STORED_IN_711 → COMPLETED 或 EXPIRED_RETURNED (7天過期)
+ * PENDING_SELLER_APPROVAL → REJECTED
+ */
+
+// POST /api/reservations - 買家發起預約
 router.post('/', async (req, res) => {
   try {
     const { listingId, buyerId, buyerName, buyerPhone, sellerId, sellerName, pickupStore, pickupMethod, scheduledAt } = req.body
@@ -10,7 +18,6 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'listingId, buyerName, sellerName, pickupStore are required' })
     }
 
-    // 建立預約
     const reservation = await prisma.pickupReservation.create({
       data: {
         listingId,
@@ -21,17 +28,19 @@ router.post('/', async (req, res) => {
         sellerName,
         pickupStore,
         pickupMethod: pickupMethod || '門市面交',
+        status: 'PENDING_SELLER_APPROVAL',
         scheduledAt: scheduledAt ? new Date(scheduledAt) : null,
       },
     })
 
-    // 更新商品狀態為 reserved
+    // 更新商品狀態
     await prisma.secondhandListing.update({
       where: { id: listingId },
       data: { status: 'reserved' },
     })
 
-    // 自動發送通知給賣家（建立一筆系統訊息）
+    // 發送預約通知給賣家
+    const timeStr = scheduledAt ? new Date(scheduledAt).toLocaleString('zh-TW') : '待確認'
     await prisma.chatMessage.create({
       data: {
         senderId: buyerId || '00000000-0000-0000-0000-000000000000',
@@ -39,7 +48,14 @@ router.post('/', async (req, res) => {
         receiverId: sellerId || '00000000-0000-0000-0000-000000000000',
         receiverName: sellerName,
         listingId,
-        content: `🤝 ${buyerName} 已預約面交！地點：${pickupStore}（${pickupMethod}）`,
+        content: JSON.stringify({
+          type: 'reservation_card',
+          reservationId: reservation.id,
+          pickupStore,
+          pickupMethod,
+          scheduledAt: scheduledAt || null,
+          status: 'PENDING_SELLER_APPROVAL',
+        }),
         messageType: 'reservation_notice',
       },
     })
@@ -51,19 +67,86 @@ router.post('/', async (req, res) => {
   }
 })
 
-// PATCH /api/reservations/:id - 更新預約狀態
+// PATCH /api/reservations/:id - 賣家確認/拒絕/更新狀態
 router.patch('/:id', async (req, res) => {
   try {
     const { id } = req.params
     const { status } = req.body
+
+    const updateData = { status }
+
+    // 門市代收同意 → 啟動 7 天倒數
+    if (status === 'ITEM_STORED_IN_711') {
+      const deadline = new Date()
+      deadline.setDate(deadline.getDate() + 7)
+      updateData.pickupDeadline = deadline
+    }
+
     const reservation = await prisma.pickupReservation.update({
       where: { id },
-      data: { status },
+      data: updateData,
     })
+
+    // 如果拒絕，恢復商品狀態
+    if (status === 'REJECTED') {
+      await prisma.secondhandListing.update({
+        where: { id: reservation.listingId },
+        data: { status: 'active' },
+      })
+    }
+
+    // 如果完成，更新商品為 sold
+    if (status === 'COMPLETED') {
+      await prisma.secondhandListing.update({
+        where: { id: reservation.listingId },
+        data: { status: 'sold' },
+      })
+    }
+
+    // 發送狀態更新通知
+    const statusMsgs = {
+      APPROVED_MEETUP: '✅ 賣家已同意面交！請依約定時間前往。',
+      ITEM_STORED_IN_711: '📦 賣家已將商品寄放門市，請於 7 天內前往取貨。',
+      COMPLETED: '🎉 交易完成！感謝使用 i二手。',
+      EXPIRED_RETURNED: '⚠️ 買家逾期未取貨，商品已安排退回，請賣家前往取回。',
+      REJECTED: '❌ 賣家已拒絕此交易。',
+    }
+
+    if (statusMsgs[status]) {
+      await prisma.chatMessage.create({
+        data: {
+          senderId: 'system',
+          senderName: '系統通知',
+          receiverId: reservation.buyerId,
+          receiverName: reservation.buyerName,
+          listingId: reservation.listingId,
+          content: statusMsgs[status],
+          messageType: 'system',
+        },
+      })
+    }
+
     res.json(reservation)
   } catch (err) {
     console.error('PATCH /api/reservations error:', err)
     res.status(500).json({ error: 'Failed to update reservation' })
+  }
+})
+
+// GET /api/reservations?userId=xxx - 取得某用戶的預約
+router.get('/', async (req, res) => {
+  try {
+    const { userId } = req.query
+    if (!userId) return res.status(400).json({ error: 'userId required' })
+    const reservations = await prisma.pickupReservation.findMany({
+      where: { OR: [{ buyerId: userId }, { sellerId: userId }] },
+      orderBy: { creTime: 'desc' },
+      include: { listing: true },
+    })
+    res.json(reservations)
+  } catch (err) {
+    console.error('GET /api/reservations error:', err)
+    res.status(500).json({ error: 'Failed to fetch reservations' })
   }
 })
 

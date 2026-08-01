@@ -7,7 +7,7 @@
 const activeTab = ref<'points' | 'barcode' | 'tickets' | 'badges' | 'groups' | 'messages'>('points')
 
 // ─── 私訊系統 ───
-const currentUserId = 'user-001'
+const currentUserId = '00000000-0000-0000-0000-000000000001'
 const currentUserName = '沈小姐'
 
 interface ChatConversation {
@@ -94,6 +94,33 @@ function closeChatRoom() { showChatRoom.value = false; activePeer.value = null }
 function formatMsgTime(iso: string): string {
   const d = new Date(iso)
   return d.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' })
+}
+
+// ─── 預約卡片輔助 ───
+function isJsonContent(content: string): boolean {
+  try { const p = JSON.parse(content); return p && p.type === 'reservation_card' } catch { return false }
+}
+function parseReservation(content: string): any {
+  try { return JSON.parse(content) } catch { return {} }
+}
+function formatScheduled(iso: string): string {
+  if (!iso) return ''
+  return new Date(iso).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
+}
+function getReservationStatusLabel(status: string): string {
+  const map: Record<string, string> = { PENDING_SELLER_APPROVAL: '⏳ 等待賣家確認', APPROVED_MEETUP: '✅ 已同意面交', ITEM_STORED_IN_711: '📦 已到店待取貨', COMPLETED: '🎉 交易完成', EXPIRED_RETURNED: '⚠️ 逾期退回', REJECTED: '❌ 已拒絕' }
+  return map[status] || status
+}
+async function confirmReservation(reservationId: string, newStatus: string) {
+  if (!reservationId) return
+  try {
+    await $fetch(`/api/reservations/${reservationId}`, { method: 'PATCH', body: { status: newStatus } })
+    alert(newStatus === 'APPROVED_MEETUP' ? '✅ 已同意面交！' : '❌ 已拒絕交易')
+    // 重新載入對話
+    if (activePeer.value) openChat(activePeer.value)
+  } catch (e: any) {
+    alert('操作失敗：' + (e?.data?.error || e?.message || ''))
+  }
 }
 interface ChatMsg { author: string; content: string; time: string; isPinned?: boolean }
 interface MyGroup {
@@ -548,9 +575,21 @@ const allBadges = ref([
             <span class="msg-header-hint">{{ activePeer.listingName || '私訊' }}</span>
           </header>
           <div class="msg-body">
-            <div v-for="m in chatMessages" :key="m.id" class="msg-bubble" :class="{ 'msg-bubble--mine': m.senderId === currentUserId, 'msg-bubble--system': m.messageType === 'reservation_notice' }">
-              <span v-if="m.senderId !== currentUserId && m.messageType !== 'reservation_notice'" class="msg-author">{{ m.senderName }}</span>
-              <p class="msg-text">{{ m.content }}</p>
+            <div v-for="m in chatMessages" :key="m.id" class="msg-bubble" :class="{ 'msg-bubble--mine': m.senderId === currentUserId, 'msg-bubble--system': m.messageType === 'system' || m.messageType === 'reservation_notice' }">
+              <span v-if="m.senderId !== currentUserId && m.messageType === 'text'" class="msg-author">{{ m.senderName }}</span>
+              <!-- 預約卡片 -->
+              <div v-if="m.messageType === 'reservation_notice' && isJsonContent(m.content)" class="msg-reservation-card">
+                <p class="msg-reservation-title">🤝 面交預約</p>
+                <p class="msg-reservation-detail">📍 {{ parseReservation(m.content).pickupStore }}</p>
+                <p v-if="parseReservation(m.content).scheduledAt" class="msg-reservation-detail">⏰ {{ formatScheduled(parseReservation(m.content).scheduledAt) }}</p>
+                <p class="msg-reservation-status">{{ getReservationStatusLabel(parseReservation(m.content).status) }}</p>
+                <div v-if="parseReservation(m.content).status === 'PENDING_SELLER_APPROVAL' && m.receiverId === currentUserId" class="msg-reservation-actions">
+                  <button class="msg-confirm-btn" @click="confirmReservation(parseReservation(m.content).reservationId, 'APPROVED_MEETUP')">✅ 同意面交</button>
+                  <button class="msg-reject-btn" @click="confirmReservation(parseReservation(m.content).reservationId, 'REJECTED')">❌ 拒絕</button>
+                </div>
+              </div>
+              <!-- 普通文字 -->
+              <p v-else class="msg-text">{{ m.content }}</p>
               <span class="msg-time">{{ formatMsgTime(m.creTime) }}</span>
             </div>
           </div>
@@ -915,4 +954,13 @@ const allBadges = ref([
 .msg-input { flex: 1; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 13px; outline: none; }
 .msg-input:focus { border-color: #f59e0b; }
 .msg-send { padding: 10px 16px; background: #f59e0b; color: #fff; border: none; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+/* Reservation Card in Chat */
+.msg-reservation-card { display: flex; flex-direction: column; gap: 4px; }
+.msg-reservation-title { margin: 0; font-size: 13px; font-weight: 700; color: #1c1917; }
+.msg-reservation-detail { margin: 0; font-size: 12px; color: #78716c; }
+.msg-reservation-status { margin: 4px 0 0; font-size: 12px; font-weight: 600; color: #0369a1; }
+.msg-reservation-actions { display: flex; gap: 8px; margin-top: 8px; }
+.msg-confirm-btn { padding: 6px 12px; border: none; border-radius: 8px; background: #16a34a; color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; }
+.msg-reject-btn { padding: 6px 12px; border: none; border-radius: 8px; background: #e11d48; color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; }
 </style>
