@@ -1,4 +1,14 @@
 <script setup lang="ts">
+// 未讀私訊數（全局狀態）
+const msgUnread = useState<number>('global-msg-unread', () => 0)
+
+onMounted(async () => {
+  try {
+    const data: any = await $fetch('/api/messages/unread', { params: { userId: '00000000-0000-0000-0000-000000000001' } })
+    msgUnread.value = data?.unreadCount || 0
+  } catch { /* silent */ }
+})
+
 function openAiChat() {
   navigateTo('/ai-chat')
 }
@@ -25,6 +35,7 @@ function goToCalendar() {
       >
         <span class="bottom-bar__btn-icon" aria-hidden="true">🏠</span>
         <span class="bottom-bar__btn-label">會員中心</span>
+        <span v-if="msgUnread > 0" class="bottom-bar__unread"></span>
       </button>
 
       <!-- AI 聊天按鈕（圓形突出） -->
@@ -77,6 +88,7 @@ function goToCalendar() {
 
 /* ── 一般按鈕 ── */
 .bottom-bar__btn {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -135,5 +147,15 @@ function goToCalendar() {
   margin-top: 2px;
   color: var(--color-primary, #3b82f6);
   font-weight: 600;
+}
+
+.bottom-bar__unread {
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e11d48;
 }
 </style>
