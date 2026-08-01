@@ -53,6 +53,7 @@ model SysCounty {
   updId             String?                          @map("upd_id") @db.Uuid
   feedbacks         PmsFormFeedback[]
   topicRestrictions PmsTopicCountyDistrictRelation[]
+  memberAddresses   MemberAddress[]
   districts         SysDistrict[]
 
   @@map("sys_county")
@@ -72,6 +73,7 @@ model SysDistrict {
   updId             String?                          @map("upd_id") @db.Uuid
   feedbacks         PmsFormFeedback[]
   topicRestrictions PmsTopicCountyDistrictRelation[]
+  memberAddresses   MemberAddress[]
   county            SysCounty                        @relation(fields: [countyCode], references: [code])
 
   @@map("sys_district")
@@ -294,22 +296,43 @@ model MmsOrderRecord {
 }
 
 model MemberAccount {
-  id           String   @id @default(uuid()) @db.Uuid
+  id           String          @id @default(uuid()) @db.Uuid
   email        Bytes?
-  emailHash    String?  @unique @map("email_hash") @db.VarChar(64)
+  emailHash    String?         @unique @map("email_hash") @db.VarChar(64)
   phone        Bytes?
-  phoneHash    String?  @unique @map("phone_hash") @db.VarChar(64)
+  phoneHash    String?         @unique @map("phone_hash") @db.VarChar(64)
   name         Bytes?
-  nameHash     String?  @map("name_hash") @db.VarChar(64)
-  passwordHash String   @map("password_hash") @db.VarChar(255)
-  status       String   @default("01") @map("status") @db.VarChar(2)
-  isDeleted    Boolean  @default(false) @map("is_deleted")
-  creId        String   @map("cre_id") @db.Uuid
-  creTime      DateTime @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updId        String   @map("upd_id") @db.Uuid
-  updTime      DateTime @default(now()) @map("upd_time") @db.Timestamptz(6)
+  nameHash     String?         @map("name_hash") @db.VarChar(64)
+  passwordHash String          @map("password_hash") @db.VarChar(255)
+  status       String          @default("01") @map("status") @db.VarChar(2)
+  isDeleted    Boolean         @default(false) @map("is_deleted")
+  creId        String          @map("cre_id") @db.Uuid
+  creTime      DateTime        @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updId        String          @map("upd_id") @db.Uuid
+  updTime      DateTime        @default(now()) @map("upd_time") @db.Timestamptz(6)
+  addresses    MemberAddress[]
 
   @@map("member_account")
+}
+
+model MemberAddress {
+  id                Int           @id @default(autoincrement())
+  memberId          String        @map("member_id") @db.Uuid
+  type              String        @default("mailing") @db.VarChar(20)
+  label             String?       @db.VarChar(50)
+  countyCode        String        @map("county_code") @db.VarChar(2)
+  districtCode      String        @map("district_code") @db.VarChar(3)
+  addressDetail     Bytes?        @map("address_detail")
+  addressDetailHash String?       @map("address_detail_hash") @db.VarChar(64)
+  isDefault         Boolean       @default(false) @map("is_default")
+  isDeleted         Boolean       @default(false) @map("is_deleted")
+  creTime           DateTime      @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updTime           DateTime      @default(now()) @map("upd_time") @db.Timestamptz(6)
+  member            MemberAccount @relation(fields: [memberId], references: [id])
+  county            SysCounty     @relation(fields: [countyCode], references: [code])
+  district          SysDistrict   @relation(fields: [districtCode], references: [code])
+
+  @@map("member_address")
 }
 
 model VendorUser {

@@ -367,6 +367,21 @@ exports.Prisma.MemberAccountScalarFieldEnum = {
   updTime: 'updTime'
 };
 
+exports.Prisma.MemberAddressScalarFieldEnum = {
+  id: 'id',
+  memberId: 'memberId',
+  type: 'type',
+  label: 'label',
+  countyCode: 'countyCode',
+  districtCode: 'districtCode',
+  addressDetail: 'addressDetail',
+  addressDetailHash: 'addressDetailHash',
+  isDefault: 'isDefault',
+  isDeleted: 'isDeleted',
+  creTime: 'creTime',
+  updTime: 'updTime'
+};
+
 exports.Prisma.VendorUserScalarFieldEnum = {
   id: 'id',
   vendorId: 'vendorId',
@@ -508,6 +523,7 @@ exports.Prisma.ModelName = {
   PmsFormFeedback: 'PmsFormFeedback',
   MmsOrderRecord: 'MmsOrderRecord',
   MemberAccount: 'MemberAccount',
+  MemberAddress: 'MemberAddress',
   VendorUser: 'VendorUser',
   SecondhandListing: 'SecondhandListing',
   ChatMessage: 'ChatMessage',
