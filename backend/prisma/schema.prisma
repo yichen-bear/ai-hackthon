@@ -487,9 +487,9 @@ model ActivityRegistration {
   userName     String            @map("user_name") @db.VarChar(50)
   userPhone    String?           @map("user_phone") @db.VarChar(20)
   status       String            @default("registered") @db.VarChar(20)
+  registeredAt DateTime          @default(now()) @map("registered_at") @db.Timestamptz(6)
   source       String            @default("app") @db.VarChar(20)
   specialNeeds String?           @map("special_needs") @db.VarChar(200)
-  registeredAt DateTime          @default(now()) @map("registered_at") @db.Timestamptz(6)
   activity     CommunityActivity @relation(fields: [activityId], references: [id])
 
   @@unique([activityId, userId])
@@ -512,41 +512,6 @@ model CommunityQuestion {
 
   @@map("community_question")
 }
-
-model RestaurantQueue {
-  id                Int          @id @default(autoincrement())
-  placeId           String       @unique @map("place_id") @db.VarChar(100)
-  name              String       @db.VarChar(100)
-  totalTables       Int          @default(10) @map("total_tables")
-  emptyTables       Int          @default(0) @map("empty_tables")
-  waitingGroups     Int          @default(0) @map("waiting_groups")
-  estimatedMinutes  Int          @default(0) @map("estimated_minutes")
-  avgServiceMinutes Int          @default(30) @map("avg_service_minutes")
-  isOpen            Boolean      @default(true) @map("is_open")
-  creTime           DateTime     @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updTime           DateTime     @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
-  entries           QueueEntry[]
-
-  @@map("restaurant_queue")
-}
-
-model QueueEntry {
-  id            Int             @id @default(autoincrement())
-  queueId       Int             @map("queue_id")
-  ticketNumber  Int             @map("ticket_number")
-  partySize     Int             @map("party_size")
-  customerName  String?         @map("customer_name") @db.VarChar(50)
-  customerPhone String?         @map("customer_phone") @db.VarChar(20)
-  note          String?         @db.VarChar(200)
-  status        String          @default("waiting") @db.VarChar(20)
-  creTime       DateTime        @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updTime       DateTime        @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
-  queue         RestaurantQueue @relation(fields: [queueId], references: [id])
-
-  @@map("queue_entry")
-}
-
-// ═══ yoxi 叫車模組 ═══
 
 model Driver {
   id          String      @id @default(uuid()) @db.Uuid
