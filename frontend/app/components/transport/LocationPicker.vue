@@ -55,13 +55,34 @@ function openPicker() {
   showMap.value = false
   mapSelectedLocation.value = null
   showPicker.value = true
+  // 初始化 Google Places Autocomplete
+  nextTick(() => initGoogleAutocomplete())
 }
 
 function closePicker() {
   showPicker.value = false
 }
 
-// 搜尋邏輯
+// Google Places Autocomplete
+const { initAutocomplete, getMapEmbedUrl } = useGooglePlaces()
+const autocompleteInputRef = ref<HTMLInputElement | null>(null)
+const selectedMapUrl = ref('')
+
+async function initGoogleAutocomplete() {
+  await nextTick()
+  const input = document.querySelector('.loc-search-input') as HTMLInputElement
+  if (!input) return
+  try {
+    await initAutocomplete(input, (place) => {
+      searchQuery.value = place.address
+      selectResult({ name: place.name || place.address, address: place.address, lat: place.lat, lng: place.lng })
+    })
+  } catch {
+    // Google API 不可用，使用 fallback mock 搜尋
+  }
+}
+
+// 搜尋邏輯（fallback when Google not available）
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
 function handleSearchInput() {
   if (searchTimeout) clearTimeout(searchTimeout)
@@ -81,8 +102,9 @@ function handleSearchInput() {
 }
 
 function selectResult(location: LocationResult) {
-  emit('update:modelValue', location.name)
+  emit('update:modelValue', location.address || location.name)
   emit('select', location)
+  selectedMapUrl.value = getMapEmbedUrl(location.address || location.name)
   closePicker()
 }
 
@@ -126,6 +148,14 @@ function confirmMapSelection() {
     </span>
     <span class="location-arrow">›</span>
   </button>
+  <!-- 地圖預覽（選擇地點後顯示） -->
+  <iframe
+    v-if="selectedMapUrl && modelValue"
+    :src="selectedMapUrl"
+    class="loc-map-preview"
+    loading="lazy"
+    allowfullscreen
+  ></iframe>
 
   <!-- 地點選擇器 Overlay -->
   <Teleport to="body">
@@ -138,7 +168,7 @@ function confirmMapSelection() {
             <input
               v-model="searchQuery"
               type="text"
-              class="search-input"
+              class="search-input loc-search-input"
               placeholder="搜尋地點或地址..."
               autofocus
               @input="handleSearchInput"
@@ -557,5 +587,13 @@ function confirmMapSelection() {
   font-size: 12px;
   color: var(--color-text-secondary, #78716c);
   margin: 0;
+}
+
+.loc-map-preview {
+  width: 100%;
+  height: 120px;
+  border: none;
+  border-radius: 10px;
+  margin-top: 8px;
 }
 </style>

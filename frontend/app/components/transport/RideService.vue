@@ -227,7 +227,11 @@ async function handleCancel() {
   rideState.value = 'idle'
 }
 
-function handleComplete() {
+async function handleComplete() {
+  // 通知後端完成行程
+  if (currentRideId.value) {
+    try { await $fetch(`/api/rides/${currentRideId.value}/complete`, { method: 'PATCH' }) } catch {}
+  }
   rideState.value = 'completed'
 }
 
