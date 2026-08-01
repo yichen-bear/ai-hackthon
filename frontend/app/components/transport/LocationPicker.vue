@@ -113,6 +113,41 @@ function toggleMap() {
   showMap.value = !showMap.value
 }
 
+// GPS 定位
+const isGeolocating = ref(false)
+const { getMapEmbedUrl: getGeoMapUrl } = useGooglePlaces()
+
+async function useCurrentLocation() {
+  if (!navigator.geolocation) {
+    selectResult({ name: '目前位置', address: '台北市信義區', lat: 25.033, lng: 121.565 })
+    return
+  }
+  isGeolocating.value = true
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      const { latitude, longitude } = pos.coords
+      // 反向 geocoding 取得地址
+      let address = `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`
+      try {
+        const config = useRuntimeConfig()
+        const apiKey = config.public.googleMapsKey as string
+        const res: any = await $fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}&language=zh-TW`)
+        if (res.results && res.results.length > 0) {
+          address = res.results[0].formatted_address
+        }
+      } catch { /* use coords */ }
+      isGeolocating.value = false
+      selectResult({ name: '目前位置', address, lat: latitude, lng: longitude })
+    },
+    () => {
+      isGeolocating.value = false
+      // fallback 台北信義
+      selectResult({ name: '目前位置', address: '台北市信義區（定位失敗）', lat: 25.033, lng: 121.565 })
+    },
+    { timeout: 8000 }
+  )
+}
+
 function handleMapClick(e: MouseEvent) {
   // 模擬地圖上點選位置（根據點擊位置計算模擬座標）
   const mapEl = e.currentTarget as HTMLElement
@@ -199,11 +234,11 @@ function confirmMapSelection() {
           <!-- 快速選擇 -->
           <div v-if="!searchQuery" class="quick-picks">
             <p class="quick-title">常用地點</p>
-            <button class="result-item" @click="selectResult({ name: '我的位置', address: '目前 GPS 位置', lat: 25.033, lng: 121.565 })">
+            <button class="result-item" @click="useCurrentLocation">
               <span class="result-icon">📌</span>
               <div class="result-info">
-                <span class="result-name">我的位置</span>
-                <span class="result-address">使用目前 GPS 定位</span>
+                <span class="result-name">{{ isGeolocating ? '定位中...' : '目前位置' }}</span>
+                <span class="result-address">使用 GPS 定位</span>
               </div>
             </button>
             <button

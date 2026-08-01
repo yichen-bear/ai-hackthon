@@ -480,10 +480,10 @@ function resetDemo() {
             </span>
           </div>
 
-          <!-- 客戶資訊 -->
+          <!-- 客戶資訊（派車前隱藏，保護乘客個資） -->
           <div class="ta__customer-info">
-            <span class="ta__customer-name">👤 {{ consultation.contactName }}</span>
-            <span class="ta__customer-phone">📞 {{ consultation.contactPhone }}</span>
+            <span class="ta__customer-name">👤 {{ consultation.status === 'pending' ? '待接單' : consultation.contactName }}</span>
+            <span class="ta__customer-phone">📞 {{ consultation.status === 'pending' ? '接單後顯示' : consultation.contactPhone }}</span>
           </div>
 
           <!-- 路線資訊 -->

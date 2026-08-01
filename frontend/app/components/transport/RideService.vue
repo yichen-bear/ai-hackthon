@@ -220,6 +220,7 @@ function stopPolling() {
 async function handleCancel() {
   stopCountdown()
   stopPolling()
+  stopRidingPoll()
   if (currentRideId.value) {
     try { await $fetch(`/api/rides/${currentRideId.value}/cancel`, { method: 'PATCH' }) } catch {}
   }
@@ -227,11 +228,40 @@ async function handleCancel() {
   rideState.value = 'idle'
 }
 
-async function handleComplete() {
-  // 通知後端完成行程
+// 用戶確認上車 → 進入 riding 狀態 + 通知後端 in_progress + 開始輪詢
+async function handleBoarding() {
   if (currentRideId.value) {
-    try { await $fetch(`/api/rides/${currentRideId.value}/complete`, { method: 'PATCH' }) } catch {}
+    try { await $fetch(`/api/rides/${currentRideId.value}/start`, { method: 'PATCH' }) } catch {}
   }
+  rideState.value = 'riding'
+  startRidingPoll()
+}
+
+// ─── riding 狀態輪詢：等廠商標記 completed ───
+let ridingPollTimer: ReturnType<typeof setInterval> | null = null
+
+function startRidingPoll() {
+  ridingPollTimer = setInterval(async () => {
+    if (!currentRideId.value) return
+    try {
+      const orders: any[] = await $fetch('/api/rides', { params: { userId: rideUser.value.id, status: 'all' } })
+      const myOrder = orders.find((o: any) => o.id === currentRideId.value)
+      if (!myOrder) return
+      if (myOrder.status === 'completed') {
+        stopRidingPoll()
+        rideState.value = 'completed'
+      }
+    } catch { /* silent */ }
+  }, 3000)
+}
+
+function stopRidingPoll() {
+  if (ridingPollTimer) { clearInterval(ridingPollTimer); ridingPollTimer = null }
+}
+
+async function handleComplete() {
+  // 用戶端不再主動呼叫 complete（由廠商端觸發）
+  // 此函式保留給評分後的 fallback
   rideState.value = 'completed'
 }
 
@@ -270,6 +300,7 @@ function openHistory() {
 onUnmounted(() => {
   stopCountdown()
   stopPolling()
+  stopRidingPoll()
 })
 </script>
 
@@ -463,7 +494,7 @@ onUnmounted(() => {
         </div>
         <div class="arrived-plate">{{ driverInfo.plateNumber }}</div>
         <p class="arrived-hint">司機正在前往，請至上車地點等候</p>
-        <button class="complete-btn" @click="rideState = 'riding'">確認上車</button>
+        <button class="complete-btn" @click="handleBoarding">確認上車</button>
       </div>
 
       <!-- riding 狀態：搭車中 -->
@@ -484,8 +515,8 @@ onUnmounted(() => {
           <p class="riding-arrow">↓</p>
           <p class="riding-to">🏁 {{ destinationInput }}</p>
         </div>
-        <p class="riding-hint">行程進行中，請繫好安全帶</p>
-        <button class="complete-btn" @click="handleComplete">已到達目的地</button>
+        <p class="riding-hint">🚗 行程進行中，請繫好安全帶</p>
+        <p class="riding-hint-sub">抵達後由司機確認完成行程</p>
       </div>
 
       <!-- completed 狀態：行程結束 + 評分 -->
@@ -997,6 +1028,7 @@ onUnmounted(() => {
 .riding-arrow { font-size: 16px; color: #94a3b8; margin: 4px 0; }
 .riding-to { font-size: 13px; color: #dc2626; margin: 4px 0; }
 .riding-hint { font-size: 13px; color: #64748b; margin: 12px 0; }
+.riding-hint-sub { font-size: 12px; color: #94a3b8; margin: 0; }
 .rating-label { font-size: 13px; color: #64748b; margin-bottom: 8px; }
 .rating-stars { display: flex; gap: 4px; justify-content: center; margin-bottom: 12px; }
 .star-btn { background: none; border: none; font-size: 24px; opacity: 0.3; cursor: pointer; transition: opacity 0.15s; }
