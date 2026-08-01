@@ -6,7 +6,8 @@
  */
 import type { YouBikeStation } from '~/composables/useYouBike'
 
-const GOOGLE_MAPS_KEY = 'AIzaSyBxEaw70I-VNOmc4oEJe2Cgbv2qpmwOLc4'
+const runtimeConfig = useRuntimeConfig()
+const GOOGLE_MAPS_KEY = runtimeConfig.public.googleMapsKey || ''
 
 const { stations, loading, error, lastUpdated, areas, startAutoRefresh, searchStations, getNearbyStations } = useYouBike()
 
