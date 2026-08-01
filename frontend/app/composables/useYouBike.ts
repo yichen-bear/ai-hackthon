@@ -22,6 +22,12 @@ export interface YouBikeStation {
   infoDate: string
   sareaen: string
   sarea: string
+  // 實際 API 欄位名
+  Quantity: number
+  available_rent_bikes: number
+  available_return_bikes: number
+  latitude: number
+  longitude: number
 }
 
 const YOUBIKE_API = 'https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json'
@@ -41,8 +47,19 @@ export function useYouBike() {
     try {
       const res = await fetch(YOUBIKE_API)
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const data: YouBikeStation[] = await res.json()
-      stations.value = data.filter(s => s.act === '1')
+      const data: any[] = await res.json()
+      // 映射 API 欄位為統一格式
+      stations.value = data
+        .filter(s => s.act === '1')
+        .map(s => ({
+          ...s,
+          // 統一欄位（API 使用不同命名）
+          tot: s.Quantity || s.tot || 0,
+          sbi: s.available_rent_bikes ?? s.sbi ?? 0,
+          bemp: s.available_return_bikes ?? s.bemp ?? 0,
+          lat: s.latitude || s.lat || 0,
+          lng: s.longitude || s.lng || 0,
+        }))
       lastUpdated.value = new Date().toLocaleTimeString('zh-TW', { hour12: false })
     } catch (e: any) {
       error.value = e.message || '無法取得 YouBike 資料'
