@@ -412,8 +412,6 @@ async function completeActivity(act: ManagedActivity) {
     showToast('❌ 操作失敗')
   }
 }
-  showToast(`🎉 活動完成：${act.name}`)
-}
 function sendNotification() {
   sendNotifyDb()
 }
