@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import HealthTracker from '~/components/medical/HealthTracker.vue'
 import DiagnosisFlow from '~/components/medical/DiagnosisFlow.vue'
 
@@ -232,78 +232,83 @@ const drugSearchQuery = ref('')
 const drugColorFilter = ref('')
 const drugShapeFilter = ref('')
 
-const colorOptions = ['', '白色', '黃色', '棕色', '紅色', '橘色', '綠色', '藍色']
-const shapeOptions = ['', '圓形', '橢圓形', '膠囊', '長方形', '其他']
-
 interface DrugItem {
-  id: number
-  nameCn: string
-  nameEn: string
-  licenseNo: string
-  color: string
-  shape: string
-  imprint: string
-  size: string
-  imageUrl: string
+  許可證字號: string
+  中文品名: string
+  英文品名: string
+  形狀: string
+  特殊劑型: string
+  顏色: string
+  特殊氣味: string
+  刻痕: string
+  外觀尺寸: string
+  標註一: string | null
+  標註二: string | null
+  外觀圖檔連結: string
 }
 
-const drugDatabase = ref<DrugItem[]>([
-  {
-    id: 1,
-    nameCn: '"福元"蘇打錠500毫克',
-    nameEn: 'SODIUM BICARBONATE TABLETS "F.Y."',
-    licenseNo: '內衛成製字第000075號',
-    color: '白色',
-    shape: '圓形',
-    imprint: 'FY T061',
-    size: '8mm',
-    imageUrl: 'https://mcp.fda.gov.tw/resources/pictures/202409/017479_1_0_0_SODIUM%20BICARBONATE%20TABLETS%20F.Y._800.jpg',
-  },
-  {
-    id: 2,
-    nameCn: '安保寧膠囊250毫克',
-    nameEn: 'AMOXICILLIN CAPSULES 250MG',
-    licenseNo: '衛署藥製字第012345號',
-    color: '紅色',
-    shape: '膠囊',
-    imprint: 'AMX 250',
-    size: '18mm',
-    imageUrl: 'https://mcp.fda.gov.tw/resources/pictures/202409/amoxicillin_capsule_800.jpg',
-  },
-  {
-    id: 3,
-    nameCn: '普拿疼加強錠',
-    nameEn: 'PANADOL EXTRA CAPLETS',
-    licenseNo: '衛署藥輸字第025678號',
-    color: '白色',
-    shape: '橢圓形',
-    imprint: 'GX',
-    size: '16mm',
-    imageUrl: 'https://mcp.fda.gov.tw/resources/pictures/202409/panadol_extra_800.jpg',
-  },
-  {
-    id: 4,
-    nameCn: '脈優錠5毫克',
-    nameEn: 'NORVASC TABLETS 5MG',
-    licenseNo: '衛署藥輸字第022100號',
-    color: '白色',
-    shape: '圓形',
-    imprint: 'AML 5',
-    size: '6mm',
-    imageUrl: 'https://mcp.fda.gov.tw/resources/pictures/202409/norvasc_5mg_800.jpg',
-  },
-])
+const drugDatabase = ref<DrugItem[]>([])
+const drugLoading = ref(false)
+const drugError = ref('')
+
+const colorOptions = computed(() => {
+  const colors = new Set<string>()
+  drugDatabase.value.forEach(d => {
+    if (d.顏色) {
+      d.顏色.split(';;;').forEach(c => {
+        const trimmed = c.trim()
+        if (trimmed) colors.add(trimmed)
+      })
+    }
+  })
+  return ['', ...Array.from(colors).sort()]
+})
+
+const shapeOptions = computed(() => {
+  const shapes = new Set<string>()
+  drugDatabase.value.forEach(d => {
+    if (d.形狀) {
+      d.形狀.split(';;;').forEach(s => {
+        const trimmed = s.trim()
+        if (trimmed) shapes.add(trimmed)
+      })
+    }
+  })
+  return ['', ...Array.from(shapes).sort()]
+})
+
+onMounted(async () => {
+  drugLoading.value = true
+  drugError.value = ''
+  try {
+    const res = await fetch('/medicine/42_5.json')
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    drugDatabase.value = await res.json()
+  } catch (e: any) {
+    drugError.value = e.message || '載入藥品資料失敗'
+  } finally {
+    drugLoading.value = false
+  }
+})
+
+const drugSearchActive = ref(false)
+
+function triggerDrugSearch() {
+  drugSearchActive.value = true
+}
 
 const filteredDrugs = computed(() => {
+  if (!drugSearchActive.value) return []
   return drugDatabase.value.filter(d => {
     const q = drugSearchQuery.value.toLowerCase()
     const matchQuery = !q ||
-      d.nameCn.toLowerCase().includes(q) ||
-      d.nameEn.toLowerCase().includes(q) ||
-      d.licenseNo.toLowerCase().includes(q) ||
-      d.imprint.toLowerCase().includes(q)
-    const matchColor = !drugColorFilter.value || d.color === drugColorFilter.value
-    const matchShape = !drugShapeFilter.value || d.shape === drugShapeFilter.value
+      d.中文品名?.toLowerCase().includes(q) ||
+      d.英文品名?.toLowerCase().includes(q) ||
+      d.許可證字號?.toLowerCase().includes(q) ||
+      (d.標註一 && d.標註一.toLowerCase().includes(q)) ||
+      (d.標註二 && d.標註二.toLowerCase().includes(q))
+    const matchColor = !drugColorFilter.value || (d.顏色 && d.顏色.split(';;;').some(c => c.trim() === drugColorFilter.value))
+    const matchShape = !drugShapeFilter.value || (d.形狀 && d.形狀.split(';;;').some(s => s.trim() === drugShapeFilter.value))
     return matchQuery && matchColor && matchShape
   })
 })
@@ -335,7 +340,7 @@ function backToDrugSearch() {
 }
 
 function addToTracking(drug: DrugItem) {
-  toastMessage.value = `已將「${drug.nameCn}」加入藥品追蹤！`
+  toastMessage.value = `已將「${drug.中文品名}」加入藥品追蹤！`
   showToast.value = true
   setTimeout(() => { showToast.value = false }, 2000)
 }
@@ -858,42 +863,67 @@ function addToTracking(drug: DrugItem) {
                   <option v-for="s in shapeOptions.slice(1)" :key="s" :value="s">{{ s }}</option>
                 </select>
               </div>
+              <button class="drug-search-btn" @click="triggerDrugSearch">
+                🔍 搜尋藥品
+              </button>
+            </div>
+
+            <!-- 載入中 -->
+            <div v-if="drugLoading" class="drug-loading-state">
+              <div class="drug-loading-spinner" />
+              <p class="drug-loading-text">正在載入藥品資料庫...</p>
+            </div>
+
+            <!-- 載入錯誤 -->
+            <div v-else-if="drugError" class="drug-error-state">
+              <p class="drug-error-text">⚠️ {{ drugError }}</p>
+            </div>
+
+            <!-- 尚未搜尋 -->
+            <div v-else-if="!drugSearchActive" class="drug-empty-text">
+              請輸入搜尋條件後點擊「搜尋藥品」按鈕
             </div>
 
             <!-- 搜尋結果 -->
-            <div v-for="drug in filteredDrugs" :key="drug.id" class="drug-result-card">
-              <div class="drug-result-card__image">
-                <img
-                  :src="drug.imageUrl"
-                  :alt="drug.nameCn"
-                  class="drug-result-card__img"
-                  loading="lazy"
-                />
-              </div>
-              <div class="drug-result-card__body">
-                <h4 class="drug-result-card__name-cn">{{ drug.nameCn }}</h4>
-                <p class="drug-result-card__name-en">{{ drug.nameEn }}</p>
-                <p class="drug-result-card__license">{{ drug.licenseNo }}</p>
-                <div class="drug-feature-badges">
-                  <span class="drug-badge">⚪ {{ drug.color }}</span>
-                  <span class="drug-badge">🟢 {{ drug.shape }}</span>
-                  <span class="drug-badge">✍️ {{ drug.imprint }}</span>
-                  <span class="drug-badge">📏 {{ drug.size }}</span>
+            <template v-else>
+              <div v-for="(drug, idx) in filteredDrugs" :key="drug.許可證字號 + idx" class="drug-result-card">
+                <div class="drug-result-card__image">
+                  <img
+                    :src="drug.外觀圖檔連結"
+                    :alt="drug.中文品名"
+                    class="drug-result-card__img"
+                    loading="lazy"
+                  />
                 </div>
-                <div class="drug-result-card__actions">
-                  <button class="drug-action-btn drug-action-btn--secondary" @click="addToTracking(drug)">
-                    ⭐ 加入追蹤
-                  </button>
-                  <button class="drug-action-btn drug-action-btn--primary" @click="openPharmacyView(drug)">
-                    🏪 查詢現貨藥局
-                  </button>
+                <div class="drug-result-card__body">
+                  <h4 class="drug-result-card__name-cn">{{ drug.中文品名 }}</h4>
+                  <p class="drug-result-card__name-en">{{ drug.英文品名 }}</p>
+                  <p class="drug-result-card__license">{{ drug.許可證字號 }}</p>
+                  <div class="drug-feature-badges">
+                    <span class="drug-badge">⚪ {{ drug.顏色 }}</span>
+                    <span class="drug-badge">🟢 {{ drug.形狀 }}</span>
+                    <span class="drug-badge">✍️ {{ drug.刻痕 }}</span>
+                    <span class="drug-badge">📏 {{ drug.外觀尺寸 }}mm</span>
+                  </div>
+                  <div v-if="drug.標註一 || drug.標註二" class="drug-imprint-info">
+                    <span v-if="drug.標註一" class="drug-badge">🔤 {{ drug.標註一 }}</span>
+                    <span v-if="drug.標註二" class="drug-badge">🔤 {{ drug.標註二 }}</span>
+                  </div>
+                  <div class="drug-result-card__actions">
+                    <button class="drug-action-btn drug-action-btn--secondary" @click="addToTracking(drug)">
+                      ⭐ 加入追蹤
+                    </button>
+                    <button class="drug-action-btn drug-action-btn--primary" @click="openPharmacyView(drug)">
+                      🏪 查詢現貨藥局
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <p v-if="filteredDrugs.length === 0" class="drug-empty-text">
-              查無符合條件的藥品，請調整搜尋條件
-            </p>
+              <p v-if="filteredDrugs.length === 0" class="drug-empty-text">
+                查無符合條件的藥品，請調整搜尋條件
+              </p>
+            </template>
           </div>
 
           <!-- 藥局庫存視圖 -->
@@ -904,7 +934,7 @@ function addToTracking(drug: DrugItem) {
 
             <div class="drug-pharmacy-header">
               <h3 class="drug-pharmacy-header__title">
-                備有【{{ selectedDrug?.nameCn }}】現貨之健保藥局
+                備有【{{ selectedDrug?.中文品名 }}】現貨之健保藥局
               </h3>
             </div>
 
@@ -2576,6 +2606,8 @@ function addToTracking(drug: DrugItem) {
 
 .drug-filter-select {
   flex: 1;
+  min-width: 0;
+  max-width: 50%;
   padding: 9px 12px;
   border: 1.5px solid #e2e8f0;
   border-radius: 10px;
@@ -2585,9 +2617,31 @@ function addToTracking(drug: DrugItem) {
   background: #fff;
   cursor: pointer;
   transition: border-color 0.15s;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .drug-filter-select:focus {
   border-color: var(--color-primary);
+}
+
+.drug-search-btn {
+  width: 100%;
+  padding: 12px 20px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0d9488, #14b8a6);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.drug-search-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(13, 148, 136, 0.35);
 }
 
 /* 藥品結果卡片 - 圖片優先 */
@@ -2700,6 +2754,50 @@ function addToTracking(drug: DrugItem) {
   font-size: 13px;
   color: #a8a29e;
   padding: 20px;
+}
+
+/* 藥品載入/錯誤狀態 */
+.drug-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 16px;
+}
+
+.drug-loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(13, 148, 136, 0.2);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.drug-loading-text {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+}
+
+.drug-error-state {
+  padding: 20px;
+  text-align: center;
+}
+
+.drug-error-text {
+  margin: 0;
+  font-size: 14px;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.drug-imprint-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
 }
 
 /* 藥局庫存視圖 */
