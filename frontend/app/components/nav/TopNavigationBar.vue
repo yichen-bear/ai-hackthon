@@ -49,7 +49,7 @@ function goNext() {
   if (hasNext.value) navigateTo(pages.value[currentIndex.value + 1].path)
 }
 
-// ---------- 定位功能（保留不變） ----------
+// ---------- 定位功能（GPS + 反向 geocoding） ----------
 const locationText = ref('定位中...')
 const isLocating = ref(false)
 
@@ -62,8 +62,24 @@ function getLocation() {
   isLocating.value = true
   locationText.value = '取得中...'
   navigator.geolocation.getCurrentPosition(
-    () => {
-      locationText.value = '已定位 ✓'
+    async (pos) => {
+      const { latitude, longitude } = pos.coords
+      // 反向 geocoding 取得地區名
+      try {
+        const config = useRuntimeConfig()
+        const apiKey = config.public.googleMapsKey as string
+        const res: any = await $fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}&language=zh-TW&result_type=sublocality|locality`)
+        if (res.results && res.results.length > 0) {
+          // 取簡短地區名（例如「信義區」）
+          const components = res.results[0].address_components
+          const district = components.find((c: any) => c.types.includes('administrative_area_level_3') || c.types.includes('sublocality_level_1'))
+          locationText.value = district ? `📍 ${district.short_name}` : `📍 已定位`
+        } else {
+          locationText.value = '📍 已定位'
+        }
+      } catch {
+        locationText.value = '📍 已定位'
+      }
       isLocating.value = false
     },
     () => {
