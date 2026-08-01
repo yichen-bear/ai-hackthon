@@ -160,9 +160,9 @@ async function enterGroupChat(group: MyGroup) {
     groupChatMessages.value = msgs.map(m => ({
       author: m.senderId === currentUserId ? '我' : m.senderName,
       content: m.content,
-      time: m.messageType === 'system' ? '' : new Date(m.creTime).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }),
-      isPinned: m.messageType === 'system',
-    }))
+      time: new Date(m.creTime).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }),
+      isPinned: false,
+    })).filter(m => !m.content.startsWith('【'))
   } catch {
     groupChatMessages.value = [{ author: '📌 公告', content: `歡迎來到【${group.name}】！`, time: '', isPinned: true }]
   }
@@ -640,7 +640,6 @@ const allBadges = ref([
         </div>
         <div class="group-card-right">
           <span v-if="group.unreadCount > 0" class="group-unread">{{ group.unreadCount }}</span>
-          <span class="group-time">{{ group.lastMessageTime }}</span>
           <button class="group-leave-btn" @click="leaveGroup(group)">退出</button>
         </div>
       </div>
@@ -655,15 +654,7 @@ const allBadges = ref([
             <span class="chat-title">{{ activeGroupChat.name }}</span>
             <span class="chat-members">👥 {{ activeGroupChat.memberCount }}</span>
           </header>
-          <!-- 置頂活動資訊卡 -->
-          <div class="chat-activity-card">
-            <div class="chat-activity-icon">{{ activeGroupChat.icon }}</div>
-            <div class="chat-activity-info">
-              <span class="chat-activity-name">{{ activeGroupChat.name }}</span>
-              <span class="chat-activity-detail">📅 {{ activeGroupChat.activityDate }} {{ activeGroupChat.activityTime }}</span>
-              <span class="chat-activity-detail">📍 {{ activeGroupChat.activityLocation }}</span>
-            </div>
-          </div>
+          <!-- 聊天訊息 -->
           <div class="chat-messages">
             <div v-for="(msg, idx) in groupChatMessages" :key="idx" class="chat-msg" :class="{ 'chat-msg--mine': msg.author === '我', 'chat-msg--pinned': msg.isPinned }">
               <span v-if="!msg.isPinned && msg.author !== '我'" class="chat-author">{{ msg.author }}</span>
