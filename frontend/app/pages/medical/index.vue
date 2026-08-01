@@ -12,6 +12,13 @@ type TabKey = 'daily' | 'symptom' | 'clinic' | 'prescription' | 'pharmacy'
 
 const activeTab = ref<TabKey>('daily')
 
+// 支援 ?tab=xxx 直接跳轉
+const medRoute = useRoute()
+onMounted(() => {
+  const tab = medRoute.query.tab as string
+  if (tab && tabs.some(t => t.key === tab)) activeTab.value = tab as TabKey
+})
+
 const tabs: { key: TabKey; label: string }[] = [
   { key: 'daily', label: '健康紀錄' },
   { key: 'symptom', label: 'AI 診斷' },
