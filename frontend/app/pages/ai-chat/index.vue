@@ -22,6 +22,7 @@ const {
   stop: stopListening,
   transcript,
   error: sttError,
+  language: sttLanguage,
 } = useWhisperSpeechRecognition()
 const { isSupported: ttsSupported, playingMessageId, speak, stop: stopSpeaking } = useSpeechSynthesis()
 
@@ -488,8 +489,32 @@ function goBack() {
     <div ref="messagesContainer" class="chat-page__messages" @scroll="handleScroll">
       <div v-if="messages.length === 0" class="chat-page__welcome">
         <p class="chat-page__placeholder">
-          嗨！我是小統，您的 AI 助手。有什麼需要幫忙的嗎？可以直接描述您想辦理的服務，或用語音輸入。
+          嗨！我是小統，您的 AI 助手。<br>有什麼需要幫忙的嗎？可以直接描述您想辦理的服務，或用語音輸入。
         </p>
+
+        <!-- 語言選擇 -->
+        <div class="chat-page__lang-selector">
+          <p class="chat-page__lang-label">語音辨識語言</p>
+          <div class="chat-page__lang-options">
+            <button
+              class="chat-page__lang-btn"
+              :class="{ 'chat-page__lang-btn--active': sttLanguage === 'mandarin' }"
+              type="button"
+              @click="sttLanguage = 'mandarin'"
+            >
+              🗣️ 國語
+            </button>
+            <button
+              class="chat-page__lang-btn"
+              :class="{ 'chat-page__lang-btn--active': sttLanguage === 'taiwanese' }"
+              type="button"
+              @click="sttLanguage = 'taiwanese'"
+            >
+              🗣️ 台語
+            </button>
+          </div>
+        </div>
+
         <p class="chat-page__suggestion-label">試試以下問題：</p>
         <div class="chat-page__suggestions">
           <button
@@ -659,6 +684,15 @@ function goBack() {
 
     <!-- 輸入區域 -->
     <div class="chat-page__input-area">
+      <!-- 語言切換小按鈕 -->
+      <button
+        class="chat-page__lang-toggle"
+        type="button"
+        :title="sttLanguage === 'taiwanese' ? '目前：台語（點擊切換）' : '目前：國語（點擊切換）'"
+        @click="sttLanguage = sttLanguage === 'taiwanese' ? 'mandarin' : 'taiwanese'"
+      >
+        {{ sttLanguage === 'taiwanese' ? '台' : '國' }}
+      </button>
       <ClientOnly>
         <button
           v-if="sttSupported"
@@ -1368,5 +1402,72 @@ function goBack() {
 .chat-page__action-btn:hover {
   background-color: var(--color-primary, #3b82f6);
   color: #ffffff;
+}
+
+/* ── 語言選擇器（歡迎畫面） ── */
+.chat-page__lang-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.chat-page__lang-label {
+  font-size: 13px;
+  color: var(--color-text-secondary, #78716c);
+  margin: 0;
+}
+
+.chat-page__lang-options {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-page__lang-btn {
+  padding: 10px 20px;
+  border: 2px solid var(--color-border, #e7e5e4);
+  border-radius: 12px;
+  background-color: var(--color-bg-card, #ffffff);
+  color: var(--color-text-primary, #1c1917);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.chat-page__lang-btn:hover {
+  border-color: var(--color-primary, #3b82f6);
+}
+
+.chat-page__lang-btn--active {
+  border-color: var(--color-primary, #3b82f6);
+  background-color: #eff6ff;
+  color: var(--color-primary, #3b82f6);
+  font-weight: 600;
+}
+
+/* ── 語言切換小按鈕（輸入列） ── */
+.chat-page__lang-toggle {
+  width: 32px;
+  height: 32px;
+  border: 1.5px solid var(--color-border, #d6d3d1);
+  border-radius: 8px;
+  background-color: #fafaf9;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-primary, #3b82f6);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.chat-page__lang-toggle:hover {
+  background-color: #eff6ff;
+  border-color: var(--color-primary, #3b82f6);
 }
 </style>
