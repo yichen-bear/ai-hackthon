@@ -177,13 +177,8 @@ function confirmMapSelection() {
           </div>
         </div>
 
-        <!-- 切換地圖模式 -->
-        <button class="map-toggle-btn" @click="toggleMap">
-          {{ showMap ? '📋 切換為搜尋' : '🗺️ 在地圖上選擇' }}
-        </button>
-
         <!-- 搜尋結果列表 -->
-        <div v-if="!showMap" class="search-results">
+        <div class="search-results">
           <button
             v-for="loc in searchResults"
             :key="loc.name + loc.lat"
@@ -226,34 +221,6 @@ function confirmMapSelection() {
           </div>
         </div>
 
-        <!-- 地圖選點 -->
-        <div v-if="showMap" class="map-container">
-          <div class="map-area" @click="handleMapClick" role="img" aria-label="地圖區域，點擊選擇地點">
-            <!-- 模擬地圖（實際專案用 Mapbox / Google Maps） -->
-            <div class="map-placeholder">
-              <div class="map-grid"></div>
-              <div class="map-center-label">台北市</div>
-              <!-- 標記點 -->
-              <div
-                v-if="mapSelectedLocation"
-                class="map-marker"
-                :style="{
-                  top: `${((25.10 - mapSelectedLocation.lat) / 0.15) * 100}%`,
-                  left: `${((mapSelectedLocation.lng - 121.45) / 0.15) * 100}%`
-                }"
-              >
-                📍
-              </div>
-            </div>
-          </div>
-
-          <div v-if="mapSelectedLocation" class="map-selection">
-            <p class="map-selection-name">{{ mapSelectedLocation.name }}</p>
-            <p class="map-selection-address">{{ mapSelectedLocation.address }}</p>
-            <button class="confirm-map-btn" @click="confirmMapSelection">確認選擇此地點</button>
-          </div>
-          <p v-else class="map-hint">點擊地圖選擇目的地</p>
-        </div>
       </div>
     </div>
   </Teleport>
