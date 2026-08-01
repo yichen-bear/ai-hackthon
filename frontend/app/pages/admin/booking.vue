@@ -73,8 +73,8 @@ const roleOptions: RoleOption[] = [
 const currentRole = ref<ViewRole>('store')
 
 // ─── 門市選擇 ───
-const allStores = ['7-11 信義門市', '7-11 松山門市', '7-11 大安門市', '7-11 公館門市']
-const selectedStore = ref('7-11 信義門市')
+const allStores = ['7-ELEVEN 信義門市', '7-ELEVEN 松山門市', '7-ELEVEN 大安門市', '7-ELEVEN 公館門市']
+const selectedStore = ref('7-ELEVEN 信義門市')
 
 // ─── Toast ───
 const toastMessage = ref('')
@@ -97,7 +97,7 @@ function getSourceIcon(s: OrderSource) { return s === 'preorder' ? '🏪' : '�
 const storeOrders = ref<StoreOrder[]>([
   {
     id: 'so-1',
-    storeName: '7-11 信義門市',
+    storeName: '7-ELEVEN 信義門市',
     source: 'groupbuy',
     productName: '舒潔衛生紙箱購',
     spec: '100抽 x 72包',
@@ -115,7 +115,7 @@ const storeOrders = ref<StoreOrder[]>([
   },
   {
     id: 'so-2',
-    storeName: '7-11 信義門市',
+    storeName: '7-ELEVEN 信義門市',
     source: 'groupbuy',
     productName: '光泉鮮乳量販組',
     spec: '1858ml x 6瓶',
@@ -135,7 +135,7 @@ const storeOrders = ref<StoreOrder[]>([
   },
   {
     id: 'so-3',
-    storeName: '7-11 信義門市',
+    storeName: '7-ELEVEN 信義門市',
     source: 'preorder',
     productName: '中秋限定月餅禮盒',
     spec: '經典蛋黃酥 x6入',
@@ -149,7 +149,7 @@ const storeOrders = ref<StoreOrder[]>([
   // ─── 松山門市 ───
   {
     id: 'so-4',
-    storeName: '7-11 松山門市',
+    storeName: '7-ELEVEN 松山門市',
     source: 'groupbuy',
     productName: '舒潔衛生紙箱購',
     spec: '100抽 x 72包',
@@ -170,7 +170,7 @@ const storeOrders = ref<StoreOrder[]>([
   },
   {
     id: 'so-5',
-    storeName: '7-11 松山門市',
+    storeName: '7-ELEVEN 松山門市',
     source: 'preorder',
     productName: '日本A5和牛禮盒',
     spec: '300g 霜降片',
@@ -184,7 +184,7 @@ const storeOrders = ref<StoreOrder[]>([
   // ─── 大安門市 ───
   {
     id: 'so-6',
-    storeName: '7-11 大安門市',
+    storeName: '7-ELEVEN 大安門市',
     source: 'groupbuy',
     productName: '光泉鮮乳量販組',
     spec: '1858ml x 6瓶',
@@ -208,7 +208,7 @@ const storeOrders = ref<StoreOrder[]>([
   // ─── 公館門市 ───
   {
     id: 'so-7',
-    storeName: '7-11 公館門市',
+    storeName: '7-ELEVEN 公館門市',
     source: 'groupbuy',
     productName: '可口可樂量販箱',
     spec: '330ml x 24罐',
@@ -227,7 +227,7 @@ const storeOrders = ref<StoreOrder[]>([
   },
   {
     id: 'so-8',
-    storeName: '7-11 公館門市',
+    storeName: '7-ELEVEN 公館門市',
     source: 'preorder',
     productName: '法式甜點禮盒',
     spec: '馬卡龍 12入',
@@ -244,7 +244,7 @@ const storeOrders = ref<StoreOrder[]>([
 const shippingOrders = ref<StoreOrder[]>([
   {
     id: 'so-ship-1',
-    storeName: '7-11 信義門市',
+    storeName: '7-ELEVEN 信義門市',
     source: 'groupbuy',
     productName: '可口可樂量販箱',
     spec: '330ml x 24罐',
@@ -259,7 +259,7 @@ const shippingOrders = ref<StoreOrder[]>([
   },
   {
     id: 'so-ship-2',
-    storeName: '7-11 信義門市',
+    storeName: '7-ELEVEN 信義門市',
     source: 'preorder',
     productName: '日本A5和牛禮盒',
     spec: '300g 霜降片',
@@ -276,7 +276,7 @@ const shippingOrders = ref<StoreOrder[]>([
 const arrivedOrders = ref<StoreOrder[]>([
   {
     id: 'so-arr-1',
-    storeName: '7-11 信義門市',
+    storeName: '7-ELEVEN 信義門市',
     source: 'groupbuy',
     productName: '花王洗衣精超值組',
     spec: '2.4kg x 3瓶',
@@ -293,7 +293,7 @@ const arrivedOrders = ref<StoreOrder[]>([
   },
   {
     id: 'so-arr-2',
-    storeName: '7-11 松山門市',
+    storeName: '7-ELEVEN 松山門市',
     source: 'preorder',
     productName: '中秋限定月餅禮盒',
     spec: '經典蛋黃酥 x6入',
@@ -309,7 +309,7 @@ const arrivedOrders = ref<StoreOrder[]>([
   },
   {
     id: 'so-arr-3',
-    storeName: '7-11 大安門市',
+    storeName: '7-ELEVEN 大安門市',
     source: 'groupbuy',
     productName: '舒潔衛生紙箱購',
     spec: '100抽 x 72包',
@@ -330,7 +330,7 @@ const arrivedOrders = ref<StoreOrder[]>([
 const regionRequests = ref<RegionRequest[]>([
   {
     id: 'rr-1',
-    storeName: '7-11 信義門市',
+    storeName: '7-ELEVEN 信義門市',
     items: [
       { productName: '舒潔衛生紙箱購', spec: '100抽x72包', quantity: 10, unitPrice: 599 },
       { productName: '光泉鮮乳量販組', spec: '1858ml x 6瓶', quantity: 5, unitPrice: 399 },
@@ -342,7 +342,7 @@ const regionRequests = ref<RegionRequest[]>([
   },
   {
     id: 'rr-2',
-    storeName: '7-11 松山門市',
+    storeName: '7-ELEVEN 松山門市',
     items: [
       { productName: '舒潔衛生紙箱購', spec: '100抽x72包', quantity: 15, unitPrice: 599 },
       { productName: '可口可樂量販箱', spec: '330ml x 24罐', quantity: 6, unitPrice: 249 },
@@ -353,7 +353,7 @@ const regionRequests = ref<RegionRequest[]>([
   },
   {
     id: 'rr-3',
-    storeName: '7-11 大安門市',
+    storeName: '7-ELEVEN 大安門市',
     items: [
       { productName: '光泉鮮乳量販組', spec: '1858ml x 6瓶', quantity: 8, unitPrice: 399 },
     ],
@@ -365,7 +365,7 @@ const regionRequests = ref<RegionRequest[]>([
   },
   {
     id: 'rr-4',
-    storeName: '7-11 公館門市',
+    storeName: '7-ELEVEN 公館門市',
     items: [
       { productName: '花王洗衣精超值組', spec: '2.4kg x 3瓶', quantity: 12, unitPrice: 469 },
     ],
@@ -471,9 +471,88 @@ const regionDeliveredCount = computed(() => regionRequests.value.filter(r => r.s
 const storeTab = ref(0)
 const regionTab = ref(0)
 
-// 支援 ?tab=0/1/2 跳轉
+// 支援 ?tab=0/1/2/3 跳轉
 const adminRoute = useRoute()
-onMounted(() => { const t = adminRoute.query.tab; if (t != null) { storeTab.value = Number(t); regionTab.value = Number(t) } })
+onMounted(() => {
+  const t = adminRoute.query.tab
+  if (t != null) { storeTab.value = Number(t); regionTab.value = Number(t) }
+  fetchSecondhandItems()
+})
+
+// ─── i二手門市代收 ───
+interface SecondhandStoreItem {
+  id: string
+  listingId: string
+  title: string
+  category: string
+  imageUrl: string | null
+  sellerName: string
+  buyerName: string
+  pickupStore: string
+  status: string
+  storedAt: string
+  pickupDeadline: string
+  carbonReducedKg: number
+}
+const secondhandItems = ref<SecondhandStoreItem[]>([])
+
+async function fetchSecondhandItems() {
+  try {
+    const store = encodeURIComponent(selectedStore.value)
+    const res = await $fetch<SecondhandStoreItem[]>(`/api/secondhand-items?store=${store}`)
+    secondhandItems.value = res
+  } catch (err) {
+    console.error('fetchSecondhandItems error:', err)
+  }
+}
+
+// 門市切換時重新載入 i二手資料
+watch(selectedStore, () => { fetchSecondhandItems() })
+
+function isExpired(item: SecondhandStoreItem): boolean {
+  if (!item.pickupDeadline) return false
+  return new Date() > new Date(item.pickupDeadline)
+}
+
+function getSecondhandDaysLeft(item: SecondhandStoreItem): number {
+  if (!item.pickupDeadline) return 7
+  const diff = new Date(item.pickupDeadline).getTime() - Date.now()
+  return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)))
+}
+
+function getSecondhandUrgencyClass(item: SecondhandStoreItem): string {
+  const days = getSecondhandDaysLeft(item)
+  if (days <= 1) return 'bk__badge--red'
+  if (days <= 3) return 'bk__badge--amber'
+  return 'bk__badge--green'
+}
+
+function formatDate(dateStr: string): string {
+  if (!dateStr) return '-'
+  return new Date(dateStr).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
+}
+
+async function confirmSecondhandPickup(item: SecondhandStoreItem) {
+  try {
+    await $fetch(`/api/secondhand-items/${item.id}/pickup`, { method: 'PATCH' })
+    showToast('✅ 核銷成功！物品已由買家取走。')
+    await fetchSecondhandItems()
+  } catch (err) {
+    console.error('confirmSecondhandPickup error:', err)
+    showToast('❌ 核銷失敗，請重試')
+  }
+}
+
+async function returnToSeller(item: SecondhandStoreItem) {
+  try {
+    await $fetch(`/api/secondhand-items/${item.id}/return-to-seller`, { method: 'PATCH' })
+    showToast('↩️ 已通知賣家前來領回商品')
+    await fetchSecondhandItems()
+  } catch (err) {
+    console.error('returnToSeller error:', err)
+    showToast('❌ 操作失敗，請重試')
+  }
+}
 
 // ─── 個資遮蔽（區域模式不顯示） ───
 function maskName(name: string): string {
@@ -592,6 +671,9 @@ function resetDemo() {
           </button>
           <button class="bk__tab" :class="{ 'bk__tab--active': storeTab === 2 }" @click="storeTab = 2">
             🏪 已到店可取貨 ({{ arrivedCount }})
+          </button>
+          <button class="bk__tab" :class="{ 'bk__tab--active': storeTab === 3 }" @click="storeTab = 3; fetchSecondhandItems()">
+            ♻️ i二手代收 ({{ secondhandItems.filter(i => i.status === 'ITEM_STORED_IN_711').length }})
           </button>
         </nav>
 
@@ -719,6 +801,53 @@ function resetDemo() {
                 <button class="bk__btn-sm bk__btn-sm--outline" @click="notifyCustomer(order, c)">📱 通知</button>
                 <button class="bk__btn-sm bk__btn-sm--green" @click="confirmPickup(order, c)">✅ 核銷</button>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ 門市 Tab 4：i二手門市代收 ═══ -->
+        <section v-show="storeTab === 3" aria-label="i二手門市代收">
+          <div v-if="secondhandItems.filter(i => i.status === 'ITEM_STORED_IN_711').length === 0" class="bk__empty">
+            <p>♻️ 目前沒有待取的二手代收件</p>
+          </div>
+          <div
+            v-for="item in secondhandItems.filter(i => i.status === 'ITEM_STORED_IN_711')"
+            :key="item.id"
+            class="bk__card"
+          >
+            <div class="bk__card-top">
+              <span class="bk__source">♻️ i二手代收</span>
+              <span
+                class="bk__badge"
+                :class="isExpired(item) ? 'bk__badge--red' : getSecondhandUrgencyClass(item)"
+              >
+                {{ isExpired(item) ? '🔴 滿 7 天已逾期' : `⏱️ 剩 ${getSecondhandDaysLeft(item)} 天` }}
+              </span>
+            </div>
+            <h4 class="bk__card-title">{{ item.title }}</h4>
+            <div class="bk__card-meta">
+              <p>📦 寄件賣家：{{ item.sellerName }}</p>
+              <p>👤 取件買家：{{ item.buyerName }}</p>
+              <p>🕐 入庫時間：{{ formatDate(item.storedAt) }}</p>
+              <p>⏰ 取貨截止：{{ formatDate(item.pickupDeadline) }}</p>
+              <p>🌱 減碳量：{{ item.carbonReducedKg }} kg</p>
+            </div>
+            <div class="bk__pickup-actions" style="margin-top: 0.75rem;">
+              <button
+                v-if="!isExpired(item)"
+                class="bk__btn-sm bk__btn-sm--green"
+                @click="confirmSecondhandPickup(item)"
+              >
+                📦 買家取貨核銷
+              </button>
+              <button
+                v-if="isExpired(item)"
+                class="bk__btn-sm bk__btn-sm--outline"
+                style="border-color: #ef4444; color: #ef4444;"
+                @click="returnToSeller(item)"
+              >
+                ↩️ 通知賣家領回
+              </button>
             </div>
           </div>
         </section>

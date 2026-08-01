@@ -453,6 +453,7 @@ model PickupReservation {
   creTime        DateTime          @default(now()) @map("cre_time") @db.Timestamptz(6)
   updTime        DateTime          @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
   pickupDeadline DateTime?         @map("pickup_deadline") @db.Timestamptz(6)
+  storedAt       DateTime?         @map("stored_at") @db.Timestamptz(6)
   listing        SecondhandListing @relation(fields: [listingId], references: [id])
 
   @@map("pickup_reservation")

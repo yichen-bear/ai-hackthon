@@ -80,6 +80,7 @@ router.patch('/:id', async (req, res) => {
       const deadline = new Date()
       deadline.setDate(deadline.getDate() + 7)
       updateData.pickupDeadline = deadline
+      updateData.storedAt = new Date()
     }
 
     const reservation = await prisma.pickupReservation.update({
