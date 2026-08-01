@@ -887,7 +887,7 @@ const allBadges = ref([
 .group-type { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 6px; }
 .group-type--interest { background: #fdf2f8; color: #ec4899; }
 .group-type--course { background: #f5f3ff; color: #8b5cf6; }
-.group-last-msg { margin: 2px 0 0; font-size: 12px; color: #78716c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.group-last-msg { margin: 2px 0 0; font-size: 12px; color: #78716c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
 .group-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
 .group-unread { background: #ec4899; color: #fff; font-size: 10px; font-weight: 700; min-width: 18px; height: 18px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
 .group-time { font-size: 10px; color: #78716c; }

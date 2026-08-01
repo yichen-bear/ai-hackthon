@@ -17,7 +17,7 @@ router.get('/my', async (req, res) => {
     const groups = await Promise.all(memberships.map(async (m) => {
       const memberCount = await prisma.groupMember.count({ where: { groupId: m.groupId } })
       const lastMsg = await prisma.chatMessage.findFirst({
-        where: { groupId: m.groupId },
+        where: { groupId: m.groupId, messageType: 'text' },
         orderBy: { creTime: 'desc' },
       })
       const unreadCount = await prisma.chatMessage.count({

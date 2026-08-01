@@ -177,6 +177,16 @@ function handleNavigateToStore(payload: { storeId: string; mode: string }) {
   console.log(`[跨模組] 導航至門市 ${payload.storeId}，模式：${payload.mode}`)
 }
 
+function handleConfirmMeetup(pickupId: string) {
+  const item = pickups.value.find(p => p.id === pickupId)
+  if (item) {
+    pickups.value = pickups.value.filter(p => p.id !== pickupId)
+    // 同步更新訂單狀態
+    const order = orders.value.find(o => o.id === item.orderId)
+    if (order) { order.status = 'completed'; order.currentStep = 4 }
+  }
+}
+
 function handleBuyNow(payload: { productId: string; channel: string }) {
   if (payload.channel === 'preorder') {
     handleNavClick('preorder')
@@ -288,7 +298,7 @@ function demoReset() {
         <BookingPickupReminder
           :pickups="pickups"
           @navigate-to-store="handleNavigateToStore"
-          @confirm-pickup="() => {}"
+          @confirm-pickup="handleConfirmMeetup"
         />
       </template>
 
