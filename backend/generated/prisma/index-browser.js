@@ -367,21 +367,6 @@ exports.Prisma.MemberAccountScalarFieldEnum = {
   updTime: 'updTime'
 };
 
-exports.Prisma.MemberAddressScalarFieldEnum = {
-  id: 'id',
-  memberId: 'memberId',
-  type: 'type',
-  label: 'label',
-  countyCode: 'countyCode',
-  districtCode: 'districtCode',
-  addressDetail: 'addressDetail',
-  addressHash: 'addressHash',
-  isDefault: 'isDefault',
-  isDeleted: 'isDeleted',
-  creTime: 'creTime',
-  updTime: 'updTime'
-};
-
 exports.Prisma.VendorUserScalarFieldEnum = {
   id: 'id',
   vendorId: 'vendorId',
@@ -398,6 +383,83 @@ exports.Prisma.VendorUserScalarFieldEnum = {
   updId: 'updId',
   updTime: 'updTime',
   companyName: 'companyName'
+};
+
+exports.Prisma.SecondhandListingScalarFieldEnum = {
+  id: 'id',
+  sellerId: 'sellerId',
+  sellerName: 'sellerName',
+  sellerPhone: 'sellerPhone',
+  productName: 'productName',
+  description: 'description',
+  price: 'price',
+  isFree: 'isFree',
+  category: 'category',
+  imageUrl: 'imageUrl',
+  pickupStore: 'pickupStore',
+  pickupMethod: 'pickupMethod',
+  carbonSaved: 'carbonSaved',
+  status: 'status',
+  isDeleted: 'isDeleted',
+  creTime: 'creTime',
+  updTime: 'updTime'
+};
+
+exports.Prisma.ChatMessageScalarFieldEnum = {
+  id: 'id',
+  senderId: 'senderId',
+  senderName: 'senderName',
+  receiverId: 'receiverId',
+  receiverName: 'receiverName',
+  listingId: 'listingId',
+  content: 'content',
+  messageType: 'messageType',
+  isRead: 'isRead',
+  creTime: 'creTime',
+  group_id: 'group_id'
+};
+
+exports.Prisma.PickupReservationScalarFieldEnum = {
+  id: 'id',
+  listingId: 'listingId',
+  buyerId: 'buyerId',
+  buyerName: 'buyerName',
+  buyerPhone: 'buyerPhone',
+  sellerId: 'sellerId',
+  sellerName: 'sellerName',
+  pickupStore: 'pickupStore',
+  pickupMethod: 'pickupMethod',
+  status: 'status',
+  scheduledAt: 'scheduledAt',
+  creTime: 'creTime',
+  updTime: 'updTime',
+  pickupDeadline: 'pickupDeadline'
+};
+
+exports.Prisma.Community_groupScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  icon: 'icon',
+  tags: 'tags',
+  description: 'description',
+  max_members: 'max_members',
+  activity_date: 'activity_date',
+  activity_time: 'activity_time',
+  activity_location: 'activity_location',
+  creator_id: 'creator_id',
+  creator_name: 'creator_name',
+  is_deleted: 'is_deleted',
+  cre_time: 'cre_time',
+  upd_time: 'upd_time'
+};
+
+exports.Prisma.Group_memberScalarFieldEnum = {
+  id: 'id',
+  group_id: 'group_id',
+  user_id: 'user_id',
+  user_name: 'user_name',
+  joined_at: 'joined_at'
 };
 
 exports.Prisma.SortOrder = {
@@ -446,8 +508,12 @@ exports.Prisma.ModelName = {
   PmsFormFeedback: 'PmsFormFeedback',
   MmsOrderRecord: 'MmsOrderRecord',
   MemberAccount: 'MemberAccount',
-  MemberAddress: 'MemberAddress',
-  VendorUser: 'VendorUser'
+  VendorUser: 'VendorUser',
+  SecondhandListing: 'SecondhandListing',
+  ChatMessage: 'ChatMessage',
+  PickupReservation: 'PickupReservation',
+  community_group: 'community_group',
+  group_member: 'group_member'
 };
 
 /**

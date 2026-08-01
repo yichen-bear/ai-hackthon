@@ -53,7 +53,6 @@ model SysCounty {
   updId             String?                          @map("upd_id") @db.Uuid
   feedbacks         PmsFormFeedback[]
   topicRestrictions PmsTopicCountyDistrictRelation[]
-  memberAddresses   MemberAddress[]
   districts         SysDistrict[]
 
   @@map("sys_county")
@@ -73,7 +72,6 @@ model SysDistrict {
   updId             String?                          @map("upd_id") @db.Uuid
   feedbacks         PmsFormFeedback[]
   topicRestrictions PmsTopicCountyDistrictRelation[]
-  memberAddresses   MemberAddress[]
   county            SysCounty                        @relation(fields: [countyCode], references: [code])
 
   @@map("sys_district")
@@ -296,43 +294,22 @@ model MmsOrderRecord {
 }
 
 model MemberAccount {
-  id           String          @id @default(uuid()) @db.Uuid
+  id           String   @id @default(uuid()) @db.Uuid
   email        Bytes?
-  emailHash    String?         @unique @map("email_hash") @db.VarChar(64)
+  emailHash    String?  @unique @map("email_hash") @db.VarChar(64)
   phone        Bytes?
-  phoneHash    String?         @unique @map("phone_hash") @db.VarChar(64)
+  phoneHash    String?  @unique @map("phone_hash") @db.VarChar(64)
   name         Bytes?
-  nameHash     String?         @map("name_hash") @db.VarChar(64)
-  passwordHash String          @map("password_hash") @db.VarChar(255)
-  status       String          @default("01") @map("status") @db.VarChar(2)
-  isDeleted    Boolean         @default(false) @map("is_deleted")
-  creId        String          @map("cre_id") @db.Uuid
-  creTime      DateTime        @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updId        String          @map("upd_id") @db.Uuid
-  updTime      DateTime        @default(now()) @map("upd_time") @db.Timestamptz(6)
-  addresses    MemberAddress[]
+  nameHash     String?  @map("name_hash") @db.VarChar(64)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  status       String   @default("01") @map("status") @db.VarChar(2)
+  isDeleted    Boolean  @default(false) @map("is_deleted")
+  creId        String   @map("cre_id") @db.Uuid
+  creTime      DateTime @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updId        String   @map("upd_id") @db.Uuid
+  updTime      DateTime @default(now()) @map("upd_time") @db.Timestamptz(6)
 
   @@map("member_account")
-}
-
-model MemberAddress {
-  id            Int           @id @default(autoincrement())
-  memberId      String        @map("member_id") @db.Uuid
-  type          String        @db.VarChar(10)
-  label         String?       @db.VarChar(50)
-  countyCode    String        @map("county_code") @db.VarChar(2)
-  districtCode  String        @map("district_code") @db.VarChar(3)
-  addressDetail Bytes?        @map("address_detail")
-  addressHash   String?       @map("address_hash") @db.VarChar(64)
-  isDefault     Boolean       @default(false) @map("is_default")
-  isDeleted     Boolean       @default(false) @map("is_deleted")
-  creTime       DateTime      @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updTime       DateTime      @default(now()) @map("upd_time") @db.Timestamptz(6)
-  member        MemberAccount @relation(fields: [memberId], references: [id])
-  county        SysCounty     @relation(fields: [countyCode], references: [code])
-  district      SysDistrict   @relation(fields: [districtCode], references: [code])
-
-  @@map("member_address")
 }
 
 model VendorUser {
@@ -355,69 +332,98 @@ model VendorUser {
   @@map("vendor_user")
 }
 
-// ═══ i二手 二手市集 ═══
-
 model SecondhandListing {
-  id           String   @id @default(uuid()) @db.Uuid
-  sellerId     String   @map("seller_id") @db.Uuid
-  sellerName   String   @map("seller_name") @db.VarChar(50)
-  sellerPhone  String?  @map("seller_phone") @db.VarChar(20)
-  productName  String   @map("product_name") @db.VarChar(100)
-  description  String?  @db.VarChar(500)
-  price        Int      @default(0)
-  isFree       Boolean  @default(false) @map("is_free")
-  category     String   @db.VarChar(20)
-  imageUrl     String?  @map("image_url")
-  pickupStore  String   @map("pickup_store") @db.VarChar(50)
-  pickupMethod String   @map("pickup_method") @db.VarChar(20)
-  carbonSaved  Decimal  @default(0) @map("carbon_saved") @db.Decimal(5, 1)
-  status       String   @default("active") @db.VarChar(20)
-  isDeleted    Boolean  @default(false) @map("is_deleted")
-  creTime      DateTime @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updTime      DateTime @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
-
-  reservations PickupReservation[]
+  id           String              @id @default(uuid()) @db.Uuid
+  sellerId     String              @map("seller_id") @db.Uuid
+  sellerName   String              @map("seller_name") @db.VarChar(50)
+  sellerPhone  String?             @map("seller_phone") @db.VarChar(20)
+  productName  String              @map("product_name") @db.VarChar(100)
+  description  String?             @db.VarChar(500)
+  price        Int                 @default(0)
+  isFree       Boolean             @default(false) @map("is_free")
+  category     String              @db.VarChar(20)
+  imageUrl     String?             @map("image_url")
+  pickupStore  String              @map("pickup_store") @db.VarChar(50)
+  pickupMethod String              @map("pickup_method") @db.VarChar(20)
+  carbonSaved  Decimal             @default(0) @map("carbon_saved") @db.Decimal(5, 1)
+  status       String              @default("active") @db.VarChar(20)
+  isDeleted    Boolean             @default(false) @map("is_deleted")
+  creTime      DateTime            @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updTime      DateTime            @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
   messages     ChatMessage[]
+  reservations PickupReservation[]
 
   @@map("secondhand_listing")
 }
 
 model ChatMessage {
-  id           String   @id @default(uuid()) @db.Uuid
-  senderId     String   @map("sender_id") @db.Uuid
-  senderName   String   @map("sender_name") @db.VarChar(50)
-  receiverId   String   @map("receiver_id") @db.Uuid
-  receiverName String   @map("receiver_name") @db.VarChar(50)
-  listingId    String?  @map("listing_id") @db.Uuid
-  content      String   @db.VarChar(1000)
-  messageType  String   @default("text") @map("message_type") @db.VarChar(20)
-  isRead       Boolean  @default(false) @map("is_read")
-  creTime      DateTime @default(now()) @map("cre_time") @db.Timestamptz(6)
-
-  listing      SecondhandListing? @relation(fields: [listingId], references: [id])
+  id              String             @id @default(uuid()) @db.Uuid
+  senderId        String             @map("sender_id") @db.Uuid
+  senderName      String             @map("sender_name") @db.VarChar(50)
+  receiverId      String?            @map("receiver_id") @db.Uuid
+  receiverName    String?            @map("receiver_name") @db.VarChar(50)
+  listingId       String?            @map("listing_id") @db.Uuid
+  content         String             @db.VarChar(1000)
+  messageType     String             @default("text") @map("message_type") @db.VarChar(20)
+  isRead          Boolean            @default(false) @map("is_read")
+  creTime         DateTime           @default(now()) @map("cre_time") @db.Timestamptz(6)
+  group_id        String?            @db.Uuid
+  community_group community_group?   @relation(fields: [group_id], references: [id])
+  listing         SecondhandListing? @relation(fields: [listingId], references: [id])
 
   @@index([senderId, receiverId])
   @@index([receiverId, isRead])
+  @@index([group_id, creTime])
   @@map("chat_message")
 }
 
 model PickupReservation {
-  id             String    @id @default(uuid()) @db.Uuid
-  listingId      String    @map("listing_id") @db.Uuid
-  buyerId        String    @map("buyer_id") @db.Uuid
-  buyerName      String    @map("buyer_name") @db.VarChar(50)
-  buyerPhone     String?   @map("buyer_phone") @db.VarChar(20)
-  sellerId       String    @map("seller_id") @db.Uuid
-  sellerName     String    @map("seller_name") @db.VarChar(50)
-  pickupStore    String    @map("pickup_store") @db.VarChar(50)
-  pickupMethod   String    @map("pickup_method") @db.VarChar(20)
-  status         String    @default("PENDING_SELLER_APPROVAL") @db.VarChar(30)
-  scheduledAt    DateTime? @map("scheduled_at") @db.Timestamptz(6)
-  pickupDeadline DateTime? @map("pickup_deadline") @db.Timestamptz(6)
-  creTime        DateTime  @default(now()) @map("cre_time") @db.Timestamptz(6)
-  updTime        DateTime  @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
-
+  id             String            @id @default(uuid()) @db.Uuid
+  listingId      String            @map("listing_id") @db.Uuid
+  buyerId        String            @map("buyer_id") @db.Uuid
+  buyerName      String            @map("buyer_name") @db.VarChar(50)
+  buyerPhone     String?           @map("buyer_phone") @db.VarChar(20)
+  sellerId       String            @map("seller_id") @db.Uuid
+  sellerName     String            @map("seller_name") @db.VarChar(50)
+  pickupStore    String            @map("pickup_store") @db.VarChar(50)
+  pickupMethod   String            @map("pickup_method") @db.VarChar(20)
+  status         String            @default("PENDING_SELLER_APPROVAL") @db.VarChar(30)
+  scheduledAt    DateTime?         @map("scheduled_at") @db.Timestamptz(6)
+  creTime        DateTime          @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updTime        DateTime          @default(now()) @updatedAt @map("upd_time") @db.Timestamptz(6)
+  pickupDeadline DateTime?         @map("pickup_deadline") @db.Timestamptz(6)
   listing        SecondhandListing @relation(fields: [listingId], references: [id])
 
   @@map("pickup_reservation")
+}
+
+model community_group {
+  id                String         @id @db.Uuid
+  name              String         @db.VarChar(50)
+  type              String         @db.VarChar(20)
+  icon              String         @db.VarChar(10)
+  tags              String[]       @default([])
+  description       String?        @db.VarChar(200)
+  max_members       Int            @default(50)
+  activity_date     String?        @db.VarChar(50)
+  activity_time     String?        @db.VarChar(50)
+  activity_location String?        @db.VarChar(100)
+  creator_id        String         @db.Uuid
+  creator_name      String         @db.VarChar(50)
+  is_deleted        Boolean        @default(false)
+  cre_time          DateTime       @default(now()) @db.Timestamptz(6)
+  upd_time          DateTime       @default(now()) @db.Timestamptz(6)
+  chat_message      ChatMessage[]
+  group_member      group_member[]
+}
+
+model group_member {
+  id              String          @id @db.Uuid
+  group_id        String          @db.Uuid
+  user_id         String          @db.Uuid
+  user_name       String          @db.VarChar(50)
+  joined_at       DateTime        @default(now()) @db.Timestamptz(6)
+  community_group community_group @relation(fields: [group_id], references: [id])
+
+  @@unique([group_id, user_id])
 }
