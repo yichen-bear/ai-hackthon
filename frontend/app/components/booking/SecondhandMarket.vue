@@ -133,6 +133,10 @@ function resetPostForm() {
 
 // ─── 私訊 ───
 async function handleMessage(item: SecondhandItem) {
+  if (item.sellerId === currentUser.id) {
+    alert('❌ 不可私訊自己')
+    return
+  }
   const msg = prompt(`發送訊息給 ${item.sellerName}：`, `您好，我對「${item.productName}」有興趣！`)
   if (!msg) return
   try {
@@ -155,6 +159,11 @@ const reserveTime = ref('')
 const isReserving = ref(false)
 
 function openReserveModal(item: SecondhandItem) {
+  // 賣家不可預約自己的商品
+  if (item.sellerId === currentUser.id) {
+    alert('❌ 不可預約自己刊登的商品')
+    return
+  }
   reserveTarget.value = item
   reserveDate.value = ''
   reserveTime.value = ''
