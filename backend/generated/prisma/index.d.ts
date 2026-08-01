@@ -104,20 +104,20 @@ export type SecondhandListing = $Result.DefaultSelection<Prisma.$SecondhandListi
  */
 export type ChatMessage = $Result.DefaultSelection<Prisma.$ChatMessagePayload>
 /**
+ * Model CommunityGroup
+ * 
+ */
+export type CommunityGroup = $Result.DefaultSelection<Prisma.$CommunityGroupPayload>
+/**
+ * Model GroupMember
+ * 
+ */
+export type GroupMember = $Result.DefaultSelection<Prisma.$GroupMemberPayload>
+/**
  * Model PickupReservation
  * 
  */
 export type PickupReservation = $Result.DefaultSelection<Prisma.$PickupReservationPayload>
-/**
- * Model community_group
- * 
- */
-export type community_group = $Result.DefaultSelection<Prisma.$community_groupPayload>
-/**
- * Model group_member
- * 
- */
-export type group_member = $Result.DefaultSelection<Prisma.$group_memberPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -421,6 +421,26 @@ export class PrismaClient<
   get chatMessage(): Prisma.ChatMessageDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.communityGroup`: Exposes CRUD operations for the **CommunityGroup** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CommunityGroups
+    * const communityGroups = await prisma.communityGroup.findMany()
+    * ```
+    */
+  get communityGroup(): Prisma.CommunityGroupDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.groupMember`: Exposes CRUD operations for the **GroupMember** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GroupMembers
+    * const groupMembers = await prisma.groupMember.findMany()
+    * ```
+    */
+  get groupMember(): Prisma.GroupMemberDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.pickupReservation`: Exposes CRUD operations for the **PickupReservation** model.
     * Example usage:
     * ```ts
@@ -429,26 +449,6 @@ export class PrismaClient<
     * ```
     */
   get pickupReservation(): Prisma.PickupReservationDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.community_group`: Exposes CRUD operations for the **community_group** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Community_groups
-    * const community_groups = await prisma.community_group.findMany()
-    * ```
-    */
-  get community_group(): Prisma.community_groupDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.group_member`: Exposes CRUD operations for the **group_member** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Group_members
-    * const group_members = await prisma.group_member.findMany()
-    * ```
-    */
-  get group_member(): Prisma.group_memberDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -914,9 +914,9 @@ export namespace Prisma {
     VendorUser: 'VendorUser',
     SecondhandListing: 'SecondhandListing',
     ChatMessage: 'ChatMessage',
-    PickupReservation: 'PickupReservation',
-    community_group: 'community_group',
-    group_member: 'group_member'
+    CommunityGroup: 'CommunityGroup',
+    GroupMember: 'GroupMember',
+    PickupReservation: 'PickupReservation'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -932,7 +932,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "cmsHomepageServiceVendor" | "cmsHomepageService" | "serviceType" | "sysCounty" | "sysDistrict" | "pmsForm" | "pmsFormGroup" | "pmsFormTopic" | "pmsTopicOption" | "pmsTopicMedia" | "pmsTopicCountyDistrictRelation" | "pmsFormFeedback" | "mmsOrderRecord" | "memberAccount" | "memberAddress" | "vendorUser" | "secondhandListing" | "chatMessage" | "pickupReservation" | "community_group" | "group_member"
+      modelProps: "cmsHomepageServiceVendor" | "cmsHomepageService" | "serviceType" | "sysCounty" | "sysDistrict" | "pmsForm" | "pmsFormGroup" | "pmsFormTopic" | "pmsTopicOption" | "pmsTopicMedia" | "pmsTopicCountyDistrictRelation" | "pmsFormFeedback" | "mmsOrderRecord" | "memberAccount" | "memberAddress" | "vendorUser" | "secondhandListing" | "chatMessage" | "communityGroup" | "groupMember" | "pickupReservation"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2268,6 +2268,154 @@ export namespace Prisma {
           }
         }
       }
+      CommunityGroup: {
+        payload: Prisma.$CommunityGroupPayload<ExtArgs>
+        fields: Prisma.CommunityGroupFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CommunityGroupFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommunityGroupPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CommunityGroupFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommunityGroupPayload>
+          }
+          findFirst: {
+            args: Prisma.CommunityGroupFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommunityGroupPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CommunityGroupFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommunityGroupPayload>
+          }
+          findMany: {
+            args: Prisma.CommunityGroupFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommunityGroupPayload>[]
+          }
+          create: {
+            args: Prisma.CommunityGroupCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommunityGroupPayload>
+          }
+          createMany: {
+            args: Prisma.CommunityGroupCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CommunityGroupCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommunityGroupPayload>[]
+          }
+          delete: {
+            args: Prisma.CommunityGroupDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommunityGroupPayload>
+          }
+          update: {
+            args: Prisma.CommunityGroupUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommunityGroupPayload>
+          }
+          deleteMany: {
+            args: Prisma.CommunityGroupDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CommunityGroupUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CommunityGroupUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommunityGroupPayload>[]
+          }
+          upsert: {
+            args: Prisma.CommunityGroupUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommunityGroupPayload>
+          }
+          aggregate: {
+            args: Prisma.CommunityGroupAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCommunityGroup>
+          }
+          groupBy: {
+            args: Prisma.CommunityGroupGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CommunityGroupGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CommunityGroupCountArgs<ExtArgs>
+            result: $Utils.Optional<CommunityGroupCountAggregateOutputType> | number
+          }
+        }
+      }
+      GroupMember: {
+        payload: Prisma.$GroupMemberPayload<ExtArgs>
+        fields: Prisma.GroupMemberFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GroupMemberFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupMemberPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GroupMemberFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupMemberPayload>
+          }
+          findFirst: {
+            args: Prisma.GroupMemberFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupMemberPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GroupMemberFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupMemberPayload>
+          }
+          findMany: {
+            args: Prisma.GroupMemberFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupMemberPayload>[]
+          }
+          create: {
+            args: Prisma.GroupMemberCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupMemberPayload>
+          }
+          createMany: {
+            args: Prisma.GroupMemberCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GroupMemberCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupMemberPayload>[]
+          }
+          delete: {
+            args: Prisma.GroupMemberDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupMemberPayload>
+          }
+          update: {
+            args: Prisma.GroupMemberUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupMemberPayload>
+          }
+          deleteMany: {
+            args: Prisma.GroupMemberDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GroupMemberUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GroupMemberUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupMemberPayload>[]
+          }
+          upsert: {
+            args: Prisma.GroupMemberUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupMemberPayload>
+          }
+          aggregate: {
+            args: Prisma.GroupMemberAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGroupMember>
+          }
+          groupBy: {
+            args: Prisma.GroupMemberGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GroupMemberGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GroupMemberCountArgs<ExtArgs>
+            result: $Utils.Optional<GroupMemberCountAggregateOutputType> | number
+          }
+        }
+      }
       PickupReservation: {
         payload: Prisma.$PickupReservationPayload<ExtArgs>
         fields: Prisma.PickupReservationFieldRefs
@@ -2339,154 +2487,6 @@ export namespace Prisma {
           count: {
             args: Prisma.PickupReservationCountArgs<ExtArgs>
             result: $Utils.Optional<PickupReservationCountAggregateOutputType> | number
-          }
-        }
-      }
-      community_group: {
-        payload: Prisma.$community_groupPayload<ExtArgs>
-        fields: Prisma.community_groupFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.community_groupFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$community_groupPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.community_groupFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$community_groupPayload>
-          }
-          findFirst: {
-            args: Prisma.community_groupFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$community_groupPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.community_groupFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$community_groupPayload>
-          }
-          findMany: {
-            args: Prisma.community_groupFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$community_groupPayload>[]
-          }
-          create: {
-            args: Prisma.community_groupCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$community_groupPayload>
-          }
-          createMany: {
-            args: Prisma.community_groupCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.community_groupCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$community_groupPayload>[]
-          }
-          delete: {
-            args: Prisma.community_groupDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$community_groupPayload>
-          }
-          update: {
-            args: Prisma.community_groupUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$community_groupPayload>
-          }
-          deleteMany: {
-            args: Prisma.community_groupDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.community_groupUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.community_groupUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$community_groupPayload>[]
-          }
-          upsert: {
-            args: Prisma.community_groupUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$community_groupPayload>
-          }
-          aggregate: {
-            args: Prisma.Community_groupAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateCommunity_group>
-          }
-          groupBy: {
-            args: Prisma.community_groupGroupByArgs<ExtArgs>
-            result: $Utils.Optional<Community_groupGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.community_groupCountArgs<ExtArgs>
-            result: $Utils.Optional<Community_groupCountAggregateOutputType> | number
-          }
-        }
-      }
-      group_member: {
-        payload: Prisma.$group_memberPayload<ExtArgs>
-        fields: Prisma.group_memberFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.group_memberFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$group_memberPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.group_memberFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$group_memberPayload>
-          }
-          findFirst: {
-            args: Prisma.group_memberFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$group_memberPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.group_memberFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$group_memberPayload>
-          }
-          findMany: {
-            args: Prisma.group_memberFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$group_memberPayload>[]
-          }
-          create: {
-            args: Prisma.group_memberCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$group_memberPayload>
-          }
-          createMany: {
-            args: Prisma.group_memberCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.group_memberCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$group_memberPayload>[]
-          }
-          delete: {
-            args: Prisma.group_memberDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$group_memberPayload>
-          }
-          update: {
-            args: Prisma.group_memberUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$group_memberPayload>
-          }
-          deleteMany: {
-            args: Prisma.group_memberDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.group_memberUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.group_memberUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$group_memberPayload>[]
-          }
-          upsert: {
-            args: Prisma.group_memberUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$group_memberPayload>
-          }
-          aggregate: {
-            args: Prisma.Group_memberAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateGroup_member>
-          }
-          groupBy: {
-            args: Prisma.group_memberGroupByArgs<ExtArgs>
-            result: $Utils.Optional<Group_memberGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.group_memberCountArgs<ExtArgs>
-            result: $Utils.Optional<Group_memberCountAggregateOutputType> | number
           }
         }
       }
@@ -2631,9 +2631,9 @@ export namespace Prisma {
     vendorUser?: VendorUserOmit
     secondhandListing?: SecondhandListingOmit
     chatMessage?: ChatMessageOmit
+    communityGroup?: CommunityGroupOmit
+    groupMember?: GroupMemberOmit
     pickupReservation?: PickupReservationOmit
-    community_group?: community_groupOmit
-    group_member?: group_memberOmit
   }
 
   /* Types for Logging */
@@ -2776,16 +2776,16 @@ export namespace Prisma {
    */
 
   export type SysCountyCountOutputType = {
+    memberAddresses: number
     feedbacks: number
     topicRestrictions: number
-    memberAddresses: number
     districts: number
   }
 
   export type SysCountyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    memberAddresses?: boolean | SysCountyCountOutputTypeCountMemberAddressesArgs
     feedbacks?: boolean | SysCountyCountOutputTypeCountFeedbacksArgs
     topicRestrictions?: boolean | SysCountyCountOutputTypeCountTopicRestrictionsArgs
-    memberAddresses?: boolean | SysCountyCountOutputTypeCountMemberAddressesArgs
     districts?: boolean | SysCountyCountOutputTypeCountDistrictsArgs
   }
 
@@ -2798,6 +2798,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the SysCountyCountOutputType
      */
     select?: SysCountyCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SysCountyCountOutputType without action
+   */
+  export type SysCountyCountOutputTypeCountMemberAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MemberAddressWhereInput
   }
 
   /**
@@ -2817,13 +2824,6 @@ export namespace Prisma {
   /**
    * SysCountyCountOutputType without action
    */
-  export type SysCountyCountOutputTypeCountMemberAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: MemberAddressWhereInput
-  }
-
-  /**
-   * SysCountyCountOutputType without action
-   */
   export type SysCountyCountOutputTypeCountDistrictsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SysDistrictWhereInput
   }
@@ -2834,15 +2834,15 @@ export namespace Prisma {
    */
 
   export type SysDistrictCountOutputType = {
+    memberAddresses: number
     feedbacks: number
     topicRestrictions: number
-    memberAddresses: number
   }
 
   export type SysDistrictCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    memberAddresses?: boolean | SysDistrictCountOutputTypeCountMemberAddressesArgs
     feedbacks?: boolean | SysDistrictCountOutputTypeCountFeedbacksArgs
     topicRestrictions?: boolean | SysDistrictCountOutputTypeCountTopicRestrictionsArgs
-    memberAddresses?: boolean | SysDistrictCountOutputTypeCountMemberAddressesArgs
   }
 
   // Custom InputTypes
@@ -2859,6 +2859,13 @@ export namespace Prisma {
   /**
    * SysDistrictCountOutputType without action
    */
+  export type SysDistrictCountOutputTypeCountMemberAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MemberAddressWhereInput
+  }
+
+  /**
+   * SysDistrictCountOutputType without action
+   */
   export type SysDistrictCountOutputTypeCountFeedbacksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PmsFormFeedbackWhereInput
   }
@@ -2868,13 +2875,6 @@ export namespace Prisma {
    */
   export type SysDistrictCountOutputTypeCountTopicRestrictionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PmsTopicCountyDistrictRelationWhereInput
-  }
-
-  /**
-   * SysDistrictCountOutputType without action
-   */
-  export type SysDistrictCountOutputTypeCountMemberAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: MemberAddressWhereInput
   }
 
 
@@ -3079,42 +3079,42 @@ export namespace Prisma {
 
 
   /**
-   * Count Type Community_groupCountOutputType
+   * Count Type CommunityGroupCountOutputType
    */
 
-  export type Community_groupCountOutputType = {
-    chat_message: number
-    group_member: number
+  export type CommunityGroupCountOutputType = {
+    messages: number
+    members: number
   }
 
-  export type Community_groupCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    chat_message?: boolean | Community_groupCountOutputTypeCountChat_messageArgs
-    group_member?: boolean | Community_groupCountOutputTypeCountGroup_memberArgs
+  export type CommunityGroupCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    messages?: boolean | CommunityGroupCountOutputTypeCountMessagesArgs
+    members?: boolean | CommunityGroupCountOutputTypeCountMembersArgs
   }
 
   // Custom InputTypes
   /**
-   * Community_groupCountOutputType without action
+   * CommunityGroupCountOutputType without action
    */
-  export type Community_groupCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CommunityGroupCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Community_groupCountOutputType
+     * Select specific fields to fetch from the CommunityGroupCountOutputType
      */
-    select?: Community_groupCountOutputTypeSelect<ExtArgs> | null
+    select?: CommunityGroupCountOutputTypeSelect<ExtArgs> | null
   }
 
   /**
-   * Community_groupCountOutputType without action
+   * CommunityGroupCountOutputType without action
    */
-  export type Community_groupCountOutputTypeCountChat_messageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CommunityGroupCountOutputTypeCountMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ChatMessageWhereInput
   }
 
   /**
-   * Community_groupCountOutputType without action
+   * CommunityGroupCountOutputType without action
    */
-  export type Community_groupCountOutputTypeCountGroup_memberArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: group_memberWhereInput
+  export type CommunityGroupCountOutputTypeCountMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GroupMemberWhereInput
   }
 
 
@@ -6684,9 +6684,9 @@ export namespace Prisma {
     creTime?: boolean
     creId?: boolean
     updId?: boolean
+    memberAddresses?: boolean | SysCounty$memberAddressesArgs<ExtArgs>
     feedbacks?: boolean | SysCounty$feedbacksArgs<ExtArgs>
     topicRestrictions?: boolean | SysCounty$topicRestrictionsArgs<ExtArgs>
-    memberAddresses?: boolean | SysCounty$memberAddressesArgs<ExtArgs>
     districts?: boolean | SysCounty$districtsArgs<ExtArgs>
     _count?: boolean | SysCountyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["sysCounty"]>
@@ -6726,9 +6726,9 @@ export namespace Prisma {
 
   export type SysCountyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"code" | "name" | "sort" | "isDeleted" | "updTime" | "creTime" | "creId" | "updId", ExtArgs["result"]["sysCounty"]>
   export type SysCountyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    memberAddresses?: boolean | SysCounty$memberAddressesArgs<ExtArgs>
     feedbacks?: boolean | SysCounty$feedbacksArgs<ExtArgs>
     topicRestrictions?: boolean | SysCounty$topicRestrictionsArgs<ExtArgs>
-    memberAddresses?: boolean | SysCounty$memberAddressesArgs<ExtArgs>
     districts?: boolean | SysCounty$districtsArgs<ExtArgs>
     _count?: boolean | SysCountyCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -6738,9 +6738,9 @@ export namespace Prisma {
   export type $SysCountyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SysCounty"
     objects: {
+      memberAddresses: Prisma.$MemberAddressPayload<ExtArgs>[]
       feedbacks: Prisma.$PmsFormFeedbackPayload<ExtArgs>[]
       topicRestrictions: Prisma.$PmsTopicCountyDistrictRelationPayload<ExtArgs>[]
-      memberAddresses: Prisma.$MemberAddressPayload<ExtArgs>[]
       districts: Prisma.$SysDistrictPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -7146,9 +7146,9 @@ export namespace Prisma {
    */
   export interface Prisma__SysCountyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    memberAddresses<T extends SysCounty$memberAddressesArgs<ExtArgs> = {}>(args?: Subset<T, SysCounty$memberAddressesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MemberAddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     feedbacks<T extends SysCounty$feedbacksArgs<ExtArgs> = {}>(args?: Subset<T, SysCounty$feedbacksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PmsFormFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     topicRestrictions<T extends SysCounty$topicRestrictionsArgs<ExtArgs> = {}>(args?: Subset<T, SysCounty$topicRestrictionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PmsTopicCountyDistrictRelationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    memberAddresses<T extends SysCounty$memberAddressesArgs<ExtArgs> = {}>(args?: Subset<T, SysCounty$memberAddressesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MemberAddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     districts<T extends SysCounty$districtsArgs<ExtArgs> = {}>(args?: Subset<T, SysCounty$districtsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SysDistrictPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -7580,6 +7580,30 @@ export namespace Prisma {
   }
 
   /**
+   * SysCounty.memberAddresses
+   */
+  export type SysCounty$memberAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberAddress
+     */
+    select?: MemberAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberAddress
+     */
+    omit?: MemberAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAddressInclude<ExtArgs> | null
+    where?: MemberAddressWhereInput
+    orderBy?: MemberAddressOrderByWithRelationInput | MemberAddressOrderByWithRelationInput[]
+    cursor?: MemberAddressWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MemberAddressScalarFieldEnum | MemberAddressScalarFieldEnum[]
+  }
+
+  /**
    * SysCounty.feedbacks
    */
   export type SysCounty$feedbacksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7625,30 +7649,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PmsTopicCountyDistrictRelationScalarFieldEnum | PmsTopicCountyDistrictRelationScalarFieldEnum[]
-  }
-
-  /**
-   * SysCounty.memberAddresses
-   */
-  export type SysCounty$memberAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MemberAddress
-     */
-    select?: MemberAddressSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MemberAddress
-     */
-    omit?: MemberAddressOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MemberAddressInclude<ExtArgs> | null
-    where?: MemberAddressWhereInput
-    orderBy?: MemberAddressOrderByWithRelationInput | MemberAddressOrderByWithRelationInput[]
-    cursor?: MemberAddressWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: MemberAddressScalarFieldEnum | MemberAddressScalarFieldEnum[]
   }
 
   /**
@@ -7940,9 +7940,9 @@ export namespace Prisma {
     creTime?: boolean
     creId?: boolean
     updId?: boolean
+    memberAddresses?: boolean | SysDistrict$memberAddressesArgs<ExtArgs>
     feedbacks?: boolean | SysDistrict$feedbacksArgs<ExtArgs>
     topicRestrictions?: boolean | SysDistrict$topicRestrictionsArgs<ExtArgs>
-    memberAddresses?: boolean | SysDistrict$memberAddressesArgs<ExtArgs>
     county?: boolean | SysCountyDefaultArgs<ExtArgs>
     _count?: boolean | SysDistrictCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["sysDistrict"]>
@@ -7993,9 +7993,9 @@ export namespace Prisma {
 
   export type SysDistrictOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"code" | "countyCode" | "name" | "nameWithCounty" | "zip" | "sort" | "isDeleted" | "updTime" | "creTime" | "creId" | "updId", ExtArgs["result"]["sysDistrict"]>
   export type SysDistrictInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    memberAddresses?: boolean | SysDistrict$memberAddressesArgs<ExtArgs>
     feedbacks?: boolean | SysDistrict$feedbacksArgs<ExtArgs>
     topicRestrictions?: boolean | SysDistrict$topicRestrictionsArgs<ExtArgs>
-    memberAddresses?: boolean | SysDistrict$memberAddressesArgs<ExtArgs>
     county?: boolean | SysCountyDefaultArgs<ExtArgs>
     _count?: boolean | SysDistrictCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -8009,9 +8009,9 @@ export namespace Prisma {
   export type $SysDistrictPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SysDistrict"
     objects: {
+      memberAddresses: Prisma.$MemberAddressPayload<ExtArgs>[]
       feedbacks: Prisma.$PmsFormFeedbackPayload<ExtArgs>[]
       topicRestrictions: Prisma.$PmsTopicCountyDistrictRelationPayload<ExtArgs>[]
-      memberAddresses: Prisma.$MemberAddressPayload<ExtArgs>[]
       county: Prisma.$SysCountyPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -8420,9 +8420,9 @@ export namespace Prisma {
    */
   export interface Prisma__SysDistrictClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    memberAddresses<T extends SysDistrict$memberAddressesArgs<ExtArgs> = {}>(args?: Subset<T, SysDistrict$memberAddressesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MemberAddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     feedbacks<T extends SysDistrict$feedbacksArgs<ExtArgs> = {}>(args?: Subset<T, SysDistrict$feedbacksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PmsFormFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     topicRestrictions<T extends SysDistrict$topicRestrictionsArgs<ExtArgs> = {}>(args?: Subset<T, SysDistrict$topicRestrictionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PmsTopicCountyDistrictRelationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    memberAddresses<T extends SysDistrict$memberAddressesArgs<ExtArgs> = {}>(args?: Subset<T, SysDistrict$memberAddressesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MemberAddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     county<T extends SysCountyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SysCountyDefaultArgs<ExtArgs>>): Prisma__SysCountyClient<$Result.GetResult<Prisma.$SysCountyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -8865,6 +8865,30 @@ export namespace Prisma {
   }
 
   /**
+   * SysDistrict.memberAddresses
+   */
+  export type SysDistrict$memberAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberAddress
+     */
+    select?: MemberAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberAddress
+     */
+    omit?: MemberAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberAddressInclude<ExtArgs> | null
+    where?: MemberAddressWhereInput
+    orderBy?: MemberAddressOrderByWithRelationInput | MemberAddressOrderByWithRelationInput[]
+    cursor?: MemberAddressWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MemberAddressScalarFieldEnum | MemberAddressScalarFieldEnum[]
+  }
+
+  /**
    * SysDistrict.feedbacks
    */
   export type SysDistrict$feedbacksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8910,30 +8934,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PmsTopicCountyDistrictRelationScalarFieldEnum | PmsTopicCountyDistrictRelationScalarFieldEnum[]
-  }
-
-  /**
-   * SysDistrict.memberAddresses
-   */
-  export type SysDistrict$memberAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MemberAddress
-     */
-    select?: MemberAddressSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MemberAddress
-     */
-    omit?: MemberAddressOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MemberAddressInclude<ExtArgs> | null
-    where?: MemberAddressWhereInput
-    orderBy?: MemberAddressOrderByWithRelationInput | MemberAddressOrderByWithRelationInput[]
-    cursor?: MemberAddressWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: MemberAddressScalarFieldEnum | MemberAddressScalarFieldEnum[]
   }
 
   /**
@@ -20992,9 +20992,9 @@ export namespace Prisma {
     isDeleted?: boolean
     creTime?: boolean
     updTime?: boolean
-    member?: boolean | MemberAccountDefaultArgs<ExtArgs>
     county?: boolean | SysCountyDefaultArgs<ExtArgs>
     district?: boolean | SysDistrictDefaultArgs<ExtArgs>
+    member?: boolean | MemberAccountDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["memberAddress"]>
 
   export type MemberAddressSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -21010,9 +21010,9 @@ export namespace Prisma {
     isDeleted?: boolean
     creTime?: boolean
     updTime?: boolean
-    member?: boolean | MemberAccountDefaultArgs<ExtArgs>
     county?: boolean | SysCountyDefaultArgs<ExtArgs>
     district?: boolean | SysDistrictDefaultArgs<ExtArgs>
+    member?: boolean | MemberAccountDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["memberAddress"]>
 
   export type MemberAddressSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -21028,9 +21028,9 @@ export namespace Prisma {
     isDeleted?: boolean
     creTime?: boolean
     updTime?: boolean
-    member?: boolean | MemberAccountDefaultArgs<ExtArgs>
     county?: boolean | SysCountyDefaultArgs<ExtArgs>
     district?: boolean | SysDistrictDefaultArgs<ExtArgs>
+    member?: boolean | MemberAccountDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["memberAddress"]>
 
   export type MemberAddressSelectScalar = {
@@ -21050,27 +21050,27 @@ export namespace Prisma {
 
   export type MemberAddressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "memberId" | "type" | "label" | "countyCode" | "districtCode" | "addressDetail" | "addressDetailHash" | "isDefault" | "isDeleted" | "creTime" | "updTime", ExtArgs["result"]["memberAddress"]>
   export type MemberAddressInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    member?: boolean | MemberAccountDefaultArgs<ExtArgs>
     county?: boolean | SysCountyDefaultArgs<ExtArgs>
     district?: boolean | SysDistrictDefaultArgs<ExtArgs>
+    member?: boolean | MemberAccountDefaultArgs<ExtArgs>
   }
   export type MemberAddressIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    member?: boolean | MemberAccountDefaultArgs<ExtArgs>
     county?: boolean | SysCountyDefaultArgs<ExtArgs>
     district?: boolean | SysDistrictDefaultArgs<ExtArgs>
+    member?: boolean | MemberAccountDefaultArgs<ExtArgs>
   }
   export type MemberAddressIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    member?: boolean | MemberAccountDefaultArgs<ExtArgs>
     county?: boolean | SysCountyDefaultArgs<ExtArgs>
     district?: boolean | SysDistrictDefaultArgs<ExtArgs>
+    member?: boolean | MemberAccountDefaultArgs<ExtArgs>
   }
 
   export type $MemberAddressPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "MemberAddress"
     objects: {
-      member: Prisma.$MemberAccountPayload<ExtArgs>
       county: Prisma.$SysCountyPayload<ExtArgs>
       district: Prisma.$SysDistrictPayload<ExtArgs>
+      member: Prisma.$MemberAccountPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -21479,9 +21479,9 @@ export namespace Prisma {
    */
   export interface Prisma__MemberAddressClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    member<T extends MemberAccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MemberAccountDefaultArgs<ExtArgs>>): Prisma__MemberAccountClient<$Result.GetResult<Prisma.$MemberAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     county<T extends SysCountyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SysCountyDefaultArgs<ExtArgs>>): Prisma__SysCountyClient<$Result.GetResult<Prisma.$SysCountyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     district<T extends SysDistrictDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SysDistrictDefaultArgs<ExtArgs>>): Prisma__SysDistrictClient<$Result.GetResult<Prisma.$SysDistrictPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    member<T extends MemberAccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MemberAccountDefaultArgs<ExtArgs>>): Prisma__MemberAccountClient<$Result.GetResult<Prisma.$MemberAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -24424,7 +24424,7 @@ export namespace Prisma {
     messageType: string | null
     isRead: boolean | null
     creTime: Date | null
-    group_id: string | null
+    groupId: string | null
   }
 
   export type ChatMessageMaxAggregateOutputType = {
@@ -24438,7 +24438,7 @@ export namespace Prisma {
     messageType: string | null
     isRead: boolean | null
     creTime: Date | null
-    group_id: string | null
+    groupId: string | null
   }
 
   export type ChatMessageCountAggregateOutputType = {
@@ -24452,7 +24452,7 @@ export namespace Prisma {
     messageType: number
     isRead: number
     creTime: number
-    group_id: number
+    groupId: number
     _all: number
   }
 
@@ -24468,7 +24468,7 @@ export namespace Prisma {
     messageType?: true
     isRead?: true
     creTime?: true
-    group_id?: true
+    groupId?: true
   }
 
   export type ChatMessageMaxAggregateInputType = {
@@ -24482,7 +24482,7 @@ export namespace Prisma {
     messageType?: true
     isRead?: true
     creTime?: true
-    group_id?: true
+    groupId?: true
   }
 
   export type ChatMessageCountAggregateInputType = {
@@ -24496,7 +24496,7 @@ export namespace Prisma {
     messageType?: true
     isRead?: true
     creTime?: true
-    group_id?: true
+    groupId?: true
     _all?: true
   }
 
@@ -24583,7 +24583,7 @@ export namespace Prisma {
     messageType: string
     isRead: boolean
     creTime: Date
-    group_id: string | null
+    groupId: string | null
     _count: ChatMessageCountAggregateOutputType | null
     _min: ChatMessageMinAggregateOutputType | null
     _max: ChatMessageMaxAggregateOutputType | null
@@ -24614,8 +24614,8 @@ export namespace Prisma {
     messageType?: boolean
     isRead?: boolean
     creTime?: boolean
-    group_id?: boolean
-    community_group?: boolean | ChatMessage$community_groupArgs<ExtArgs>
+    groupId?: boolean
+    group?: boolean | ChatMessage$groupArgs<ExtArgs>
     listing?: boolean | ChatMessage$listingArgs<ExtArgs>
   }, ExtArgs["result"]["chatMessage"]>
 
@@ -24630,8 +24630,8 @@ export namespace Prisma {
     messageType?: boolean
     isRead?: boolean
     creTime?: boolean
-    group_id?: boolean
-    community_group?: boolean | ChatMessage$community_groupArgs<ExtArgs>
+    groupId?: boolean
+    group?: boolean | ChatMessage$groupArgs<ExtArgs>
     listing?: boolean | ChatMessage$listingArgs<ExtArgs>
   }, ExtArgs["result"]["chatMessage"]>
 
@@ -24646,8 +24646,8 @@ export namespace Prisma {
     messageType?: boolean
     isRead?: boolean
     creTime?: boolean
-    group_id?: boolean
-    community_group?: boolean | ChatMessage$community_groupArgs<ExtArgs>
+    groupId?: boolean
+    group?: boolean | ChatMessage$groupArgs<ExtArgs>
     listing?: boolean | ChatMessage$listingArgs<ExtArgs>
   }, ExtArgs["result"]["chatMessage"]>
 
@@ -24662,27 +24662,27 @@ export namespace Prisma {
     messageType?: boolean
     isRead?: boolean
     creTime?: boolean
-    group_id?: boolean
+    groupId?: boolean
   }
 
-  export type ChatMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "senderId" | "senderName" | "receiverId" | "receiverName" | "listingId" | "content" | "messageType" | "isRead" | "creTime" | "group_id", ExtArgs["result"]["chatMessage"]>
+  export type ChatMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "senderId" | "senderName" | "receiverId" | "receiverName" | "listingId" | "content" | "messageType" | "isRead" | "creTime" | "groupId", ExtArgs["result"]["chatMessage"]>
   export type ChatMessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    community_group?: boolean | ChatMessage$community_groupArgs<ExtArgs>
+    group?: boolean | ChatMessage$groupArgs<ExtArgs>
     listing?: boolean | ChatMessage$listingArgs<ExtArgs>
   }
   export type ChatMessageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    community_group?: boolean | ChatMessage$community_groupArgs<ExtArgs>
+    group?: boolean | ChatMessage$groupArgs<ExtArgs>
     listing?: boolean | ChatMessage$listingArgs<ExtArgs>
   }
   export type ChatMessageIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    community_group?: boolean | ChatMessage$community_groupArgs<ExtArgs>
+    group?: boolean | ChatMessage$groupArgs<ExtArgs>
     listing?: boolean | ChatMessage$listingArgs<ExtArgs>
   }
 
   export type $ChatMessagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ChatMessage"
     objects: {
-      community_group: Prisma.$community_groupPayload<ExtArgs> | null
+      group: Prisma.$CommunityGroupPayload<ExtArgs> | null
       listing: Prisma.$SecondhandListingPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -24696,7 +24696,7 @@ export namespace Prisma {
       messageType: string
       isRead: boolean
       creTime: Date
-      group_id: string | null
+      groupId: string | null
     }, ExtArgs["result"]["chatMessage"]>
     composites: {}
   }
@@ -25091,7 +25091,7 @@ export namespace Prisma {
    */
   export interface Prisma__ChatMessageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    community_group<T extends ChatMessage$community_groupArgs<ExtArgs> = {}>(args?: Subset<T, ChatMessage$community_groupArgs<ExtArgs>>): Prisma__community_groupClient<$Result.GetResult<Prisma.$community_groupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    group<T extends ChatMessage$groupArgs<ExtArgs> = {}>(args?: Subset<T, ChatMessage$groupArgs<ExtArgs>>): Prisma__CommunityGroupClient<$Result.GetResult<Prisma.$CommunityGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     listing<T extends ChatMessage$listingArgs<ExtArgs> = {}>(args?: Subset<T, ChatMessage$listingArgs<ExtArgs>>): Prisma__SecondhandListingClient<$Result.GetResult<Prisma.$SecondhandListingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -25132,7 +25132,7 @@ export namespace Prisma {
     readonly messageType: FieldRef<"ChatMessage", 'String'>
     readonly isRead: FieldRef<"ChatMessage", 'Boolean'>
     readonly creTime: FieldRef<"ChatMessage", 'DateTime'>
-    readonly group_id: FieldRef<"ChatMessage", 'String'>
+    readonly groupId: FieldRef<"ChatMessage", 'String'>
   }
     
 
@@ -25534,22 +25534,22 @@ export namespace Prisma {
   }
 
   /**
-   * ChatMessage.community_group
+   * ChatMessage.group
    */
-  export type ChatMessage$community_groupArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChatMessage$groupArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the community_group
+     * Select specific fields to fetch from the CommunityGroup
      */
-    select?: community_groupSelect<ExtArgs> | null
+    select?: CommunityGroupSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the community_group
+     * Omit specific fields from the CommunityGroup
      */
-    omit?: community_groupOmit<ExtArgs> | null
+    omit?: CommunityGroupOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: community_groupInclude<ExtArgs> | null
-    where?: community_groupWhereInput
+    include?: CommunityGroupInclude<ExtArgs> | null
+    where?: CommunityGroupWhereInput
   }
 
   /**
@@ -25587,6 +25587,2332 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ChatMessageInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CommunityGroup
+   */
+
+  export type AggregateCommunityGroup = {
+    _count: CommunityGroupCountAggregateOutputType | null
+    _avg: CommunityGroupAvgAggregateOutputType | null
+    _sum: CommunityGroupSumAggregateOutputType | null
+    _min: CommunityGroupMinAggregateOutputType | null
+    _max: CommunityGroupMaxAggregateOutputType | null
+  }
+
+  export type CommunityGroupAvgAggregateOutputType = {
+    maxMembers: number | null
+  }
+
+  export type CommunityGroupSumAggregateOutputType = {
+    maxMembers: number | null
+  }
+
+  export type CommunityGroupMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    type: string | null
+    icon: string | null
+    description: string | null
+    maxMembers: number | null
+    activityDate: string | null
+    activityTime: string | null
+    activityLocation: string | null
+    creatorId: string | null
+    creatorName: string | null
+    isDeleted: boolean | null
+    creTime: Date | null
+    updTime: Date | null
+  }
+
+  export type CommunityGroupMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    type: string | null
+    icon: string | null
+    description: string | null
+    maxMembers: number | null
+    activityDate: string | null
+    activityTime: string | null
+    activityLocation: string | null
+    creatorId: string | null
+    creatorName: string | null
+    isDeleted: boolean | null
+    creTime: Date | null
+    updTime: Date | null
+  }
+
+  export type CommunityGroupCountAggregateOutputType = {
+    id: number
+    name: number
+    type: number
+    icon: number
+    tags: number
+    description: number
+    maxMembers: number
+    activityDate: number
+    activityTime: number
+    activityLocation: number
+    creatorId: number
+    creatorName: number
+    isDeleted: number
+    creTime: number
+    updTime: number
+    _all: number
+  }
+
+
+  export type CommunityGroupAvgAggregateInputType = {
+    maxMembers?: true
+  }
+
+  export type CommunityGroupSumAggregateInputType = {
+    maxMembers?: true
+  }
+
+  export type CommunityGroupMinAggregateInputType = {
+    id?: true
+    name?: true
+    type?: true
+    icon?: true
+    description?: true
+    maxMembers?: true
+    activityDate?: true
+    activityTime?: true
+    activityLocation?: true
+    creatorId?: true
+    creatorName?: true
+    isDeleted?: true
+    creTime?: true
+    updTime?: true
+  }
+
+  export type CommunityGroupMaxAggregateInputType = {
+    id?: true
+    name?: true
+    type?: true
+    icon?: true
+    description?: true
+    maxMembers?: true
+    activityDate?: true
+    activityTime?: true
+    activityLocation?: true
+    creatorId?: true
+    creatorName?: true
+    isDeleted?: true
+    creTime?: true
+    updTime?: true
+  }
+
+  export type CommunityGroupCountAggregateInputType = {
+    id?: true
+    name?: true
+    type?: true
+    icon?: true
+    tags?: true
+    description?: true
+    maxMembers?: true
+    activityDate?: true
+    activityTime?: true
+    activityLocation?: true
+    creatorId?: true
+    creatorName?: true
+    isDeleted?: true
+    creTime?: true
+    updTime?: true
+    _all?: true
+  }
+
+  export type CommunityGroupAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CommunityGroup to aggregate.
+     */
+    where?: CommunityGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CommunityGroups to fetch.
+     */
+    orderBy?: CommunityGroupOrderByWithRelationInput | CommunityGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CommunityGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CommunityGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CommunityGroups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CommunityGroups
+    **/
+    _count?: true | CommunityGroupCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CommunityGroupAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CommunityGroupSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CommunityGroupMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CommunityGroupMaxAggregateInputType
+  }
+
+  export type GetCommunityGroupAggregateType<T extends CommunityGroupAggregateArgs> = {
+        [P in keyof T & keyof AggregateCommunityGroup]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCommunityGroup[P]>
+      : GetScalarType<T[P], AggregateCommunityGroup[P]>
+  }
+
+
+
+
+  export type CommunityGroupGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CommunityGroupWhereInput
+    orderBy?: CommunityGroupOrderByWithAggregationInput | CommunityGroupOrderByWithAggregationInput[]
+    by: CommunityGroupScalarFieldEnum[] | CommunityGroupScalarFieldEnum
+    having?: CommunityGroupScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CommunityGroupCountAggregateInputType | true
+    _avg?: CommunityGroupAvgAggregateInputType
+    _sum?: CommunityGroupSumAggregateInputType
+    _min?: CommunityGroupMinAggregateInputType
+    _max?: CommunityGroupMaxAggregateInputType
+  }
+
+  export type CommunityGroupGroupByOutputType = {
+    id: string
+    name: string
+    type: string
+    icon: string
+    tags: string[]
+    description: string | null
+    maxMembers: number
+    activityDate: string | null
+    activityTime: string | null
+    activityLocation: string | null
+    creatorId: string
+    creatorName: string
+    isDeleted: boolean
+    creTime: Date
+    updTime: Date
+    _count: CommunityGroupCountAggregateOutputType | null
+    _avg: CommunityGroupAvgAggregateOutputType | null
+    _sum: CommunityGroupSumAggregateOutputType | null
+    _min: CommunityGroupMinAggregateOutputType | null
+    _max: CommunityGroupMaxAggregateOutputType | null
+  }
+
+  type GetCommunityGroupGroupByPayload<T extends CommunityGroupGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CommunityGroupGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CommunityGroupGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CommunityGroupGroupByOutputType[P]>
+            : GetScalarType<T[P], CommunityGroupGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CommunityGroupSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    type?: boolean
+    icon?: boolean
+    tags?: boolean
+    description?: boolean
+    maxMembers?: boolean
+    activityDate?: boolean
+    activityTime?: boolean
+    activityLocation?: boolean
+    creatorId?: boolean
+    creatorName?: boolean
+    isDeleted?: boolean
+    creTime?: boolean
+    updTime?: boolean
+    messages?: boolean | CommunityGroup$messagesArgs<ExtArgs>
+    members?: boolean | CommunityGroup$membersArgs<ExtArgs>
+    _count?: boolean | CommunityGroupCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["communityGroup"]>
+
+  export type CommunityGroupSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    type?: boolean
+    icon?: boolean
+    tags?: boolean
+    description?: boolean
+    maxMembers?: boolean
+    activityDate?: boolean
+    activityTime?: boolean
+    activityLocation?: boolean
+    creatorId?: boolean
+    creatorName?: boolean
+    isDeleted?: boolean
+    creTime?: boolean
+    updTime?: boolean
+  }, ExtArgs["result"]["communityGroup"]>
+
+  export type CommunityGroupSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    type?: boolean
+    icon?: boolean
+    tags?: boolean
+    description?: boolean
+    maxMembers?: boolean
+    activityDate?: boolean
+    activityTime?: boolean
+    activityLocation?: boolean
+    creatorId?: boolean
+    creatorName?: boolean
+    isDeleted?: boolean
+    creTime?: boolean
+    updTime?: boolean
+  }, ExtArgs["result"]["communityGroup"]>
+
+  export type CommunityGroupSelectScalar = {
+    id?: boolean
+    name?: boolean
+    type?: boolean
+    icon?: boolean
+    tags?: boolean
+    description?: boolean
+    maxMembers?: boolean
+    activityDate?: boolean
+    activityTime?: boolean
+    activityLocation?: boolean
+    creatorId?: boolean
+    creatorName?: boolean
+    isDeleted?: boolean
+    creTime?: boolean
+    updTime?: boolean
+  }
+
+  export type CommunityGroupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "icon" | "tags" | "description" | "maxMembers" | "activityDate" | "activityTime" | "activityLocation" | "creatorId" | "creatorName" | "isDeleted" | "creTime" | "updTime", ExtArgs["result"]["communityGroup"]>
+  export type CommunityGroupInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    messages?: boolean | CommunityGroup$messagesArgs<ExtArgs>
+    members?: boolean | CommunityGroup$membersArgs<ExtArgs>
+    _count?: boolean | CommunityGroupCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type CommunityGroupIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type CommunityGroupIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $CommunityGroupPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CommunityGroup"
+    objects: {
+      messages: Prisma.$ChatMessagePayload<ExtArgs>[]
+      members: Prisma.$GroupMemberPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      type: string
+      icon: string
+      tags: string[]
+      description: string | null
+      maxMembers: number
+      activityDate: string | null
+      activityTime: string | null
+      activityLocation: string | null
+      creatorId: string
+      creatorName: string
+      isDeleted: boolean
+      creTime: Date
+      updTime: Date
+    }, ExtArgs["result"]["communityGroup"]>
+    composites: {}
+  }
+
+  type CommunityGroupGetPayload<S extends boolean | null | undefined | CommunityGroupDefaultArgs> = $Result.GetResult<Prisma.$CommunityGroupPayload, S>
+
+  type CommunityGroupCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CommunityGroupFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CommunityGroupCountAggregateInputType | true
+    }
+
+  export interface CommunityGroupDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CommunityGroup'], meta: { name: 'CommunityGroup' } }
+    /**
+     * Find zero or one CommunityGroup that matches the filter.
+     * @param {CommunityGroupFindUniqueArgs} args - Arguments to find a CommunityGroup
+     * @example
+     * // Get one CommunityGroup
+     * const communityGroup = await prisma.communityGroup.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CommunityGroupFindUniqueArgs>(args: SelectSubset<T, CommunityGroupFindUniqueArgs<ExtArgs>>): Prisma__CommunityGroupClient<$Result.GetResult<Prisma.$CommunityGroupPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CommunityGroup that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CommunityGroupFindUniqueOrThrowArgs} args - Arguments to find a CommunityGroup
+     * @example
+     * // Get one CommunityGroup
+     * const communityGroup = await prisma.communityGroup.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CommunityGroupFindUniqueOrThrowArgs>(args: SelectSubset<T, CommunityGroupFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CommunityGroupClient<$Result.GetResult<Prisma.$CommunityGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CommunityGroup that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommunityGroupFindFirstArgs} args - Arguments to find a CommunityGroup
+     * @example
+     * // Get one CommunityGroup
+     * const communityGroup = await prisma.communityGroup.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CommunityGroupFindFirstArgs>(args?: SelectSubset<T, CommunityGroupFindFirstArgs<ExtArgs>>): Prisma__CommunityGroupClient<$Result.GetResult<Prisma.$CommunityGroupPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CommunityGroup that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommunityGroupFindFirstOrThrowArgs} args - Arguments to find a CommunityGroup
+     * @example
+     * // Get one CommunityGroup
+     * const communityGroup = await prisma.communityGroup.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CommunityGroupFindFirstOrThrowArgs>(args?: SelectSubset<T, CommunityGroupFindFirstOrThrowArgs<ExtArgs>>): Prisma__CommunityGroupClient<$Result.GetResult<Prisma.$CommunityGroupPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CommunityGroups that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommunityGroupFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CommunityGroups
+     * const communityGroups = await prisma.communityGroup.findMany()
+     * 
+     * // Get first 10 CommunityGroups
+     * const communityGroups = await prisma.communityGroup.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const communityGroupWithIdOnly = await prisma.communityGroup.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CommunityGroupFindManyArgs>(args?: SelectSubset<T, CommunityGroupFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommunityGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CommunityGroup.
+     * @param {CommunityGroupCreateArgs} args - Arguments to create a CommunityGroup.
+     * @example
+     * // Create one CommunityGroup
+     * const CommunityGroup = await prisma.communityGroup.create({
+     *   data: {
+     *     // ... data to create a CommunityGroup
+     *   }
+     * })
+     * 
+     */
+    create<T extends CommunityGroupCreateArgs>(args: SelectSubset<T, CommunityGroupCreateArgs<ExtArgs>>): Prisma__CommunityGroupClient<$Result.GetResult<Prisma.$CommunityGroupPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CommunityGroups.
+     * @param {CommunityGroupCreateManyArgs} args - Arguments to create many CommunityGroups.
+     * @example
+     * // Create many CommunityGroups
+     * const communityGroup = await prisma.communityGroup.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CommunityGroupCreateManyArgs>(args?: SelectSubset<T, CommunityGroupCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CommunityGroups and returns the data saved in the database.
+     * @param {CommunityGroupCreateManyAndReturnArgs} args - Arguments to create many CommunityGroups.
+     * @example
+     * // Create many CommunityGroups
+     * const communityGroup = await prisma.communityGroup.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CommunityGroups and only return the `id`
+     * const communityGroupWithIdOnly = await prisma.communityGroup.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CommunityGroupCreateManyAndReturnArgs>(args?: SelectSubset<T, CommunityGroupCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommunityGroupPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CommunityGroup.
+     * @param {CommunityGroupDeleteArgs} args - Arguments to delete one CommunityGroup.
+     * @example
+     * // Delete one CommunityGroup
+     * const CommunityGroup = await prisma.communityGroup.delete({
+     *   where: {
+     *     // ... filter to delete one CommunityGroup
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CommunityGroupDeleteArgs>(args: SelectSubset<T, CommunityGroupDeleteArgs<ExtArgs>>): Prisma__CommunityGroupClient<$Result.GetResult<Prisma.$CommunityGroupPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CommunityGroup.
+     * @param {CommunityGroupUpdateArgs} args - Arguments to update one CommunityGroup.
+     * @example
+     * // Update one CommunityGroup
+     * const communityGroup = await prisma.communityGroup.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CommunityGroupUpdateArgs>(args: SelectSubset<T, CommunityGroupUpdateArgs<ExtArgs>>): Prisma__CommunityGroupClient<$Result.GetResult<Prisma.$CommunityGroupPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CommunityGroups.
+     * @param {CommunityGroupDeleteManyArgs} args - Arguments to filter CommunityGroups to delete.
+     * @example
+     * // Delete a few CommunityGroups
+     * const { count } = await prisma.communityGroup.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CommunityGroupDeleteManyArgs>(args?: SelectSubset<T, CommunityGroupDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CommunityGroups.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommunityGroupUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CommunityGroups
+     * const communityGroup = await prisma.communityGroup.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CommunityGroupUpdateManyArgs>(args: SelectSubset<T, CommunityGroupUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CommunityGroups and returns the data updated in the database.
+     * @param {CommunityGroupUpdateManyAndReturnArgs} args - Arguments to update many CommunityGroups.
+     * @example
+     * // Update many CommunityGroups
+     * const communityGroup = await prisma.communityGroup.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CommunityGroups and only return the `id`
+     * const communityGroupWithIdOnly = await prisma.communityGroup.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CommunityGroupUpdateManyAndReturnArgs>(args: SelectSubset<T, CommunityGroupUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommunityGroupPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CommunityGroup.
+     * @param {CommunityGroupUpsertArgs} args - Arguments to update or create a CommunityGroup.
+     * @example
+     * // Update or create a CommunityGroup
+     * const communityGroup = await prisma.communityGroup.upsert({
+     *   create: {
+     *     // ... data to create a CommunityGroup
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CommunityGroup we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CommunityGroupUpsertArgs>(args: SelectSubset<T, CommunityGroupUpsertArgs<ExtArgs>>): Prisma__CommunityGroupClient<$Result.GetResult<Prisma.$CommunityGroupPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CommunityGroups.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommunityGroupCountArgs} args - Arguments to filter CommunityGroups to count.
+     * @example
+     * // Count the number of CommunityGroups
+     * const count = await prisma.communityGroup.count({
+     *   where: {
+     *     // ... the filter for the CommunityGroups we want to count
+     *   }
+     * })
+    **/
+    count<T extends CommunityGroupCountArgs>(
+      args?: Subset<T, CommunityGroupCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CommunityGroupCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CommunityGroup.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommunityGroupAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CommunityGroupAggregateArgs>(args: Subset<T, CommunityGroupAggregateArgs>): Prisma.PrismaPromise<GetCommunityGroupAggregateType<T>>
+
+    /**
+     * Group by CommunityGroup.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommunityGroupGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CommunityGroupGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CommunityGroupGroupByArgs['orderBy'] }
+        : { orderBy?: CommunityGroupGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CommunityGroupGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCommunityGroupGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CommunityGroup model
+   */
+  readonly fields: CommunityGroupFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CommunityGroup.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CommunityGroupClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    messages<T extends CommunityGroup$messagesArgs<ExtArgs> = {}>(args?: Subset<T, CommunityGroup$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    members<T extends CommunityGroup$membersArgs<ExtArgs> = {}>(args?: Subset<T, CommunityGroup$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CommunityGroup model
+   */
+  interface CommunityGroupFieldRefs {
+    readonly id: FieldRef<"CommunityGroup", 'String'>
+    readonly name: FieldRef<"CommunityGroup", 'String'>
+    readonly type: FieldRef<"CommunityGroup", 'String'>
+    readonly icon: FieldRef<"CommunityGroup", 'String'>
+    readonly tags: FieldRef<"CommunityGroup", 'String[]'>
+    readonly description: FieldRef<"CommunityGroup", 'String'>
+    readonly maxMembers: FieldRef<"CommunityGroup", 'Int'>
+    readonly activityDate: FieldRef<"CommunityGroup", 'String'>
+    readonly activityTime: FieldRef<"CommunityGroup", 'String'>
+    readonly activityLocation: FieldRef<"CommunityGroup", 'String'>
+    readonly creatorId: FieldRef<"CommunityGroup", 'String'>
+    readonly creatorName: FieldRef<"CommunityGroup", 'String'>
+    readonly isDeleted: FieldRef<"CommunityGroup", 'Boolean'>
+    readonly creTime: FieldRef<"CommunityGroup", 'DateTime'>
+    readonly updTime: FieldRef<"CommunityGroup", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CommunityGroup findUnique
+   */
+  export type CommunityGroupFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommunityGroup
+     */
+    select?: CommunityGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommunityGroup
+     */
+    omit?: CommunityGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommunityGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which CommunityGroup to fetch.
+     */
+    where: CommunityGroupWhereUniqueInput
+  }
+
+  /**
+   * CommunityGroup findUniqueOrThrow
+   */
+  export type CommunityGroupFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommunityGroup
+     */
+    select?: CommunityGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommunityGroup
+     */
+    omit?: CommunityGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommunityGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which CommunityGroup to fetch.
+     */
+    where: CommunityGroupWhereUniqueInput
+  }
+
+  /**
+   * CommunityGroup findFirst
+   */
+  export type CommunityGroupFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommunityGroup
+     */
+    select?: CommunityGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommunityGroup
+     */
+    omit?: CommunityGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommunityGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which CommunityGroup to fetch.
+     */
+    where?: CommunityGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CommunityGroups to fetch.
+     */
+    orderBy?: CommunityGroupOrderByWithRelationInput | CommunityGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CommunityGroups.
+     */
+    cursor?: CommunityGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CommunityGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CommunityGroups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CommunityGroups.
+     */
+    distinct?: CommunityGroupScalarFieldEnum | CommunityGroupScalarFieldEnum[]
+  }
+
+  /**
+   * CommunityGroup findFirstOrThrow
+   */
+  export type CommunityGroupFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommunityGroup
+     */
+    select?: CommunityGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommunityGroup
+     */
+    omit?: CommunityGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommunityGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which CommunityGroup to fetch.
+     */
+    where?: CommunityGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CommunityGroups to fetch.
+     */
+    orderBy?: CommunityGroupOrderByWithRelationInput | CommunityGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CommunityGroups.
+     */
+    cursor?: CommunityGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CommunityGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CommunityGroups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CommunityGroups.
+     */
+    distinct?: CommunityGroupScalarFieldEnum | CommunityGroupScalarFieldEnum[]
+  }
+
+  /**
+   * CommunityGroup findMany
+   */
+  export type CommunityGroupFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommunityGroup
+     */
+    select?: CommunityGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommunityGroup
+     */
+    omit?: CommunityGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommunityGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which CommunityGroups to fetch.
+     */
+    where?: CommunityGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CommunityGroups to fetch.
+     */
+    orderBy?: CommunityGroupOrderByWithRelationInput | CommunityGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CommunityGroups.
+     */
+    cursor?: CommunityGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CommunityGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CommunityGroups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CommunityGroups.
+     */
+    distinct?: CommunityGroupScalarFieldEnum | CommunityGroupScalarFieldEnum[]
+  }
+
+  /**
+   * CommunityGroup create
+   */
+  export type CommunityGroupCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommunityGroup
+     */
+    select?: CommunityGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommunityGroup
+     */
+    omit?: CommunityGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommunityGroupInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CommunityGroup.
+     */
+    data: XOR<CommunityGroupCreateInput, CommunityGroupUncheckedCreateInput>
+  }
+
+  /**
+   * CommunityGroup createMany
+   */
+  export type CommunityGroupCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CommunityGroups.
+     */
+    data: CommunityGroupCreateManyInput | CommunityGroupCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CommunityGroup createManyAndReturn
+   */
+  export type CommunityGroupCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommunityGroup
+     */
+    select?: CommunityGroupSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommunityGroup
+     */
+    omit?: CommunityGroupOmit<ExtArgs> | null
+    /**
+     * The data used to create many CommunityGroups.
+     */
+    data: CommunityGroupCreateManyInput | CommunityGroupCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CommunityGroup update
+   */
+  export type CommunityGroupUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommunityGroup
+     */
+    select?: CommunityGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommunityGroup
+     */
+    omit?: CommunityGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommunityGroupInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CommunityGroup.
+     */
+    data: XOR<CommunityGroupUpdateInput, CommunityGroupUncheckedUpdateInput>
+    /**
+     * Choose, which CommunityGroup to update.
+     */
+    where: CommunityGroupWhereUniqueInput
+  }
+
+  /**
+   * CommunityGroup updateMany
+   */
+  export type CommunityGroupUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CommunityGroups.
+     */
+    data: XOR<CommunityGroupUpdateManyMutationInput, CommunityGroupUncheckedUpdateManyInput>
+    /**
+     * Filter which CommunityGroups to update
+     */
+    where?: CommunityGroupWhereInput
+    /**
+     * Limit how many CommunityGroups to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CommunityGroup updateManyAndReturn
+   */
+  export type CommunityGroupUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommunityGroup
+     */
+    select?: CommunityGroupSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommunityGroup
+     */
+    omit?: CommunityGroupOmit<ExtArgs> | null
+    /**
+     * The data used to update CommunityGroups.
+     */
+    data: XOR<CommunityGroupUpdateManyMutationInput, CommunityGroupUncheckedUpdateManyInput>
+    /**
+     * Filter which CommunityGroups to update
+     */
+    where?: CommunityGroupWhereInput
+    /**
+     * Limit how many CommunityGroups to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CommunityGroup upsert
+   */
+  export type CommunityGroupUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommunityGroup
+     */
+    select?: CommunityGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommunityGroup
+     */
+    omit?: CommunityGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommunityGroupInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CommunityGroup to update in case it exists.
+     */
+    where: CommunityGroupWhereUniqueInput
+    /**
+     * In case the CommunityGroup found by the `where` argument doesn't exist, create a new CommunityGroup with this data.
+     */
+    create: XOR<CommunityGroupCreateInput, CommunityGroupUncheckedCreateInput>
+    /**
+     * In case the CommunityGroup was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CommunityGroupUpdateInput, CommunityGroupUncheckedUpdateInput>
+  }
+
+  /**
+   * CommunityGroup delete
+   */
+  export type CommunityGroupDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommunityGroup
+     */
+    select?: CommunityGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommunityGroup
+     */
+    omit?: CommunityGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommunityGroupInclude<ExtArgs> | null
+    /**
+     * Filter which CommunityGroup to delete.
+     */
+    where: CommunityGroupWhereUniqueInput
+  }
+
+  /**
+   * CommunityGroup deleteMany
+   */
+  export type CommunityGroupDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CommunityGroups to delete
+     */
+    where?: CommunityGroupWhereInput
+    /**
+     * Limit how many CommunityGroups to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CommunityGroup.messages
+   */
+  export type CommunityGroup$messagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessage
+     */
+    omit?: ChatMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatMessageInclude<ExtArgs> | null
+    where?: ChatMessageWhereInput
+    orderBy?: ChatMessageOrderByWithRelationInput | ChatMessageOrderByWithRelationInput[]
+    cursor?: ChatMessageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChatMessageScalarFieldEnum | ChatMessageScalarFieldEnum[]
+  }
+
+  /**
+   * CommunityGroup.members
+   */
+  export type CommunityGroup$membersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupMember
+     */
+    select?: GroupMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupMember
+     */
+    omit?: GroupMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupMemberInclude<ExtArgs> | null
+    where?: GroupMemberWhereInput
+    orderBy?: GroupMemberOrderByWithRelationInput | GroupMemberOrderByWithRelationInput[]
+    cursor?: GroupMemberWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GroupMemberScalarFieldEnum | GroupMemberScalarFieldEnum[]
+  }
+
+  /**
+   * CommunityGroup without action
+   */
+  export type CommunityGroupDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommunityGroup
+     */
+    select?: CommunityGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommunityGroup
+     */
+    omit?: CommunityGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommunityGroupInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model GroupMember
+   */
+
+  export type AggregateGroupMember = {
+    _count: GroupMemberCountAggregateOutputType | null
+    _min: GroupMemberMinAggregateOutputType | null
+    _max: GroupMemberMaxAggregateOutputType | null
+  }
+
+  export type GroupMemberMinAggregateOutputType = {
+    id: string | null
+    groupId: string | null
+    userId: string | null
+    userName: string | null
+    joinedAt: Date | null
+  }
+
+  export type GroupMemberMaxAggregateOutputType = {
+    id: string | null
+    groupId: string | null
+    userId: string | null
+    userName: string | null
+    joinedAt: Date | null
+  }
+
+  export type GroupMemberCountAggregateOutputType = {
+    id: number
+    groupId: number
+    userId: number
+    userName: number
+    joinedAt: number
+    _all: number
+  }
+
+
+  export type GroupMemberMinAggregateInputType = {
+    id?: true
+    groupId?: true
+    userId?: true
+    userName?: true
+    joinedAt?: true
+  }
+
+  export type GroupMemberMaxAggregateInputType = {
+    id?: true
+    groupId?: true
+    userId?: true
+    userName?: true
+    joinedAt?: true
+  }
+
+  export type GroupMemberCountAggregateInputType = {
+    id?: true
+    groupId?: true
+    userId?: true
+    userName?: true
+    joinedAt?: true
+    _all?: true
+  }
+
+  export type GroupMemberAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GroupMember to aggregate.
+     */
+    where?: GroupMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupMembers to fetch.
+     */
+    orderBy?: GroupMemberOrderByWithRelationInput | GroupMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GroupMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupMembers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GroupMembers
+    **/
+    _count?: true | GroupMemberCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GroupMemberMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GroupMemberMaxAggregateInputType
+  }
+
+  export type GetGroupMemberAggregateType<T extends GroupMemberAggregateArgs> = {
+        [P in keyof T & keyof AggregateGroupMember]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGroupMember[P]>
+      : GetScalarType<T[P], AggregateGroupMember[P]>
+  }
+
+
+
+
+  export type GroupMemberGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GroupMemberWhereInput
+    orderBy?: GroupMemberOrderByWithAggregationInput | GroupMemberOrderByWithAggregationInput[]
+    by: GroupMemberScalarFieldEnum[] | GroupMemberScalarFieldEnum
+    having?: GroupMemberScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GroupMemberCountAggregateInputType | true
+    _min?: GroupMemberMinAggregateInputType
+    _max?: GroupMemberMaxAggregateInputType
+  }
+
+  export type GroupMemberGroupByOutputType = {
+    id: string
+    groupId: string
+    userId: string
+    userName: string
+    joinedAt: Date
+    _count: GroupMemberCountAggregateOutputType | null
+    _min: GroupMemberMinAggregateOutputType | null
+    _max: GroupMemberMaxAggregateOutputType | null
+  }
+
+  type GetGroupMemberGroupByPayload<T extends GroupMemberGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GroupMemberGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GroupMemberGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GroupMemberGroupByOutputType[P]>
+            : GetScalarType<T[P], GroupMemberGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GroupMemberSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    groupId?: boolean
+    userId?: boolean
+    userName?: boolean
+    joinedAt?: boolean
+    group?: boolean | CommunityGroupDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["groupMember"]>
+
+  export type GroupMemberSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    groupId?: boolean
+    userId?: boolean
+    userName?: boolean
+    joinedAt?: boolean
+    group?: boolean | CommunityGroupDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["groupMember"]>
+
+  export type GroupMemberSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    groupId?: boolean
+    userId?: boolean
+    userName?: boolean
+    joinedAt?: boolean
+    group?: boolean | CommunityGroupDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["groupMember"]>
+
+  export type GroupMemberSelectScalar = {
+    id?: boolean
+    groupId?: boolean
+    userId?: boolean
+    userName?: boolean
+    joinedAt?: boolean
+  }
+
+  export type GroupMemberOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "groupId" | "userId" | "userName" | "joinedAt", ExtArgs["result"]["groupMember"]>
+  export type GroupMemberInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    group?: boolean | CommunityGroupDefaultArgs<ExtArgs>
+  }
+  export type GroupMemberIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    group?: boolean | CommunityGroupDefaultArgs<ExtArgs>
+  }
+  export type GroupMemberIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    group?: boolean | CommunityGroupDefaultArgs<ExtArgs>
+  }
+
+  export type $GroupMemberPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GroupMember"
+    objects: {
+      group: Prisma.$CommunityGroupPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      groupId: string
+      userId: string
+      userName: string
+      joinedAt: Date
+    }, ExtArgs["result"]["groupMember"]>
+    composites: {}
+  }
+
+  type GroupMemberGetPayload<S extends boolean | null | undefined | GroupMemberDefaultArgs> = $Result.GetResult<Prisma.$GroupMemberPayload, S>
+
+  type GroupMemberCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GroupMemberFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GroupMemberCountAggregateInputType | true
+    }
+
+  export interface GroupMemberDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GroupMember'], meta: { name: 'GroupMember' } }
+    /**
+     * Find zero or one GroupMember that matches the filter.
+     * @param {GroupMemberFindUniqueArgs} args - Arguments to find a GroupMember
+     * @example
+     * // Get one GroupMember
+     * const groupMember = await prisma.groupMember.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GroupMemberFindUniqueArgs>(args: SelectSubset<T, GroupMemberFindUniqueArgs<ExtArgs>>): Prisma__GroupMemberClient<$Result.GetResult<Prisma.$GroupMemberPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GroupMember that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GroupMemberFindUniqueOrThrowArgs} args - Arguments to find a GroupMember
+     * @example
+     * // Get one GroupMember
+     * const groupMember = await prisma.groupMember.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GroupMemberFindUniqueOrThrowArgs>(args: SelectSubset<T, GroupMemberFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GroupMemberClient<$Result.GetResult<Prisma.$GroupMemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GroupMember that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupMemberFindFirstArgs} args - Arguments to find a GroupMember
+     * @example
+     * // Get one GroupMember
+     * const groupMember = await prisma.groupMember.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GroupMemberFindFirstArgs>(args?: SelectSubset<T, GroupMemberFindFirstArgs<ExtArgs>>): Prisma__GroupMemberClient<$Result.GetResult<Prisma.$GroupMemberPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GroupMember that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupMemberFindFirstOrThrowArgs} args - Arguments to find a GroupMember
+     * @example
+     * // Get one GroupMember
+     * const groupMember = await prisma.groupMember.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GroupMemberFindFirstOrThrowArgs>(args?: SelectSubset<T, GroupMemberFindFirstOrThrowArgs<ExtArgs>>): Prisma__GroupMemberClient<$Result.GetResult<Prisma.$GroupMemberPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GroupMembers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupMemberFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GroupMembers
+     * const groupMembers = await prisma.groupMember.findMany()
+     * 
+     * // Get first 10 GroupMembers
+     * const groupMembers = await prisma.groupMember.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const groupMemberWithIdOnly = await prisma.groupMember.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GroupMemberFindManyArgs>(args?: SelectSubset<T, GroupMemberFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GroupMember.
+     * @param {GroupMemberCreateArgs} args - Arguments to create a GroupMember.
+     * @example
+     * // Create one GroupMember
+     * const GroupMember = await prisma.groupMember.create({
+     *   data: {
+     *     // ... data to create a GroupMember
+     *   }
+     * })
+     * 
+     */
+    create<T extends GroupMemberCreateArgs>(args: SelectSubset<T, GroupMemberCreateArgs<ExtArgs>>): Prisma__GroupMemberClient<$Result.GetResult<Prisma.$GroupMemberPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GroupMembers.
+     * @param {GroupMemberCreateManyArgs} args - Arguments to create many GroupMembers.
+     * @example
+     * // Create many GroupMembers
+     * const groupMember = await prisma.groupMember.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GroupMemberCreateManyArgs>(args?: SelectSubset<T, GroupMemberCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GroupMembers and returns the data saved in the database.
+     * @param {GroupMemberCreateManyAndReturnArgs} args - Arguments to create many GroupMembers.
+     * @example
+     * // Create many GroupMembers
+     * const groupMember = await prisma.groupMember.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GroupMembers and only return the `id`
+     * const groupMemberWithIdOnly = await prisma.groupMember.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GroupMemberCreateManyAndReturnArgs>(args?: SelectSubset<T, GroupMemberCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupMemberPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a GroupMember.
+     * @param {GroupMemberDeleteArgs} args - Arguments to delete one GroupMember.
+     * @example
+     * // Delete one GroupMember
+     * const GroupMember = await prisma.groupMember.delete({
+     *   where: {
+     *     // ... filter to delete one GroupMember
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GroupMemberDeleteArgs>(args: SelectSubset<T, GroupMemberDeleteArgs<ExtArgs>>): Prisma__GroupMemberClient<$Result.GetResult<Prisma.$GroupMemberPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GroupMember.
+     * @param {GroupMemberUpdateArgs} args - Arguments to update one GroupMember.
+     * @example
+     * // Update one GroupMember
+     * const groupMember = await prisma.groupMember.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GroupMemberUpdateArgs>(args: SelectSubset<T, GroupMemberUpdateArgs<ExtArgs>>): Prisma__GroupMemberClient<$Result.GetResult<Prisma.$GroupMemberPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GroupMembers.
+     * @param {GroupMemberDeleteManyArgs} args - Arguments to filter GroupMembers to delete.
+     * @example
+     * // Delete a few GroupMembers
+     * const { count } = await prisma.groupMember.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GroupMemberDeleteManyArgs>(args?: SelectSubset<T, GroupMemberDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GroupMembers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupMemberUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GroupMembers
+     * const groupMember = await prisma.groupMember.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GroupMemberUpdateManyArgs>(args: SelectSubset<T, GroupMemberUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GroupMembers and returns the data updated in the database.
+     * @param {GroupMemberUpdateManyAndReturnArgs} args - Arguments to update many GroupMembers.
+     * @example
+     * // Update many GroupMembers
+     * const groupMember = await prisma.groupMember.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GroupMembers and only return the `id`
+     * const groupMemberWithIdOnly = await prisma.groupMember.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GroupMemberUpdateManyAndReturnArgs>(args: SelectSubset<T, GroupMemberUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupMemberPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one GroupMember.
+     * @param {GroupMemberUpsertArgs} args - Arguments to update or create a GroupMember.
+     * @example
+     * // Update or create a GroupMember
+     * const groupMember = await prisma.groupMember.upsert({
+     *   create: {
+     *     // ... data to create a GroupMember
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GroupMember we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GroupMemberUpsertArgs>(args: SelectSubset<T, GroupMemberUpsertArgs<ExtArgs>>): Prisma__GroupMemberClient<$Result.GetResult<Prisma.$GroupMemberPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GroupMembers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupMemberCountArgs} args - Arguments to filter GroupMembers to count.
+     * @example
+     * // Count the number of GroupMembers
+     * const count = await prisma.groupMember.count({
+     *   where: {
+     *     // ... the filter for the GroupMembers we want to count
+     *   }
+     * })
+    **/
+    count<T extends GroupMemberCountArgs>(
+      args?: Subset<T, GroupMemberCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GroupMemberCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GroupMember.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupMemberAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GroupMemberAggregateArgs>(args: Subset<T, GroupMemberAggregateArgs>): Prisma.PrismaPromise<GetGroupMemberAggregateType<T>>
+
+    /**
+     * Group by GroupMember.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupMemberGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GroupMemberGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GroupMemberGroupByArgs['orderBy'] }
+        : { orderBy?: GroupMemberGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GroupMemberGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGroupMemberGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GroupMember model
+   */
+  readonly fields: GroupMemberFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GroupMember.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GroupMemberClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    group<T extends CommunityGroupDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CommunityGroupDefaultArgs<ExtArgs>>): Prisma__CommunityGroupClient<$Result.GetResult<Prisma.$CommunityGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GroupMember model
+   */
+  interface GroupMemberFieldRefs {
+    readonly id: FieldRef<"GroupMember", 'String'>
+    readonly groupId: FieldRef<"GroupMember", 'String'>
+    readonly userId: FieldRef<"GroupMember", 'String'>
+    readonly userName: FieldRef<"GroupMember", 'String'>
+    readonly joinedAt: FieldRef<"GroupMember", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GroupMember findUnique
+   */
+  export type GroupMemberFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupMember
+     */
+    select?: GroupMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupMember
+     */
+    omit?: GroupMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupMember to fetch.
+     */
+    where: GroupMemberWhereUniqueInput
+  }
+
+  /**
+   * GroupMember findUniqueOrThrow
+   */
+  export type GroupMemberFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupMember
+     */
+    select?: GroupMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupMember
+     */
+    omit?: GroupMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupMember to fetch.
+     */
+    where: GroupMemberWhereUniqueInput
+  }
+
+  /**
+   * GroupMember findFirst
+   */
+  export type GroupMemberFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupMember
+     */
+    select?: GroupMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupMember
+     */
+    omit?: GroupMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupMember to fetch.
+     */
+    where?: GroupMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupMembers to fetch.
+     */
+    orderBy?: GroupMemberOrderByWithRelationInput | GroupMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GroupMembers.
+     */
+    cursor?: GroupMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupMembers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GroupMembers.
+     */
+    distinct?: GroupMemberScalarFieldEnum | GroupMemberScalarFieldEnum[]
+  }
+
+  /**
+   * GroupMember findFirstOrThrow
+   */
+  export type GroupMemberFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupMember
+     */
+    select?: GroupMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupMember
+     */
+    omit?: GroupMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupMember to fetch.
+     */
+    where?: GroupMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupMembers to fetch.
+     */
+    orderBy?: GroupMemberOrderByWithRelationInput | GroupMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GroupMembers.
+     */
+    cursor?: GroupMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupMembers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GroupMembers.
+     */
+    distinct?: GroupMemberScalarFieldEnum | GroupMemberScalarFieldEnum[]
+  }
+
+  /**
+   * GroupMember findMany
+   */
+  export type GroupMemberFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupMember
+     */
+    select?: GroupMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupMember
+     */
+    omit?: GroupMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupMembers to fetch.
+     */
+    where?: GroupMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupMembers to fetch.
+     */
+    orderBy?: GroupMemberOrderByWithRelationInput | GroupMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GroupMembers.
+     */
+    cursor?: GroupMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupMembers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GroupMembers.
+     */
+    distinct?: GroupMemberScalarFieldEnum | GroupMemberScalarFieldEnum[]
+  }
+
+  /**
+   * GroupMember create
+   */
+  export type GroupMemberCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupMember
+     */
+    select?: GroupMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupMember
+     */
+    omit?: GroupMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupMemberInclude<ExtArgs> | null
+    /**
+     * The data needed to create a GroupMember.
+     */
+    data: XOR<GroupMemberCreateInput, GroupMemberUncheckedCreateInput>
+  }
+
+  /**
+   * GroupMember createMany
+   */
+  export type GroupMemberCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GroupMembers.
+     */
+    data: GroupMemberCreateManyInput | GroupMemberCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GroupMember createManyAndReturn
+   */
+  export type GroupMemberCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupMember
+     */
+    select?: GroupMemberSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupMember
+     */
+    omit?: GroupMemberOmit<ExtArgs> | null
+    /**
+     * The data used to create many GroupMembers.
+     */
+    data: GroupMemberCreateManyInput | GroupMemberCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupMemberIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GroupMember update
+   */
+  export type GroupMemberUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupMember
+     */
+    select?: GroupMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupMember
+     */
+    omit?: GroupMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupMemberInclude<ExtArgs> | null
+    /**
+     * The data needed to update a GroupMember.
+     */
+    data: XOR<GroupMemberUpdateInput, GroupMemberUncheckedUpdateInput>
+    /**
+     * Choose, which GroupMember to update.
+     */
+    where: GroupMemberWhereUniqueInput
+  }
+
+  /**
+   * GroupMember updateMany
+   */
+  export type GroupMemberUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GroupMembers.
+     */
+    data: XOR<GroupMemberUpdateManyMutationInput, GroupMemberUncheckedUpdateManyInput>
+    /**
+     * Filter which GroupMembers to update
+     */
+    where?: GroupMemberWhereInput
+    /**
+     * Limit how many GroupMembers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GroupMember updateManyAndReturn
+   */
+  export type GroupMemberUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupMember
+     */
+    select?: GroupMemberSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupMember
+     */
+    omit?: GroupMemberOmit<ExtArgs> | null
+    /**
+     * The data used to update GroupMembers.
+     */
+    data: XOR<GroupMemberUpdateManyMutationInput, GroupMemberUncheckedUpdateManyInput>
+    /**
+     * Filter which GroupMembers to update
+     */
+    where?: GroupMemberWhereInput
+    /**
+     * Limit how many GroupMembers to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupMemberIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GroupMember upsert
+   */
+  export type GroupMemberUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupMember
+     */
+    select?: GroupMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupMember
+     */
+    omit?: GroupMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupMemberInclude<ExtArgs> | null
+    /**
+     * The filter to search for the GroupMember to update in case it exists.
+     */
+    where: GroupMemberWhereUniqueInput
+    /**
+     * In case the GroupMember found by the `where` argument doesn't exist, create a new GroupMember with this data.
+     */
+    create: XOR<GroupMemberCreateInput, GroupMemberUncheckedCreateInput>
+    /**
+     * In case the GroupMember was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GroupMemberUpdateInput, GroupMemberUncheckedUpdateInput>
+  }
+
+  /**
+   * GroupMember delete
+   */
+  export type GroupMemberDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupMember
+     */
+    select?: GroupMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupMember
+     */
+    omit?: GroupMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupMemberInclude<ExtArgs> | null
+    /**
+     * Filter which GroupMember to delete.
+     */
+    where: GroupMemberWhereUniqueInput
+  }
+
+  /**
+   * GroupMember deleteMany
+   */
+  export type GroupMemberDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GroupMembers to delete
+     */
+    where?: GroupMemberWhereInput
+    /**
+     * Limit how many GroupMembers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GroupMember without action
+   */
+  export type GroupMemberDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupMember
+     */
+    select?: GroupMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupMember
+     */
+    omit?: GroupMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupMemberInclude<ExtArgs> | null
   }
 
 
@@ -26771,2332 +29097,6 @@ export namespace Prisma {
 
 
   /**
-   * Model community_group
-   */
-
-  export type AggregateCommunity_group = {
-    _count: Community_groupCountAggregateOutputType | null
-    _avg: Community_groupAvgAggregateOutputType | null
-    _sum: Community_groupSumAggregateOutputType | null
-    _min: Community_groupMinAggregateOutputType | null
-    _max: Community_groupMaxAggregateOutputType | null
-  }
-
-  export type Community_groupAvgAggregateOutputType = {
-    max_members: number | null
-  }
-
-  export type Community_groupSumAggregateOutputType = {
-    max_members: number | null
-  }
-
-  export type Community_groupMinAggregateOutputType = {
-    id: string | null
-    name: string | null
-    type: string | null
-    icon: string | null
-    description: string | null
-    max_members: number | null
-    activity_date: string | null
-    activity_time: string | null
-    activity_location: string | null
-    creator_id: string | null
-    creator_name: string | null
-    is_deleted: boolean | null
-    cre_time: Date | null
-    upd_time: Date | null
-  }
-
-  export type Community_groupMaxAggregateOutputType = {
-    id: string | null
-    name: string | null
-    type: string | null
-    icon: string | null
-    description: string | null
-    max_members: number | null
-    activity_date: string | null
-    activity_time: string | null
-    activity_location: string | null
-    creator_id: string | null
-    creator_name: string | null
-    is_deleted: boolean | null
-    cre_time: Date | null
-    upd_time: Date | null
-  }
-
-  export type Community_groupCountAggregateOutputType = {
-    id: number
-    name: number
-    type: number
-    icon: number
-    tags: number
-    description: number
-    max_members: number
-    activity_date: number
-    activity_time: number
-    activity_location: number
-    creator_id: number
-    creator_name: number
-    is_deleted: number
-    cre_time: number
-    upd_time: number
-    _all: number
-  }
-
-
-  export type Community_groupAvgAggregateInputType = {
-    max_members?: true
-  }
-
-  export type Community_groupSumAggregateInputType = {
-    max_members?: true
-  }
-
-  export type Community_groupMinAggregateInputType = {
-    id?: true
-    name?: true
-    type?: true
-    icon?: true
-    description?: true
-    max_members?: true
-    activity_date?: true
-    activity_time?: true
-    activity_location?: true
-    creator_id?: true
-    creator_name?: true
-    is_deleted?: true
-    cre_time?: true
-    upd_time?: true
-  }
-
-  export type Community_groupMaxAggregateInputType = {
-    id?: true
-    name?: true
-    type?: true
-    icon?: true
-    description?: true
-    max_members?: true
-    activity_date?: true
-    activity_time?: true
-    activity_location?: true
-    creator_id?: true
-    creator_name?: true
-    is_deleted?: true
-    cre_time?: true
-    upd_time?: true
-  }
-
-  export type Community_groupCountAggregateInputType = {
-    id?: true
-    name?: true
-    type?: true
-    icon?: true
-    tags?: true
-    description?: true
-    max_members?: true
-    activity_date?: true
-    activity_time?: true
-    activity_location?: true
-    creator_id?: true
-    creator_name?: true
-    is_deleted?: true
-    cre_time?: true
-    upd_time?: true
-    _all?: true
-  }
-
-  export type Community_groupAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which community_group to aggregate.
-     */
-    where?: community_groupWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of community_groups to fetch.
-     */
-    orderBy?: community_groupOrderByWithRelationInput | community_groupOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: community_groupWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` community_groups from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` community_groups.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned community_groups
-    **/
-    _count?: true | Community_groupCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: Community_groupAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: Community_groupSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: Community_groupMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: Community_groupMaxAggregateInputType
-  }
-
-  export type GetCommunity_groupAggregateType<T extends Community_groupAggregateArgs> = {
-        [P in keyof T & keyof AggregateCommunity_group]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateCommunity_group[P]>
-      : GetScalarType<T[P], AggregateCommunity_group[P]>
-  }
-
-
-
-
-  export type community_groupGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: community_groupWhereInput
-    orderBy?: community_groupOrderByWithAggregationInput | community_groupOrderByWithAggregationInput[]
-    by: Community_groupScalarFieldEnum[] | Community_groupScalarFieldEnum
-    having?: community_groupScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: Community_groupCountAggregateInputType | true
-    _avg?: Community_groupAvgAggregateInputType
-    _sum?: Community_groupSumAggregateInputType
-    _min?: Community_groupMinAggregateInputType
-    _max?: Community_groupMaxAggregateInputType
-  }
-
-  export type Community_groupGroupByOutputType = {
-    id: string
-    name: string
-    type: string
-    icon: string
-    tags: string[]
-    description: string | null
-    max_members: number
-    activity_date: string | null
-    activity_time: string | null
-    activity_location: string | null
-    creator_id: string
-    creator_name: string
-    is_deleted: boolean
-    cre_time: Date
-    upd_time: Date
-    _count: Community_groupCountAggregateOutputType | null
-    _avg: Community_groupAvgAggregateOutputType | null
-    _sum: Community_groupSumAggregateOutputType | null
-    _min: Community_groupMinAggregateOutputType | null
-    _max: Community_groupMaxAggregateOutputType | null
-  }
-
-  type GetCommunity_groupGroupByPayload<T extends community_groupGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<Community_groupGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof Community_groupGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], Community_groupGroupByOutputType[P]>
-            : GetScalarType<T[P], Community_groupGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type community_groupSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    type?: boolean
-    icon?: boolean
-    tags?: boolean
-    description?: boolean
-    max_members?: boolean
-    activity_date?: boolean
-    activity_time?: boolean
-    activity_location?: boolean
-    creator_id?: boolean
-    creator_name?: boolean
-    is_deleted?: boolean
-    cre_time?: boolean
-    upd_time?: boolean
-    chat_message?: boolean | community_group$chat_messageArgs<ExtArgs>
-    group_member?: boolean | community_group$group_memberArgs<ExtArgs>
-    _count?: boolean | Community_groupCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["community_group"]>
-
-  export type community_groupSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    type?: boolean
-    icon?: boolean
-    tags?: boolean
-    description?: boolean
-    max_members?: boolean
-    activity_date?: boolean
-    activity_time?: boolean
-    activity_location?: boolean
-    creator_id?: boolean
-    creator_name?: boolean
-    is_deleted?: boolean
-    cre_time?: boolean
-    upd_time?: boolean
-  }, ExtArgs["result"]["community_group"]>
-
-  export type community_groupSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    type?: boolean
-    icon?: boolean
-    tags?: boolean
-    description?: boolean
-    max_members?: boolean
-    activity_date?: boolean
-    activity_time?: boolean
-    activity_location?: boolean
-    creator_id?: boolean
-    creator_name?: boolean
-    is_deleted?: boolean
-    cre_time?: boolean
-    upd_time?: boolean
-  }, ExtArgs["result"]["community_group"]>
-
-  export type community_groupSelectScalar = {
-    id?: boolean
-    name?: boolean
-    type?: boolean
-    icon?: boolean
-    tags?: boolean
-    description?: boolean
-    max_members?: boolean
-    activity_date?: boolean
-    activity_time?: boolean
-    activity_location?: boolean
-    creator_id?: boolean
-    creator_name?: boolean
-    is_deleted?: boolean
-    cre_time?: boolean
-    upd_time?: boolean
-  }
-
-  export type community_groupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "icon" | "tags" | "description" | "max_members" | "activity_date" | "activity_time" | "activity_location" | "creator_id" | "creator_name" | "is_deleted" | "cre_time" | "upd_time", ExtArgs["result"]["community_group"]>
-  export type community_groupInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    chat_message?: boolean | community_group$chat_messageArgs<ExtArgs>
-    group_member?: boolean | community_group$group_memberArgs<ExtArgs>
-    _count?: boolean | Community_groupCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type community_groupIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type community_groupIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-
-  export type $community_groupPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "community_group"
-    objects: {
-      chat_message: Prisma.$ChatMessagePayload<ExtArgs>[]
-      group_member: Prisma.$group_memberPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      name: string
-      type: string
-      icon: string
-      tags: string[]
-      description: string | null
-      max_members: number
-      activity_date: string | null
-      activity_time: string | null
-      activity_location: string | null
-      creator_id: string
-      creator_name: string
-      is_deleted: boolean
-      cre_time: Date
-      upd_time: Date
-    }, ExtArgs["result"]["community_group"]>
-    composites: {}
-  }
-
-  type community_groupGetPayload<S extends boolean | null | undefined | community_groupDefaultArgs> = $Result.GetResult<Prisma.$community_groupPayload, S>
-
-  type community_groupCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<community_groupFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: Community_groupCountAggregateInputType | true
-    }
-
-  export interface community_groupDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['community_group'], meta: { name: 'community_group' } }
-    /**
-     * Find zero or one Community_group that matches the filter.
-     * @param {community_groupFindUniqueArgs} args - Arguments to find a Community_group
-     * @example
-     * // Get one Community_group
-     * const community_group = await prisma.community_group.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends community_groupFindUniqueArgs>(args: SelectSubset<T, community_groupFindUniqueArgs<ExtArgs>>): Prisma__community_groupClient<$Result.GetResult<Prisma.$community_groupPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Community_group that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {community_groupFindUniqueOrThrowArgs} args - Arguments to find a Community_group
-     * @example
-     * // Get one Community_group
-     * const community_group = await prisma.community_group.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends community_groupFindUniqueOrThrowArgs>(args: SelectSubset<T, community_groupFindUniqueOrThrowArgs<ExtArgs>>): Prisma__community_groupClient<$Result.GetResult<Prisma.$community_groupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Community_group that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {community_groupFindFirstArgs} args - Arguments to find a Community_group
-     * @example
-     * // Get one Community_group
-     * const community_group = await prisma.community_group.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends community_groupFindFirstArgs>(args?: SelectSubset<T, community_groupFindFirstArgs<ExtArgs>>): Prisma__community_groupClient<$Result.GetResult<Prisma.$community_groupPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Community_group that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {community_groupFindFirstOrThrowArgs} args - Arguments to find a Community_group
-     * @example
-     * // Get one Community_group
-     * const community_group = await prisma.community_group.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends community_groupFindFirstOrThrowArgs>(args?: SelectSubset<T, community_groupFindFirstOrThrowArgs<ExtArgs>>): Prisma__community_groupClient<$Result.GetResult<Prisma.$community_groupPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Community_groups that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {community_groupFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Community_groups
-     * const community_groups = await prisma.community_group.findMany()
-     * 
-     * // Get first 10 Community_groups
-     * const community_groups = await prisma.community_group.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const community_groupWithIdOnly = await prisma.community_group.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends community_groupFindManyArgs>(args?: SelectSubset<T, community_groupFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$community_groupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Community_group.
-     * @param {community_groupCreateArgs} args - Arguments to create a Community_group.
-     * @example
-     * // Create one Community_group
-     * const Community_group = await prisma.community_group.create({
-     *   data: {
-     *     // ... data to create a Community_group
-     *   }
-     * })
-     * 
-     */
-    create<T extends community_groupCreateArgs>(args: SelectSubset<T, community_groupCreateArgs<ExtArgs>>): Prisma__community_groupClient<$Result.GetResult<Prisma.$community_groupPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Community_groups.
-     * @param {community_groupCreateManyArgs} args - Arguments to create many Community_groups.
-     * @example
-     * // Create many Community_groups
-     * const community_group = await prisma.community_group.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends community_groupCreateManyArgs>(args?: SelectSubset<T, community_groupCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Community_groups and returns the data saved in the database.
-     * @param {community_groupCreateManyAndReturnArgs} args - Arguments to create many Community_groups.
-     * @example
-     * // Create many Community_groups
-     * const community_group = await prisma.community_group.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Community_groups and only return the `id`
-     * const community_groupWithIdOnly = await prisma.community_group.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends community_groupCreateManyAndReturnArgs>(args?: SelectSubset<T, community_groupCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$community_groupPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Community_group.
-     * @param {community_groupDeleteArgs} args - Arguments to delete one Community_group.
-     * @example
-     * // Delete one Community_group
-     * const Community_group = await prisma.community_group.delete({
-     *   where: {
-     *     // ... filter to delete one Community_group
-     *   }
-     * })
-     * 
-     */
-    delete<T extends community_groupDeleteArgs>(args: SelectSubset<T, community_groupDeleteArgs<ExtArgs>>): Prisma__community_groupClient<$Result.GetResult<Prisma.$community_groupPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Community_group.
-     * @param {community_groupUpdateArgs} args - Arguments to update one Community_group.
-     * @example
-     * // Update one Community_group
-     * const community_group = await prisma.community_group.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends community_groupUpdateArgs>(args: SelectSubset<T, community_groupUpdateArgs<ExtArgs>>): Prisma__community_groupClient<$Result.GetResult<Prisma.$community_groupPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Community_groups.
-     * @param {community_groupDeleteManyArgs} args - Arguments to filter Community_groups to delete.
-     * @example
-     * // Delete a few Community_groups
-     * const { count } = await prisma.community_group.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends community_groupDeleteManyArgs>(args?: SelectSubset<T, community_groupDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Community_groups.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {community_groupUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Community_groups
-     * const community_group = await prisma.community_group.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends community_groupUpdateManyArgs>(args: SelectSubset<T, community_groupUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Community_groups and returns the data updated in the database.
-     * @param {community_groupUpdateManyAndReturnArgs} args - Arguments to update many Community_groups.
-     * @example
-     * // Update many Community_groups
-     * const community_group = await prisma.community_group.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Community_groups and only return the `id`
-     * const community_groupWithIdOnly = await prisma.community_group.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends community_groupUpdateManyAndReturnArgs>(args: SelectSubset<T, community_groupUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$community_groupPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Community_group.
-     * @param {community_groupUpsertArgs} args - Arguments to update or create a Community_group.
-     * @example
-     * // Update or create a Community_group
-     * const community_group = await prisma.community_group.upsert({
-     *   create: {
-     *     // ... data to create a Community_group
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Community_group we want to update
-     *   }
-     * })
-     */
-    upsert<T extends community_groupUpsertArgs>(args: SelectSubset<T, community_groupUpsertArgs<ExtArgs>>): Prisma__community_groupClient<$Result.GetResult<Prisma.$community_groupPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Community_groups.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {community_groupCountArgs} args - Arguments to filter Community_groups to count.
-     * @example
-     * // Count the number of Community_groups
-     * const count = await prisma.community_group.count({
-     *   where: {
-     *     // ... the filter for the Community_groups we want to count
-     *   }
-     * })
-    **/
-    count<T extends community_groupCountArgs>(
-      args?: Subset<T, community_groupCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], Community_groupCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Community_group.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Community_groupAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends Community_groupAggregateArgs>(args: Subset<T, Community_groupAggregateArgs>): Prisma.PrismaPromise<GetCommunity_groupAggregateType<T>>
-
-    /**
-     * Group by Community_group.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {community_groupGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends community_groupGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: community_groupGroupByArgs['orderBy'] }
-        : { orderBy?: community_groupGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, community_groupGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCommunity_groupGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the community_group model
-   */
-  readonly fields: community_groupFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for community_group.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__community_groupClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    chat_message<T extends community_group$chat_messageArgs<ExtArgs> = {}>(args?: Subset<T, community_group$chat_messageArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    group_member<T extends community_group$group_memberArgs<ExtArgs> = {}>(args?: Subset<T, community_group$group_memberArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$group_memberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the community_group model
-   */
-  interface community_groupFieldRefs {
-    readonly id: FieldRef<"community_group", 'String'>
-    readonly name: FieldRef<"community_group", 'String'>
-    readonly type: FieldRef<"community_group", 'String'>
-    readonly icon: FieldRef<"community_group", 'String'>
-    readonly tags: FieldRef<"community_group", 'String[]'>
-    readonly description: FieldRef<"community_group", 'String'>
-    readonly max_members: FieldRef<"community_group", 'Int'>
-    readonly activity_date: FieldRef<"community_group", 'String'>
-    readonly activity_time: FieldRef<"community_group", 'String'>
-    readonly activity_location: FieldRef<"community_group", 'String'>
-    readonly creator_id: FieldRef<"community_group", 'String'>
-    readonly creator_name: FieldRef<"community_group", 'String'>
-    readonly is_deleted: FieldRef<"community_group", 'Boolean'>
-    readonly cre_time: FieldRef<"community_group", 'DateTime'>
-    readonly upd_time: FieldRef<"community_group", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * community_group findUnique
-   */
-  export type community_groupFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the community_group
-     */
-    select?: community_groupSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the community_group
-     */
-    omit?: community_groupOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: community_groupInclude<ExtArgs> | null
-    /**
-     * Filter, which community_group to fetch.
-     */
-    where: community_groupWhereUniqueInput
-  }
-
-  /**
-   * community_group findUniqueOrThrow
-   */
-  export type community_groupFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the community_group
-     */
-    select?: community_groupSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the community_group
-     */
-    omit?: community_groupOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: community_groupInclude<ExtArgs> | null
-    /**
-     * Filter, which community_group to fetch.
-     */
-    where: community_groupWhereUniqueInput
-  }
-
-  /**
-   * community_group findFirst
-   */
-  export type community_groupFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the community_group
-     */
-    select?: community_groupSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the community_group
-     */
-    omit?: community_groupOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: community_groupInclude<ExtArgs> | null
-    /**
-     * Filter, which community_group to fetch.
-     */
-    where?: community_groupWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of community_groups to fetch.
-     */
-    orderBy?: community_groupOrderByWithRelationInput | community_groupOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for community_groups.
-     */
-    cursor?: community_groupWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` community_groups from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` community_groups.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of community_groups.
-     */
-    distinct?: Community_groupScalarFieldEnum | Community_groupScalarFieldEnum[]
-  }
-
-  /**
-   * community_group findFirstOrThrow
-   */
-  export type community_groupFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the community_group
-     */
-    select?: community_groupSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the community_group
-     */
-    omit?: community_groupOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: community_groupInclude<ExtArgs> | null
-    /**
-     * Filter, which community_group to fetch.
-     */
-    where?: community_groupWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of community_groups to fetch.
-     */
-    orderBy?: community_groupOrderByWithRelationInput | community_groupOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for community_groups.
-     */
-    cursor?: community_groupWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` community_groups from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` community_groups.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of community_groups.
-     */
-    distinct?: Community_groupScalarFieldEnum | Community_groupScalarFieldEnum[]
-  }
-
-  /**
-   * community_group findMany
-   */
-  export type community_groupFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the community_group
-     */
-    select?: community_groupSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the community_group
-     */
-    omit?: community_groupOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: community_groupInclude<ExtArgs> | null
-    /**
-     * Filter, which community_groups to fetch.
-     */
-    where?: community_groupWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of community_groups to fetch.
-     */
-    orderBy?: community_groupOrderByWithRelationInput | community_groupOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing community_groups.
-     */
-    cursor?: community_groupWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` community_groups from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` community_groups.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of community_groups.
-     */
-    distinct?: Community_groupScalarFieldEnum | Community_groupScalarFieldEnum[]
-  }
-
-  /**
-   * community_group create
-   */
-  export type community_groupCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the community_group
-     */
-    select?: community_groupSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the community_group
-     */
-    omit?: community_groupOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: community_groupInclude<ExtArgs> | null
-    /**
-     * The data needed to create a community_group.
-     */
-    data: XOR<community_groupCreateInput, community_groupUncheckedCreateInput>
-  }
-
-  /**
-   * community_group createMany
-   */
-  export type community_groupCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many community_groups.
-     */
-    data: community_groupCreateManyInput | community_groupCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * community_group createManyAndReturn
-   */
-  export type community_groupCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the community_group
-     */
-    select?: community_groupSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the community_group
-     */
-    omit?: community_groupOmit<ExtArgs> | null
-    /**
-     * The data used to create many community_groups.
-     */
-    data: community_groupCreateManyInput | community_groupCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * community_group update
-   */
-  export type community_groupUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the community_group
-     */
-    select?: community_groupSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the community_group
-     */
-    omit?: community_groupOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: community_groupInclude<ExtArgs> | null
-    /**
-     * The data needed to update a community_group.
-     */
-    data: XOR<community_groupUpdateInput, community_groupUncheckedUpdateInput>
-    /**
-     * Choose, which community_group to update.
-     */
-    where: community_groupWhereUniqueInput
-  }
-
-  /**
-   * community_group updateMany
-   */
-  export type community_groupUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update community_groups.
-     */
-    data: XOR<community_groupUpdateManyMutationInput, community_groupUncheckedUpdateManyInput>
-    /**
-     * Filter which community_groups to update
-     */
-    where?: community_groupWhereInput
-    /**
-     * Limit how many community_groups to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * community_group updateManyAndReturn
-   */
-  export type community_groupUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the community_group
-     */
-    select?: community_groupSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the community_group
-     */
-    omit?: community_groupOmit<ExtArgs> | null
-    /**
-     * The data used to update community_groups.
-     */
-    data: XOR<community_groupUpdateManyMutationInput, community_groupUncheckedUpdateManyInput>
-    /**
-     * Filter which community_groups to update
-     */
-    where?: community_groupWhereInput
-    /**
-     * Limit how many community_groups to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * community_group upsert
-   */
-  export type community_groupUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the community_group
-     */
-    select?: community_groupSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the community_group
-     */
-    omit?: community_groupOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: community_groupInclude<ExtArgs> | null
-    /**
-     * The filter to search for the community_group to update in case it exists.
-     */
-    where: community_groupWhereUniqueInput
-    /**
-     * In case the community_group found by the `where` argument doesn't exist, create a new community_group with this data.
-     */
-    create: XOR<community_groupCreateInput, community_groupUncheckedCreateInput>
-    /**
-     * In case the community_group was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<community_groupUpdateInput, community_groupUncheckedUpdateInput>
-  }
-
-  /**
-   * community_group delete
-   */
-  export type community_groupDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the community_group
-     */
-    select?: community_groupSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the community_group
-     */
-    omit?: community_groupOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: community_groupInclude<ExtArgs> | null
-    /**
-     * Filter which community_group to delete.
-     */
-    where: community_groupWhereUniqueInput
-  }
-
-  /**
-   * community_group deleteMany
-   */
-  export type community_groupDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which community_groups to delete
-     */
-    where?: community_groupWhereInput
-    /**
-     * Limit how many community_groups to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * community_group.chat_message
-   */
-  export type community_group$chat_messageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ChatMessage
-     */
-    select?: ChatMessageSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ChatMessage
-     */
-    omit?: ChatMessageOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ChatMessageInclude<ExtArgs> | null
-    where?: ChatMessageWhereInput
-    orderBy?: ChatMessageOrderByWithRelationInput | ChatMessageOrderByWithRelationInput[]
-    cursor?: ChatMessageWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ChatMessageScalarFieldEnum | ChatMessageScalarFieldEnum[]
-  }
-
-  /**
-   * community_group.group_member
-   */
-  export type community_group$group_memberArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the group_member
-     */
-    select?: group_memberSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the group_member
-     */
-    omit?: group_memberOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: group_memberInclude<ExtArgs> | null
-    where?: group_memberWhereInput
-    orderBy?: group_memberOrderByWithRelationInput | group_memberOrderByWithRelationInput[]
-    cursor?: group_memberWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Group_memberScalarFieldEnum | Group_memberScalarFieldEnum[]
-  }
-
-  /**
-   * community_group without action
-   */
-  export type community_groupDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the community_group
-     */
-    select?: community_groupSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the community_group
-     */
-    omit?: community_groupOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: community_groupInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model group_member
-   */
-
-  export type AggregateGroup_member = {
-    _count: Group_memberCountAggregateOutputType | null
-    _min: Group_memberMinAggregateOutputType | null
-    _max: Group_memberMaxAggregateOutputType | null
-  }
-
-  export type Group_memberMinAggregateOutputType = {
-    id: string | null
-    group_id: string | null
-    user_id: string | null
-    user_name: string | null
-    joined_at: Date | null
-  }
-
-  export type Group_memberMaxAggregateOutputType = {
-    id: string | null
-    group_id: string | null
-    user_id: string | null
-    user_name: string | null
-    joined_at: Date | null
-  }
-
-  export type Group_memberCountAggregateOutputType = {
-    id: number
-    group_id: number
-    user_id: number
-    user_name: number
-    joined_at: number
-    _all: number
-  }
-
-
-  export type Group_memberMinAggregateInputType = {
-    id?: true
-    group_id?: true
-    user_id?: true
-    user_name?: true
-    joined_at?: true
-  }
-
-  export type Group_memberMaxAggregateInputType = {
-    id?: true
-    group_id?: true
-    user_id?: true
-    user_name?: true
-    joined_at?: true
-  }
-
-  export type Group_memberCountAggregateInputType = {
-    id?: true
-    group_id?: true
-    user_id?: true
-    user_name?: true
-    joined_at?: true
-    _all?: true
-  }
-
-  export type Group_memberAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which group_member to aggregate.
-     */
-    where?: group_memberWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of group_members to fetch.
-     */
-    orderBy?: group_memberOrderByWithRelationInput | group_memberOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: group_memberWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` group_members from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` group_members.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned group_members
-    **/
-    _count?: true | Group_memberCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: Group_memberMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: Group_memberMaxAggregateInputType
-  }
-
-  export type GetGroup_memberAggregateType<T extends Group_memberAggregateArgs> = {
-        [P in keyof T & keyof AggregateGroup_member]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateGroup_member[P]>
-      : GetScalarType<T[P], AggregateGroup_member[P]>
-  }
-
-
-
-
-  export type group_memberGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: group_memberWhereInput
-    orderBy?: group_memberOrderByWithAggregationInput | group_memberOrderByWithAggregationInput[]
-    by: Group_memberScalarFieldEnum[] | Group_memberScalarFieldEnum
-    having?: group_memberScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: Group_memberCountAggregateInputType | true
-    _min?: Group_memberMinAggregateInputType
-    _max?: Group_memberMaxAggregateInputType
-  }
-
-  export type Group_memberGroupByOutputType = {
-    id: string
-    group_id: string
-    user_id: string
-    user_name: string
-    joined_at: Date
-    _count: Group_memberCountAggregateOutputType | null
-    _min: Group_memberMinAggregateOutputType | null
-    _max: Group_memberMaxAggregateOutputType | null
-  }
-
-  type GetGroup_memberGroupByPayload<T extends group_memberGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<Group_memberGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof Group_memberGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], Group_memberGroupByOutputType[P]>
-            : GetScalarType<T[P], Group_memberGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type group_memberSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    group_id?: boolean
-    user_id?: boolean
-    user_name?: boolean
-    joined_at?: boolean
-    community_group?: boolean | community_groupDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["group_member"]>
-
-  export type group_memberSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    group_id?: boolean
-    user_id?: boolean
-    user_name?: boolean
-    joined_at?: boolean
-    community_group?: boolean | community_groupDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["group_member"]>
-
-  export type group_memberSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    group_id?: boolean
-    user_id?: boolean
-    user_name?: boolean
-    joined_at?: boolean
-    community_group?: boolean | community_groupDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["group_member"]>
-
-  export type group_memberSelectScalar = {
-    id?: boolean
-    group_id?: boolean
-    user_id?: boolean
-    user_name?: boolean
-    joined_at?: boolean
-  }
-
-  export type group_memberOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "group_id" | "user_id" | "user_name" | "joined_at", ExtArgs["result"]["group_member"]>
-  export type group_memberInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    community_group?: boolean | community_groupDefaultArgs<ExtArgs>
-  }
-  export type group_memberIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    community_group?: boolean | community_groupDefaultArgs<ExtArgs>
-  }
-  export type group_memberIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    community_group?: boolean | community_groupDefaultArgs<ExtArgs>
-  }
-
-  export type $group_memberPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "group_member"
-    objects: {
-      community_group: Prisma.$community_groupPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      group_id: string
-      user_id: string
-      user_name: string
-      joined_at: Date
-    }, ExtArgs["result"]["group_member"]>
-    composites: {}
-  }
-
-  type group_memberGetPayload<S extends boolean | null | undefined | group_memberDefaultArgs> = $Result.GetResult<Prisma.$group_memberPayload, S>
-
-  type group_memberCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<group_memberFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: Group_memberCountAggregateInputType | true
-    }
-
-  export interface group_memberDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['group_member'], meta: { name: 'group_member' } }
-    /**
-     * Find zero or one Group_member that matches the filter.
-     * @param {group_memberFindUniqueArgs} args - Arguments to find a Group_member
-     * @example
-     * // Get one Group_member
-     * const group_member = await prisma.group_member.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends group_memberFindUniqueArgs>(args: SelectSubset<T, group_memberFindUniqueArgs<ExtArgs>>): Prisma__group_memberClient<$Result.GetResult<Prisma.$group_memberPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Group_member that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {group_memberFindUniqueOrThrowArgs} args - Arguments to find a Group_member
-     * @example
-     * // Get one Group_member
-     * const group_member = await prisma.group_member.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends group_memberFindUniqueOrThrowArgs>(args: SelectSubset<T, group_memberFindUniqueOrThrowArgs<ExtArgs>>): Prisma__group_memberClient<$Result.GetResult<Prisma.$group_memberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Group_member that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {group_memberFindFirstArgs} args - Arguments to find a Group_member
-     * @example
-     * // Get one Group_member
-     * const group_member = await prisma.group_member.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends group_memberFindFirstArgs>(args?: SelectSubset<T, group_memberFindFirstArgs<ExtArgs>>): Prisma__group_memberClient<$Result.GetResult<Prisma.$group_memberPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Group_member that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {group_memberFindFirstOrThrowArgs} args - Arguments to find a Group_member
-     * @example
-     * // Get one Group_member
-     * const group_member = await prisma.group_member.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends group_memberFindFirstOrThrowArgs>(args?: SelectSubset<T, group_memberFindFirstOrThrowArgs<ExtArgs>>): Prisma__group_memberClient<$Result.GetResult<Prisma.$group_memberPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Group_members that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {group_memberFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Group_members
-     * const group_members = await prisma.group_member.findMany()
-     * 
-     * // Get first 10 Group_members
-     * const group_members = await prisma.group_member.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const group_memberWithIdOnly = await prisma.group_member.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends group_memberFindManyArgs>(args?: SelectSubset<T, group_memberFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$group_memberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Group_member.
-     * @param {group_memberCreateArgs} args - Arguments to create a Group_member.
-     * @example
-     * // Create one Group_member
-     * const Group_member = await prisma.group_member.create({
-     *   data: {
-     *     // ... data to create a Group_member
-     *   }
-     * })
-     * 
-     */
-    create<T extends group_memberCreateArgs>(args: SelectSubset<T, group_memberCreateArgs<ExtArgs>>): Prisma__group_memberClient<$Result.GetResult<Prisma.$group_memberPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Group_members.
-     * @param {group_memberCreateManyArgs} args - Arguments to create many Group_members.
-     * @example
-     * // Create many Group_members
-     * const group_member = await prisma.group_member.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends group_memberCreateManyArgs>(args?: SelectSubset<T, group_memberCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Group_members and returns the data saved in the database.
-     * @param {group_memberCreateManyAndReturnArgs} args - Arguments to create many Group_members.
-     * @example
-     * // Create many Group_members
-     * const group_member = await prisma.group_member.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Group_members and only return the `id`
-     * const group_memberWithIdOnly = await prisma.group_member.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends group_memberCreateManyAndReturnArgs>(args?: SelectSubset<T, group_memberCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$group_memberPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Group_member.
-     * @param {group_memberDeleteArgs} args - Arguments to delete one Group_member.
-     * @example
-     * // Delete one Group_member
-     * const Group_member = await prisma.group_member.delete({
-     *   where: {
-     *     // ... filter to delete one Group_member
-     *   }
-     * })
-     * 
-     */
-    delete<T extends group_memberDeleteArgs>(args: SelectSubset<T, group_memberDeleteArgs<ExtArgs>>): Prisma__group_memberClient<$Result.GetResult<Prisma.$group_memberPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Group_member.
-     * @param {group_memberUpdateArgs} args - Arguments to update one Group_member.
-     * @example
-     * // Update one Group_member
-     * const group_member = await prisma.group_member.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends group_memberUpdateArgs>(args: SelectSubset<T, group_memberUpdateArgs<ExtArgs>>): Prisma__group_memberClient<$Result.GetResult<Prisma.$group_memberPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Group_members.
-     * @param {group_memberDeleteManyArgs} args - Arguments to filter Group_members to delete.
-     * @example
-     * // Delete a few Group_members
-     * const { count } = await prisma.group_member.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends group_memberDeleteManyArgs>(args?: SelectSubset<T, group_memberDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Group_members.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {group_memberUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Group_members
-     * const group_member = await prisma.group_member.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends group_memberUpdateManyArgs>(args: SelectSubset<T, group_memberUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Group_members and returns the data updated in the database.
-     * @param {group_memberUpdateManyAndReturnArgs} args - Arguments to update many Group_members.
-     * @example
-     * // Update many Group_members
-     * const group_member = await prisma.group_member.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Group_members and only return the `id`
-     * const group_memberWithIdOnly = await prisma.group_member.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends group_memberUpdateManyAndReturnArgs>(args: SelectSubset<T, group_memberUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$group_memberPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Group_member.
-     * @param {group_memberUpsertArgs} args - Arguments to update or create a Group_member.
-     * @example
-     * // Update or create a Group_member
-     * const group_member = await prisma.group_member.upsert({
-     *   create: {
-     *     // ... data to create a Group_member
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Group_member we want to update
-     *   }
-     * })
-     */
-    upsert<T extends group_memberUpsertArgs>(args: SelectSubset<T, group_memberUpsertArgs<ExtArgs>>): Prisma__group_memberClient<$Result.GetResult<Prisma.$group_memberPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Group_members.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {group_memberCountArgs} args - Arguments to filter Group_members to count.
-     * @example
-     * // Count the number of Group_members
-     * const count = await prisma.group_member.count({
-     *   where: {
-     *     // ... the filter for the Group_members we want to count
-     *   }
-     * })
-    **/
-    count<T extends group_memberCountArgs>(
-      args?: Subset<T, group_memberCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], Group_memberCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Group_member.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Group_memberAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends Group_memberAggregateArgs>(args: Subset<T, Group_memberAggregateArgs>): Prisma.PrismaPromise<GetGroup_memberAggregateType<T>>
-
-    /**
-     * Group by Group_member.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {group_memberGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends group_memberGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: group_memberGroupByArgs['orderBy'] }
-        : { orderBy?: group_memberGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, group_memberGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGroup_memberGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the group_member model
-   */
-  readonly fields: group_memberFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for group_member.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__group_memberClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    community_group<T extends community_groupDefaultArgs<ExtArgs> = {}>(args?: Subset<T, community_groupDefaultArgs<ExtArgs>>): Prisma__community_groupClient<$Result.GetResult<Prisma.$community_groupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the group_member model
-   */
-  interface group_memberFieldRefs {
-    readonly id: FieldRef<"group_member", 'String'>
-    readonly group_id: FieldRef<"group_member", 'String'>
-    readonly user_id: FieldRef<"group_member", 'String'>
-    readonly user_name: FieldRef<"group_member", 'String'>
-    readonly joined_at: FieldRef<"group_member", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * group_member findUnique
-   */
-  export type group_memberFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the group_member
-     */
-    select?: group_memberSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the group_member
-     */
-    omit?: group_memberOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: group_memberInclude<ExtArgs> | null
-    /**
-     * Filter, which group_member to fetch.
-     */
-    where: group_memberWhereUniqueInput
-  }
-
-  /**
-   * group_member findUniqueOrThrow
-   */
-  export type group_memberFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the group_member
-     */
-    select?: group_memberSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the group_member
-     */
-    omit?: group_memberOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: group_memberInclude<ExtArgs> | null
-    /**
-     * Filter, which group_member to fetch.
-     */
-    where: group_memberWhereUniqueInput
-  }
-
-  /**
-   * group_member findFirst
-   */
-  export type group_memberFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the group_member
-     */
-    select?: group_memberSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the group_member
-     */
-    omit?: group_memberOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: group_memberInclude<ExtArgs> | null
-    /**
-     * Filter, which group_member to fetch.
-     */
-    where?: group_memberWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of group_members to fetch.
-     */
-    orderBy?: group_memberOrderByWithRelationInput | group_memberOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for group_members.
-     */
-    cursor?: group_memberWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` group_members from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` group_members.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of group_members.
-     */
-    distinct?: Group_memberScalarFieldEnum | Group_memberScalarFieldEnum[]
-  }
-
-  /**
-   * group_member findFirstOrThrow
-   */
-  export type group_memberFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the group_member
-     */
-    select?: group_memberSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the group_member
-     */
-    omit?: group_memberOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: group_memberInclude<ExtArgs> | null
-    /**
-     * Filter, which group_member to fetch.
-     */
-    where?: group_memberWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of group_members to fetch.
-     */
-    orderBy?: group_memberOrderByWithRelationInput | group_memberOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for group_members.
-     */
-    cursor?: group_memberWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` group_members from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` group_members.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of group_members.
-     */
-    distinct?: Group_memberScalarFieldEnum | Group_memberScalarFieldEnum[]
-  }
-
-  /**
-   * group_member findMany
-   */
-  export type group_memberFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the group_member
-     */
-    select?: group_memberSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the group_member
-     */
-    omit?: group_memberOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: group_memberInclude<ExtArgs> | null
-    /**
-     * Filter, which group_members to fetch.
-     */
-    where?: group_memberWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of group_members to fetch.
-     */
-    orderBy?: group_memberOrderByWithRelationInput | group_memberOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing group_members.
-     */
-    cursor?: group_memberWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` group_members from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` group_members.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of group_members.
-     */
-    distinct?: Group_memberScalarFieldEnum | Group_memberScalarFieldEnum[]
-  }
-
-  /**
-   * group_member create
-   */
-  export type group_memberCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the group_member
-     */
-    select?: group_memberSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the group_member
-     */
-    omit?: group_memberOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: group_memberInclude<ExtArgs> | null
-    /**
-     * The data needed to create a group_member.
-     */
-    data: XOR<group_memberCreateInput, group_memberUncheckedCreateInput>
-  }
-
-  /**
-   * group_member createMany
-   */
-  export type group_memberCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many group_members.
-     */
-    data: group_memberCreateManyInput | group_memberCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * group_member createManyAndReturn
-   */
-  export type group_memberCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the group_member
-     */
-    select?: group_memberSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the group_member
-     */
-    omit?: group_memberOmit<ExtArgs> | null
-    /**
-     * The data used to create many group_members.
-     */
-    data: group_memberCreateManyInput | group_memberCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: group_memberIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * group_member update
-   */
-  export type group_memberUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the group_member
-     */
-    select?: group_memberSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the group_member
-     */
-    omit?: group_memberOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: group_memberInclude<ExtArgs> | null
-    /**
-     * The data needed to update a group_member.
-     */
-    data: XOR<group_memberUpdateInput, group_memberUncheckedUpdateInput>
-    /**
-     * Choose, which group_member to update.
-     */
-    where: group_memberWhereUniqueInput
-  }
-
-  /**
-   * group_member updateMany
-   */
-  export type group_memberUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update group_members.
-     */
-    data: XOR<group_memberUpdateManyMutationInput, group_memberUncheckedUpdateManyInput>
-    /**
-     * Filter which group_members to update
-     */
-    where?: group_memberWhereInput
-    /**
-     * Limit how many group_members to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * group_member updateManyAndReturn
-   */
-  export type group_memberUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the group_member
-     */
-    select?: group_memberSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the group_member
-     */
-    omit?: group_memberOmit<ExtArgs> | null
-    /**
-     * The data used to update group_members.
-     */
-    data: XOR<group_memberUpdateManyMutationInput, group_memberUncheckedUpdateManyInput>
-    /**
-     * Filter which group_members to update
-     */
-    where?: group_memberWhereInput
-    /**
-     * Limit how many group_members to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: group_memberIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * group_member upsert
-   */
-  export type group_memberUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the group_member
-     */
-    select?: group_memberSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the group_member
-     */
-    omit?: group_memberOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: group_memberInclude<ExtArgs> | null
-    /**
-     * The filter to search for the group_member to update in case it exists.
-     */
-    where: group_memberWhereUniqueInput
-    /**
-     * In case the group_member found by the `where` argument doesn't exist, create a new group_member with this data.
-     */
-    create: XOR<group_memberCreateInput, group_memberUncheckedCreateInput>
-    /**
-     * In case the group_member was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<group_memberUpdateInput, group_memberUncheckedUpdateInput>
-  }
-
-  /**
-   * group_member delete
-   */
-  export type group_memberDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the group_member
-     */
-    select?: group_memberSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the group_member
-     */
-    omit?: group_memberOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: group_memberInclude<ExtArgs> | null
-    /**
-     * Filter which group_member to delete.
-     */
-    where: group_memberWhereUniqueInput
-  }
-
-  /**
-   * group_member deleteMany
-   */
-  export type group_memberDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which group_members to delete
-     */
-    where?: group_memberWhereInput
-    /**
-     * Limit how many group_members to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * group_member without action
-   */
-  export type group_memberDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the group_member
-     */
-    select?: group_memberSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the group_member
-     */
-    omit?: group_memberOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: group_memberInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Enums
    */
 
@@ -29472,10 +29472,42 @@ export namespace Prisma {
     messageType: 'messageType',
     isRead: 'isRead',
     creTime: 'creTime',
-    group_id: 'group_id'
+    groupId: 'groupId'
   };
 
   export type ChatMessageScalarFieldEnum = (typeof ChatMessageScalarFieldEnum)[keyof typeof ChatMessageScalarFieldEnum]
+
+
+  export const CommunityGroupScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    type: 'type',
+    icon: 'icon',
+    tags: 'tags',
+    description: 'description',
+    maxMembers: 'maxMembers',
+    activityDate: 'activityDate',
+    activityTime: 'activityTime',
+    activityLocation: 'activityLocation',
+    creatorId: 'creatorId',
+    creatorName: 'creatorName',
+    isDeleted: 'isDeleted',
+    creTime: 'creTime',
+    updTime: 'updTime'
+  };
+
+  export type CommunityGroupScalarFieldEnum = (typeof CommunityGroupScalarFieldEnum)[keyof typeof CommunityGroupScalarFieldEnum]
+
+
+  export const GroupMemberScalarFieldEnum: {
+    id: 'id',
+    groupId: 'groupId',
+    userId: 'userId',
+    userName: 'userName',
+    joinedAt: 'joinedAt'
+  };
+
+  export type GroupMemberScalarFieldEnum = (typeof GroupMemberScalarFieldEnum)[keyof typeof GroupMemberScalarFieldEnum]
 
 
   export const PickupReservationScalarFieldEnum: {
@@ -29496,38 +29528,6 @@ export namespace Prisma {
   };
 
   export type PickupReservationScalarFieldEnum = (typeof PickupReservationScalarFieldEnum)[keyof typeof PickupReservationScalarFieldEnum]
-
-
-  export const Community_groupScalarFieldEnum: {
-    id: 'id',
-    name: 'name',
-    type: 'type',
-    icon: 'icon',
-    tags: 'tags',
-    description: 'description',
-    max_members: 'max_members',
-    activity_date: 'activity_date',
-    activity_time: 'activity_time',
-    activity_location: 'activity_location',
-    creator_id: 'creator_id',
-    creator_name: 'creator_name',
-    is_deleted: 'is_deleted',
-    cre_time: 'cre_time',
-    upd_time: 'upd_time'
-  };
-
-  export type Community_groupScalarFieldEnum = (typeof Community_groupScalarFieldEnum)[keyof typeof Community_groupScalarFieldEnum]
-
-
-  export const Group_memberScalarFieldEnum: {
-    id: 'id',
-    group_id: 'group_id',
-    user_id: 'user_id',
-    user_name: 'user_name',
-    joined_at: 'joined_at'
-  };
-
-  export type Group_memberScalarFieldEnum = (typeof Group_memberScalarFieldEnum)[keyof typeof Group_memberScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -29896,9 +29896,9 @@ export namespace Prisma {
     creTime?: DateTimeFilter<"SysCounty"> | Date | string
     creId?: UuidFilter<"SysCounty"> | string
     updId?: UuidNullableFilter<"SysCounty"> | string | null
+    memberAddresses?: MemberAddressListRelationFilter
     feedbacks?: PmsFormFeedbackListRelationFilter
     topicRestrictions?: PmsTopicCountyDistrictRelationListRelationFilter
-    memberAddresses?: MemberAddressListRelationFilter
     districts?: SysDistrictListRelationFilter
   }
 
@@ -29911,9 +29911,9 @@ export namespace Prisma {
     creTime?: SortOrder
     creId?: SortOrder
     updId?: SortOrderInput | SortOrder
+    memberAddresses?: MemberAddressOrderByRelationAggregateInput
     feedbacks?: PmsFormFeedbackOrderByRelationAggregateInput
     topicRestrictions?: PmsTopicCountyDistrictRelationOrderByRelationAggregateInput
-    memberAddresses?: MemberAddressOrderByRelationAggregateInput
     districts?: SysDistrictOrderByRelationAggregateInput
   }
 
@@ -29929,9 +29929,9 @@ export namespace Prisma {
     creTime?: DateTimeFilter<"SysCounty"> | Date | string
     creId?: UuidFilter<"SysCounty"> | string
     updId?: UuidNullableFilter<"SysCounty"> | string | null
+    memberAddresses?: MemberAddressListRelationFilter
     feedbacks?: PmsFormFeedbackListRelationFilter
     topicRestrictions?: PmsTopicCountyDistrictRelationListRelationFilter
-    memberAddresses?: MemberAddressListRelationFilter
     districts?: SysDistrictListRelationFilter
   }, "code">
 
@@ -29980,9 +29980,9 @@ export namespace Prisma {
     creTime?: DateTimeFilter<"SysDistrict"> | Date | string
     creId?: UuidFilter<"SysDistrict"> | string
     updId?: UuidNullableFilter<"SysDistrict"> | string | null
+    memberAddresses?: MemberAddressListRelationFilter
     feedbacks?: PmsFormFeedbackListRelationFilter
     topicRestrictions?: PmsTopicCountyDistrictRelationListRelationFilter
-    memberAddresses?: MemberAddressListRelationFilter
     county?: XOR<SysCountyScalarRelationFilter, SysCountyWhereInput>
   }
 
@@ -29998,9 +29998,9 @@ export namespace Prisma {
     creTime?: SortOrder
     creId?: SortOrder
     updId?: SortOrderInput | SortOrder
+    memberAddresses?: MemberAddressOrderByRelationAggregateInput
     feedbacks?: PmsFormFeedbackOrderByRelationAggregateInput
     topicRestrictions?: PmsTopicCountyDistrictRelationOrderByRelationAggregateInput
-    memberAddresses?: MemberAddressOrderByRelationAggregateInput
     county?: SysCountyOrderByWithRelationInput
   }
 
@@ -30019,9 +30019,9 @@ export namespace Prisma {
     creTime?: DateTimeFilter<"SysDistrict"> | Date | string
     creId?: UuidFilter<"SysDistrict"> | string
     updId?: UuidNullableFilter<"SysDistrict"> | string | null
+    memberAddresses?: MemberAddressListRelationFilter
     feedbacks?: PmsFormFeedbackListRelationFilter
     topicRestrictions?: PmsTopicCountyDistrictRelationListRelationFilter
-    memberAddresses?: MemberAddressListRelationFilter
     county?: XOR<SysCountyScalarRelationFilter, SysCountyWhereInput>
   }, "code">
 
@@ -31245,9 +31245,9 @@ export namespace Prisma {
     isDeleted?: BoolFilter<"MemberAddress"> | boolean
     creTime?: DateTimeFilter<"MemberAddress"> | Date | string
     updTime?: DateTimeFilter<"MemberAddress"> | Date | string
-    member?: XOR<MemberAccountScalarRelationFilter, MemberAccountWhereInput>
     county?: XOR<SysCountyScalarRelationFilter, SysCountyWhereInput>
     district?: XOR<SysDistrictScalarRelationFilter, SysDistrictWhereInput>
+    member?: XOR<MemberAccountScalarRelationFilter, MemberAccountWhereInput>
   }
 
   export type MemberAddressOrderByWithRelationInput = {
@@ -31263,9 +31263,9 @@ export namespace Prisma {
     isDeleted?: SortOrder
     creTime?: SortOrder
     updTime?: SortOrder
-    member?: MemberAccountOrderByWithRelationInput
     county?: SysCountyOrderByWithRelationInput
     district?: SysDistrictOrderByWithRelationInput
+    member?: MemberAccountOrderByWithRelationInput
   }
 
   export type MemberAddressWhereUniqueInput = Prisma.AtLeast<{
@@ -31284,9 +31284,9 @@ export namespace Prisma {
     isDeleted?: BoolFilter<"MemberAddress"> | boolean
     creTime?: DateTimeFilter<"MemberAddress"> | Date | string
     updTime?: DateTimeFilter<"MemberAddress"> | Date | string
-    member?: XOR<MemberAccountScalarRelationFilter, MemberAccountWhereInput>
     county?: XOR<SysCountyScalarRelationFilter, SysCountyWhereInput>
     district?: XOR<SysDistrictScalarRelationFilter, SysDistrictWhereInput>
+    member?: XOR<MemberAccountScalarRelationFilter, MemberAccountWhereInput>
   }, "id">
 
   export type MemberAddressOrderByWithAggregationInput = {
@@ -31565,8 +31565,8 @@ export namespace Prisma {
     messageType?: StringFilter<"ChatMessage"> | string
     isRead?: BoolFilter<"ChatMessage"> | boolean
     creTime?: DateTimeFilter<"ChatMessage"> | Date | string
-    group_id?: UuidNullableFilter<"ChatMessage"> | string | null
-    community_group?: XOR<Community_groupNullableScalarRelationFilter, community_groupWhereInput> | null
+    groupId?: UuidNullableFilter<"ChatMessage"> | string | null
+    group?: XOR<CommunityGroupNullableScalarRelationFilter, CommunityGroupWhereInput> | null
     listing?: XOR<SecondhandListingNullableScalarRelationFilter, SecondhandListingWhereInput> | null
   }
 
@@ -31581,8 +31581,8 @@ export namespace Prisma {
     messageType?: SortOrder
     isRead?: SortOrder
     creTime?: SortOrder
-    group_id?: SortOrderInput | SortOrder
-    community_group?: community_groupOrderByWithRelationInput
+    groupId?: SortOrderInput | SortOrder
+    group?: CommunityGroupOrderByWithRelationInput
     listing?: SecondhandListingOrderByWithRelationInput
   }
 
@@ -31600,8 +31600,8 @@ export namespace Prisma {
     messageType?: StringFilter<"ChatMessage"> | string
     isRead?: BoolFilter<"ChatMessage"> | boolean
     creTime?: DateTimeFilter<"ChatMessage"> | Date | string
-    group_id?: UuidNullableFilter<"ChatMessage"> | string | null
-    community_group?: XOR<Community_groupNullableScalarRelationFilter, community_groupWhereInput> | null
+    groupId?: UuidNullableFilter<"ChatMessage"> | string | null
+    group?: XOR<CommunityGroupNullableScalarRelationFilter, CommunityGroupWhereInput> | null
     listing?: XOR<SecondhandListingNullableScalarRelationFilter, SecondhandListingWhereInput> | null
   }, "id">
 
@@ -31616,7 +31616,7 @@ export namespace Prisma {
     messageType?: SortOrder
     isRead?: SortOrder
     creTime?: SortOrder
-    group_id?: SortOrderInput | SortOrder
+    groupId?: SortOrderInput | SortOrder
     _count?: ChatMessageCountOrderByAggregateInput
     _max?: ChatMessageMaxOrderByAggregateInput
     _min?: ChatMessageMinOrderByAggregateInput
@@ -31636,7 +31636,173 @@ export namespace Prisma {
     messageType?: StringWithAggregatesFilter<"ChatMessage"> | string
     isRead?: BoolWithAggregatesFilter<"ChatMessage"> | boolean
     creTime?: DateTimeWithAggregatesFilter<"ChatMessage"> | Date | string
-    group_id?: UuidNullableWithAggregatesFilter<"ChatMessage"> | string | null
+    groupId?: UuidNullableWithAggregatesFilter<"ChatMessage"> | string | null
+  }
+
+  export type CommunityGroupWhereInput = {
+    AND?: CommunityGroupWhereInput | CommunityGroupWhereInput[]
+    OR?: CommunityGroupWhereInput[]
+    NOT?: CommunityGroupWhereInput | CommunityGroupWhereInput[]
+    id?: UuidFilter<"CommunityGroup"> | string
+    name?: StringFilter<"CommunityGroup"> | string
+    type?: StringFilter<"CommunityGroup"> | string
+    icon?: StringFilter<"CommunityGroup"> | string
+    tags?: StringNullableListFilter<"CommunityGroup">
+    description?: StringNullableFilter<"CommunityGroup"> | string | null
+    maxMembers?: IntFilter<"CommunityGroup"> | number
+    activityDate?: StringNullableFilter<"CommunityGroup"> | string | null
+    activityTime?: StringNullableFilter<"CommunityGroup"> | string | null
+    activityLocation?: StringNullableFilter<"CommunityGroup"> | string | null
+    creatorId?: UuidFilter<"CommunityGroup"> | string
+    creatorName?: StringFilter<"CommunityGroup"> | string
+    isDeleted?: BoolFilter<"CommunityGroup"> | boolean
+    creTime?: DateTimeFilter<"CommunityGroup"> | Date | string
+    updTime?: DateTimeFilter<"CommunityGroup"> | Date | string
+    messages?: ChatMessageListRelationFilter
+    members?: GroupMemberListRelationFilter
+  }
+
+  export type CommunityGroupOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    icon?: SortOrder
+    tags?: SortOrder
+    description?: SortOrderInput | SortOrder
+    maxMembers?: SortOrder
+    activityDate?: SortOrderInput | SortOrder
+    activityTime?: SortOrderInput | SortOrder
+    activityLocation?: SortOrderInput | SortOrder
+    creatorId?: SortOrder
+    creatorName?: SortOrder
+    isDeleted?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+    messages?: ChatMessageOrderByRelationAggregateInput
+    members?: GroupMemberOrderByRelationAggregateInput
+  }
+
+  export type CommunityGroupWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CommunityGroupWhereInput | CommunityGroupWhereInput[]
+    OR?: CommunityGroupWhereInput[]
+    NOT?: CommunityGroupWhereInput | CommunityGroupWhereInput[]
+    name?: StringFilter<"CommunityGroup"> | string
+    type?: StringFilter<"CommunityGroup"> | string
+    icon?: StringFilter<"CommunityGroup"> | string
+    tags?: StringNullableListFilter<"CommunityGroup">
+    description?: StringNullableFilter<"CommunityGroup"> | string | null
+    maxMembers?: IntFilter<"CommunityGroup"> | number
+    activityDate?: StringNullableFilter<"CommunityGroup"> | string | null
+    activityTime?: StringNullableFilter<"CommunityGroup"> | string | null
+    activityLocation?: StringNullableFilter<"CommunityGroup"> | string | null
+    creatorId?: UuidFilter<"CommunityGroup"> | string
+    creatorName?: StringFilter<"CommunityGroup"> | string
+    isDeleted?: BoolFilter<"CommunityGroup"> | boolean
+    creTime?: DateTimeFilter<"CommunityGroup"> | Date | string
+    updTime?: DateTimeFilter<"CommunityGroup"> | Date | string
+    messages?: ChatMessageListRelationFilter
+    members?: GroupMemberListRelationFilter
+  }, "id">
+
+  export type CommunityGroupOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    icon?: SortOrder
+    tags?: SortOrder
+    description?: SortOrderInput | SortOrder
+    maxMembers?: SortOrder
+    activityDate?: SortOrderInput | SortOrder
+    activityTime?: SortOrderInput | SortOrder
+    activityLocation?: SortOrderInput | SortOrder
+    creatorId?: SortOrder
+    creatorName?: SortOrder
+    isDeleted?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+    _count?: CommunityGroupCountOrderByAggregateInput
+    _avg?: CommunityGroupAvgOrderByAggregateInput
+    _max?: CommunityGroupMaxOrderByAggregateInput
+    _min?: CommunityGroupMinOrderByAggregateInput
+    _sum?: CommunityGroupSumOrderByAggregateInput
+  }
+
+  export type CommunityGroupScalarWhereWithAggregatesInput = {
+    AND?: CommunityGroupScalarWhereWithAggregatesInput | CommunityGroupScalarWhereWithAggregatesInput[]
+    OR?: CommunityGroupScalarWhereWithAggregatesInput[]
+    NOT?: CommunityGroupScalarWhereWithAggregatesInput | CommunityGroupScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"CommunityGroup"> | string
+    name?: StringWithAggregatesFilter<"CommunityGroup"> | string
+    type?: StringWithAggregatesFilter<"CommunityGroup"> | string
+    icon?: StringWithAggregatesFilter<"CommunityGroup"> | string
+    tags?: StringNullableListFilter<"CommunityGroup">
+    description?: StringNullableWithAggregatesFilter<"CommunityGroup"> | string | null
+    maxMembers?: IntWithAggregatesFilter<"CommunityGroup"> | number
+    activityDate?: StringNullableWithAggregatesFilter<"CommunityGroup"> | string | null
+    activityTime?: StringNullableWithAggregatesFilter<"CommunityGroup"> | string | null
+    activityLocation?: StringNullableWithAggregatesFilter<"CommunityGroup"> | string | null
+    creatorId?: UuidWithAggregatesFilter<"CommunityGroup"> | string
+    creatorName?: StringWithAggregatesFilter<"CommunityGroup"> | string
+    isDeleted?: BoolWithAggregatesFilter<"CommunityGroup"> | boolean
+    creTime?: DateTimeWithAggregatesFilter<"CommunityGroup"> | Date | string
+    updTime?: DateTimeWithAggregatesFilter<"CommunityGroup"> | Date | string
+  }
+
+  export type GroupMemberWhereInput = {
+    AND?: GroupMemberWhereInput | GroupMemberWhereInput[]
+    OR?: GroupMemberWhereInput[]
+    NOT?: GroupMemberWhereInput | GroupMemberWhereInput[]
+    id?: UuidFilter<"GroupMember"> | string
+    groupId?: UuidFilter<"GroupMember"> | string
+    userId?: UuidFilter<"GroupMember"> | string
+    userName?: StringFilter<"GroupMember"> | string
+    joinedAt?: DateTimeFilter<"GroupMember"> | Date | string
+    group?: XOR<CommunityGroupScalarRelationFilter, CommunityGroupWhereInput>
+  }
+
+  export type GroupMemberOrderByWithRelationInput = {
+    id?: SortOrder
+    groupId?: SortOrder
+    userId?: SortOrder
+    userName?: SortOrder
+    joinedAt?: SortOrder
+    group?: CommunityGroupOrderByWithRelationInput
+  }
+
+  export type GroupMemberWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    groupId_userId?: GroupMemberGroupIdUserIdCompoundUniqueInput
+    AND?: GroupMemberWhereInput | GroupMemberWhereInput[]
+    OR?: GroupMemberWhereInput[]
+    NOT?: GroupMemberWhereInput | GroupMemberWhereInput[]
+    groupId?: UuidFilter<"GroupMember"> | string
+    userId?: UuidFilter<"GroupMember"> | string
+    userName?: StringFilter<"GroupMember"> | string
+    joinedAt?: DateTimeFilter<"GroupMember"> | Date | string
+    group?: XOR<CommunityGroupScalarRelationFilter, CommunityGroupWhereInput>
+  }, "id" | "groupId_userId">
+
+  export type GroupMemberOrderByWithAggregationInput = {
+    id?: SortOrder
+    groupId?: SortOrder
+    userId?: SortOrder
+    userName?: SortOrder
+    joinedAt?: SortOrder
+    _count?: GroupMemberCountOrderByAggregateInput
+    _max?: GroupMemberMaxOrderByAggregateInput
+    _min?: GroupMemberMinOrderByAggregateInput
+  }
+
+  export type GroupMemberScalarWhereWithAggregatesInput = {
+    AND?: GroupMemberScalarWhereWithAggregatesInput | GroupMemberScalarWhereWithAggregatesInput[]
+    OR?: GroupMemberScalarWhereWithAggregatesInput[]
+    NOT?: GroupMemberScalarWhereWithAggregatesInput | GroupMemberScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"GroupMember"> | string
+    groupId?: UuidWithAggregatesFilter<"GroupMember"> | string
+    userId?: UuidWithAggregatesFilter<"GroupMember"> | string
+    userName?: StringWithAggregatesFilter<"GroupMember"> | string
+    joinedAt?: DateTimeWithAggregatesFilter<"GroupMember"> | Date | string
   }
 
   export type PickupReservationWhereInput = {
@@ -31737,172 +31903,6 @@ export namespace Prisma {
     creTime?: DateTimeWithAggregatesFilter<"PickupReservation"> | Date | string
     updTime?: DateTimeWithAggregatesFilter<"PickupReservation"> | Date | string
     pickupDeadline?: DateTimeNullableWithAggregatesFilter<"PickupReservation"> | Date | string | null
-  }
-
-  export type community_groupWhereInput = {
-    AND?: community_groupWhereInput | community_groupWhereInput[]
-    OR?: community_groupWhereInput[]
-    NOT?: community_groupWhereInput | community_groupWhereInput[]
-    id?: UuidFilter<"community_group"> | string
-    name?: StringFilter<"community_group"> | string
-    type?: StringFilter<"community_group"> | string
-    icon?: StringFilter<"community_group"> | string
-    tags?: StringNullableListFilter<"community_group">
-    description?: StringNullableFilter<"community_group"> | string | null
-    max_members?: IntFilter<"community_group"> | number
-    activity_date?: StringNullableFilter<"community_group"> | string | null
-    activity_time?: StringNullableFilter<"community_group"> | string | null
-    activity_location?: StringNullableFilter<"community_group"> | string | null
-    creator_id?: UuidFilter<"community_group"> | string
-    creator_name?: StringFilter<"community_group"> | string
-    is_deleted?: BoolFilter<"community_group"> | boolean
-    cre_time?: DateTimeFilter<"community_group"> | Date | string
-    upd_time?: DateTimeFilter<"community_group"> | Date | string
-    chat_message?: ChatMessageListRelationFilter
-    group_member?: Group_memberListRelationFilter
-  }
-
-  export type community_groupOrderByWithRelationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    type?: SortOrder
-    icon?: SortOrder
-    tags?: SortOrder
-    description?: SortOrderInput | SortOrder
-    max_members?: SortOrder
-    activity_date?: SortOrderInput | SortOrder
-    activity_time?: SortOrderInput | SortOrder
-    activity_location?: SortOrderInput | SortOrder
-    creator_id?: SortOrder
-    creator_name?: SortOrder
-    is_deleted?: SortOrder
-    cre_time?: SortOrder
-    upd_time?: SortOrder
-    chat_message?: ChatMessageOrderByRelationAggregateInput
-    group_member?: group_memberOrderByRelationAggregateInput
-  }
-
-  export type community_groupWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: community_groupWhereInput | community_groupWhereInput[]
-    OR?: community_groupWhereInput[]
-    NOT?: community_groupWhereInput | community_groupWhereInput[]
-    name?: StringFilter<"community_group"> | string
-    type?: StringFilter<"community_group"> | string
-    icon?: StringFilter<"community_group"> | string
-    tags?: StringNullableListFilter<"community_group">
-    description?: StringNullableFilter<"community_group"> | string | null
-    max_members?: IntFilter<"community_group"> | number
-    activity_date?: StringNullableFilter<"community_group"> | string | null
-    activity_time?: StringNullableFilter<"community_group"> | string | null
-    activity_location?: StringNullableFilter<"community_group"> | string | null
-    creator_id?: UuidFilter<"community_group"> | string
-    creator_name?: StringFilter<"community_group"> | string
-    is_deleted?: BoolFilter<"community_group"> | boolean
-    cre_time?: DateTimeFilter<"community_group"> | Date | string
-    upd_time?: DateTimeFilter<"community_group"> | Date | string
-    chat_message?: ChatMessageListRelationFilter
-    group_member?: Group_memberListRelationFilter
-  }, "id">
-
-  export type community_groupOrderByWithAggregationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    type?: SortOrder
-    icon?: SortOrder
-    tags?: SortOrder
-    description?: SortOrderInput | SortOrder
-    max_members?: SortOrder
-    activity_date?: SortOrderInput | SortOrder
-    activity_time?: SortOrderInput | SortOrder
-    activity_location?: SortOrderInput | SortOrder
-    creator_id?: SortOrder
-    creator_name?: SortOrder
-    is_deleted?: SortOrder
-    cre_time?: SortOrder
-    upd_time?: SortOrder
-    _count?: community_groupCountOrderByAggregateInput
-    _avg?: community_groupAvgOrderByAggregateInput
-    _max?: community_groupMaxOrderByAggregateInput
-    _min?: community_groupMinOrderByAggregateInput
-    _sum?: community_groupSumOrderByAggregateInput
-  }
-
-  export type community_groupScalarWhereWithAggregatesInput = {
-    AND?: community_groupScalarWhereWithAggregatesInput | community_groupScalarWhereWithAggregatesInput[]
-    OR?: community_groupScalarWhereWithAggregatesInput[]
-    NOT?: community_groupScalarWhereWithAggregatesInput | community_groupScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"community_group"> | string
-    name?: StringWithAggregatesFilter<"community_group"> | string
-    type?: StringWithAggregatesFilter<"community_group"> | string
-    icon?: StringWithAggregatesFilter<"community_group"> | string
-    tags?: StringNullableListFilter<"community_group">
-    description?: StringNullableWithAggregatesFilter<"community_group"> | string | null
-    max_members?: IntWithAggregatesFilter<"community_group"> | number
-    activity_date?: StringNullableWithAggregatesFilter<"community_group"> | string | null
-    activity_time?: StringNullableWithAggregatesFilter<"community_group"> | string | null
-    activity_location?: StringNullableWithAggregatesFilter<"community_group"> | string | null
-    creator_id?: UuidWithAggregatesFilter<"community_group"> | string
-    creator_name?: StringWithAggregatesFilter<"community_group"> | string
-    is_deleted?: BoolWithAggregatesFilter<"community_group"> | boolean
-    cre_time?: DateTimeWithAggregatesFilter<"community_group"> | Date | string
-    upd_time?: DateTimeWithAggregatesFilter<"community_group"> | Date | string
-  }
-
-  export type group_memberWhereInput = {
-    AND?: group_memberWhereInput | group_memberWhereInput[]
-    OR?: group_memberWhereInput[]
-    NOT?: group_memberWhereInput | group_memberWhereInput[]
-    id?: UuidFilter<"group_member"> | string
-    group_id?: UuidFilter<"group_member"> | string
-    user_id?: UuidFilter<"group_member"> | string
-    user_name?: StringFilter<"group_member"> | string
-    joined_at?: DateTimeFilter<"group_member"> | Date | string
-    community_group?: XOR<Community_groupScalarRelationFilter, community_groupWhereInput>
-  }
-
-  export type group_memberOrderByWithRelationInput = {
-    id?: SortOrder
-    group_id?: SortOrder
-    user_id?: SortOrder
-    user_name?: SortOrder
-    joined_at?: SortOrder
-    community_group?: community_groupOrderByWithRelationInput
-  }
-
-  export type group_memberWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    group_id_user_id?: group_memberGroup_idUser_idCompoundUniqueInput
-    AND?: group_memberWhereInput | group_memberWhereInput[]
-    OR?: group_memberWhereInput[]
-    NOT?: group_memberWhereInput | group_memberWhereInput[]
-    group_id?: UuidFilter<"group_member"> | string
-    user_id?: UuidFilter<"group_member"> | string
-    user_name?: StringFilter<"group_member"> | string
-    joined_at?: DateTimeFilter<"group_member"> | Date | string
-    community_group?: XOR<Community_groupScalarRelationFilter, community_groupWhereInput>
-  }, "id" | "group_id_user_id">
-
-  export type group_memberOrderByWithAggregationInput = {
-    id?: SortOrder
-    group_id?: SortOrder
-    user_id?: SortOrder
-    user_name?: SortOrder
-    joined_at?: SortOrder
-    _count?: group_memberCountOrderByAggregateInput
-    _max?: group_memberMaxOrderByAggregateInput
-    _min?: group_memberMinOrderByAggregateInput
-  }
-
-  export type group_memberScalarWhereWithAggregatesInput = {
-    AND?: group_memberScalarWhereWithAggregatesInput | group_memberScalarWhereWithAggregatesInput[]
-    OR?: group_memberScalarWhereWithAggregatesInput[]
-    NOT?: group_memberScalarWhereWithAggregatesInput | group_memberScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"group_member"> | string
-    group_id?: UuidWithAggregatesFilter<"group_member"> | string
-    user_id?: UuidWithAggregatesFilter<"group_member"> | string
-    user_name?: StringWithAggregatesFilter<"group_member"> | string
-    joined_at?: DateTimeWithAggregatesFilter<"group_member"> | Date | string
   }
 
   export type CmsHomepageServiceVendorCreateInput = {
@@ -32089,9 +32089,9 @@ export namespace Prisma {
     creTime: Date | string
     creId?: string
     updId?: string | null
+    memberAddresses?: MemberAddressCreateNestedManyWithoutCountyInput
     feedbacks?: PmsFormFeedbackCreateNestedManyWithoutCountyInput
     topicRestrictions?: PmsTopicCountyDistrictRelationCreateNestedManyWithoutCountyInput
-    memberAddresses?: MemberAddressCreateNestedManyWithoutCountyInput
     districts?: SysDistrictCreateNestedManyWithoutCountyInput
   }
 
@@ -32104,9 +32104,9 @@ export namespace Prisma {
     creTime: Date | string
     creId?: string
     updId?: string | null
+    memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutCountyInput
     feedbacks?: PmsFormFeedbackUncheckedCreateNestedManyWithoutCountyInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedCreateNestedManyWithoutCountyInput
-    memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutCountyInput
     districts?: SysDistrictUncheckedCreateNestedManyWithoutCountyInput
   }
 
@@ -32119,9 +32119,9 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
+    memberAddresses?: MemberAddressUpdateManyWithoutCountyNestedInput
     feedbacks?: PmsFormFeedbackUpdateManyWithoutCountyNestedInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUpdateManyWithoutCountyNestedInput
-    memberAddresses?: MemberAddressUpdateManyWithoutCountyNestedInput
     districts?: SysDistrictUpdateManyWithoutCountyNestedInput
   }
 
@@ -32134,9 +32134,9 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
+    memberAddresses?: MemberAddressUncheckedUpdateManyWithoutCountyNestedInput
     feedbacks?: PmsFormFeedbackUncheckedUpdateManyWithoutCountyNestedInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedUpdateManyWithoutCountyNestedInput
-    memberAddresses?: MemberAddressUncheckedUpdateManyWithoutCountyNestedInput
     districts?: SysDistrictUncheckedUpdateManyWithoutCountyNestedInput
   }
 
@@ -32184,9 +32184,9 @@ export namespace Prisma {
     creTime: Date | string
     creId?: string
     updId?: string | null
+    memberAddresses?: MemberAddressCreateNestedManyWithoutDistrictInput
     feedbacks?: PmsFormFeedbackCreateNestedManyWithoutDistrictInput
     topicRestrictions?: PmsTopicCountyDistrictRelationCreateNestedManyWithoutDistrictInput
-    memberAddresses?: MemberAddressCreateNestedManyWithoutDistrictInput
     county: SysCountyCreateNestedOneWithoutDistrictsInput
   }
 
@@ -32202,9 +32202,9 @@ export namespace Prisma {
     creTime: Date | string
     creId?: string
     updId?: string | null
+    memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutDistrictInput
     feedbacks?: PmsFormFeedbackUncheckedCreateNestedManyWithoutDistrictInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedCreateNestedManyWithoutDistrictInput
-    memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutDistrictInput
   }
 
   export type SysDistrictUpdateInput = {
@@ -32218,9 +32218,9 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
+    memberAddresses?: MemberAddressUpdateManyWithoutDistrictNestedInput
     feedbacks?: PmsFormFeedbackUpdateManyWithoutDistrictNestedInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUpdateManyWithoutDistrictNestedInput
-    memberAddresses?: MemberAddressUpdateManyWithoutDistrictNestedInput
     county?: SysCountyUpdateOneRequiredWithoutDistrictsNestedInput
   }
 
@@ -32236,9 +32236,9 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
+    memberAddresses?: MemberAddressUncheckedUpdateManyWithoutDistrictNestedInput
     feedbacks?: PmsFormFeedbackUncheckedUpdateManyWithoutDistrictNestedInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedUpdateManyWithoutDistrictNestedInput
-    memberAddresses?: MemberAddressUncheckedUpdateManyWithoutDistrictNestedInput
   }
 
   export type SysDistrictCreateManyInput = {
@@ -33676,9 +33676,9 @@ export namespace Prisma {
     isDeleted?: boolean
     creTime?: Date | string
     updTime?: Date | string
-    member: MemberAccountCreateNestedOneWithoutAddressesInput
     county: SysCountyCreateNestedOneWithoutMemberAddressesInput
     district: SysDistrictCreateNestedOneWithoutMemberAddressesInput
+    member: MemberAccountCreateNestedOneWithoutAddressesInput
   }
 
   export type MemberAddressUncheckedCreateInput = {
@@ -33705,9 +33705,9 @@ export namespace Prisma {
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    member?: MemberAccountUpdateOneRequiredWithoutAddressesNestedInput
     county?: SysCountyUpdateOneRequiredWithoutMemberAddressesNestedInput
     district?: SysDistrictUpdateOneRequiredWithoutMemberAddressesNestedInput
+    member?: MemberAccountUpdateOneRequiredWithoutAddressesNestedInput
   }
 
   export type MemberAddressUncheckedUpdateInput = {
@@ -34050,7 +34050,7 @@ export namespace Prisma {
     messageType?: string
     isRead?: boolean
     creTime?: Date | string
-    community_group?: community_groupCreateNestedOneWithoutChat_messageInput
+    group?: CommunityGroupCreateNestedOneWithoutMessagesInput
     listing?: SecondhandListingCreateNestedOneWithoutMessagesInput
   }
 
@@ -34065,7 +34065,7 @@ export namespace Prisma {
     messageType?: string
     isRead?: boolean
     creTime?: Date | string
-    group_id?: string | null
+    groupId?: string | null
   }
 
   export type ChatMessageUpdateInput = {
@@ -34078,7 +34078,7 @@ export namespace Prisma {
     messageType?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    community_group?: community_groupUpdateOneWithoutChat_messageNestedInput
+    group?: CommunityGroupUpdateOneWithoutMessagesNestedInput
     listing?: SecondhandListingUpdateOneWithoutMessagesNestedInput
   }
 
@@ -34093,7 +34093,7 @@ export namespace Prisma {
     messageType?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    group_id?: NullableStringFieldUpdateOperationsInput | string | null
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ChatMessageCreateManyInput = {
@@ -34107,7 +34107,7 @@ export namespace Prisma {
     messageType?: string
     isRead?: boolean
     creTime?: Date | string
-    group_id?: string | null
+    groupId?: string | null
   }
 
   export type ChatMessageUpdateManyMutationInput = {
@@ -34133,7 +34133,196 @@ export namespace Prisma {
     messageType?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    group_id?: NullableStringFieldUpdateOperationsInput | string | null
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CommunityGroupCreateInput = {
+    id?: string
+    name: string
+    type: string
+    icon: string
+    tags?: CommunityGroupCreatetagsInput | string[]
+    description?: string | null
+    maxMembers?: number
+    activityDate?: string | null
+    activityTime?: string | null
+    activityLocation?: string | null
+    creatorId: string
+    creatorName: string
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+    messages?: ChatMessageCreateNestedManyWithoutGroupInput
+    members?: GroupMemberCreateNestedManyWithoutGroupInput
+  }
+
+  export type CommunityGroupUncheckedCreateInput = {
+    id?: string
+    name: string
+    type: string
+    icon: string
+    tags?: CommunityGroupCreatetagsInput | string[]
+    description?: string | null
+    maxMembers?: number
+    activityDate?: string | null
+    activityTime?: string | null
+    activityLocation?: string | null
+    creatorId: string
+    creatorName: string
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+    messages?: ChatMessageUncheckedCreateNestedManyWithoutGroupInput
+    members?: GroupMemberUncheckedCreateNestedManyWithoutGroupInput
+  }
+
+  export type CommunityGroupUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    tags?: CommunityGroupUpdatetagsInput | string[]
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    activityDate?: NullableStringFieldUpdateOperationsInput | string | null
+    activityTime?: NullableStringFieldUpdateOperationsInput | string | null
+    activityLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorId?: StringFieldUpdateOperationsInput | string
+    creatorName?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: ChatMessageUpdateManyWithoutGroupNestedInput
+    members?: GroupMemberUpdateManyWithoutGroupNestedInput
+  }
+
+  export type CommunityGroupUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    tags?: CommunityGroupUpdatetagsInput | string[]
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    activityDate?: NullableStringFieldUpdateOperationsInput | string | null
+    activityTime?: NullableStringFieldUpdateOperationsInput | string | null
+    activityLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorId?: StringFieldUpdateOperationsInput | string
+    creatorName?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: ChatMessageUncheckedUpdateManyWithoutGroupNestedInput
+    members?: GroupMemberUncheckedUpdateManyWithoutGroupNestedInput
+  }
+
+  export type CommunityGroupCreateManyInput = {
+    id?: string
+    name: string
+    type: string
+    icon: string
+    tags?: CommunityGroupCreatetagsInput | string[]
+    description?: string | null
+    maxMembers?: number
+    activityDate?: string | null
+    activityTime?: string | null
+    activityLocation?: string | null
+    creatorId: string
+    creatorName: string
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+  }
+
+  export type CommunityGroupUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    tags?: CommunityGroupUpdatetagsInput | string[]
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    activityDate?: NullableStringFieldUpdateOperationsInput | string | null
+    activityTime?: NullableStringFieldUpdateOperationsInput | string | null
+    activityLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorId?: StringFieldUpdateOperationsInput | string
+    creatorName?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CommunityGroupUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    tags?: CommunityGroupUpdatetagsInput | string[]
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    activityDate?: NullableStringFieldUpdateOperationsInput | string | null
+    activityTime?: NullableStringFieldUpdateOperationsInput | string | null
+    activityLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorId?: StringFieldUpdateOperationsInput | string
+    creatorName?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupMemberCreateInput = {
+    id?: string
+    userId: string
+    userName: string
+    joinedAt?: Date | string
+    group: CommunityGroupCreateNestedOneWithoutMembersInput
+  }
+
+  export type GroupMemberUncheckedCreateInput = {
+    id?: string
+    groupId: string
+    userId: string
+    userName: string
+    joinedAt?: Date | string
+  }
+
+  export type GroupMemberUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    userName?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    group?: CommunityGroupUpdateOneRequiredWithoutMembersNestedInput
+  }
+
+  export type GroupMemberUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    groupId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    userName?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupMemberCreateManyInput = {
+    id?: string
+    groupId: string
+    userId: string
+    userName: string
+    joinedAt?: Date | string
+  }
+
+  export type GroupMemberUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    userName?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupMemberUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    groupId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    userName?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PickupReservationCreateInput = {
@@ -34252,195 +34441,6 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
     pickupDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type community_groupCreateInput = {
-    id: string
-    name: string
-    type: string
-    icon: string
-    tags?: community_groupCreatetagsInput | string[]
-    description?: string | null
-    max_members?: number
-    activity_date?: string | null
-    activity_time?: string | null
-    activity_location?: string | null
-    creator_id: string
-    creator_name: string
-    is_deleted?: boolean
-    cre_time?: Date | string
-    upd_time?: Date | string
-    chat_message?: ChatMessageCreateNestedManyWithoutCommunity_groupInput
-    group_member?: group_memberCreateNestedManyWithoutCommunity_groupInput
-  }
-
-  export type community_groupUncheckedCreateInput = {
-    id: string
-    name: string
-    type: string
-    icon: string
-    tags?: community_groupCreatetagsInput | string[]
-    description?: string | null
-    max_members?: number
-    activity_date?: string | null
-    activity_time?: string | null
-    activity_location?: string | null
-    creator_id: string
-    creator_name: string
-    is_deleted?: boolean
-    cre_time?: Date | string
-    upd_time?: Date | string
-    chat_message?: ChatMessageUncheckedCreateNestedManyWithoutCommunity_groupInput
-    group_member?: group_memberUncheckedCreateNestedManyWithoutCommunity_groupInput
-  }
-
-  export type community_groupUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    icon?: StringFieldUpdateOperationsInput | string
-    tags?: community_groupUpdatetagsInput | string[]
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    max_members?: IntFieldUpdateOperationsInput | number
-    activity_date?: NullableStringFieldUpdateOperationsInput | string | null
-    activity_time?: NullableStringFieldUpdateOperationsInput | string | null
-    activity_location?: NullableStringFieldUpdateOperationsInput | string | null
-    creator_id?: StringFieldUpdateOperationsInput | string
-    creator_name?: StringFieldUpdateOperationsInput | string
-    is_deleted?: BoolFieldUpdateOperationsInput | boolean
-    cre_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    upd_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    chat_message?: ChatMessageUpdateManyWithoutCommunity_groupNestedInput
-    group_member?: group_memberUpdateManyWithoutCommunity_groupNestedInput
-  }
-
-  export type community_groupUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    icon?: StringFieldUpdateOperationsInput | string
-    tags?: community_groupUpdatetagsInput | string[]
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    max_members?: IntFieldUpdateOperationsInput | number
-    activity_date?: NullableStringFieldUpdateOperationsInput | string | null
-    activity_time?: NullableStringFieldUpdateOperationsInput | string | null
-    activity_location?: NullableStringFieldUpdateOperationsInput | string | null
-    creator_id?: StringFieldUpdateOperationsInput | string
-    creator_name?: StringFieldUpdateOperationsInput | string
-    is_deleted?: BoolFieldUpdateOperationsInput | boolean
-    cre_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    upd_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    chat_message?: ChatMessageUncheckedUpdateManyWithoutCommunity_groupNestedInput
-    group_member?: group_memberUncheckedUpdateManyWithoutCommunity_groupNestedInput
-  }
-
-  export type community_groupCreateManyInput = {
-    id: string
-    name: string
-    type: string
-    icon: string
-    tags?: community_groupCreatetagsInput | string[]
-    description?: string | null
-    max_members?: number
-    activity_date?: string | null
-    activity_time?: string | null
-    activity_location?: string | null
-    creator_id: string
-    creator_name: string
-    is_deleted?: boolean
-    cre_time?: Date | string
-    upd_time?: Date | string
-  }
-
-  export type community_groupUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    icon?: StringFieldUpdateOperationsInput | string
-    tags?: community_groupUpdatetagsInput | string[]
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    max_members?: IntFieldUpdateOperationsInput | number
-    activity_date?: NullableStringFieldUpdateOperationsInput | string | null
-    activity_time?: NullableStringFieldUpdateOperationsInput | string | null
-    activity_location?: NullableStringFieldUpdateOperationsInput | string | null
-    creator_id?: StringFieldUpdateOperationsInput | string
-    creator_name?: StringFieldUpdateOperationsInput | string
-    is_deleted?: BoolFieldUpdateOperationsInput | boolean
-    cre_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    upd_time?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type community_groupUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    icon?: StringFieldUpdateOperationsInput | string
-    tags?: community_groupUpdatetagsInput | string[]
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    max_members?: IntFieldUpdateOperationsInput | number
-    activity_date?: NullableStringFieldUpdateOperationsInput | string | null
-    activity_time?: NullableStringFieldUpdateOperationsInput | string | null
-    activity_location?: NullableStringFieldUpdateOperationsInput | string | null
-    creator_id?: StringFieldUpdateOperationsInput | string
-    creator_name?: StringFieldUpdateOperationsInput | string
-    is_deleted?: BoolFieldUpdateOperationsInput | boolean
-    cre_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    upd_time?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type group_memberCreateInput = {
-    id: string
-    user_id: string
-    user_name: string
-    joined_at?: Date | string
-    community_group: community_groupCreateNestedOneWithoutGroup_memberInput
-  }
-
-  export type group_memberUncheckedCreateInput = {
-    id: string
-    group_id: string
-    user_id: string
-    user_name: string
-    joined_at?: Date | string
-  }
-
-  export type group_memberUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    user_id?: StringFieldUpdateOperationsInput | string
-    user_name?: StringFieldUpdateOperationsInput | string
-    joined_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    community_group?: community_groupUpdateOneRequiredWithoutGroup_memberNestedInput
-  }
-
-  export type group_memberUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    group_id?: StringFieldUpdateOperationsInput | string
-    user_id?: StringFieldUpdateOperationsInput | string
-    user_name?: StringFieldUpdateOperationsInput | string
-    joined_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type group_memberCreateManyInput = {
-    id: string
-    group_id: string
-    user_id: string
-    user_name: string
-    joined_at?: Date | string
-  }
-
-  export type group_memberUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    user_id?: StringFieldUpdateOperationsInput | string
-    user_name?: StringFieldUpdateOperationsInput | string
-    joined_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type group_memberUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    group_id?: StringFieldUpdateOperationsInput | string
-    user_id?: StringFieldUpdateOperationsInput | string
-    user_name?: StringFieldUpdateOperationsInput | string
-    joined_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -34711,6 +34711,12 @@ export namespace Prisma {
     not?: NestedUuidNullableFilter<$PrismaModel> | string | null
   }
 
+  export type MemberAddressListRelationFilter = {
+    every?: MemberAddressWhereInput
+    some?: MemberAddressWhereInput
+    none?: MemberAddressWhereInput
+  }
+
   export type PmsFormFeedbackListRelationFilter = {
     every?: PmsFormFeedbackWhereInput
     some?: PmsFormFeedbackWhereInput
@@ -34723,16 +34729,14 @@ export namespace Prisma {
     none?: PmsTopicCountyDistrictRelationWhereInput
   }
 
-  export type MemberAddressListRelationFilter = {
-    every?: MemberAddressWhereInput
-    some?: MemberAddressWhereInput
-    none?: MemberAddressWhereInput
-  }
-
   export type SysDistrictListRelationFilter = {
     every?: SysDistrictWhereInput
     some?: SysDistrictWhereInput
     none?: SysDistrictWhereInput
+  }
+
+  export type MemberAddressOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type PmsFormFeedbackOrderByRelationAggregateInput = {
@@ -34740,10 +34744,6 @@ export namespace Prisma {
   }
 
   export type PmsTopicCountyDistrictRelationOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type MemberAddressOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -36113,9 +36113,9 @@ export namespace Prisma {
     carbonSaved?: SortOrder
   }
 
-  export type Community_groupNullableScalarRelationFilter = {
-    is?: community_groupWhereInput | null
-    isNot?: community_groupWhereInput | null
+  export type CommunityGroupNullableScalarRelationFilter = {
+    is?: CommunityGroupWhereInput | null
+    isNot?: CommunityGroupWhereInput | null
   }
 
   export type SecondhandListingNullableScalarRelationFilter = {
@@ -36134,7 +36134,7 @@ export namespace Prisma {
     messageType?: SortOrder
     isRead?: SortOrder
     creTime?: SortOrder
-    group_id?: SortOrder
+    groupId?: SortOrder
   }
 
   export type ChatMessageMaxOrderByAggregateInput = {
@@ -36148,7 +36148,7 @@ export namespace Prisma {
     messageType?: SortOrder
     isRead?: SortOrder
     creTime?: SortOrder
-    group_id?: SortOrder
+    groupId?: SortOrder
   }
 
   export type ChatMessageMinOrderByAggregateInput = {
@@ -36162,7 +36162,119 @@ export namespace Prisma {
     messageType?: SortOrder
     isRead?: SortOrder
     creTime?: SortOrder
-    group_id?: SortOrder
+    groupId?: SortOrder
+  }
+
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
+  export type GroupMemberListRelationFilter = {
+    every?: GroupMemberWhereInput
+    some?: GroupMemberWhereInput
+    none?: GroupMemberWhereInput
+  }
+
+  export type GroupMemberOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CommunityGroupCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    icon?: SortOrder
+    tags?: SortOrder
+    description?: SortOrder
+    maxMembers?: SortOrder
+    activityDate?: SortOrder
+    activityTime?: SortOrder
+    activityLocation?: SortOrder
+    creatorId?: SortOrder
+    creatorName?: SortOrder
+    isDeleted?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+  }
+
+  export type CommunityGroupAvgOrderByAggregateInput = {
+    maxMembers?: SortOrder
+  }
+
+  export type CommunityGroupMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    icon?: SortOrder
+    description?: SortOrder
+    maxMembers?: SortOrder
+    activityDate?: SortOrder
+    activityTime?: SortOrder
+    activityLocation?: SortOrder
+    creatorId?: SortOrder
+    creatorName?: SortOrder
+    isDeleted?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+  }
+
+  export type CommunityGroupMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    icon?: SortOrder
+    description?: SortOrder
+    maxMembers?: SortOrder
+    activityDate?: SortOrder
+    activityTime?: SortOrder
+    activityLocation?: SortOrder
+    creatorId?: SortOrder
+    creatorName?: SortOrder
+    isDeleted?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+  }
+
+  export type CommunityGroupSumOrderByAggregateInput = {
+    maxMembers?: SortOrder
+  }
+
+  export type CommunityGroupScalarRelationFilter = {
+    is?: CommunityGroupWhereInput
+    isNot?: CommunityGroupWhereInput
+  }
+
+  export type GroupMemberGroupIdUserIdCompoundUniqueInput = {
+    groupId: string
+    userId: string
+  }
+
+  export type GroupMemberCountOrderByAggregateInput = {
+    id?: SortOrder
+    groupId?: SortOrder
+    userId?: SortOrder
+    userName?: SortOrder
+    joinedAt?: SortOrder
+  }
+
+  export type GroupMemberMaxOrderByAggregateInput = {
+    id?: SortOrder
+    groupId?: SortOrder
+    userId?: SortOrder
+    userName?: SortOrder
+    joinedAt?: SortOrder
+  }
+
+  export type GroupMemberMinOrderByAggregateInput = {
+    id?: SortOrder
+    groupId?: SortOrder
+    userId?: SortOrder
+    userName?: SortOrder
+    joinedAt?: SortOrder
   }
 
   export type SecondhandListingScalarRelationFilter = {
@@ -36219,118 +36331,6 @@ export namespace Prisma {
     creTime?: SortOrder
     updTime?: SortOrder
     pickupDeadline?: SortOrder
-  }
-
-  export type StringNullableListFilter<$PrismaModel = never> = {
-    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    has?: string | StringFieldRefInput<$PrismaModel> | null
-    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
-    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
-    isEmpty?: boolean
-  }
-
-  export type Group_memberListRelationFilter = {
-    every?: group_memberWhereInput
-    some?: group_memberWhereInput
-    none?: group_memberWhereInput
-  }
-
-  export type group_memberOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type community_groupCountOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    type?: SortOrder
-    icon?: SortOrder
-    tags?: SortOrder
-    description?: SortOrder
-    max_members?: SortOrder
-    activity_date?: SortOrder
-    activity_time?: SortOrder
-    activity_location?: SortOrder
-    creator_id?: SortOrder
-    creator_name?: SortOrder
-    is_deleted?: SortOrder
-    cre_time?: SortOrder
-    upd_time?: SortOrder
-  }
-
-  export type community_groupAvgOrderByAggregateInput = {
-    max_members?: SortOrder
-  }
-
-  export type community_groupMaxOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    type?: SortOrder
-    icon?: SortOrder
-    description?: SortOrder
-    max_members?: SortOrder
-    activity_date?: SortOrder
-    activity_time?: SortOrder
-    activity_location?: SortOrder
-    creator_id?: SortOrder
-    creator_name?: SortOrder
-    is_deleted?: SortOrder
-    cre_time?: SortOrder
-    upd_time?: SortOrder
-  }
-
-  export type community_groupMinOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    type?: SortOrder
-    icon?: SortOrder
-    description?: SortOrder
-    max_members?: SortOrder
-    activity_date?: SortOrder
-    activity_time?: SortOrder
-    activity_location?: SortOrder
-    creator_id?: SortOrder
-    creator_name?: SortOrder
-    is_deleted?: SortOrder
-    cre_time?: SortOrder
-    upd_time?: SortOrder
-  }
-
-  export type community_groupSumOrderByAggregateInput = {
-    max_members?: SortOrder
-  }
-
-  export type Community_groupScalarRelationFilter = {
-    is?: community_groupWhereInput
-    isNot?: community_groupWhereInput
-  }
-
-  export type group_memberGroup_idUser_idCompoundUniqueInput = {
-    group_id: string
-    user_id: string
-  }
-
-  export type group_memberCountOrderByAggregateInput = {
-    id?: SortOrder
-    group_id?: SortOrder
-    user_id?: SortOrder
-    user_name?: SortOrder
-    joined_at?: SortOrder
-  }
-
-  export type group_memberMaxOrderByAggregateInput = {
-    id?: SortOrder
-    group_id?: SortOrder
-    user_id?: SortOrder
-    user_name?: SortOrder
-    joined_at?: SortOrder
-  }
-
-  export type group_memberMinOrderByAggregateInput = {
-    id?: SortOrder
-    group_id?: SortOrder
-    user_id?: SortOrder
-    user_name?: SortOrder
-    joined_at?: SortOrder
   }
 
   export type CmsHomepageServiceCreateNestedManyWithoutVendorInput = {
@@ -36465,6 +36465,13 @@ export namespace Prisma {
     deleteMany?: CmsHomepageServiceScalarWhereInput | CmsHomepageServiceScalarWhereInput[]
   }
 
+  export type MemberAddressCreateNestedManyWithoutCountyInput = {
+    create?: XOR<MemberAddressCreateWithoutCountyInput, MemberAddressUncheckedCreateWithoutCountyInput> | MemberAddressCreateWithoutCountyInput[] | MemberAddressUncheckedCreateWithoutCountyInput[]
+    connectOrCreate?: MemberAddressCreateOrConnectWithoutCountyInput | MemberAddressCreateOrConnectWithoutCountyInput[]
+    createMany?: MemberAddressCreateManyCountyInputEnvelope
+    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+  }
+
   export type PmsFormFeedbackCreateNestedManyWithoutCountyInput = {
     create?: XOR<PmsFormFeedbackCreateWithoutCountyInput, PmsFormFeedbackUncheckedCreateWithoutCountyInput> | PmsFormFeedbackCreateWithoutCountyInput[] | PmsFormFeedbackUncheckedCreateWithoutCountyInput[]
     connectOrCreate?: PmsFormFeedbackCreateOrConnectWithoutCountyInput | PmsFormFeedbackCreateOrConnectWithoutCountyInput[]
@@ -36479,18 +36486,18 @@ export namespace Prisma {
     connect?: PmsTopicCountyDistrictRelationWhereUniqueInput | PmsTopicCountyDistrictRelationWhereUniqueInput[]
   }
 
-  export type MemberAddressCreateNestedManyWithoutCountyInput = {
-    create?: XOR<MemberAddressCreateWithoutCountyInput, MemberAddressUncheckedCreateWithoutCountyInput> | MemberAddressCreateWithoutCountyInput[] | MemberAddressUncheckedCreateWithoutCountyInput[]
-    connectOrCreate?: MemberAddressCreateOrConnectWithoutCountyInput | MemberAddressCreateOrConnectWithoutCountyInput[]
-    createMany?: MemberAddressCreateManyCountyInputEnvelope
-    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
-  }
-
   export type SysDistrictCreateNestedManyWithoutCountyInput = {
     create?: XOR<SysDistrictCreateWithoutCountyInput, SysDistrictUncheckedCreateWithoutCountyInput> | SysDistrictCreateWithoutCountyInput[] | SysDistrictUncheckedCreateWithoutCountyInput[]
     connectOrCreate?: SysDistrictCreateOrConnectWithoutCountyInput | SysDistrictCreateOrConnectWithoutCountyInput[]
     createMany?: SysDistrictCreateManyCountyInputEnvelope
     connect?: SysDistrictWhereUniqueInput | SysDistrictWhereUniqueInput[]
+  }
+
+  export type MemberAddressUncheckedCreateNestedManyWithoutCountyInput = {
+    create?: XOR<MemberAddressCreateWithoutCountyInput, MemberAddressUncheckedCreateWithoutCountyInput> | MemberAddressCreateWithoutCountyInput[] | MemberAddressUncheckedCreateWithoutCountyInput[]
+    connectOrCreate?: MemberAddressCreateOrConnectWithoutCountyInput | MemberAddressCreateOrConnectWithoutCountyInput[]
+    createMany?: MemberAddressCreateManyCountyInputEnvelope
+    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
   }
 
   export type PmsFormFeedbackUncheckedCreateNestedManyWithoutCountyInput = {
@@ -36507,18 +36514,25 @@ export namespace Prisma {
     connect?: PmsTopicCountyDistrictRelationWhereUniqueInput | PmsTopicCountyDistrictRelationWhereUniqueInput[]
   }
 
-  export type MemberAddressUncheckedCreateNestedManyWithoutCountyInput = {
-    create?: XOR<MemberAddressCreateWithoutCountyInput, MemberAddressUncheckedCreateWithoutCountyInput> | MemberAddressCreateWithoutCountyInput[] | MemberAddressUncheckedCreateWithoutCountyInput[]
-    connectOrCreate?: MemberAddressCreateOrConnectWithoutCountyInput | MemberAddressCreateOrConnectWithoutCountyInput[]
-    createMany?: MemberAddressCreateManyCountyInputEnvelope
-    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
-  }
-
   export type SysDistrictUncheckedCreateNestedManyWithoutCountyInput = {
     create?: XOR<SysDistrictCreateWithoutCountyInput, SysDistrictUncheckedCreateWithoutCountyInput> | SysDistrictCreateWithoutCountyInput[] | SysDistrictUncheckedCreateWithoutCountyInput[]
     connectOrCreate?: SysDistrictCreateOrConnectWithoutCountyInput | SysDistrictCreateOrConnectWithoutCountyInput[]
     createMany?: SysDistrictCreateManyCountyInputEnvelope
     connect?: SysDistrictWhereUniqueInput | SysDistrictWhereUniqueInput[]
+  }
+
+  export type MemberAddressUpdateManyWithoutCountyNestedInput = {
+    create?: XOR<MemberAddressCreateWithoutCountyInput, MemberAddressUncheckedCreateWithoutCountyInput> | MemberAddressCreateWithoutCountyInput[] | MemberAddressUncheckedCreateWithoutCountyInput[]
+    connectOrCreate?: MemberAddressCreateOrConnectWithoutCountyInput | MemberAddressCreateOrConnectWithoutCountyInput[]
+    upsert?: MemberAddressUpsertWithWhereUniqueWithoutCountyInput | MemberAddressUpsertWithWhereUniqueWithoutCountyInput[]
+    createMany?: MemberAddressCreateManyCountyInputEnvelope
+    set?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    disconnect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    delete?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    update?: MemberAddressUpdateWithWhereUniqueWithoutCountyInput | MemberAddressUpdateWithWhereUniqueWithoutCountyInput[]
+    updateMany?: MemberAddressUpdateManyWithWhereWithoutCountyInput | MemberAddressUpdateManyWithWhereWithoutCountyInput[]
+    deleteMany?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
   }
 
   export type PmsFormFeedbackUpdateManyWithoutCountyNestedInput = {
@@ -36549,20 +36563,6 @@ export namespace Prisma {
     deleteMany?: PmsTopicCountyDistrictRelationScalarWhereInput | PmsTopicCountyDistrictRelationScalarWhereInput[]
   }
 
-  export type MemberAddressUpdateManyWithoutCountyNestedInput = {
-    create?: XOR<MemberAddressCreateWithoutCountyInput, MemberAddressUncheckedCreateWithoutCountyInput> | MemberAddressCreateWithoutCountyInput[] | MemberAddressUncheckedCreateWithoutCountyInput[]
-    connectOrCreate?: MemberAddressCreateOrConnectWithoutCountyInput | MemberAddressCreateOrConnectWithoutCountyInput[]
-    upsert?: MemberAddressUpsertWithWhereUniqueWithoutCountyInput | MemberAddressUpsertWithWhereUniqueWithoutCountyInput[]
-    createMany?: MemberAddressCreateManyCountyInputEnvelope
-    set?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
-    disconnect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
-    delete?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
-    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
-    update?: MemberAddressUpdateWithWhereUniqueWithoutCountyInput | MemberAddressUpdateWithWhereUniqueWithoutCountyInput[]
-    updateMany?: MemberAddressUpdateManyWithWhereWithoutCountyInput | MemberAddressUpdateManyWithWhereWithoutCountyInput[]
-    deleteMany?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
-  }
-
   export type SysDistrictUpdateManyWithoutCountyNestedInput = {
     create?: XOR<SysDistrictCreateWithoutCountyInput, SysDistrictUncheckedCreateWithoutCountyInput> | SysDistrictCreateWithoutCountyInput[] | SysDistrictUncheckedCreateWithoutCountyInput[]
     connectOrCreate?: SysDistrictCreateOrConnectWithoutCountyInput | SysDistrictCreateOrConnectWithoutCountyInput[]
@@ -36575,6 +36575,20 @@ export namespace Prisma {
     update?: SysDistrictUpdateWithWhereUniqueWithoutCountyInput | SysDistrictUpdateWithWhereUniqueWithoutCountyInput[]
     updateMany?: SysDistrictUpdateManyWithWhereWithoutCountyInput | SysDistrictUpdateManyWithWhereWithoutCountyInput[]
     deleteMany?: SysDistrictScalarWhereInput | SysDistrictScalarWhereInput[]
+  }
+
+  export type MemberAddressUncheckedUpdateManyWithoutCountyNestedInput = {
+    create?: XOR<MemberAddressCreateWithoutCountyInput, MemberAddressUncheckedCreateWithoutCountyInput> | MemberAddressCreateWithoutCountyInput[] | MemberAddressUncheckedCreateWithoutCountyInput[]
+    connectOrCreate?: MemberAddressCreateOrConnectWithoutCountyInput | MemberAddressCreateOrConnectWithoutCountyInput[]
+    upsert?: MemberAddressUpsertWithWhereUniqueWithoutCountyInput | MemberAddressUpsertWithWhereUniqueWithoutCountyInput[]
+    createMany?: MemberAddressCreateManyCountyInputEnvelope
+    set?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    disconnect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    delete?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    update?: MemberAddressUpdateWithWhereUniqueWithoutCountyInput | MemberAddressUpdateWithWhereUniqueWithoutCountyInput[]
+    updateMany?: MemberAddressUpdateManyWithWhereWithoutCountyInput | MemberAddressUpdateManyWithWhereWithoutCountyInput[]
+    deleteMany?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
   }
 
   export type PmsFormFeedbackUncheckedUpdateManyWithoutCountyNestedInput = {
@@ -36605,20 +36619,6 @@ export namespace Prisma {
     deleteMany?: PmsTopicCountyDistrictRelationScalarWhereInput | PmsTopicCountyDistrictRelationScalarWhereInput[]
   }
 
-  export type MemberAddressUncheckedUpdateManyWithoutCountyNestedInput = {
-    create?: XOR<MemberAddressCreateWithoutCountyInput, MemberAddressUncheckedCreateWithoutCountyInput> | MemberAddressCreateWithoutCountyInput[] | MemberAddressUncheckedCreateWithoutCountyInput[]
-    connectOrCreate?: MemberAddressCreateOrConnectWithoutCountyInput | MemberAddressCreateOrConnectWithoutCountyInput[]
-    upsert?: MemberAddressUpsertWithWhereUniqueWithoutCountyInput | MemberAddressUpsertWithWhereUniqueWithoutCountyInput[]
-    createMany?: MemberAddressCreateManyCountyInputEnvelope
-    set?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
-    disconnect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
-    delete?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
-    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
-    update?: MemberAddressUpdateWithWhereUniqueWithoutCountyInput | MemberAddressUpdateWithWhereUniqueWithoutCountyInput[]
-    updateMany?: MemberAddressUpdateManyWithWhereWithoutCountyInput | MemberAddressUpdateManyWithWhereWithoutCountyInput[]
-    deleteMany?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
-  }
-
   export type SysDistrictUncheckedUpdateManyWithoutCountyNestedInput = {
     create?: XOR<SysDistrictCreateWithoutCountyInput, SysDistrictUncheckedCreateWithoutCountyInput> | SysDistrictCreateWithoutCountyInput[] | SysDistrictUncheckedCreateWithoutCountyInput[]
     connectOrCreate?: SysDistrictCreateOrConnectWithoutCountyInput | SysDistrictCreateOrConnectWithoutCountyInput[]
@@ -36631,6 +36631,13 @@ export namespace Prisma {
     update?: SysDistrictUpdateWithWhereUniqueWithoutCountyInput | SysDistrictUpdateWithWhereUniqueWithoutCountyInput[]
     updateMany?: SysDistrictUpdateManyWithWhereWithoutCountyInput | SysDistrictUpdateManyWithWhereWithoutCountyInput[]
     deleteMany?: SysDistrictScalarWhereInput | SysDistrictScalarWhereInput[]
+  }
+
+  export type MemberAddressCreateNestedManyWithoutDistrictInput = {
+    create?: XOR<MemberAddressCreateWithoutDistrictInput, MemberAddressUncheckedCreateWithoutDistrictInput> | MemberAddressCreateWithoutDistrictInput[] | MemberAddressUncheckedCreateWithoutDistrictInput[]
+    connectOrCreate?: MemberAddressCreateOrConnectWithoutDistrictInput | MemberAddressCreateOrConnectWithoutDistrictInput[]
+    createMany?: MemberAddressCreateManyDistrictInputEnvelope
+    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
   }
 
   export type PmsFormFeedbackCreateNestedManyWithoutDistrictInput = {
@@ -36647,17 +36654,17 @@ export namespace Prisma {
     connect?: PmsTopicCountyDistrictRelationWhereUniqueInput | PmsTopicCountyDistrictRelationWhereUniqueInput[]
   }
 
-  export type MemberAddressCreateNestedManyWithoutDistrictInput = {
-    create?: XOR<MemberAddressCreateWithoutDistrictInput, MemberAddressUncheckedCreateWithoutDistrictInput> | MemberAddressCreateWithoutDistrictInput[] | MemberAddressUncheckedCreateWithoutDistrictInput[]
-    connectOrCreate?: MemberAddressCreateOrConnectWithoutDistrictInput | MemberAddressCreateOrConnectWithoutDistrictInput[]
-    createMany?: MemberAddressCreateManyDistrictInputEnvelope
-    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
-  }
-
   export type SysCountyCreateNestedOneWithoutDistrictsInput = {
     create?: XOR<SysCountyCreateWithoutDistrictsInput, SysCountyUncheckedCreateWithoutDistrictsInput>
     connectOrCreate?: SysCountyCreateOrConnectWithoutDistrictsInput
     connect?: SysCountyWhereUniqueInput
+  }
+
+  export type MemberAddressUncheckedCreateNestedManyWithoutDistrictInput = {
+    create?: XOR<MemberAddressCreateWithoutDistrictInput, MemberAddressUncheckedCreateWithoutDistrictInput> | MemberAddressCreateWithoutDistrictInput[] | MemberAddressUncheckedCreateWithoutDistrictInput[]
+    connectOrCreate?: MemberAddressCreateOrConnectWithoutDistrictInput | MemberAddressCreateOrConnectWithoutDistrictInput[]
+    createMany?: MemberAddressCreateManyDistrictInputEnvelope
+    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
   }
 
   export type PmsFormFeedbackUncheckedCreateNestedManyWithoutDistrictInput = {
@@ -36674,11 +36681,18 @@ export namespace Prisma {
     connect?: PmsTopicCountyDistrictRelationWhereUniqueInput | PmsTopicCountyDistrictRelationWhereUniqueInput[]
   }
 
-  export type MemberAddressUncheckedCreateNestedManyWithoutDistrictInput = {
+  export type MemberAddressUpdateManyWithoutDistrictNestedInput = {
     create?: XOR<MemberAddressCreateWithoutDistrictInput, MemberAddressUncheckedCreateWithoutDistrictInput> | MemberAddressCreateWithoutDistrictInput[] | MemberAddressUncheckedCreateWithoutDistrictInput[]
     connectOrCreate?: MemberAddressCreateOrConnectWithoutDistrictInput | MemberAddressCreateOrConnectWithoutDistrictInput[]
+    upsert?: MemberAddressUpsertWithWhereUniqueWithoutDistrictInput | MemberAddressUpsertWithWhereUniqueWithoutDistrictInput[]
     createMany?: MemberAddressCreateManyDistrictInputEnvelope
+    set?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    disconnect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    delete?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
     connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
+    update?: MemberAddressUpdateWithWhereUniqueWithoutDistrictInput | MemberAddressUpdateWithWhereUniqueWithoutDistrictInput[]
+    updateMany?: MemberAddressUpdateManyWithWhereWithoutDistrictInput | MemberAddressUpdateManyWithWhereWithoutDistrictInput[]
+    deleteMany?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
   }
 
   export type PmsFormFeedbackUpdateManyWithoutDistrictNestedInput = {
@@ -36709,7 +36723,15 @@ export namespace Prisma {
     deleteMany?: PmsTopicCountyDistrictRelationScalarWhereInput | PmsTopicCountyDistrictRelationScalarWhereInput[]
   }
 
-  export type MemberAddressUpdateManyWithoutDistrictNestedInput = {
+  export type SysCountyUpdateOneRequiredWithoutDistrictsNestedInput = {
+    create?: XOR<SysCountyCreateWithoutDistrictsInput, SysCountyUncheckedCreateWithoutDistrictsInput>
+    connectOrCreate?: SysCountyCreateOrConnectWithoutDistrictsInput
+    upsert?: SysCountyUpsertWithoutDistrictsInput
+    connect?: SysCountyWhereUniqueInput
+    update?: XOR<XOR<SysCountyUpdateToOneWithWhereWithoutDistrictsInput, SysCountyUpdateWithoutDistrictsInput>, SysCountyUncheckedUpdateWithoutDistrictsInput>
+  }
+
+  export type MemberAddressUncheckedUpdateManyWithoutDistrictNestedInput = {
     create?: XOR<MemberAddressCreateWithoutDistrictInput, MemberAddressUncheckedCreateWithoutDistrictInput> | MemberAddressCreateWithoutDistrictInput[] | MemberAddressUncheckedCreateWithoutDistrictInput[]
     connectOrCreate?: MemberAddressCreateOrConnectWithoutDistrictInput | MemberAddressCreateOrConnectWithoutDistrictInput[]
     upsert?: MemberAddressUpsertWithWhereUniqueWithoutDistrictInput | MemberAddressUpsertWithWhereUniqueWithoutDistrictInput[]
@@ -36721,14 +36743,6 @@ export namespace Prisma {
     update?: MemberAddressUpdateWithWhereUniqueWithoutDistrictInput | MemberAddressUpdateWithWhereUniqueWithoutDistrictInput[]
     updateMany?: MemberAddressUpdateManyWithWhereWithoutDistrictInput | MemberAddressUpdateManyWithWhereWithoutDistrictInput[]
     deleteMany?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
-  }
-
-  export type SysCountyUpdateOneRequiredWithoutDistrictsNestedInput = {
-    create?: XOR<SysCountyCreateWithoutDistrictsInput, SysCountyUncheckedCreateWithoutDistrictsInput>
-    connectOrCreate?: SysCountyCreateOrConnectWithoutDistrictsInput
-    upsert?: SysCountyUpsertWithoutDistrictsInput
-    connect?: SysCountyWhereUniqueInput
-    update?: XOR<XOR<SysCountyUpdateToOneWithWhereWithoutDistrictsInput, SysCountyUpdateWithoutDistrictsInput>, SysCountyUncheckedUpdateWithoutDistrictsInput>
   }
 
   export type PmsFormFeedbackUncheckedUpdateManyWithoutDistrictNestedInput = {
@@ -36757,20 +36771,6 @@ export namespace Prisma {
     update?: PmsTopicCountyDistrictRelationUpdateWithWhereUniqueWithoutDistrictInput | PmsTopicCountyDistrictRelationUpdateWithWhereUniqueWithoutDistrictInput[]
     updateMany?: PmsTopicCountyDistrictRelationUpdateManyWithWhereWithoutDistrictInput | PmsTopicCountyDistrictRelationUpdateManyWithWhereWithoutDistrictInput[]
     deleteMany?: PmsTopicCountyDistrictRelationScalarWhereInput | PmsTopicCountyDistrictRelationScalarWhereInput[]
-  }
-
-  export type MemberAddressUncheckedUpdateManyWithoutDistrictNestedInput = {
-    create?: XOR<MemberAddressCreateWithoutDistrictInput, MemberAddressUncheckedCreateWithoutDistrictInput> | MemberAddressCreateWithoutDistrictInput[] | MemberAddressUncheckedCreateWithoutDistrictInput[]
-    connectOrCreate?: MemberAddressCreateOrConnectWithoutDistrictInput | MemberAddressCreateOrConnectWithoutDistrictInput[]
-    upsert?: MemberAddressUpsertWithWhereUniqueWithoutDistrictInput | MemberAddressUpsertWithWhereUniqueWithoutDistrictInput[]
-    createMany?: MemberAddressCreateManyDistrictInputEnvelope
-    set?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
-    disconnect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
-    delete?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
-    connect?: MemberAddressWhereUniqueInput | MemberAddressWhereUniqueInput[]
-    update?: MemberAddressUpdateWithWhereUniqueWithoutDistrictInput | MemberAddressUpdateWithWhereUniqueWithoutDistrictInput[]
-    updateMany?: MemberAddressUpdateManyWithWhereWithoutDistrictInput | MemberAddressUpdateManyWithWhereWithoutDistrictInput[]
-    deleteMany?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
   }
 
   export type PmsFormFeedbackCreateNestedManyWithoutFormInput = {
@@ -37303,12 +37303,6 @@ export namespace Prisma {
     deleteMany?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
   }
 
-  export type MemberAccountCreateNestedOneWithoutAddressesInput = {
-    create?: XOR<MemberAccountCreateWithoutAddressesInput, MemberAccountUncheckedCreateWithoutAddressesInput>
-    connectOrCreate?: MemberAccountCreateOrConnectWithoutAddressesInput
-    connect?: MemberAccountWhereUniqueInput
-  }
-
   export type SysCountyCreateNestedOneWithoutMemberAddressesInput = {
     create?: XOR<SysCountyCreateWithoutMemberAddressesInput, SysCountyUncheckedCreateWithoutMemberAddressesInput>
     connectOrCreate?: SysCountyCreateOrConnectWithoutMemberAddressesInput
@@ -37321,12 +37315,10 @@ export namespace Prisma {
     connect?: SysDistrictWhereUniqueInput
   }
 
-  export type MemberAccountUpdateOneRequiredWithoutAddressesNestedInput = {
+  export type MemberAccountCreateNestedOneWithoutAddressesInput = {
     create?: XOR<MemberAccountCreateWithoutAddressesInput, MemberAccountUncheckedCreateWithoutAddressesInput>
     connectOrCreate?: MemberAccountCreateOrConnectWithoutAddressesInput
-    upsert?: MemberAccountUpsertWithoutAddressesInput
     connect?: MemberAccountWhereUniqueInput
-    update?: XOR<XOR<MemberAccountUpdateToOneWithWhereWithoutAddressesInput, MemberAccountUpdateWithoutAddressesInput>, MemberAccountUncheckedUpdateWithoutAddressesInput>
   }
 
   export type SysCountyUpdateOneRequiredWithoutMemberAddressesNestedInput = {
@@ -37343,6 +37335,14 @@ export namespace Prisma {
     upsert?: SysDistrictUpsertWithoutMemberAddressesInput
     connect?: SysDistrictWhereUniqueInput
     update?: XOR<XOR<SysDistrictUpdateToOneWithWhereWithoutMemberAddressesInput, SysDistrictUpdateWithoutMemberAddressesInput>, SysDistrictUncheckedUpdateWithoutMemberAddressesInput>
+  }
+
+  export type MemberAccountUpdateOneRequiredWithoutAddressesNestedInput = {
+    create?: XOR<MemberAccountCreateWithoutAddressesInput, MemberAccountUncheckedCreateWithoutAddressesInput>
+    connectOrCreate?: MemberAccountCreateOrConnectWithoutAddressesInput
+    upsert?: MemberAccountUpsertWithoutAddressesInput
+    connect?: MemberAccountWhereUniqueInput
+    update?: XOR<XOR<MemberAccountUpdateToOneWithWhereWithoutAddressesInput, MemberAccountUpdateWithoutAddressesInput>, MemberAccountUncheckedUpdateWithoutAddressesInput>
   }
 
   export type ChatMessageCreateNestedManyWithoutListingInput = {
@@ -37429,10 +37429,10 @@ export namespace Prisma {
     deleteMany?: PickupReservationScalarWhereInput | PickupReservationScalarWhereInput[]
   }
 
-  export type community_groupCreateNestedOneWithoutChat_messageInput = {
-    create?: XOR<community_groupCreateWithoutChat_messageInput, community_groupUncheckedCreateWithoutChat_messageInput>
-    connectOrCreate?: community_groupCreateOrConnectWithoutChat_messageInput
-    connect?: community_groupWhereUniqueInput
+  export type CommunityGroupCreateNestedOneWithoutMessagesInput = {
+    create?: XOR<CommunityGroupCreateWithoutMessagesInput, CommunityGroupUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: CommunityGroupCreateOrConnectWithoutMessagesInput
+    connect?: CommunityGroupWhereUniqueInput
   }
 
   export type SecondhandListingCreateNestedOneWithoutMessagesInput = {
@@ -37441,14 +37441,14 @@ export namespace Prisma {
     connect?: SecondhandListingWhereUniqueInput
   }
 
-  export type community_groupUpdateOneWithoutChat_messageNestedInput = {
-    create?: XOR<community_groupCreateWithoutChat_messageInput, community_groupUncheckedCreateWithoutChat_messageInput>
-    connectOrCreate?: community_groupCreateOrConnectWithoutChat_messageInput
-    upsert?: community_groupUpsertWithoutChat_messageInput
-    disconnect?: community_groupWhereInput | boolean
-    delete?: community_groupWhereInput | boolean
-    connect?: community_groupWhereUniqueInput
-    update?: XOR<XOR<community_groupUpdateToOneWithWhereWithoutChat_messageInput, community_groupUpdateWithoutChat_messageInput>, community_groupUncheckedUpdateWithoutChat_messageInput>
+  export type CommunityGroupUpdateOneWithoutMessagesNestedInput = {
+    create?: XOR<CommunityGroupCreateWithoutMessagesInput, CommunityGroupUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: CommunityGroupCreateOrConnectWithoutMessagesInput
+    upsert?: CommunityGroupUpsertWithoutMessagesInput
+    disconnect?: CommunityGroupWhereInput | boolean
+    delete?: CommunityGroupWhereInput | boolean
+    connect?: CommunityGroupWhereUniqueInput
+    update?: XOR<XOR<CommunityGroupUpdateToOneWithWhereWithoutMessagesInput, CommunityGroupUpdateWithoutMessagesInput>, CommunityGroupUncheckedUpdateWithoutMessagesInput>
   }
 
   export type SecondhandListingUpdateOneWithoutMessagesNestedInput = {
@@ -37459,6 +37459,113 @@ export namespace Prisma {
     delete?: SecondhandListingWhereInput | boolean
     connect?: SecondhandListingWhereUniqueInput
     update?: XOR<XOR<SecondhandListingUpdateToOneWithWhereWithoutMessagesInput, SecondhandListingUpdateWithoutMessagesInput>, SecondhandListingUncheckedUpdateWithoutMessagesInput>
+  }
+
+  export type CommunityGroupCreatetagsInput = {
+    set: string[]
+  }
+
+  export type ChatMessageCreateNestedManyWithoutGroupInput = {
+    create?: XOR<ChatMessageCreateWithoutGroupInput, ChatMessageUncheckedCreateWithoutGroupInput> | ChatMessageCreateWithoutGroupInput[] | ChatMessageUncheckedCreateWithoutGroupInput[]
+    connectOrCreate?: ChatMessageCreateOrConnectWithoutGroupInput | ChatMessageCreateOrConnectWithoutGroupInput[]
+    createMany?: ChatMessageCreateManyGroupInputEnvelope
+    connect?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
+  }
+
+  export type GroupMemberCreateNestedManyWithoutGroupInput = {
+    create?: XOR<GroupMemberCreateWithoutGroupInput, GroupMemberUncheckedCreateWithoutGroupInput> | GroupMemberCreateWithoutGroupInput[] | GroupMemberUncheckedCreateWithoutGroupInput[]
+    connectOrCreate?: GroupMemberCreateOrConnectWithoutGroupInput | GroupMemberCreateOrConnectWithoutGroupInput[]
+    createMany?: GroupMemberCreateManyGroupInputEnvelope
+    connect?: GroupMemberWhereUniqueInput | GroupMemberWhereUniqueInput[]
+  }
+
+  export type ChatMessageUncheckedCreateNestedManyWithoutGroupInput = {
+    create?: XOR<ChatMessageCreateWithoutGroupInput, ChatMessageUncheckedCreateWithoutGroupInput> | ChatMessageCreateWithoutGroupInput[] | ChatMessageUncheckedCreateWithoutGroupInput[]
+    connectOrCreate?: ChatMessageCreateOrConnectWithoutGroupInput | ChatMessageCreateOrConnectWithoutGroupInput[]
+    createMany?: ChatMessageCreateManyGroupInputEnvelope
+    connect?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
+  }
+
+  export type GroupMemberUncheckedCreateNestedManyWithoutGroupInput = {
+    create?: XOR<GroupMemberCreateWithoutGroupInput, GroupMemberUncheckedCreateWithoutGroupInput> | GroupMemberCreateWithoutGroupInput[] | GroupMemberUncheckedCreateWithoutGroupInput[]
+    connectOrCreate?: GroupMemberCreateOrConnectWithoutGroupInput | GroupMemberCreateOrConnectWithoutGroupInput[]
+    createMany?: GroupMemberCreateManyGroupInputEnvelope
+    connect?: GroupMemberWhereUniqueInput | GroupMemberWhereUniqueInput[]
+  }
+
+  export type CommunityGroupUpdatetagsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type ChatMessageUpdateManyWithoutGroupNestedInput = {
+    create?: XOR<ChatMessageCreateWithoutGroupInput, ChatMessageUncheckedCreateWithoutGroupInput> | ChatMessageCreateWithoutGroupInput[] | ChatMessageUncheckedCreateWithoutGroupInput[]
+    connectOrCreate?: ChatMessageCreateOrConnectWithoutGroupInput | ChatMessageCreateOrConnectWithoutGroupInput[]
+    upsert?: ChatMessageUpsertWithWhereUniqueWithoutGroupInput | ChatMessageUpsertWithWhereUniqueWithoutGroupInput[]
+    createMany?: ChatMessageCreateManyGroupInputEnvelope
+    set?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
+    disconnect?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
+    delete?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
+    connect?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
+    update?: ChatMessageUpdateWithWhereUniqueWithoutGroupInput | ChatMessageUpdateWithWhereUniqueWithoutGroupInput[]
+    updateMany?: ChatMessageUpdateManyWithWhereWithoutGroupInput | ChatMessageUpdateManyWithWhereWithoutGroupInput[]
+    deleteMany?: ChatMessageScalarWhereInput | ChatMessageScalarWhereInput[]
+  }
+
+  export type GroupMemberUpdateManyWithoutGroupNestedInput = {
+    create?: XOR<GroupMemberCreateWithoutGroupInput, GroupMemberUncheckedCreateWithoutGroupInput> | GroupMemberCreateWithoutGroupInput[] | GroupMemberUncheckedCreateWithoutGroupInput[]
+    connectOrCreate?: GroupMemberCreateOrConnectWithoutGroupInput | GroupMemberCreateOrConnectWithoutGroupInput[]
+    upsert?: GroupMemberUpsertWithWhereUniqueWithoutGroupInput | GroupMemberUpsertWithWhereUniqueWithoutGroupInput[]
+    createMany?: GroupMemberCreateManyGroupInputEnvelope
+    set?: GroupMemberWhereUniqueInput | GroupMemberWhereUniqueInput[]
+    disconnect?: GroupMemberWhereUniqueInput | GroupMemberWhereUniqueInput[]
+    delete?: GroupMemberWhereUniqueInput | GroupMemberWhereUniqueInput[]
+    connect?: GroupMemberWhereUniqueInput | GroupMemberWhereUniqueInput[]
+    update?: GroupMemberUpdateWithWhereUniqueWithoutGroupInput | GroupMemberUpdateWithWhereUniqueWithoutGroupInput[]
+    updateMany?: GroupMemberUpdateManyWithWhereWithoutGroupInput | GroupMemberUpdateManyWithWhereWithoutGroupInput[]
+    deleteMany?: GroupMemberScalarWhereInput | GroupMemberScalarWhereInput[]
+  }
+
+  export type ChatMessageUncheckedUpdateManyWithoutGroupNestedInput = {
+    create?: XOR<ChatMessageCreateWithoutGroupInput, ChatMessageUncheckedCreateWithoutGroupInput> | ChatMessageCreateWithoutGroupInput[] | ChatMessageUncheckedCreateWithoutGroupInput[]
+    connectOrCreate?: ChatMessageCreateOrConnectWithoutGroupInput | ChatMessageCreateOrConnectWithoutGroupInput[]
+    upsert?: ChatMessageUpsertWithWhereUniqueWithoutGroupInput | ChatMessageUpsertWithWhereUniqueWithoutGroupInput[]
+    createMany?: ChatMessageCreateManyGroupInputEnvelope
+    set?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
+    disconnect?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
+    delete?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
+    connect?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
+    update?: ChatMessageUpdateWithWhereUniqueWithoutGroupInput | ChatMessageUpdateWithWhereUniqueWithoutGroupInput[]
+    updateMany?: ChatMessageUpdateManyWithWhereWithoutGroupInput | ChatMessageUpdateManyWithWhereWithoutGroupInput[]
+    deleteMany?: ChatMessageScalarWhereInput | ChatMessageScalarWhereInput[]
+  }
+
+  export type GroupMemberUncheckedUpdateManyWithoutGroupNestedInput = {
+    create?: XOR<GroupMemberCreateWithoutGroupInput, GroupMemberUncheckedCreateWithoutGroupInput> | GroupMemberCreateWithoutGroupInput[] | GroupMemberUncheckedCreateWithoutGroupInput[]
+    connectOrCreate?: GroupMemberCreateOrConnectWithoutGroupInput | GroupMemberCreateOrConnectWithoutGroupInput[]
+    upsert?: GroupMemberUpsertWithWhereUniqueWithoutGroupInput | GroupMemberUpsertWithWhereUniqueWithoutGroupInput[]
+    createMany?: GroupMemberCreateManyGroupInputEnvelope
+    set?: GroupMemberWhereUniqueInput | GroupMemberWhereUniqueInput[]
+    disconnect?: GroupMemberWhereUniqueInput | GroupMemberWhereUniqueInput[]
+    delete?: GroupMemberWhereUniqueInput | GroupMemberWhereUniqueInput[]
+    connect?: GroupMemberWhereUniqueInput | GroupMemberWhereUniqueInput[]
+    update?: GroupMemberUpdateWithWhereUniqueWithoutGroupInput | GroupMemberUpdateWithWhereUniqueWithoutGroupInput[]
+    updateMany?: GroupMemberUpdateManyWithWhereWithoutGroupInput | GroupMemberUpdateManyWithWhereWithoutGroupInput[]
+    deleteMany?: GroupMemberScalarWhereInput | GroupMemberScalarWhereInput[]
+  }
+
+  export type CommunityGroupCreateNestedOneWithoutMembersInput = {
+    create?: XOR<CommunityGroupCreateWithoutMembersInput, CommunityGroupUncheckedCreateWithoutMembersInput>
+    connectOrCreate?: CommunityGroupCreateOrConnectWithoutMembersInput
+    connect?: CommunityGroupWhereUniqueInput
+  }
+
+  export type CommunityGroupUpdateOneRequiredWithoutMembersNestedInput = {
+    create?: XOR<CommunityGroupCreateWithoutMembersInput, CommunityGroupUncheckedCreateWithoutMembersInput>
+    connectOrCreate?: CommunityGroupCreateOrConnectWithoutMembersInput
+    upsert?: CommunityGroupUpsertWithoutMembersInput
+    connect?: CommunityGroupWhereUniqueInput
+    update?: XOR<XOR<CommunityGroupUpdateToOneWithWhereWithoutMembersInput, CommunityGroupUpdateWithoutMembersInput>, CommunityGroupUncheckedUpdateWithoutMembersInput>
   }
 
   export type SecondhandListingCreateNestedOneWithoutReservationsInput = {
@@ -37473,113 +37580,6 @@ export namespace Prisma {
     upsert?: SecondhandListingUpsertWithoutReservationsInput
     connect?: SecondhandListingWhereUniqueInput
     update?: XOR<XOR<SecondhandListingUpdateToOneWithWhereWithoutReservationsInput, SecondhandListingUpdateWithoutReservationsInput>, SecondhandListingUncheckedUpdateWithoutReservationsInput>
-  }
-
-  export type community_groupCreatetagsInput = {
-    set: string[]
-  }
-
-  export type ChatMessageCreateNestedManyWithoutCommunity_groupInput = {
-    create?: XOR<ChatMessageCreateWithoutCommunity_groupInput, ChatMessageUncheckedCreateWithoutCommunity_groupInput> | ChatMessageCreateWithoutCommunity_groupInput[] | ChatMessageUncheckedCreateWithoutCommunity_groupInput[]
-    connectOrCreate?: ChatMessageCreateOrConnectWithoutCommunity_groupInput | ChatMessageCreateOrConnectWithoutCommunity_groupInput[]
-    createMany?: ChatMessageCreateManyCommunity_groupInputEnvelope
-    connect?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
-  }
-
-  export type group_memberCreateNestedManyWithoutCommunity_groupInput = {
-    create?: XOR<group_memberCreateWithoutCommunity_groupInput, group_memberUncheckedCreateWithoutCommunity_groupInput> | group_memberCreateWithoutCommunity_groupInput[] | group_memberUncheckedCreateWithoutCommunity_groupInput[]
-    connectOrCreate?: group_memberCreateOrConnectWithoutCommunity_groupInput | group_memberCreateOrConnectWithoutCommunity_groupInput[]
-    createMany?: group_memberCreateManyCommunity_groupInputEnvelope
-    connect?: group_memberWhereUniqueInput | group_memberWhereUniqueInput[]
-  }
-
-  export type ChatMessageUncheckedCreateNestedManyWithoutCommunity_groupInput = {
-    create?: XOR<ChatMessageCreateWithoutCommunity_groupInput, ChatMessageUncheckedCreateWithoutCommunity_groupInput> | ChatMessageCreateWithoutCommunity_groupInput[] | ChatMessageUncheckedCreateWithoutCommunity_groupInput[]
-    connectOrCreate?: ChatMessageCreateOrConnectWithoutCommunity_groupInput | ChatMessageCreateOrConnectWithoutCommunity_groupInput[]
-    createMany?: ChatMessageCreateManyCommunity_groupInputEnvelope
-    connect?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
-  }
-
-  export type group_memberUncheckedCreateNestedManyWithoutCommunity_groupInput = {
-    create?: XOR<group_memberCreateWithoutCommunity_groupInput, group_memberUncheckedCreateWithoutCommunity_groupInput> | group_memberCreateWithoutCommunity_groupInput[] | group_memberUncheckedCreateWithoutCommunity_groupInput[]
-    connectOrCreate?: group_memberCreateOrConnectWithoutCommunity_groupInput | group_memberCreateOrConnectWithoutCommunity_groupInput[]
-    createMany?: group_memberCreateManyCommunity_groupInputEnvelope
-    connect?: group_memberWhereUniqueInput | group_memberWhereUniqueInput[]
-  }
-
-  export type community_groupUpdatetagsInput = {
-    set?: string[]
-    push?: string | string[]
-  }
-
-  export type ChatMessageUpdateManyWithoutCommunity_groupNestedInput = {
-    create?: XOR<ChatMessageCreateWithoutCommunity_groupInput, ChatMessageUncheckedCreateWithoutCommunity_groupInput> | ChatMessageCreateWithoutCommunity_groupInput[] | ChatMessageUncheckedCreateWithoutCommunity_groupInput[]
-    connectOrCreate?: ChatMessageCreateOrConnectWithoutCommunity_groupInput | ChatMessageCreateOrConnectWithoutCommunity_groupInput[]
-    upsert?: ChatMessageUpsertWithWhereUniqueWithoutCommunity_groupInput | ChatMessageUpsertWithWhereUniqueWithoutCommunity_groupInput[]
-    createMany?: ChatMessageCreateManyCommunity_groupInputEnvelope
-    set?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
-    disconnect?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
-    delete?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
-    connect?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
-    update?: ChatMessageUpdateWithWhereUniqueWithoutCommunity_groupInput | ChatMessageUpdateWithWhereUniqueWithoutCommunity_groupInput[]
-    updateMany?: ChatMessageUpdateManyWithWhereWithoutCommunity_groupInput | ChatMessageUpdateManyWithWhereWithoutCommunity_groupInput[]
-    deleteMany?: ChatMessageScalarWhereInput | ChatMessageScalarWhereInput[]
-  }
-
-  export type group_memberUpdateManyWithoutCommunity_groupNestedInput = {
-    create?: XOR<group_memberCreateWithoutCommunity_groupInput, group_memberUncheckedCreateWithoutCommunity_groupInput> | group_memberCreateWithoutCommunity_groupInput[] | group_memberUncheckedCreateWithoutCommunity_groupInput[]
-    connectOrCreate?: group_memberCreateOrConnectWithoutCommunity_groupInput | group_memberCreateOrConnectWithoutCommunity_groupInput[]
-    upsert?: group_memberUpsertWithWhereUniqueWithoutCommunity_groupInput | group_memberUpsertWithWhereUniqueWithoutCommunity_groupInput[]
-    createMany?: group_memberCreateManyCommunity_groupInputEnvelope
-    set?: group_memberWhereUniqueInput | group_memberWhereUniqueInput[]
-    disconnect?: group_memberWhereUniqueInput | group_memberWhereUniqueInput[]
-    delete?: group_memberWhereUniqueInput | group_memberWhereUniqueInput[]
-    connect?: group_memberWhereUniqueInput | group_memberWhereUniqueInput[]
-    update?: group_memberUpdateWithWhereUniqueWithoutCommunity_groupInput | group_memberUpdateWithWhereUniqueWithoutCommunity_groupInput[]
-    updateMany?: group_memberUpdateManyWithWhereWithoutCommunity_groupInput | group_memberUpdateManyWithWhereWithoutCommunity_groupInput[]
-    deleteMany?: group_memberScalarWhereInput | group_memberScalarWhereInput[]
-  }
-
-  export type ChatMessageUncheckedUpdateManyWithoutCommunity_groupNestedInput = {
-    create?: XOR<ChatMessageCreateWithoutCommunity_groupInput, ChatMessageUncheckedCreateWithoutCommunity_groupInput> | ChatMessageCreateWithoutCommunity_groupInput[] | ChatMessageUncheckedCreateWithoutCommunity_groupInput[]
-    connectOrCreate?: ChatMessageCreateOrConnectWithoutCommunity_groupInput | ChatMessageCreateOrConnectWithoutCommunity_groupInput[]
-    upsert?: ChatMessageUpsertWithWhereUniqueWithoutCommunity_groupInput | ChatMessageUpsertWithWhereUniqueWithoutCommunity_groupInput[]
-    createMany?: ChatMessageCreateManyCommunity_groupInputEnvelope
-    set?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
-    disconnect?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
-    delete?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
-    connect?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
-    update?: ChatMessageUpdateWithWhereUniqueWithoutCommunity_groupInput | ChatMessageUpdateWithWhereUniqueWithoutCommunity_groupInput[]
-    updateMany?: ChatMessageUpdateManyWithWhereWithoutCommunity_groupInput | ChatMessageUpdateManyWithWhereWithoutCommunity_groupInput[]
-    deleteMany?: ChatMessageScalarWhereInput | ChatMessageScalarWhereInput[]
-  }
-
-  export type group_memberUncheckedUpdateManyWithoutCommunity_groupNestedInput = {
-    create?: XOR<group_memberCreateWithoutCommunity_groupInput, group_memberUncheckedCreateWithoutCommunity_groupInput> | group_memberCreateWithoutCommunity_groupInput[] | group_memberUncheckedCreateWithoutCommunity_groupInput[]
-    connectOrCreate?: group_memberCreateOrConnectWithoutCommunity_groupInput | group_memberCreateOrConnectWithoutCommunity_groupInput[]
-    upsert?: group_memberUpsertWithWhereUniqueWithoutCommunity_groupInput | group_memberUpsertWithWhereUniqueWithoutCommunity_groupInput[]
-    createMany?: group_memberCreateManyCommunity_groupInputEnvelope
-    set?: group_memberWhereUniqueInput | group_memberWhereUniqueInput[]
-    disconnect?: group_memberWhereUniqueInput | group_memberWhereUniqueInput[]
-    delete?: group_memberWhereUniqueInput | group_memberWhereUniqueInput[]
-    connect?: group_memberWhereUniqueInput | group_memberWhereUniqueInput[]
-    update?: group_memberUpdateWithWhereUniqueWithoutCommunity_groupInput | group_memberUpdateWithWhereUniqueWithoutCommunity_groupInput[]
-    updateMany?: group_memberUpdateManyWithWhereWithoutCommunity_groupInput | group_memberUpdateManyWithWhereWithoutCommunity_groupInput[]
-    deleteMany?: group_memberScalarWhereInput | group_memberScalarWhereInput[]
-  }
-
-  export type community_groupCreateNestedOneWithoutGroup_memberInput = {
-    create?: XOR<community_groupCreateWithoutGroup_memberInput, community_groupUncheckedCreateWithoutGroup_memberInput>
-    connectOrCreate?: community_groupCreateOrConnectWithoutGroup_memberInput
-    connect?: community_groupWhereUniqueInput
-  }
-
-  export type community_groupUpdateOneRequiredWithoutGroup_memberNestedInput = {
-    create?: XOR<community_groupCreateWithoutGroup_memberInput, community_groupUncheckedCreateWithoutGroup_memberInput>
-    connectOrCreate?: community_groupCreateOrConnectWithoutGroup_memberInput
-    upsert?: community_groupUpsertWithoutGroup_memberInput
-    connect?: community_groupWhereUniqueInput
-    update?: XOR<XOR<community_groupUpdateToOneWithWhereWithoutGroup_memberInput, community_groupUpdateWithoutGroup_memberInput>, community_groupUncheckedUpdateWithoutGroup_memberInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -38138,6 +38138,43 @@ export namespace Prisma {
     data: XOR<CmsHomepageServiceUpdateManyMutationInput, CmsHomepageServiceUncheckedUpdateManyWithoutServiceTypeInput>
   }
 
+  export type MemberAddressCreateWithoutCountyInput = {
+    type?: string
+    label?: string | null
+    addressDetail?: Bytes | null
+    addressDetailHash?: string | null
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+    district: SysDistrictCreateNestedOneWithoutMemberAddressesInput
+    member: MemberAccountCreateNestedOneWithoutAddressesInput
+  }
+
+  export type MemberAddressUncheckedCreateWithoutCountyInput = {
+    id?: number
+    memberId: string
+    type?: string
+    label?: string | null
+    districtCode: string
+    addressDetail?: Bytes | null
+    addressDetailHash?: string | null
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+  }
+
+  export type MemberAddressCreateOrConnectWithoutCountyInput = {
+    where: MemberAddressWhereUniqueInput
+    create: XOR<MemberAddressCreateWithoutCountyInput, MemberAddressUncheckedCreateWithoutCountyInput>
+  }
+
+  export type MemberAddressCreateManyCountyInputEnvelope = {
+    data: MemberAddressCreateManyCountyInput | MemberAddressCreateManyCountyInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PmsFormFeedbackCreateWithoutCountyInput = {
     feedbackNo: string
     serviceId: number
@@ -38238,43 +38275,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type MemberAddressCreateWithoutCountyInput = {
-    type?: string
-    label?: string | null
-    addressDetail?: Bytes | null
-    addressDetailHash?: string | null
-    isDefault?: boolean
-    isDeleted?: boolean
-    creTime?: Date | string
-    updTime?: Date | string
-    member: MemberAccountCreateNestedOneWithoutAddressesInput
-    district: SysDistrictCreateNestedOneWithoutMemberAddressesInput
-  }
-
-  export type MemberAddressUncheckedCreateWithoutCountyInput = {
-    id?: number
-    memberId: string
-    type?: string
-    label?: string | null
-    districtCode: string
-    addressDetail?: Bytes | null
-    addressDetailHash?: string | null
-    isDefault?: boolean
-    isDeleted?: boolean
-    creTime?: Date | string
-    updTime?: Date | string
-  }
-
-  export type MemberAddressCreateOrConnectWithoutCountyInput = {
-    where: MemberAddressWhereUniqueInput
-    create: XOR<MemberAddressCreateWithoutCountyInput, MemberAddressUncheckedCreateWithoutCountyInput>
-  }
-
-  export type MemberAddressCreateManyCountyInputEnvelope = {
-    data: MemberAddressCreateManyCountyInput | MemberAddressCreateManyCountyInput[]
-    skipDuplicates?: boolean
-  }
-
   export type SysDistrictCreateWithoutCountyInput = {
     code: string
     name: string
@@ -38286,9 +38286,9 @@ export namespace Prisma {
     creTime: Date | string
     creId?: string
     updId?: string | null
+    memberAddresses?: MemberAddressCreateNestedManyWithoutDistrictInput
     feedbacks?: PmsFormFeedbackCreateNestedManyWithoutDistrictInput
     topicRestrictions?: PmsTopicCountyDistrictRelationCreateNestedManyWithoutDistrictInput
-    memberAddresses?: MemberAddressCreateNestedManyWithoutDistrictInput
   }
 
   export type SysDistrictUncheckedCreateWithoutCountyInput = {
@@ -38302,9 +38302,9 @@ export namespace Prisma {
     creTime: Date | string
     creId?: string
     updId?: string | null
+    memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutDistrictInput
     feedbacks?: PmsFormFeedbackUncheckedCreateNestedManyWithoutDistrictInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedCreateNestedManyWithoutDistrictInput
-    memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutDistrictInput
   }
 
   export type SysDistrictCreateOrConnectWithoutCountyInput = {
@@ -38315,6 +38315,40 @@ export namespace Prisma {
   export type SysDistrictCreateManyCountyInputEnvelope = {
     data: SysDistrictCreateManyCountyInput | SysDistrictCreateManyCountyInput[]
     skipDuplicates?: boolean
+  }
+
+  export type MemberAddressUpsertWithWhereUniqueWithoutCountyInput = {
+    where: MemberAddressWhereUniqueInput
+    update: XOR<MemberAddressUpdateWithoutCountyInput, MemberAddressUncheckedUpdateWithoutCountyInput>
+    create: XOR<MemberAddressCreateWithoutCountyInput, MemberAddressUncheckedCreateWithoutCountyInput>
+  }
+
+  export type MemberAddressUpdateWithWhereUniqueWithoutCountyInput = {
+    where: MemberAddressWhereUniqueInput
+    data: XOR<MemberAddressUpdateWithoutCountyInput, MemberAddressUncheckedUpdateWithoutCountyInput>
+  }
+
+  export type MemberAddressUpdateManyWithWhereWithoutCountyInput = {
+    where: MemberAddressScalarWhereInput
+    data: XOR<MemberAddressUpdateManyMutationInput, MemberAddressUncheckedUpdateManyWithoutCountyInput>
+  }
+
+  export type MemberAddressScalarWhereInput = {
+    AND?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
+    OR?: MemberAddressScalarWhereInput[]
+    NOT?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
+    id?: IntFilter<"MemberAddress"> | number
+    memberId?: UuidFilter<"MemberAddress"> | string
+    type?: StringFilter<"MemberAddress"> | string
+    label?: StringNullableFilter<"MemberAddress"> | string | null
+    countyCode?: StringFilter<"MemberAddress"> | string
+    districtCode?: StringFilter<"MemberAddress"> | string
+    addressDetail?: BytesNullableFilter<"MemberAddress"> | Bytes | null
+    addressDetailHash?: StringNullableFilter<"MemberAddress"> | string | null
+    isDefault?: BoolFilter<"MemberAddress"> | boolean
+    isDeleted?: BoolFilter<"MemberAddress"> | boolean
+    creTime?: DateTimeFilter<"MemberAddress"> | Date | string
+    updTime?: DateTimeFilter<"MemberAddress"> | Date | string
   }
 
   export type PmsFormFeedbackUpsertWithWhereUniqueWithoutCountyInput = {
@@ -38397,40 +38431,6 @@ export namespace Prisma {
     updId?: UuidNullableFilter<"PmsTopicCountyDistrictRelation"> | string | null
   }
 
-  export type MemberAddressUpsertWithWhereUniqueWithoutCountyInput = {
-    where: MemberAddressWhereUniqueInput
-    update: XOR<MemberAddressUpdateWithoutCountyInput, MemberAddressUncheckedUpdateWithoutCountyInput>
-    create: XOR<MemberAddressCreateWithoutCountyInput, MemberAddressUncheckedCreateWithoutCountyInput>
-  }
-
-  export type MemberAddressUpdateWithWhereUniqueWithoutCountyInput = {
-    where: MemberAddressWhereUniqueInput
-    data: XOR<MemberAddressUpdateWithoutCountyInput, MemberAddressUncheckedUpdateWithoutCountyInput>
-  }
-
-  export type MemberAddressUpdateManyWithWhereWithoutCountyInput = {
-    where: MemberAddressScalarWhereInput
-    data: XOR<MemberAddressUpdateManyMutationInput, MemberAddressUncheckedUpdateManyWithoutCountyInput>
-  }
-
-  export type MemberAddressScalarWhereInput = {
-    AND?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
-    OR?: MemberAddressScalarWhereInput[]
-    NOT?: MemberAddressScalarWhereInput | MemberAddressScalarWhereInput[]
-    id?: IntFilter<"MemberAddress"> | number
-    memberId?: UuidFilter<"MemberAddress"> | string
-    type?: StringFilter<"MemberAddress"> | string
-    label?: StringNullableFilter<"MemberAddress"> | string | null
-    countyCode?: StringFilter<"MemberAddress"> | string
-    districtCode?: StringFilter<"MemberAddress"> | string
-    addressDetail?: BytesNullableFilter<"MemberAddress"> | Bytes | null
-    addressDetailHash?: StringNullableFilter<"MemberAddress"> | string | null
-    isDefault?: BoolFilter<"MemberAddress"> | boolean
-    isDeleted?: BoolFilter<"MemberAddress"> | boolean
-    creTime?: DateTimeFilter<"MemberAddress"> | Date | string
-    updTime?: DateTimeFilter<"MemberAddress"> | Date | string
-  }
-
   export type SysDistrictUpsertWithWhereUniqueWithoutCountyInput = {
     where: SysDistrictWhereUniqueInput
     update: XOR<SysDistrictUpdateWithoutCountyInput, SysDistrictUncheckedUpdateWithoutCountyInput>
@@ -38462,6 +38462,43 @@ export namespace Prisma {
     creTime?: DateTimeFilter<"SysDistrict"> | Date | string
     creId?: UuidFilter<"SysDistrict"> | string
     updId?: UuidNullableFilter<"SysDistrict"> | string | null
+  }
+
+  export type MemberAddressCreateWithoutDistrictInput = {
+    type?: string
+    label?: string | null
+    addressDetail?: Bytes | null
+    addressDetailHash?: string | null
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+    county: SysCountyCreateNestedOneWithoutMemberAddressesInput
+    member: MemberAccountCreateNestedOneWithoutAddressesInput
+  }
+
+  export type MemberAddressUncheckedCreateWithoutDistrictInput = {
+    id?: number
+    memberId: string
+    type?: string
+    label?: string | null
+    countyCode: string
+    addressDetail?: Bytes | null
+    addressDetailHash?: string | null
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+  }
+
+  export type MemberAddressCreateOrConnectWithoutDistrictInput = {
+    where: MemberAddressWhereUniqueInput
+    create: XOR<MemberAddressCreateWithoutDistrictInput, MemberAddressUncheckedCreateWithoutDistrictInput>
+  }
+
+  export type MemberAddressCreateManyDistrictInputEnvelope = {
+    data: MemberAddressCreateManyDistrictInput | MemberAddressCreateManyDistrictInput[]
+    skipDuplicates?: boolean
   }
 
   export type PmsFormFeedbackCreateWithoutDistrictInput = {
@@ -38564,43 +38601,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type MemberAddressCreateWithoutDistrictInput = {
-    type?: string
-    label?: string | null
-    addressDetail?: Bytes | null
-    addressDetailHash?: string | null
-    isDefault?: boolean
-    isDeleted?: boolean
-    creTime?: Date | string
-    updTime?: Date | string
-    member: MemberAccountCreateNestedOneWithoutAddressesInput
-    county: SysCountyCreateNestedOneWithoutMemberAddressesInput
-  }
-
-  export type MemberAddressUncheckedCreateWithoutDistrictInput = {
-    id?: number
-    memberId: string
-    type?: string
-    label?: string | null
-    countyCode: string
-    addressDetail?: Bytes | null
-    addressDetailHash?: string | null
-    isDefault?: boolean
-    isDeleted?: boolean
-    creTime?: Date | string
-    updTime?: Date | string
-  }
-
-  export type MemberAddressCreateOrConnectWithoutDistrictInput = {
-    where: MemberAddressWhereUniqueInput
-    create: XOR<MemberAddressCreateWithoutDistrictInput, MemberAddressUncheckedCreateWithoutDistrictInput>
-  }
-
-  export type MemberAddressCreateManyDistrictInputEnvelope = {
-    data: MemberAddressCreateManyDistrictInput | MemberAddressCreateManyDistrictInput[]
-    skipDuplicates?: boolean
-  }
-
   export type SysCountyCreateWithoutDistrictsInput = {
     code: string
     name: string
@@ -38610,9 +38610,9 @@ export namespace Prisma {
     creTime: Date | string
     creId?: string
     updId?: string | null
+    memberAddresses?: MemberAddressCreateNestedManyWithoutCountyInput
     feedbacks?: PmsFormFeedbackCreateNestedManyWithoutCountyInput
     topicRestrictions?: PmsTopicCountyDistrictRelationCreateNestedManyWithoutCountyInput
-    memberAddresses?: MemberAddressCreateNestedManyWithoutCountyInput
   }
 
   export type SysCountyUncheckedCreateWithoutDistrictsInput = {
@@ -38624,14 +38624,30 @@ export namespace Prisma {
     creTime: Date | string
     creId?: string
     updId?: string | null
+    memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutCountyInput
     feedbacks?: PmsFormFeedbackUncheckedCreateNestedManyWithoutCountyInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedCreateNestedManyWithoutCountyInput
-    memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutCountyInput
   }
 
   export type SysCountyCreateOrConnectWithoutDistrictsInput = {
     where: SysCountyWhereUniqueInput
     create: XOR<SysCountyCreateWithoutDistrictsInput, SysCountyUncheckedCreateWithoutDistrictsInput>
+  }
+
+  export type MemberAddressUpsertWithWhereUniqueWithoutDistrictInput = {
+    where: MemberAddressWhereUniqueInput
+    update: XOR<MemberAddressUpdateWithoutDistrictInput, MemberAddressUncheckedUpdateWithoutDistrictInput>
+    create: XOR<MemberAddressCreateWithoutDistrictInput, MemberAddressUncheckedCreateWithoutDistrictInput>
+  }
+
+  export type MemberAddressUpdateWithWhereUniqueWithoutDistrictInput = {
+    where: MemberAddressWhereUniqueInput
+    data: XOR<MemberAddressUpdateWithoutDistrictInput, MemberAddressUncheckedUpdateWithoutDistrictInput>
+  }
+
+  export type MemberAddressUpdateManyWithWhereWithoutDistrictInput = {
+    where: MemberAddressScalarWhereInput
+    data: XOR<MemberAddressUpdateManyMutationInput, MemberAddressUncheckedUpdateManyWithoutDistrictInput>
   }
 
   export type PmsFormFeedbackUpsertWithWhereUniqueWithoutDistrictInput = {
@@ -38666,22 +38682,6 @@ export namespace Prisma {
     data: XOR<PmsTopicCountyDistrictRelationUpdateManyMutationInput, PmsTopicCountyDistrictRelationUncheckedUpdateManyWithoutDistrictInput>
   }
 
-  export type MemberAddressUpsertWithWhereUniqueWithoutDistrictInput = {
-    where: MemberAddressWhereUniqueInput
-    update: XOR<MemberAddressUpdateWithoutDistrictInput, MemberAddressUncheckedUpdateWithoutDistrictInput>
-    create: XOR<MemberAddressCreateWithoutDistrictInput, MemberAddressUncheckedCreateWithoutDistrictInput>
-  }
-
-  export type MemberAddressUpdateWithWhereUniqueWithoutDistrictInput = {
-    where: MemberAddressWhereUniqueInput
-    data: XOR<MemberAddressUpdateWithoutDistrictInput, MemberAddressUncheckedUpdateWithoutDistrictInput>
-  }
-
-  export type MemberAddressUpdateManyWithWhereWithoutDistrictInput = {
-    where: MemberAddressScalarWhereInput
-    data: XOR<MemberAddressUpdateManyMutationInput, MemberAddressUncheckedUpdateManyWithoutDistrictInput>
-  }
-
   export type SysCountyUpsertWithoutDistrictsInput = {
     update: XOR<SysCountyUpdateWithoutDistrictsInput, SysCountyUncheckedUpdateWithoutDistrictsInput>
     create: XOR<SysCountyCreateWithoutDistrictsInput, SysCountyUncheckedCreateWithoutDistrictsInput>
@@ -38702,9 +38702,9 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
+    memberAddresses?: MemberAddressUpdateManyWithoutCountyNestedInput
     feedbacks?: PmsFormFeedbackUpdateManyWithoutCountyNestedInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUpdateManyWithoutCountyNestedInput
-    memberAddresses?: MemberAddressUpdateManyWithoutCountyNestedInput
   }
 
   export type SysCountyUncheckedUpdateWithoutDistrictsInput = {
@@ -38716,9 +38716,9 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
+    memberAddresses?: MemberAddressUncheckedUpdateManyWithoutCountyNestedInput
     feedbacks?: PmsFormFeedbackUncheckedUpdateManyWithoutCountyNestedInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedUpdateManyWithoutCountyNestedInput
-    memberAddresses?: MemberAddressUncheckedUpdateManyWithoutCountyNestedInput
   }
 
   export type PmsFormFeedbackCreateWithoutFormInput = {
@@ -39739,8 +39739,8 @@ export namespace Prisma {
     creTime: Date | string
     creId?: string
     updId?: string | null
-    feedbacks?: PmsFormFeedbackCreateNestedManyWithoutCountyInput
     memberAddresses?: MemberAddressCreateNestedManyWithoutCountyInput
+    feedbacks?: PmsFormFeedbackCreateNestedManyWithoutCountyInput
     districts?: SysDistrictCreateNestedManyWithoutCountyInput
   }
 
@@ -39753,8 +39753,8 @@ export namespace Prisma {
     creTime: Date | string
     creId?: string
     updId?: string | null
-    feedbacks?: PmsFormFeedbackUncheckedCreateNestedManyWithoutCountyInput
     memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutCountyInput
+    feedbacks?: PmsFormFeedbackUncheckedCreateNestedManyWithoutCountyInput
     districts?: SysDistrictUncheckedCreateNestedManyWithoutCountyInput
   }
 
@@ -39774,8 +39774,8 @@ export namespace Prisma {
     creTime: Date | string
     creId?: string
     updId?: string | null
-    feedbacks?: PmsFormFeedbackCreateNestedManyWithoutDistrictInput
     memberAddresses?: MemberAddressCreateNestedManyWithoutDistrictInput
+    feedbacks?: PmsFormFeedbackCreateNestedManyWithoutDistrictInput
     county: SysCountyCreateNestedOneWithoutDistrictsInput
   }
 
@@ -39791,8 +39791,8 @@ export namespace Prisma {
     creTime: Date | string
     creId?: string
     updId?: string | null
-    feedbacks?: PmsFormFeedbackUncheckedCreateNestedManyWithoutDistrictInput
     memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutDistrictInput
+    feedbacks?: PmsFormFeedbackUncheckedCreateNestedManyWithoutDistrictInput
   }
 
   export type SysDistrictCreateOrConnectWithoutTopicRestrictionsInput = {
@@ -39872,8 +39872,8 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
-    feedbacks?: PmsFormFeedbackUpdateManyWithoutCountyNestedInput
     memberAddresses?: MemberAddressUpdateManyWithoutCountyNestedInput
+    feedbacks?: PmsFormFeedbackUpdateManyWithoutCountyNestedInput
     districts?: SysDistrictUpdateManyWithoutCountyNestedInput
   }
 
@@ -39886,8 +39886,8 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
-    feedbacks?: PmsFormFeedbackUncheckedUpdateManyWithoutCountyNestedInput
     memberAddresses?: MemberAddressUncheckedUpdateManyWithoutCountyNestedInput
+    feedbacks?: PmsFormFeedbackUncheckedUpdateManyWithoutCountyNestedInput
     districts?: SysDistrictUncheckedUpdateManyWithoutCountyNestedInput
   }
 
@@ -39913,8 +39913,8 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
-    feedbacks?: PmsFormFeedbackUpdateManyWithoutDistrictNestedInput
     memberAddresses?: MemberAddressUpdateManyWithoutDistrictNestedInput
+    feedbacks?: PmsFormFeedbackUpdateManyWithoutDistrictNestedInput
     county?: SysCountyUpdateOneRequiredWithoutDistrictsNestedInput
   }
 
@@ -39930,8 +39930,8 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
-    feedbacks?: PmsFormFeedbackUncheckedUpdateManyWithoutDistrictNestedInput
     memberAddresses?: MemberAddressUncheckedUpdateManyWithoutDistrictNestedInput
+    feedbacks?: PmsFormFeedbackUncheckedUpdateManyWithoutDistrictNestedInput
   }
 
   export type PmsFormTopicUpsertWithoutRestrictionsInput = {
@@ -40001,8 +40001,8 @@ export namespace Prisma {
     creTime: Date | string
     creId?: string
     updId?: string | null
-    topicRestrictions?: PmsTopicCountyDistrictRelationCreateNestedManyWithoutCountyInput
     memberAddresses?: MemberAddressCreateNestedManyWithoutCountyInput
+    topicRestrictions?: PmsTopicCountyDistrictRelationCreateNestedManyWithoutCountyInput
     districts?: SysDistrictCreateNestedManyWithoutCountyInput
   }
 
@@ -40015,8 +40015,8 @@ export namespace Prisma {
     creTime: Date | string
     creId?: string
     updId?: string | null
-    topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedCreateNestedManyWithoutCountyInput
     memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutCountyInput
+    topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedCreateNestedManyWithoutCountyInput
     districts?: SysDistrictUncheckedCreateNestedManyWithoutCountyInput
   }
 
@@ -40036,8 +40036,8 @@ export namespace Prisma {
     creTime: Date | string
     creId?: string
     updId?: string | null
-    topicRestrictions?: PmsTopicCountyDistrictRelationCreateNestedManyWithoutDistrictInput
     memberAddresses?: MemberAddressCreateNestedManyWithoutDistrictInput
+    topicRestrictions?: PmsTopicCountyDistrictRelationCreateNestedManyWithoutDistrictInput
     county: SysCountyCreateNestedOneWithoutDistrictsInput
   }
 
@@ -40053,8 +40053,8 @@ export namespace Prisma {
     creTime: Date | string
     creId?: string
     updId?: string | null
-    topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedCreateNestedManyWithoutDistrictInput
     memberAddresses?: MemberAddressUncheckedCreateNestedManyWithoutDistrictInput
+    topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedCreateNestedManyWithoutDistrictInput
   }
 
   export type SysDistrictCreateOrConnectWithoutFeedbacksInput = {
@@ -40132,8 +40132,8 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
-    topicRestrictions?: PmsTopicCountyDistrictRelationUpdateManyWithoutCountyNestedInput
     memberAddresses?: MemberAddressUpdateManyWithoutCountyNestedInput
+    topicRestrictions?: PmsTopicCountyDistrictRelationUpdateManyWithoutCountyNestedInput
     districts?: SysDistrictUpdateManyWithoutCountyNestedInput
   }
 
@@ -40146,8 +40146,8 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
-    topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedUpdateManyWithoutCountyNestedInput
     memberAddresses?: MemberAddressUncheckedUpdateManyWithoutCountyNestedInput
+    topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedUpdateManyWithoutCountyNestedInput
     districts?: SysDistrictUncheckedUpdateManyWithoutCountyNestedInput
   }
 
@@ -40173,8 +40173,8 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
-    topicRestrictions?: PmsTopicCountyDistrictRelationUpdateManyWithoutDistrictNestedInput
     memberAddresses?: MemberAddressUpdateManyWithoutDistrictNestedInput
+    topicRestrictions?: PmsTopicCountyDistrictRelationUpdateManyWithoutDistrictNestedInput
     county?: SysCountyUpdateOneRequiredWithoutDistrictsNestedInput
   }
 
@@ -40190,8 +40190,8 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
-    topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedUpdateManyWithoutDistrictNestedInput
     memberAddresses?: MemberAddressUncheckedUpdateManyWithoutDistrictNestedInput
+    topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedUpdateManyWithoutDistrictNestedInput
   }
 
   export type PmsFormUpsertWithoutFeedbacksInput = {
@@ -40303,45 +40303,6 @@ export namespace Prisma {
     data: XOR<MemberAddressUpdateManyMutationInput, MemberAddressUncheckedUpdateManyWithoutMemberInput>
   }
 
-  export type MemberAccountCreateWithoutAddressesInput = {
-    id?: string
-    email?: Bytes | null
-    emailHash?: string | null
-    phone?: Bytes | null
-    phoneHash?: string | null
-    name?: Bytes | null
-    nameHash?: string | null
-    passwordHash: string
-    status?: string
-    isDeleted?: boolean
-    creId: string
-    creTime?: Date | string
-    updId: string
-    updTime?: Date | string
-  }
-
-  export type MemberAccountUncheckedCreateWithoutAddressesInput = {
-    id?: string
-    email?: Bytes | null
-    emailHash?: string | null
-    phone?: Bytes | null
-    phoneHash?: string | null
-    name?: Bytes | null
-    nameHash?: string | null
-    passwordHash: string
-    status?: string
-    isDeleted?: boolean
-    creId: string
-    creTime?: Date | string
-    updId: string
-    updTime?: Date | string
-  }
-
-  export type MemberAccountCreateOrConnectWithoutAddressesInput = {
-    where: MemberAccountWhereUniqueInput
-    create: XOR<MemberAccountCreateWithoutAddressesInput, MemberAccountUncheckedCreateWithoutAddressesInput>
-  }
-
   export type SysCountyCreateWithoutMemberAddressesInput = {
     code: string
     name: string
@@ -40412,49 +40373,43 @@ export namespace Prisma {
     create: XOR<SysDistrictCreateWithoutMemberAddressesInput, SysDistrictUncheckedCreateWithoutMemberAddressesInput>
   }
 
-  export type MemberAccountUpsertWithoutAddressesInput = {
-    update: XOR<MemberAccountUpdateWithoutAddressesInput, MemberAccountUncheckedUpdateWithoutAddressesInput>
+  export type MemberAccountCreateWithoutAddressesInput = {
+    id?: string
+    email?: Bytes | null
+    emailHash?: string | null
+    phone?: Bytes | null
+    phoneHash?: string | null
+    name?: Bytes | null
+    nameHash?: string | null
+    passwordHash: string
+    status?: string
+    isDeleted?: boolean
+    creId: string
+    creTime?: Date | string
+    updId: string
+    updTime?: Date | string
+  }
+
+  export type MemberAccountUncheckedCreateWithoutAddressesInput = {
+    id?: string
+    email?: Bytes | null
+    emailHash?: string | null
+    phone?: Bytes | null
+    phoneHash?: string | null
+    name?: Bytes | null
+    nameHash?: string | null
+    passwordHash: string
+    status?: string
+    isDeleted?: boolean
+    creId: string
+    creTime?: Date | string
+    updId: string
+    updTime?: Date | string
+  }
+
+  export type MemberAccountCreateOrConnectWithoutAddressesInput = {
+    where: MemberAccountWhereUniqueInput
     create: XOR<MemberAccountCreateWithoutAddressesInput, MemberAccountUncheckedCreateWithoutAddressesInput>
-    where?: MemberAccountWhereInput
-  }
-
-  export type MemberAccountUpdateToOneWithWhereWithoutAddressesInput = {
-    where?: MemberAccountWhereInput
-    data: XOR<MemberAccountUpdateWithoutAddressesInput, MemberAccountUncheckedUpdateWithoutAddressesInput>
-  }
-
-  export type MemberAccountUpdateWithoutAddressesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: NullableBytesFieldUpdateOperationsInput | Bytes | null
-    emailHash?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableBytesFieldUpdateOperationsInput | Bytes | null
-    phoneHash?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableBytesFieldUpdateOperationsInput | Bytes | null
-    nameHash?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creId?: StringFieldUpdateOperationsInput | string
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updId?: StringFieldUpdateOperationsInput | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type MemberAccountUncheckedUpdateWithoutAddressesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: NullableBytesFieldUpdateOperationsInput | Bytes | null
-    emailHash?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableBytesFieldUpdateOperationsInput | Bytes | null
-    phoneHash?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableBytesFieldUpdateOperationsInput | Bytes | null
-    nameHash?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creId?: StringFieldUpdateOperationsInput | string
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updId?: StringFieldUpdateOperationsInput | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SysCountyUpsertWithoutMemberAddressesInput = {
@@ -40539,6 +40494,51 @@ export namespace Prisma {
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedUpdateManyWithoutDistrictNestedInput
   }
 
+  export type MemberAccountUpsertWithoutAddressesInput = {
+    update: XOR<MemberAccountUpdateWithoutAddressesInput, MemberAccountUncheckedUpdateWithoutAddressesInput>
+    create: XOR<MemberAccountCreateWithoutAddressesInput, MemberAccountUncheckedCreateWithoutAddressesInput>
+    where?: MemberAccountWhereInput
+  }
+
+  export type MemberAccountUpdateToOneWithWhereWithoutAddressesInput = {
+    where?: MemberAccountWhereInput
+    data: XOR<MemberAccountUpdateWithoutAddressesInput, MemberAccountUncheckedUpdateWithoutAddressesInput>
+  }
+
+  export type MemberAccountUpdateWithoutAddressesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    emailHash?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    phoneHash?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    nameHash?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creId?: StringFieldUpdateOperationsInput | string
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updId?: StringFieldUpdateOperationsInput | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MemberAccountUncheckedUpdateWithoutAddressesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    emailHash?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    phoneHash?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    nameHash?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creId?: StringFieldUpdateOperationsInput | string
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updId?: StringFieldUpdateOperationsInput | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ChatMessageCreateWithoutListingInput = {
     id?: string
     senderId: string
@@ -40549,7 +40549,7 @@ export namespace Prisma {
     messageType?: string
     isRead?: boolean
     creTime?: Date | string
-    community_group?: community_groupCreateNestedOneWithoutChat_messageInput
+    group?: CommunityGroupCreateNestedOneWithoutMessagesInput
   }
 
   export type ChatMessageUncheckedCreateWithoutListingInput = {
@@ -40562,7 +40562,7 @@ export namespace Prisma {
     messageType?: string
     isRead?: boolean
     creTime?: Date | string
-    group_id?: string | null
+    groupId?: string | null
   }
 
   export type ChatMessageCreateOrConnectWithoutListingInput = {
@@ -40647,7 +40647,7 @@ export namespace Prisma {
     messageType?: StringFilter<"ChatMessage"> | string
     isRead?: BoolFilter<"ChatMessage"> | boolean
     creTime?: DateTimeFilter<"ChatMessage"> | Date | string
-    group_id?: UuidNullableFilter<"ChatMessage"> | string | null
+    groupId?: UuidNullableFilter<"ChatMessage"> | string | null
   }
 
   export type PickupReservationUpsertWithWhereUniqueWithoutListingInput = {
@@ -40686,47 +40686,47 @@ export namespace Prisma {
     pickupDeadline?: DateTimeNullableFilter<"PickupReservation"> | Date | string | null
   }
 
-  export type community_groupCreateWithoutChat_messageInput = {
-    id: string
+  export type CommunityGroupCreateWithoutMessagesInput = {
+    id?: string
     name: string
     type: string
     icon: string
-    tags?: community_groupCreatetagsInput | string[]
+    tags?: CommunityGroupCreatetagsInput | string[]
     description?: string | null
-    max_members?: number
-    activity_date?: string | null
-    activity_time?: string | null
-    activity_location?: string | null
-    creator_id: string
-    creator_name: string
-    is_deleted?: boolean
-    cre_time?: Date | string
-    upd_time?: Date | string
-    group_member?: group_memberCreateNestedManyWithoutCommunity_groupInput
+    maxMembers?: number
+    activityDate?: string | null
+    activityTime?: string | null
+    activityLocation?: string | null
+    creatorId: string
+    creatorName: string
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+    members?: GroupMemberCreateNestedManyWithoutGroupInput
   }
 
-  export type community_groupUncheckedCreateWithoutChat_messageInput = {
-    id: string
+  export type CommunityGroupUncheckedCreateWithoutMessagesInput = {
+    id?: string
     name: string
     type: string
     icon: string
-    tags?: community_groupCreatetagsInput | string[]
+    tags?: CommunityGroupCreatetagsInput | string[]
     description?: string | null
-    max_members?: number
-    activity_date?: string | null
-    activity_time?: string | null
-    activity_location?: string | null
-    creator_id: string
-    creator_name: string
-    is_deleted?: boolean
-    cre_time?: Date | string
-    upd_time?: Date | string
-    group_member?: group_memberUncheckedCreateNestedManyWithoutCommunity_groupInput
+    maxMembers?: number
+    activityDate?: string | null
+    activityTime?: string | null
+    activityLocation?: string | null
+    creatorId: string
+    creatorName: string
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+    members?: GroupMemberUncheckedCreateNestedManyWithoutGroupInput
   }
 
-  export type community_groupCreateOrConnectWithoutChat_messageInput = {
-    where: community_groupWhereUniqueInput
-    create: XOR<community_groupCreateWithoutChat_messageInput, community_groupUncheckedCreateWithoutChat_messageInput>
+  export type CommunityGroupCreateOrConnectWithoutMessagesInput = {
+    where: CommunityGroupWhereUniqueInput
+    create: XOR<CommunityGroupCreateWithoutMessagesInput, CommunityGroupUncheckedCreateWithoutMessagesInput>
   }
 
   export type SecondhandListingCreateWithoutMessagesInput = {
@@ -40776,53 +40776,53 @@ export namespace Prisma {
     create: XOR<SecondhandListingCreateWithoutMessagesInput, SecondhandListingUncheckedCreateWithoutMessagesInput>
   }
 
-  export type community_groupUpsertWithoutChat_messageInput = {
-    update: XOR<community_groupUpdateWithoutChat_messageInput, community_groupUncheckedUpdateWithoutChat_messageInput>
-    create: XOR<community_groupCreateWithoutChat_messageInput, community_groupUncheckedCreateWithoutChat_messageInput>
-    where?: community_groupWhereInput
+  export type CommunityGroupUpsertWithoutMessagesInput = {
+    update: XOR<CommunityGroupUpdateWithoutMessagesInput, CommunityGroupUncheckedUpdateWithoutMessagesInput>
+    create: XOR<CommunityGroupCreateWithoutMessagesInput, CommunityGroupUncheckedCreateWithoutMessagesInput>
+    where?: CommunityGroupWhereInput
   }
 
-  export type community_groupUpdateToOneWithWhereWithoutChat_messageInput = {
-    where?: community_groupWhereInput
-    data: XOR<community_groupUpdateWithoutChat_messageInput, community_groupUncheckedUpdateWithoutChat_messageInput>
+  export type CommunityGroupUpdateToOneWithWhereWithoutMessagesInput = {
+    where?: CommunityGroupWhereInput
+    data: XOR<CommunityGroupUpdateWithoutMessagesInput, CommunityGroupUncheckedUpdateWithoutMessagesInput>
   }
 
-  export type community_groupUpdateWithoutChat_messageInput = {
+  export type CommunityGroupUpdateWithoutMessagesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     icon?: StringFieldUpdateOperationsInput | string
-    tags?: community_groupUpdatetagsInput | string[]
+    tags?: CommunityGroupUpdatetagsInput | string[]
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    max_members?: IntFieldUpdateOperationsInput | number
-    activity_date?: NullableStringFieldUpdateOperationsInput | string | null
-    activity_time?: NullableStringFieldUpdateOperationsInput | string | null
-    activity_location?: NullableStringFieldUpdateOperationsInput | string | null
-    creator_id?: StringFieldUpdateOperationsInput | string
-    creator_name?: StringFieldUpdateOperationsInput | string
-    is_deleted?: BoolFieldUpdateOperationsInput | boolean
-    cre_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    upd_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    group_member?: group_memberUpdateManyWithoutCommunity_groupNestedInput
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    activityDate?: NullableStringFieldUpdateOperationsInput | string | null
+    activityTime?: NullableStringFieldUpdateOperationsInput | string | null
+    activityLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorId?: StringFieldUpdateOperationsInput | string
+    creatorName?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: GroupMemberUpdateManyWithoutGroupNestedInput
   }
 
-  export type community_groupUncheckedUpdateWithoutChat_messageInput = {
+  export type CommunityGroupUncheckedUpdateWithoutMessagesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     icon?: StringFieldUpdateOperationsInput | string
-    tags?: community_groupUpdatetagsInput | string[]
+    tags?: CommunityGroupUpdatetagsInput | string[]
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    max_members?: IntFieldUpdateOperationsInput | number
-    activity_date?: NullableStringFieldUpdateOperationsInput | string | null
-    activity_time?: NullableStringFieldUpdateOperationsInput | string | null
-    activity_location?: NullableStringFieldUpdateOperationsInput | string | null
-    creator_id?: StringFieldUpdateOperationsInput | string
-    creator_name?: StringFieldUpdateOperationsInput | string
-    is_deleted?: BoolFieldUpdateOperationsInput | boolean
-    cre_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    upd_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    group_member?: group_memberUncheckedUpdateManyWithoutCommunity_groupNestedInput
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    activityDate?: NullableStringFieldUpdateOperationsInput | string | null
+    activityTime?: NullableStringFieldUpdateOperationsInput | string | null
+    activityLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorId?: StringFieldUpdateOperationsInput | string
+    creatorName?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: GroupMemberUncheckedUpdateManyWithoutGroupNestedInput
   }
 
   export type SecondhandListingUpsertWithoutMessagesInput = {
@@ -40876,6 +40876,201 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
     reservations?: PickupReservationUncheckedUpdateManyWithoutListingNestedInput
+  }
+
+  export type ChatMessageCreateWithoutGroupInput = {
+    id?: string
+    senderId: string
+    senderName: string
+    receiverId?: string | null
+    receiverName?: string | null
+    content: string
+    messageType?: string
+    isRead?: boolean
+    creTime?: Date | string
+    listing?: SecondhandListingCreateNestedOneWithoutMessagesInput
+  }
+
+  export type ChatMessageUncheckedCreateWithoutGroupInput = {
+    id?: string
+    senderId: string
+    senderName: string
+    receiverId?: string | null
+    receiverName?: string | null
+    listingId?: string | null
+    content: string
+    messageType?: string
+    isRead?: boolean
+    creTime?: Date | string
+  }
+
+  export type ChatMessageCreateOrConnectWithoutGroupInput = {
+    where: ChatMessageWhereUniqueInput
+    create: XOR<ChatMessageCreateWithoutGroupInput, ChatMessageUncheckedCreateWithoutGroupInput>
+  }
+
+  export type ChatMessageCreateManyGroupInputEnvelope = {
+    data: ChatMessageCreateManyGroupInput | ChatMessageCreateManyGroupInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type GroupMemberCreateWithoutGroupInput = {
+    id?: string
+    userId: string
+    userName: string
+    joinedAt?: Date | string
+  }
+
+  export type GroupMemberUncheckedCreateWithoutGroupInput = {
+    id?: string
+    userId: string
+    userName: string
+    joinedAt?: Date | string
+  }
+
+  export type GroupMemberCreateOrConnectWithoutGroupInput = {
+    where: GroupMemberWhereUniqueInput
+    create: XOR<GroupMemberCreateWithoutGroupInput, GroupMemberUncheckedCreateWithoutGroupInput>
+  }
+
+  export type GroupMemberCreateManyGroupInputEnvelope = {
+    data: GroupMemberCreateManyGroupInput | GroupMemberCreateManyGroupInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ChatMessageUpsertWithWhereUniqueWithoutGroupInput = {
+    where: ChatMessageWhereUniqueInput
+    update: XOR<ChatMessageUpdateWithoutGroupInput, ChatMessageUncheckedUpdateWithoutGroupInput>
+    create: XOR<ChatMessageCreateWithoutGroupInput, ChatMessageUncheckedCreateWithoutGroupInput>
+  }
+
+  export type ChatMessageUpdateWithWhereUniqueWithoutGroupInput = {
+    where: ChatMessageWhereUniqueInput
+    data: XOR<ChatMessageUpdateWithoutGroupInput, ChatMessageUncheckedUpdateWithoutGroupInput>
+  }
+
+  export type ChatMessageUpdateManyWithWhereWithoutGroupInput = {
+    where: ChatMessageScalarWhereInput
+    data: XOR<ChatMessageUpdateManyMutationInput, ChatMessageUncheckedUpdateManyWithoutGroupInput>
+  }
+
+  export type GroupMemberUpsertWithWhereUniqueWithoutGroupInput = {
+    where: GroupMemberWhereUniqueInput
+    update: XOR<GroupMemberUpdateWithoutGroupInput, GroupMemberUncheckedUpdateWithoutGroupInput>
+    create: XOR<GroupMemberCreateWithoutGroupInput, GroupMemberUncheckedCreateWithoutGroupInput>
+  }
+
+  export type GroupMemberUpdateWithWhereUniqueWithoutGroupInput = {
+    where: GroupMemberWhereUniqueInput
+    data: XOR<GroupMemberUpdateWithoutGroupInput, GroupMemberUncheckedUpdateWithoutGroupInput>
+  }
+
+  export type GroupMemberUpdateManyWithWhereWithoutGroupInput = {
+    where: GroupMemberScalarWhereInput
+    data: XOR<GroupMemberUpdateManyMutationInput, GroupMemberUncheckedUpdateManyWithoutGroupInput>
+  }
+
+  export type GroupMemberScalarWhereInput = {
+    AND?: GroupMemberScalarWhereInput | GroupMemberScalarWhereInput[]
+    OR?: GroupMemberScalarWhereInput[]
+    NOT?: GroupMemberScalarWhereInput | GroupMemberScalarWhereInput[]
+    id?: UuidFilter<"GroupMember"> | string
+    groupId?: UuidFilter<"GroupMember"> | string
+    userId?: UuidFilter<"GroupMember"> | string
+    userName?: StringFilter<"GroupMember"> | string
+    joinedAt?: DateTimeFilter<"GroupMember"> | Date | string
+  }
+
+  export type CommunityGroupCreateWithoutMembersInput = {
+    id?: string
+    name: string
+    type: string
+    icon: string
+    tags?: CommunityGroupCreatetagsInput | string[]
+    description?: string | null
+    maxMembers?: number
+    activityDate?: string | null
+    activityTime?: string | null
+    activityLocation?: string | null
+    creatorId: string
+    creatorName: string
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+    messages?: ChatMessageCreateNestedManyWithoutGroupInput
+  }
+
+  export type CommunityGroupUncheckedCreateWithoutMembersInput = {
+    id?: string
+    name: string
+    type: string
+    icon: string
+    tags?: CommunityGroupCreatetagsInput | string[]
+    description?: string | null
+    maxMembers?: number
+    activityDate?: string | null
+    activityTime?: string | null
+    activityLocation?: string | null
+    creatorId: string
+    creatorName: string
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+    messages?: ChatMessageUncheckedCreateNestedManyWithoutGroupInput
+  }
+
+  export type CommunityGroupCreateOrConnectWithoutMembersInput = {
+    where: CommunityGroupWhereUniqueInput
+    create: XOR<CommunityGroupCreateWithoutMembersInput, CommunityGroupUncheckedCreateWithoutMembersInput>
+  }
+
+  export type CommunityGroupUpsertWithoutMembersInput = {
+    update: XOR<CommunityGroupUpdateWithoutMembersInput, CommunityGroupUncheckedUpdateWithoutMembersInput>
+    create: XOR<CommunityGroupCreateWithoutMembersInput, CommunityGroupUncheckedCreateWithoutMembersInput>
+    where?: CommunityGroupWhereInput
+  }
+
+  export type CommunityGroupUpdateToOneWithWhereWithoutMembersInput = {
+    where?: CommunityGroupWhereInput
+    data: XOR<CommunityGroupUpdateWithoutMembersInput, CommunityGroupUncheckedUpdateWithoutMembersInput>
+  }
+
+  export type CommunityGroupUpdateWithoutMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    tags?: CommunityGroupUpdatetagsInput | string[]
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    activityDate?: NullableStringFieldUpdateOperationsInput | string | null
+    activityTime?: NullableStringFieldUpdateOperationsInput | string | null
+    activityLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorId?: StringFieldUpdateOperationsInput | string
+    creatorName?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: ChatMessageUpdateManyWithoutGroupNestedInput
+  }
+
+  export type CommunityGroupUncheckedUpdateWithoutMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    tags?: CommunityGroupUpdatetagsInput | string[]
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    activityDate?: NullableStringFieldUpdateOperationsInput | string | null
+    activityTime?: NullableStringFieldUpdateOperationsInput | string | null
+    activityLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorId?: StringFieldUpdateOperationsInput | string
+    creatorName?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: ChatMessageUncheckedUpdateManyWithoutGroupNestedInput
   }
 
   export type SecondhandListingCreateWithoutReservationsInput = {
@@ -40978,201 +41173,6 @@ export namespace Prisma {
     messages?: ChatMessageUncheckedUpdateManyWithoutListingNestedInput
   }
 
-  export type ChatMessageCreateWithoutCommunity_groupInput = {
-    id?: string
-    senderId: string
-    senderName: string
-    receiverId?: string | null
-    receiverName?: string | null
-    content: string
-    messageType?: string
-    isRead?: boolean
-    creTime?: Date | string
-    listing?: SecondhandListingCreateNestedOneWithoutMessagesInput
-  }
-
-  export type ChatMessageUncheckedCreateWithoutCommunity_groupInput = {
-    id?: string
-    senderId: string
-    senderName: string
-    receiverId?: string | null
-    receiverName?: string | null
-    listingId?: string | null
-    content: string
-    messageType?: string
-    isRead?: boolean
-    creTime?: Date | string
-  }
-
-  export type ChatMessageCreateOrConnectWithoutCommunity_groupInput = {
-    where: ChatMessageWhereUniqueInput
-    create: XOR<ChatMessageCreateWithoutCommunity_groupInput, ChatMessageUncheckedCreateWithoutCommunity_groupInput>
-  }
-
-  export type ChatMessageCreateManyCommunity_groupInputEnvelope = {
-    data: ChatMessageCreateManyCommunity_groupInput | ChatMessageCreateManyCommunity_groupInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type group_memberCreateWithoutCommunity_groupInput = {
-    id: string
-    user_id: string
-    user_name: string
-    joined_at?: Date | string
-  }
-
-  export type group_memberUncheckedCreateWithoutCommunity_groupInput = {
-    id: string
-    user_id: string
-    user_name: string
-    joined_at?: Date | string
-  }
-
-  export type group_memberCreateOrConnectWithoutCommunity_groupInput = {
-    where: group_memberWhereUniqueInput
-    create: XOR<group_memberCreateWithoutCommunity_groupInput, group_memberUncheckedCreateWithoutCommunity_groupInput>
-  }
-
-  export type group_memberCreateManyCommunity_groupInputEnvelope = {
-    data: group_memberCreateManyCommunity_groupInput | group_memberCreateManyCommunity_groupInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type ChatMessageUpsertWithWhereUniqueWithoutCommunity_groupInput = {
-    where: ChatMessageWhereUniqueInput
-    update: XOR<ChatMessageUpdateWithoutCommunity_groupInput, ChatMessageUncheckedUpdateWithoutCommunity_groupInput>
-    create: XOR<ChatMessageCreateWithoutCommunity_groupInput, ChatMessageUncheckedCreateWithoutCommunity_groupInput>
-  }
-
-  export type ChatMessageUpdateWithWhereUniqueWithoutCommunity_groupInput = {
-    where: ChatMessageWhereUniqueInput
-    data: XOR<ChatMessageUpdateWithoutCommunity_groupInput, ChatMessageUncheckedUpdateWithoutCommunity_groupInput>
-  }
-
-  export type ChatMessageUpdateManyWithWhereWithoutCommunity_groupInput = {
-    where: ChatMessageScalarWhereInput
-    data: XOR<ChatMessageUpdateManyMutationInput, ChatMessageUncheckedUpdateManyWithoutCommunity_groupInput>
-  }
-
-  export type group_memberUpsertWithWhereUniqueWithoutCommunity_groupInput = {
-    where: group_memberWhereUniqueInput
-    update: XOR<group_memberUpdateWithoutCommunity_groupInput, group_memberUncheckedUpdateWithoutCommunity_groupInput>
-    create: XOR<group_memberCreateWithoutCommunity_groupInput, group_memberUncheckedCreateWithoutCommunity_groupInput>
-  }
-
-  export type group_memberUpdateWithWhereUniqueWithoutCommunity_groupInput = {
-    where: group_memberWhereUniqueInput
-    data: XOR<group_memberUpdateWithoutCommunity_groupInput, group_memberUncheckedUpdateWithoutCommunity_groupInput>
-  }
-
-  export type group_memberUpdateManyWithWhereWithoutCommunity_groupInput = {
-    where: group_memberScalarWhereInput
-    data: XOR<group_memberUpdateManyMutationInput, group_memberUncheckedUpdateManyWithoutCommunity_groupInput>
-  }
-
-  export type group_memberScalarWhereInput = {
-    AND?: group_memberScalarWhereInput | group_memberScalarWhereInput[]
-    OR?: group_memberScalarWhereInput[]
-    NOT?: group_memberScalarWhereInput | group_memberScalarWhereInput[]
-    id?: UuidFilter<"group_member"> | string
-    group_id?: UuidFilter<"group_member"> | string
-    user_id?: UuidFilter<"group_member"> | string
-    user_name?: StringFilter<"group_member"> | string
-    joined_at?: DateTimeFilter<"group_member"> | Date | string
-  }
-
-  export type community_groupCreateWithoutGroup_memberInput = {
-    id: string
-    name: string
-    type: string
-    icon: string
-    tags?: community_groupCreatetagsInput | string[]
-    description?: string | null
-    max_members?: number
-    activity_date?: string | null
-    activity_time?: string | null
-    activity_location?: string | null
-    creator_id: string
-    creator_name: string
-    is_deleted?: boolean
-    cre_time?: Date | string
-    upd_time?: Date | string
-    chat_message?: ChatMessageCreateNestedManyWithoutCommunity_groupInput
-  }
-
-  export type community_groupUncheckedCreateWithoutGroup_memberInput = {
-    id: string
-    name: string
-    type: string
-    icon: string
-    tags?: community_groupCreatetagsInput | string[]
-    description?: string | null
-    max_members?: number
-    activity_date?: string | null
-    activity_time?: string | null
-    activity_location?: string | null
-    creator_id: string
-    creator_name: string
-    is_deleted?: boolean
-    cre_time?: Date | string
-    upd_time?: Date | string
-    chat_message?: ChatMessageUncheckedCreateNestedManyWithoutCommunity_groupInput
-  }
-
-  export type community_groupCreateOrConnectWithoutGroup_memberInput = {
-    where: community_groupWhereUniqueInput
-    create: XOR<community_groupCreateWithoutGroup_memberInput, community_groupUncheckedCreateWithoutGroup_memberInput>
-  }
-
-  export type community_groupUpsertWithoutGroup_memberInput = {
-    update: XOR<community_groupUpdateWithoutGroup_memberInput, community_groupUncheckedUpdateWithoutGroup_memberInput>
-    create: XOR<community_groupCreateWithoutGroup_memberInput, community_groupUncheckedCreateWithoutGroup_memberInput>
-    where?: community_groupWhereInput
-  }
-
-  export type community_groupUpdateToOneWithWhereWithoutGroup_memberInput = {
-    where?: community_groupWhereInput
-    data: XOR<community_groupUpdateWithoutGroup_memberInput, community_groupUncheckedUpdateWithoutGroup_memberInput>
-  }
-
-  export type community_groupUpdateWithoutGroup_memberInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    icon?: StringFieldUpdateOperationsInput | string
-    tags?: community_groupUpdatetagsInput | string[]
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    max_members?: IntFieldUpdateOperationsInput | number
-    activity_date?: NullableStringFieldUpdateOperationsInput | string | null
-    activity_time?: NullableStringFieldUpdateOperationsInput | string | null
-    activity_location?: NullableStringFieldUpdateOperationsInput | string | null
-    creator_id?: StringFieldUpdateOperationsInput | string
-    creator_name?: StringFieldUpdateOperationsInput | string
-    is_deleted?: BoolFieldUpdateOperationsInput | boolean
-    cre_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    upd_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    chat_message?: ChatMessageUpdateManyWithoutCommunity_groupNestedInput
-  }
-
-  export type community_groupUncheckedUpdateWithoutGroup_memberInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    icon?: StringFieldUpdateOperationsInput | string
-    tags?: community_groupUpdatetagsInput | string[]
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    max_members?: IntFieldUpdateOperationsInput | number
-    activity_date?: NullableStringFieldUpdateOperationsInput | string | null
-    activity_time?: NullableStringFieldUpdateOperationsInput | string | null
-    activity_location?: NullableStringFieldUpdateOperationsInput | string | null
-    creator_id?: StringFieldUpdateOperationsInput | string
-    creator_name?: StringFieldUpdateOperationsInput | string
-    is_deleted?: BoolFieldUpdateOperationsInput | boolean
-    cre_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    upd_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    chat_message?: ChatMessageUncheckedUpdateManyWithoutCommunity_groupNestedInput
-  }
-
   export type CmsHomepageServiceCreateManyVendorInput = {
     id?: number
     type: string
@@ -41235,6 +41235,20 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type MemberAddressCreateManyCountyInput = {
+    id?: number
+    memberId: string
+    type?: string
+    label?: string | null
+    districtCode: string
+    addressDetail?: Bytes | null
+    addressDetailHash?: string | null
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
+  }
+
   export type PmsFormFeedbackCreateManyCountyInput = {
     feedbackNo: string
     serviceId: number
@@ -41275,20 +41289,6 @@ export namespace Prisma {
     updId?: string | null
   }
 
-  export type MemberAddressCreateManyCountyInput = {
-    id?: number
-    memberId: string
-    type?: string
-    label?: string | null
-    districtCode: string
-    addressDetail?: Bytes | null
-    addressDetailHash?: string | null
-    isDefault?: boolean
-    isDeleted?: boolean
-    creTime?: Date | string
-    updTime?: Date | string
-  }
-
   export type SysDistrictCreateManyCountyInput = {
     code: string
     name: string
@@ -41300,6 +41300,47 @@ export namespace Prisma {
     creTime: Date | string
     creId?: string
     updId?: string | null
+  }
+
+  export type MemberAddressUpdateWithoutCountyInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    addressDetailHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    district?: SysDistrictUpdateOneRequiredWithoutMemberAddressesNestedInput
+    member?: MemberAccountUpdateOneRequiredWithoutAddressesNestedInput
+  }
+
+  export type MemberAddressUncheckedUpdateWithoutCountyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    districtCode?: StringFieldUpdateOperationsInput | string
+    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    addressDetailHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MemberAddressUncheckedUpdateManyWithoutCountyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    districtCode?: StringFieldUpdateOperationsInput | string
+    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    addressDetailHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PmsFormFeedbackUpdateWithoutCountyInput = {
@@ -41422,47 +41463,6 @@ export namespace Prisma {
     updId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type MemberAddressUpdateWithoutCountyInput = {
-    type?: StringFieldUpdateOperationsInput | string
-    label?: NullableStringFieldUpdateOperationsInput | string | null
-    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
-    addressDetailHash?: NullableStringFieldUpdateOperationsInput | string | null
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    member?: MemberAccountUpdateOneRequiredWithoutAddressesNestedInput
-    district?: SysDistrictUpdateOneRequiredWithoutMemberAddressesNestedInput
-  }
-
-  export type MemberAddressUncheckedUpdateWithoutCountyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    memberId?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    label?: NullableStringFieldUpdateOperationsInput | string | null
-    districtCode?: StringFieldUpdateOperationsInput | string
-    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
-    addressDetailHash?: NullableStringFieldUpdateOperationsInput | string | null
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type MemberAddressUncheckedUpdateManyWithoutCountyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    memberId?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    label?: NullableStringFieldUpdateOperationsInput | string | null
-    districtCode?: StringFieldUpdateOperationsInput | string
-    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
-    addressDetailHash?: NullableStringFieldUpdateOperationsInput | string | null
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type SysDistrictUpdateWithoutCountyInput = {
     code?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -41474,9 +41474,9 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
+    memberAddresses?: MemberAddressUpdateManyWithoutDistrictNestedInput
     feedbacks?: PmsFormFeedbackUpdateManyWithoutDistrictNestedInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUpdateManyWithoutDistrictNestedInput
-    memberAddresses?: MemberAddressUpdateManyWithoutDistrictNestedInput
   }
 
   export type SysDistrictUncheckedUpdateWithoutCountyInput = {
@@ -41490,9 +41490,9 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
+    memberAddresses?: MemberAddressUncheckedUpdateManyWithoutDistrictNestedInput
     feedbacks?: PmsFormFeedbackUncheckedUpdateManyWithoutDistrictNestedInput
     topicRestrictions?: PmsTopicCountyDistrictRelationUncheckedUpdateManyWithoutDistrictNestedInput
-    memberAddresses?: MemberAddressUncheckedUpdateManyWithoutDistrictNestedInput
   }
 
   export type SysDistrictUncheckedUpdateManyWithoutCountyInput = {
@@ -41506,6 +41506,20 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MemberAddressCreateManyDistrictInput = {
+    id?: number
+    memberId: string
+    type?: string
+    label?: string | null
+    countyCode: string
+    addressDetail?: Bytes | null
+    addressDetailHash?: string | null
+    isDefault?: boolean
+    isDeleted?: boolean
+    creTime?: Date | string
+    updTime?: Date | string
   }
 
   export type PmsFormFeedbackCreateManyDistrictInput = {
@@ -41548,18 +41562,45 @@ export namespace Prisma {
     updId?: string | null
   }
 
-  export type MemberAddressCreateManyDistrictInput = {
-    id?: number
-    memberId: string
-    type?: string
-    label?: string | null
-    countyCode: string
-    addressDetail?: Bytes | null
-    addressDetailHash?: string | null
-    isDefault?: boolean
-    isDeleted?: boolean
-    creTime?: Date | string
-    updTime?: Date | string
+  export type MemberAddressUpdateWithoutDistrictInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    addressDetailHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    county?: SysCountyUpdateOneRequiredWithoutMemberAddressesNestedInput
+    member?: MemberAccountUpdateOneRequiredWithoutAddressesNestedInput
+  }
+
+  export type MemberAddressUncheckedUpdateWithoutDistrictInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    countyCode?: StringFieldUpdateOperationsInput | string
+    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    addressDetailHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MemberAddressUncheckedUpdateManyWithoutDistrictInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    countyCode?: StringFieldUpdateOperationsInput | string
+    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    addressDetailHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PmsFormFeedbackUpdateWithoutDistrictInput = {
@@ -41680,47 +41721,6 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     creId?: StringFieldUpdateOperationsInput | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type MemberAddressUpdateWithoutDistrictInput = {
-    type?: StringFieldUpdateOperationsInput | string
-    label?: NullableStringFieldUpdateOperationsInput | string | null
-    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
-    addressDetailHash?: NullableStringFieldUpdateOperationsInput | string | null
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    member?: MemberAccountUpdateOneRequiredWithoutAddressesNestedInput
-    county?: SysCountyUpdateOneRequiredWithoutMemberAddressesNestedInput
-  }
-
-  export type MemberAddressUncheckedUpdateWithoutDistrictInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    memberId?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    label?: NullableStringFieldUpdateOperationsInput | string | null
-    countyCode?: StringFieldUpdateOperationsInput | string
-    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
-    addressDetailHash?: NullableStringFieldUpdateOperationsInput | string | null
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type MemberAddressUncheckedUpdateManyWithoutDistrictInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    memberId?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    label?: NullableStringFieldUpdateOperationsInput | string | null
-    countyCode?: StringFieldUpdateOperationsInput | string
-    addressDetail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
-    addressDetailHash?: NullableStringFieldUpdateOperationsInput | string | null
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PmsFormFeedbackCreateManyFormInput = {
@@ -42289,7 +42289,7 @@ export namespace Prisma {
     messageType?: string
     isRead?: boolean
     creTime?: Date | string
-    group_id?: string | null
+    groupId?: string | null
   }
 
   export type PickupReservationCreateManyListingInput = {
@@ -42318,7 +42318,7 @@ export namespace Prisma {
     messageType?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    community_group?: community_groupUpdateOneWithoutChat_messageNestedInput
+    group?: CommunityGroupUpdateOneWithoutMessagesNestedInput
   }
 
   export type ChatMessageUncheckedUpdateWithoutListingInput = {
@@ -42331,7 +42331,7 @@ export namespace Prisma {
     messageType?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    group_id?: NullableStringFieldUpdateOperationsInput | string | null
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ChatMessageUncheckedUpdateManyWithoutListingInput = {
@@ -42344,7 +42344,7 @@ export namespace Prisma {
     messageType?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    group_id?: NullableStringFieldUpdateOperationsInput | string | null
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PickupReservationUpdateWithoutListingInput = {
@@ -42395,7 +42395,7 @@ export namespace Prisma {
     pickupDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-  export type ChatMessageCreateManyCommunity_groupInput = {
+  export type ChatMessageCreateManyGroupInput = {
     id?: string
     senderId: string
     senderName: string
@@ -42408,14 +42408,14 @@ export namespace Prisma {
     creTime?: Date | string
   }
 
-  export type group_memberCreateManyCommunity_groupInput = {
-    id: string
-    user_id: string
-    user_name: string
-    joined_at?: Date | string
+  export type GroupMemberCreateManyGroupInput = {
+    id?: string
+    userId: string
+    userName: string
+    joinedAt?: Date | string
   }
 
-  export type ChatMessageUpdateWithoutCommunity_groupInput = {
+  export type ChatMessageUpdateWithoutGroupInput = {
     id?: StringFieldUpdateOperationsInput | string
     senderId?: StringFieldUpdateOperationsInput | string
     senderName?: StringFieldUpdateOperationsInput | string
@@ -42428,7 +42428,7 @@ export namespace Prisma {
     listing?: SecondhandListingUpdateOneWithoutMessagesNestedInput
   }
 
-  export type ChatMessageUncheckedUpdateWithoutCommunity_groupInput = {
+  export type ChatMessageUncheckedUpdateWithoutGroupInput = {
     id?: StringFieldUpdateOperationsInput | string
     senderId?: StringFieldUpdateOperationsInput | string
     senderName?: StringFieldUpdateOperationsInput | string
@@ -42441,7 +42441,7 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ChatMessageUncheckedUpdateManyWithoutCommunity_groupInput = {
+  export type ChatMessageUncheckedUpdateManyWithoutGroupInput = {
     id?: StringFieldUpdateOperationsInput | string
     senderId?: StringFieldUpdateOperationsInput | string
     senderName?: StringFieldUpdateOperationsInput | string
@@ -42454,25 +42454,25 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type group_memberUpdateWithoutCommunity_groupInput = {
+  export type GroupMemberUpdateWithoutGroupInput = {
     id?: StringFieldUpdateOperationsInput | string
-    user_id?: StringFieldUpdateOperationsInput | string
-    user_name?: StringFieldUpdateOperationsInput | string
-    joined_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    userName?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type group_memberUncheckedUpdateWithoutCommunity_groupInput = {
+  export type GroupMemberUncheckedUpdateWithoutGroupInput = {
     id?: StringFieldUpdateOperationsInput | string
-    user_id?: StringFieldUpdateOperationsInput | string
-    user_name?: StringFieldUpdateOperationsInput | string
-    joined_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    userName?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type group_memberUncheckedUpdateManyWithoutCommunity_groupInput = {
+  export type GroupMemberUncheckedUpdateManyWithoutGroupInput = {
     id?: StringFieldUpdateOperationsInput | string
-    user_id?: StringFieldUpdateOperationsInput | string
-    user_name?: StringFieldUpdateOperationsInput | string
-    joined_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    userName?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
