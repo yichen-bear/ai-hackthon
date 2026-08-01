@@ -1,18 +1,48 @@
 <script setup lang="ts">
 /**
  * 個人資料頁面
+ * 從 /api/auth/me 取得登入者資料並顯示
  * 可編輯欄位、修改密碼、大頭貼上傳
  */
 const isEditing = ref(false)
+const isLoadingProfile = ref(true)
 
 const user = ref({
-  name: '王小明',
-  email: 'xiaoming@example.com',
-  phone: '0912-345-678',
-  birthday: '1995-03-15',
-  gender: '男',
-  address: '台北市信義區信義路五段7號',
+  name: '',
+  email: '',
+  phone: '',
+  birthday: '',
+  gender: '',
+  address: '',
   avatar: '',
+})
+
+// 從 API 取得登入者資料
+async function fetchProfile() {
+  isLoadingProfile.value = true
+  try {
+    const res = await $fetch<{
+      userId: string
+      role: string
+      name?: string
+      email?: string
+      phone?: string
+      createdAt?: string
+    }>('/api/auth/me', { credentials: 'include' })
+
+    if (res.name) user.value.name = res.name
+    if (res.email) user.value.email = res.email
+    if (res.phone) user.value.phone = res.phone
+  } catch {
+    // 未登入或 token 失效，導向登入頁
+    navigateTo('/member')
+  } finally {
+    isLoadingProfile.value = false
+  }
+}
+
+onMounted(() => {
+  fetchProfile()
 })
 
 // 編輯用副本
@@ -80,6 +110,12 @@ function handleChangePassword() {
 
 <template>
   <div class="profile-page">
+    <!-- 載入中 -->
+    <div v-if="isLoadingProfile" class="loading-state">
+      <p>載入中...</p>
+    </div>
+
+    <template v-else>
     <!-- 大頭貼區 -->
     <div class="profile-header">
       <div class="avatar-wrapper">
@@ -104,12 +140,12 @@ function handleChangePassword() {
 
       <!-- 顯示模式 -->
       <template v-if="!isEditing">
-        <div class="profile-row"><span class="label">姓名</span><span class="value">{{ user.name }}</span></div>
-        <div class="profile-row"><span class="label">Email</span><span class="value">{{ user.email }}</span></div>
-        <div class="profile-row"><span class="label">電話</span><span class="value">{{ user.phone }}</span></div>
-        <div class="profile-row"><span class="label">生日</span><span class="value">{{ user.birthday }}</span></div>
-        <div class="profile-row"><span class="label">性別</span><span class="value">{{ user.gender }}</span></div>
-        <div class="profile-row"><span class="label">地址</span><span class="value">{{ user.address }}</span></div>
+        <div class="profile-row"><span class="label">姓名</span><span class="value">{{ user.name || '—' }}</span></div>
+        <div class="profile-row"><span class="label">Email</span><span class="value">{{ user.email || '—' }}</span></div>
+        <div class="profile-row"><span class="label">電話</span><span class="value">{{ user.phone || '—' }}</span></div>
+        <div v-if="user.birthday" class="profile-row"><span class="label">生日</span><span class="value">{{ user.birthday }}</span></div>
+        <div v-if="user.gender" class="profile-row"><span class="label">性別</span><span class="value">{{ user.gender }}</span></div>
+        <div v-if="user.address" class="profile-row"><span class="label">地址</span><span class="value">{{ user.address }}</span></div>
       </template>
 
       <!-- 編輯模式 -->
@@ -130,6 +166,15 @@ function handleChangePassword() {
           <button class="cancel-btn" @click="cancelEdit">取消</button>
         </div>
       </template>
+    </div>
+
+    <!-- 常用地址管理 -->
+    <div class="profile-card profile-card--link" @click="navigateTo('/member/addresses')">
+      <div class="card-header-row">
+        <h2 class="card-section-title">📍 常用地址管理</h2>
+        <span class="link-arrow">›</span>
+      </div>
+      <p class="password-hint">新增、編輯或刪除您的常用地址</p>
     </div>
 
     <!-- 修改密碼 -->
@@ -157,11 +202,14 @@ function handleChangePassword() {
     </div>
 
     <button class="logout-btn" @click="navigateTo('/login')">登出</button>
+    </template>
   </div>
 </template>
 
 <style scoped>
 .profile-page { padding: 16px; max-width: 430px; margin: 0 auto; }
+
+.loading-state { display: flex; align-items: center; justify-content: center; min-height: 200px; color: var(--color-text-secondary, #78716c); font-size: 14px; }
 
 .profile-header { text-align: center; margin-bottom: 20px; }
 .avatar-wrapper { position: relative; display: inline-block; }
@@ -177,6 +225,10 @@ function handleChangePassword() {
 .card-section-title { font-size: 15px; font-weight: 600; margin: 0; }
 .edit-btn { background: none; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 10px; font-size: 12px; color: #64748b; cursor: pointer; }
 .edit-btn:hover { border-color: #f59e0b; color: #f59e0b; }
+
+.profile-card--link { cursor: pointer; transition: background-color 0.15s; }
+.profile-card--link:hover { background-color: #fefce8; }
+.link-arrow { font-size: 20px; color: #94a3b8; font-weight: 300; }
 
 .profile-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f8fafc; }
 .profile-row:last-child { border-bottom: none; }

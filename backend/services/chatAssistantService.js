@@ -570,6 +570,31 @@ async function buildFormFeedbackPayload(session, userId, prismaClient = defaultP
 
   const feedbackContent = buildFeedbackContent(collectedFields);
   const contactInput = extractContactInputFromCollectedFields(collectedFields);
+
+  // 若聯絡欄位為空且使用者已登入，自動從會員資料補上
+  if (userId && (!contactInput.contactName || !contactInput.contactMobile || !contactInput.contactEmail)) {
+    try {
+      const account = await prismaClient.memberAccount.findUnique({
+        where: { id: userId },
+        select: { name: true, email: true, phone: true },
+      });
+      if (account) {
+        const { decryptField } = require('../utils/crypto');
+        if (!contactInput.contactName && account.name) {
+          contactInput.contactName = decryptField(account.name);
+        }
+        if (!contactInput.contactMobile && account.phone) {
+          contactInput.contactMobile = decryptField(account.phone);
+        }
+        if (!contactInput.contactEmail && account.email) {
+          contactInput.contactEmail = decryptField(account.email);
+        }
+      }
+    } catch (_) {
+      // 取得會員資料失敗不影響送出
+    }
+  }
+
   const contactFields = buildContactFields(contactInput);
 
   const serviceId = await resolveServiceId(form.serviceVendorId, prismaClient);
