@@ -129,7 +129,7 @@ function formatScheduled(iso: string): string {
   return new Date(iso).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
 }
 function getReservationStatusLabel(status: string): string {
-  const map: Record<string, string> = { PENDING_SELLER_APPROVAL: '⏳ 等待賣家確認', APPROVED_MEETUP: '✅ 已同意面交', ITEM_STORED_IN_711: '📦 已到店待取貨', COMPLETED: '🎉 交易完成', EXPIRED_RETURNED: '⚠️ 逾期退回', REJECTED: '❌ 已拒絕' }
+  const map: Record<string, string> = { PENDING_SELLER_APPROVAL: '⏳ 等待賣家確認', APPROVED_MEETUP: '✅ 已同意面交', APPROVED_STORE_PICKUP: '✅ 已同意代收，等待寄放', ITEM_STORED_IN_711: '📦 已到店待取貨', COMPLETED: '🎉 交易完成', EXPIRED_RETURNED: '⚠️ 逾期退回', REJECTED: '❌ 已拒絕' }
   return map[status] || status
 }
 async function confirmReservation(reservationId: string, newStatus: string) {
@@ -647,13 +647,27 @@ const allBadges = ref([
               <span v-if="m.senderId !== currentUserId && m.messageType === 'text'" class="msg-author">{{ m.senderName }}</span>
               <!-- 預約卡片 -->
               <div v-if="m.messageType === 'reservation_notice' && isJsonContent(m.content)" class="msg-reservation-card">
-                <p class="msg-reservation-title">🤝 面交預約</p>
+                <p class="msg-reservation-title">🤝 {{ parseReservation(m.content).pickupMethod === '門市代收' ? '門市代收預約' : '面交預約' }}</p>
                 <p class="msg-reservation-detail">📍 {{ parseReservation(m.content).pickupStore }}</p>
                 <p v-if="parseReservation(m.content).scheduledAt" class="msg-reservation-detail">⏰ {{ formatScheduled(parseReservation(m.content).scheduledAt) }}</p>
                 <p class="msg-reservation-status">{{ getReservationStatusLabel(parseReservation(m.content).status) }}</p>
+                <!-- 賣家：等待確認 → 同意/拒絕 -->
                 <div v-if="parseReservation(m.content).status === 'PENDING_SELLER_APPROVAL' && m.receiverId === currentUserId" class="msg-reservation-actions">
-                  <button class="msg-confirm-btn" @click="confirmReservation(parseReservation(m.content).reservationId, 'APPROVED_MEETUP')">✅ 同意面交</button>
+                  <button v-if="parseReservation(m.content).pickupMethod === '門市代收'" class="msg-confirm-btn" @click="confirmReservation(parseReservation(m.content).reservationId, 'APPROVED_STORE_PICKUP')">✅ 同意代收</button>
+                  <button v-else class="msg-confirm-btn" @click="confirmReservation(parseReservation(m.content).reservationId, 'APPROVED_MEETUP')">✅ 同意面交</button>
                   <button class="msg-reject-btn" @click="confirmReservation(parseReservation(m.content).reservationId, 'REJECTED')">❌ 拒絕</button>
+                </div>
+                <!-- 賣家：已同意代收 → 已寄放門市 -->
+                <div v-if="parseReservation(m.content).status === 'APPROVED_STORE_PICKUP' && m.receiverId === currentUserId" class="msg-reservation-actions">
+                  <button class="msg-confirm-btn" @click="confirmReservation(parseReservation(m.content).reservationId, 'ITEM_STORED_IN_711')">📦 已寄放門市</button>
+                </div>
+                <!-- 買家：面交已同意 → 確認已面交 -->
+                <div v-if="parseReservation(m.content).status === 'APPROVED_MEETUP' && m.senderId === currentUserId" class="msg-reservation-actions">
+                  <button class="msg-confirm-btn" @click="confirmReservation(parseReservation(m.content).reservationId, 'COMPLETED')">✅ 確認已面交</button>
+                </div>
+                <!-- 買家：已到店 → 確認已取貨 -->
+                <div v-if="parseReservation(m.content).status === 'ITEM_STORED_IN_711' && m.senderId === currentUserId" class="msg-reservation-actions">
+                  <button class="msg-confirm-btn" @click="confirmReservation(parseReservation(m.content).reservationId, 'COMPLETED')">✅ 確認已取貨</button>
                 </div>
               </div>
               <!-- 普通文字 -->
