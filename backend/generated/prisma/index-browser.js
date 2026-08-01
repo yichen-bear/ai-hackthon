@@ -431,7 +431,33 @@ exports.Prisma.ChatMessageScalarFieldEnum = {
   messageType: 'messageType',
   isRead: 'isRead',
   creTime: 'creTime',
-  group_id: 'group_id'
+  groupId: 'groupId'
+};
+
+exports.Prisma.CommunityGroupScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  icon: 'icon',
+  tags: 'tags',
+  description: 'description',
+  maxMembers: 'maxMembers',
+  activityDate: 'activityDate',
+  activityTime: 'activityTime',
+  activityLocation: 'activityLocation',
+  creatorId: 'creatorId',
+  creatorName: 'creatorName',
+  isDeleted: 'isDeleted',
+  creTime: 'creTime',
+  updTime: 'updTime'
+};
+
+exports.Prisma.GroupMemberScalarFieldEnum = {
+  id: 'id',
+  groupId: 'groupId',
+  userId: 'userId',
+  userName: 'userName',
+  joinedAt: 'joinedAt'
 };
 
 exports.Prisma.PickupReservationScalarFieldEnum = {
@@ -448,33 +474,8 @@ exports.Prisma.PickupReservationScalarFieldEnum = {
   scheduledAt: 'scheduledAt',
   creTime: 'creTime',
   updTime: 'updTime',
-  pickupDeadline: 'pickupDeadline'
-};
-
-exports.Prisma.Community_groupScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  type: 'type',
-  icon: 'icon',
-  tags: 'tags',
-  description: 'description',
-  max_members: 'max_members',
-  activity_date: 'activity_date',
-  activity_time: 'activity_time',
-  activity_location: 'activity_location',
-  creator_id: 'creator_id',
-  creator_name: 'creator_name',
-  is_deleted: 'is_deleted',
-  cre_time: 'cre_time',
-  upd_time: 'upd_time'
-};
-
-exports.Prisma.Group_memberScalarFieldEnum = {
-  id: 'id',
-  group_id: 'group_id',
-  user_id: 'user_id',
-  user_name: 'user_name',
-  joined_at: 'joined_at'
+  pickupDeadline: 'pickupDeadline',
+  storedAt: 'storedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -527,9 +528,9 @@ exports.Prisma.ModelName = {
   VendorUser: 'VendorUser',
   SecondhandListing: 'SecondhandListing',
   ChatMessage: 'ChatMessage',
-  PickupReservation: 'PickupReservation',
-  community_group: 'community_group',
-  group_member: 'group_member'
+  CommunityGroup: 'CommunityGroup',
+  GroupMember: 'GroupMember',
+  PickupReservation: 'PickupReservation'
 };
 
 /**
