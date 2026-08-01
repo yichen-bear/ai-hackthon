@@ -75,7 +75,7 @@ function showToast(msg: string) {
 // ─── 從 DB 載入活動（覆蓋 mock） ───
 async function fetchDbActivities() {
   try {
-    const data: any[] = await $fetch('/api/activities', { params: { status: 'open' } })
+    const data: any[] = await $fetch('/api/activities', { params: { status: 'all' } })
     if (data.length > 0) {
       activities.value = data.map(a => ({
         id: a.id,
@@ -88,14 +88,14 @@ async function fetchDbActivities() {
         fee: 0,
         maxParticipants: a.maxParticipants,
         currentParticipants: a.currentParticipants || 0,
-        waitlistCount: 0,
+        waitlistCount: a.waitlistCount || 0,
         checkedInCount: 0,
-        volunteersNeeded: 0,
-        volunteersAssigned: 0,
-        status: a.isFull ? 'full' : 'open',
+        volunteersNeeded: a.volunteersNeeded || 0,
+        volunteersAssigned: a.volunteersAssigned || 0,
+        status: a.status === 'completed' ? 'completed' : (a.isFull ? 'full' : a.status === 'closed' ? 'full' : 'open'),
         registrations: [],
       }))
-      // 載入每個活動的報名名單
+      // 載入每個活動的報名名單（含候補）
       for (const act of activities.value) {
         try {
           const detail: any = await $fetch(`/api/activities/${act.id}`)
@@ -107,11 +107,22 @@ async function fetchDbActivities() {
               registeredAt: new Date(r.registeredAt).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
               status: r.status === 'registered' ? 'confirmed' : r.status,
               specialNeeds: [],
-              source: 'app',
+              source: r.source || 'app',
               paymentMethod: '免費',
               amount: 0,
             }))
-            act.currentParticipants = detail.registrations.length
+            act.currentParticipants = detail.currentParticipants || detail.registrations.length
+            act.waitlistCount = detail.waitlistCount || 0
+          }
+          // 候補名單
+          if (detail.waitlist && detail.waitlist.length > 0) {
+            act.waitlist = detail.waitlist.map((r: any) => ({
+              id: r.id,
+              contactName: r.userName,
+              contactPhone: r.userPhone || '',
+              registeredAt: new Date(r.registeredAt).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+              source: r.source || 'app',
+            }))
           }
         } catch { /* skip */ }
       }
@@ -391,9 +402,16 @@ function closeActivity(act: ManagedActivity) {
   act.status = 'closed'
   showToast(`🔒 已截止：${act.name}`)
 }
-function completeActivity(act: ManagedActivity) {
-  act.status = 'completed'
-  act.registrations.forEach(r => { if (r.status === 'confirmed' || r.status === 'checked_in') r.status = 'completed' })
+async function completeActivity(act: ManagedActivity) {
+  try {
+    await $fetch(`/api/activities/${act.id}/complete`, { method: 'POST' })
+    act.status = 'completed'
+    act.registrations.forEach(r => { if (r.status === 'confirmed' || r.status === 'checked_in') r.status = 'completed' })
+    showToast(`🎉 活動完成：${act.name}`)
+  } catch {
+    showToast('❌ 操作失敗')
+  }
+}
   showToast(`🎉 活動完成：${act.name}`)
 }
 function sendNotification() {
@@ -495,6 +513,16 @@ function resetDemo() { location.reload() }
                 <p class="ea__reg-detail">📅 報名：{{ reg.registeredAt }} · {{ reg.paymentMethod }}</p>
                 <button v-if="reg.status !== 'completed'" class="ea__btn-sm ea__btn-sm--red" @click.stop="cancelReg(act, reg)">❌ 取消報名</button>
               </div>
+            </div>
+          </div>
+          <!-- 候補名單 -->
+          <div v-if="(act as any).waitlist && (act as any).waitlist.length > 0" class="ea__waitlist-section">
+            <h4 class="ea__waitlist-title">⏳ 候補名單（{{ (act as any).waitlist.length }} 人）</h4>
+            <div v-for="(w, idx) in (act as any).waitlist" :key="w.id" class="ea__waitlist-item">
+              <span class="ea__waitlist-num">#{{ idx + 1 }}</span>
+              <span class="ea__reg-name">{{ w.contactName }}</span>
+              <span class="ea__reg-source">{{ getSourceLabel(w.source) }}</span>
+              <span class="ea__reg-phone">{{ w.contactPhone }}</span>
             </div>
           </div>
         </div>
@@ -718,4 +746,9 @@ function resetDemo() { location.reload() }
 .toast-fade-enter-active, .toast-fade-leave-active { transition: all .3s ease; }
 .toast-fade-enter-from, .toast-fade-leave-to { opacity: 0; transform: translateX(-50%) translateY(16px); }
 .toast-fade-enter-to, .toast-fade-leave-from { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.ea__waitlist-section { margin-top: 12px; padding: 12px; background: #fef3c7; border-radius: 10px; border: 1px solid #fcd34d; }
+.ea__waitlist-title { font-size: 13px; font-weight: 600; color: #92400e; margin: 0 0 8px; }
+.ea__waitlist-item { display: flex; gap: 8px; align-items: center; padding: 4px 0; font-size: 12px; color: #78350f; }
+.ea__waitlist-num { font-weight: 700; min-width: 24px; }
 </style>

@@ -488,6 +488,9 @@ exports.Prisma.CommunityActivityScalarFieldEnum = {
   activityDate: 'activityDate',
   activityEndDate: 'activityEndDate',
   maxParticipants: 'maxParticipants',
+  extraParticipants: 'extraParticipants',
+  volunteersNeeded: 'volunteersNeeded',
+  volunteersAssigned: 'volunteersAssigned',
   status: 'status',
   imageUrl: 'imageUrl',
   organizerId: 'organizerId',
@@ -504,6 +507,7 @@ exports.Prisma.ActivityRegistrationScalarFieldEnum = {
   userName: 'userName',
   userPhone: 'userPhone',
   status: 'status',
+  source: 'source',
   registeredAt: 'registeredAt'
 };
 

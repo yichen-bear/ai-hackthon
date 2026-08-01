@@ -29440,10 +29440,16 @@ export namespace Prisma {
 
   export type CommunityActivityAvgAggregateOutputType = {
     maxParticipants: number | null
+    extraParticipants: number | null
+    volunteersNeeded: number | null
+    volunteersAssigned: number | null
   }
 
   export type CommunityActivitySumAggregateOutputType = {
     maxParticipants: number | null
+    extraParticipants: number | null
+    volunteersNeeded: number | null
+    volunteersAssigned: number | null
   }
 
   export type CommunityActivityMinAggregateOutputType = {
@@ -29455,6 +29461,9 @@ export namespace Prisma {
     activityDate: Date | null
     activityEndDate: Date | null
     maxParticipants: number | null
+    extraParticipants: number | null
+    volunteersNeeded: number | null
+    volunteersAssigned: number | null
     status: string | null
     imageUrl: string | null
     organizerId: string | null
@@ -29473,6 +29482,9 @@ export namespace Prisma {
     activityDate: Date | null
     activityEndDate: Date | null
     maxParticipants: number | null
+    extraParticipants: number | null
+    volunteersNeeded: number | null
+    volunteersAssigned: number | null
     status: string | null
     imageUrl: string | null
     organizerId: string | null
@@ -29491,6 +29503,9 @@ export namespace Prisma {
     activityDate: number
     activityEndDate: number
     maxParticipants: number
+    extraParticipants: number
+    volunteersNeeded: number
+    volunteersAssigned: number
     status: number
     imageUrl: number
     organizerId: number
@@ -29504,10 +29519,16 @@ export namespace Prisma {
 
   export type CommunityActivityAvgAggregateInputType = {
     maxParticipants?: true
+    extraParticipants?: true
+    volunteersNeeded?: true
+    volunteersAssigned?: true
   }
 
   export type CommunityActivitySumAggregateInputType = {
     maxParticipants?: true
+    extraParticipants?: true
+    volunteersNeeded?: true
+    volunteersAssigned?: true
   }
 
   export type CommunityActivityMinAggregateInputType = {
@@ -29519,6 +29540,9 @@ export namespace Prisma {
     activityDate?: true
     activityEndDate?: true
     maxParticipants?: true
+    extraParticipants?: true
+    volunteersNeeded?: true
+    volunteersAssigned?: true
     status?: true
     imageUrl?: true
     organizerId?: true
@@ -29537,6 +29561,9 @@ export namespace Prisma {
     activityDate?: true
     activityEndDate?: true
     maxParticipants?: true
+    extraParticipants?: true
+    volunteersNeeded?: true
+    volunteersAssigned?: true
     status?: true
     imageUrl?: true
     organizerId?: true
@@ -29555,6 +29582,9 @@ export namespace Prisma {
     activityDate?: true
     activityEndDate?: true
     maxParticipants?: true
+    extraParticipants?: true
+    volunteersNeeded?: true
+    volunteersAssigned?: true
     status?: true
     imageUrl?: true
     organizerId?: true
@@ -29660,6 +29690,9 @@ export namespace Prisma {
     activityDate: Date
     activityEndDate: Date | null
     maxParticipants: number
+    extraParticipants: number
+    volunteersNeeded: number
+    volunteersAssigned: number
     status: string
     imageUrl: string | null
     organizerId: string
@@ -29697,6 +29730,9 @@ export namespace Prisma {
     activityDate?: boolean
     activityEndDate?: boolean
     maxParticipants?: boolean
+    extraParticipants?: boolean
+    volunteersNeeded?: boolean
+    volunteersAssigned?: boolean
     status?: boolean
     imageUrl?: boolean
     organizerId?: boolean
@@ -29717,6 +29753,9 @@ export namespace Prisma {
     activityDate?: boolean
     activityEndDate?: boolean
     maxParticipants?: boolean
+    extraParticipants?: boolean
+    volunteersNeeded?: boolean
+    volunteersAssigned?: boolean
     status?: boolean
     imageUrl?: boolean
     organizerId?: boolean
@@ -29735,6 +29774,9 @@ export namespace Prisma {
     activityDate?: boolean
     activityEndDate?: boolean
     maxParticipants?: boolean
+    extraParticipants?: boolean
+    volunteersNeeded?: boolean
+    volunteersAssigned?: boolean
     status?: boolean
     imageUrl?: boolean
     organizerId?: boolean
@@ -29753,6 +29795,9 @@ export namespace Prisma {
     activityDate?: boolean
     activityEndDate?: boolean
     maxParticipants?: boolean
+    extraParticipants?: boolean
+    volunteersNeeded?: boolean
+    volunteersAssigned?: boolean
     status?: boolean
     imageUrl?: boolean
     organizerId?: boolean
@@ -29762,7 +29807,7 @@ export namespace Prisma {
     updTime?: boolean
   }
 
-  export type CommunityActivityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "category" | "location" | "activityDate" | "activityEndDate" | "maxParticipants" | "status" | "imageUrl" | "organizerId" | "organizerName" | "isDeleted" | "creTime" | "updTime", ExtArgs["result"]["communityActivity"]>
+  export type CommunityActivityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "category" | "location" | "activityDate" | "activityEndDate" | "maxParticipants" | "extraParticipants" | "volunteersNeeded" | "volunteersAssigned" | "status" | "imageUrl" | "organizerId" | "organizerName" | "isDeleted" | "creTime" | "updTime", ExtArgs["result"]["communityActivity"]>
   export type CommunityActivityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     registrations?: boolean | CommunityActivity$registrationsArgs<ExtArgs>
     _count?: boolean | CommunityActivityCountOutputTypeDefaultArgs<ExtArgs>
@@ -29784,6 +29829,9 @@ export namespace Prisma {
       activityDate: Date
       activityEndDate: Date | null
       maxParticipants: number
+      extraParticipants: number
+      volunteersNeeded: number
+      volunteersAssigned: number
       status: string
       imageUrl: string | null
       organizerId: string
@@ -30223,6 +30271,9 @@ export namespace Prisma {
     readonly activityDate: FieldRef<"CommunityActivity", 'DateTime'>
     readonly activityEndDate: FieldRef<"CommunityActivity", 'DateTime'>
     readonly maxParticipants: FieldRef<"CommunityActivity", 'Int'>
+    readonly extraParticipants: FieldRef<"CommunityActivity", 'Int'>
+    readonly volunteersNeeded: FieldRef<"CommunityActivity", 'Int'>
+    readonly volunteersAssigned: FieldRef<"CommunityActivity", 'Int'>
     readonly status: FieldRef<"CommunityActivity", 'String'>
     readonly imageUrl: FieldRef<"CommunityActivity", 'String'>
     readonly organizerId: FieldRef<"CommunityActivity", 'String'>
@@ -30682,6 +30733,7 @@ export namespace Prisma {
     userName: string | null
     userPhone: string | null
     status: string | null
+    source: string | null
     registeredAt: Date | null
   }
 
@@ -30692,6 +30744,7 @@ export namespace Prisma {
     userName: string | null
     userPhone: string | null
     status: string | null
+    source: string | null
     registeredAt: Date | null
   }
 
@@ -30702,6 +30755,7 @@ export namespace Prisma {
     userName: number
     userPhone: number
     status: number
+    source: number
     registeredAt: number
     _all: number
   }
@@ -30714,6 +30768,7 @@ export namespace Prisma {
     userName?: true
     userPhone?: true
     status?: true
+    source?: true
     registeredAt?: true
   }
 
@@ -30724,6 +30779,7 @@ export namespace Prisma {
     userName?: true
     userPhone?: true
     status?: true
+    source?: true
     registeredAt?: true
   }
 
@@ -30734,6 +30790,7 @@ export namespace Prisma {
     userName?: true
     userPhone?: true
     status?: true
+    source?: true
     registeredAt?: true
     _all?: true
   }
@@ -30817,6 +30874,7 @@ export namespace Prisma {
     userName: string
     userPhone: string | null
     status: string
+    source: string
     registeredAt: Date
     _count: ActivityRegistrationCountAggregateOutputType | null
     _min: ActivityRegistrationMinAggregateOutputType | null
@@ -30844,6 +30902,7 @@ export namespace Prisma {
     userName?: boolean
     userPhone?: boolean
     status?: boolean
+    source?: boolean
     registeredAt?: boolean
     activity?: boolean | CommunityActivityDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["activityRegistration"]>
@@ -30855,6 +30914,7 @@ export namespace Prisma {
     userName?: boolean
     userPhone?: boolean
     status?: boolean
+    source?: boolean
     registeredAt?: boolean
     activity?: boolean | CommunityActivityDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["activityRegistration"]>
@@ -30866,6 +30926,7 @@ export namespace Prisma {
     userName?: boolean
     userPhone?: boolean
     status?: boolean
+    source?: boolean
     registeredAt?: boolean
     activity?: boolean | CommunityActivityDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["activityRegistration"]>
@@ -30877,10 +30938,11 @@ export namespace Prisma {
     userName?: boolean
     userPhone?: boolean
     status?: boolean
+    source?: boolean
     registeredAt?: boolean
   }
 
-  export type ActivityRegistrationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "activityId" | "userId" | "userName" | "userPhone" | "status" | "registeredAt", ExtArgs["result"]["activityRegistration"]>
+  export type ActivityRegistrationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "activityId" | "userId" | "userName" | "userPhone" | "status" | "source" | "registeredAt", ExtArgs["result"]["activityRegistration"]>
   export type ActivityRegistrationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     activity?: boolean | CommunityActivityDefaultArgs<ExtArgs>
   }
@@ -30903,6 +30965,7 @@ export namespace Prisma {
       userName: string
       userPhone: string | null
       status: string
+      source: string
       registeredAt: Date
     }, ExtArgs["result"]["activityRegistration"]>
     composites: {}
@@ -31334,6 +31397,7 @@ export namespace Prisma {
     readonly userName: FieldRef<"ActivityRegistration", 'String'>
     readonly userPhone: FieldRef<"ActivityRegistration", 'String'>
     readonly status: FieldRef<"ActivityRegistration", 'String'>
+    readonly source: FieldRef<"ActivityRegistration", 'String'>
     readonly registeredAt: FieldRef<"ActivityRegistration", 'DateTime'>
   }
     
@@ -33290,6 +33354,9 @@ export namespace Prisma {
     activityDate: 'activityDate',
     activityEndDate: 'activityEndDate',
     maxParticipants: 'maxParticipants',
+    extraParticipants: 'extraParticipants',
+    volunteersNeeded: 'volunteersNeeded',
+    volunteersAssigned: 'volunteersAssigned',
     status: 'status',
     imageUrl: 'imageUrl',
     organizerId: 'organizerId',
@@ -33309,6 +33376,7 @@ export namespace Prisma {
     userName: 'userName',
     userPhone: 'userPhone',
     status: 'status',
+    source: 'source',
     registeredAt: 'registeredAt'
   };
 
@@ -35730,6 +35798,9 @@ export namespace Prisma {
     activityDate?: DateTimeFilter<"CommunityActivity"> | Date | string
     activityEndDate?: DateTimeNullableFilter<"CommunityActivity"> | Date | string | null
     maxParticipants?: IntFilter<"CommunityActivity"> | number
+    extraParticipants?: IntFilter<"CommunityActivity"> | number
+    volunteersNeeded?: IntFilter<"CommunityActivity"> | number
+    volunteersAssigned?: IntFilter<"CommunityActivity"> | number
     status?: StringFilter<"CommunityActivity"> | string
     imageUrl?: StringNullableFilter<"CommunityActivity"> | string | null
     organizerId?: UuidFilter<"CommunityActivity"> | string
@@ -35749,6 +35820,9 @@ export namespace Prisma {
     activityDate?: SortOrder
     activityEndDate?: SortOrderInput | SortOrder
     maxParticipants?: SortOrder
+    extraParticipants?: SortOrder
+    volunteersNeeded?: SortOrder
+    volunteersAssigned?: SortOrder
     status?: SortOrder
     imageUrl?: SortOrderInput | SortOrder
     organizerId?: SortOrder
@@ -35771,6 +35845,9 @@ export namespace Prisma {
     activityDate?: DateTimeFilter<"CommunityActivity"> | Date | string
     activityEndDate?: DateTimeNullableFilter<"CommunityActivity"> | Date | string | null
     maxParticipants?: IntFilter<"CommunityActivity"> | number
+    extraParticipants?: IntFilter<"CommunityActivity"> | number
+    volunteersNeeded?: IntFilter<"CommunityActivity"> | number
+    volunteersAssigned?: IntFilter<"CommunityActivity"> | number
     status?: StringFilter<"CommunityActivity"> | string
     imageUrl?: StringNullableFilter<"CommunityActivity"> | string | null
     organizerId?: UuidFilter<"CommunityActivity"> | string
@@ -35790,6 +35867,9 @@ export namespace Prisma {
     activityDate?: SortOrder
     activityEndDate?: SortOrderInput | SortOrder
     maxParticipants?: SortOrder
+    extraParticipants?: SortOrder
+    volunteersNeeded?: SortOrder
+    volunteersAssigned?: SortOrder
     status?: SortOrder
     imageUrl?: SortOrderInput | SortOrder
     organizerId?: SortOrder
@@ -35816,6 +35896,9 @@ export namespace Prisma {
     activityDate?: DateTimeWithAggregatesFilter<"CommunityActivity"> | Date | string
     activityEndDate?: DateTimeNullableWithAggregatesFilter<"CommunityActivity"> | Date | string | null
     maxParticipants?: IntWithAggregatesFilter<"CommunityActivity"> | number
+    extraParticipants?: IntWithAggregatesFilter<"CommunityActivity"> | number
+    volunteersNeeded?: IntWithAggregatesFilter<"CommunityActivity"> | number
+    volunteersAssigned?: IntWithAggregatesFilter<"CommunityActivity"> | number
     status?: StringWithAggregatesFilter<"CommunityActivity"> | string
     imageUrl?: StringNullableWithAggregatesFilter<"CommunityActivity"> | string | null
     organizerId?: UuidWithAggregatesFilter<"CommunityActivity"> | string
@@ -35835,6 +35918,7 @@ export namespace Prisma {
     userName?: StringFilter<"ActivityRegistration"> | string
     userPhone?: StringNullableFilter<"ActivityRegistration"> | string | null
     status?: StringFilter<"ActivityRegistration"> | string
+    source?: StringFilter<"ActivityRegistration"> | string
     registeredAt?: DateTimeFilter<"ActivityRegistration"> | Date | string
     activity?: XOR<CommunityActivityScalarRelationFilter, CommunityActivityWhereInput>
   }
@@ -35846,6 +35930,7 @@ export namespace Prisma {
     userName?: SortOrder
     userPhone?: SortOrderInput | SortOrder
     status?: SortOrder
+    source?: SortOrder
     registeredAt?: SortOrder
     activity?: CommunityActivityOrderByWithRelationInput
   }
@@ -35861,6 +35946,7 @@ export namespace Prisma {
     userName?: StringFilter<"ActivityRegistration"> | string
     userPhone?: StringNullableFilter<"ActivityRegistration"> | string | null
     status?: StringFilter<"ActivityRegistration"> | string
+    source?: StringFilter<"ActivityRegistration"> | string
     registeredAt?: DateTimeFilter<"ActivityRegistration"> | Date | string
     activity?: XOR<CommunityActivityScalarRelationFilter, CommunityActivityWhereInput>
   }, "id" | "activityId_userId">
@@ -35872,6 +35958,7 @@ export namespace Prisma {
     userName?: SortOrder
     userPhone?: SortOrderInput | SortOrder
     status?: SortOrder
+    source?: SortOrder
     registeredAt?: SortOrder
     _count?: ActivityRegistrationCountOrderByAggregateInput
     _max?: ActivityRegistrationMaxOrderByAggregateInput
@@ -35888,6 +35975,7 @@ export namespace Prisma {
     userName?: StringWithAggregatesFilter<"ActivityRegistration"> | string
     userPhone?: StringNullableWithAggregatesFilter<"ActivityRegistration"> | string | null
     status?: StringWithAggregatesFilter<"ActivityRegistration"> | string
+    source?: StringWithAggregatesFilter<"ActivityRegistration"> | string
     registeredAt?: DateTimeWithAggregatesFilter<"ActivityRegistration"> | Date | string
   }
 
@@ -38539,6 +38627,9 @@ export namespace Prisma {
     activityDate: Date | string
     activityEndDate?: Date | string | null
     maxParticipants?: number
+    extraParticipants?: number
+    volunteersNeeded?: number
+    volunteersAssigned?: number
     status?: string
     imageUrl?: string | null
     organizerId: string
@@ -38558,6 +38649,9 @@ export namespace Prisma {
     activityDate: Date | string
     activityEndDate?: Date | string | null
     maxParticipants?: number
+    extraParticipants?: number
+    volunteersNeeded?: number
+    volunteersAssigned?: number
     status?: string
     imageUrl?: string | null
     organizerId: string
@@ -38577,6 +38671,9 @@ export namespace Prisma {
     activityDate?: DateTimeFieldUpdateOperationsInput | Date | string
     activityEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     maxParticipants?: IntFieldUpdateOperationsInput | number
+    extraParticipants?: IntFieldUpdateOperationsInput | number
+    volunteersNeeded?: IntFieldUpdateOperationsInput | number
+    volunteersAssigned?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     organizerId?: StringFieldUpdateOperationsInput | string
@@ -38596,6 +38693,9 @@ export namespace Prisma {
     activityDate?: DateTimeFieldUpdateOperationsInput | Date | string
     activityEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     maxParticipants?: IntFieldUpdateOperationsInput | number
+    extraParticipants?: IntFieldUpdateOperationsInput | number
+    volunteersNeeded?: IntFieldUpdateOperationsInput | number
+    volunteersAssigned?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     organizerId?: StringFieldUpdateOperationsInput | string
@@ -38615,6 +38715,9 @@ export namespace Prisma {
     activityDate: Date | string
     activityEndDate?: Date | string | null
     maxParticipants?: number
+    extraParticipants?: number
+    volunteersNeeded?: number
+    volunteersAssigned?: number
     status?: string
     imageUrl?: string | null
     organizerId: string
@@ -38633,6 +38736,9 @@ export namespace Prisma {
     activityDate?: DateTimeFieldUpdateOperationsInput | Date | string
     activityEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     maxParticipants?: IntFieldUpdateOperationsInput | number
+    extraParticipants?: IntFieldUpdateOperationsInput | number
+    volunteersNeeded?: IntFieldUpdateOperationsInput | number
+    volunteersAssigned?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     organizerId?: StringFieldUpdateOperationsInput | string
@@ -38651,6 +38757,9 @@ export namespace Prisma {
     activityDate?: DateTimeFieldUpdateOperationsInput | Date | string
     activityEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     maxParticipants?: IntFieldUpdateOperationsInput | number
+    extraParticipants?: IntFieldUpdateOperationsInput | number
+    volunteersNeeded?: IntFieldUpdateOperationsInput | number
+    volunteersAssigned?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     organizerId?: StringFieldUpdateOperationsInput | string
@@ -38666,6 +38775,7 @@ export namespace Prisma {
     userName: string
     userPhone?: string | null
     status?: string
+    source?: string
     registeredAt?: Date | string
     activity: CommunityActivityCreateNestedOneWithoutRegistrationsInput
   }
@@ -38677,6 +38787,7 @@ export namespace Prisma {
     userName: string
     userPhone?: string | null
     status?: string
+    source?: string
     registeredAt?: Date | string
   }
 
@@ -38686,6 +38797,7 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     userPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     activity?: CommunityActivityUpdateOneRequiredWithoutRegistrationsNestedInput
   }
@@ -38697,6 +38809,7 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     userPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -38707,6 +38820,7 @@ export namespace Prisma {
     userName: string
     userPhone?: string | null
     status?: string
+    source?: string
     registeredAt?: Date | string
   }
 
@@ -38716,6 +38830,7 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     userPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -38726,6 +38841,7 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     userPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -40749,6 +40865,9 @@ export namespace Prisma {
     activityDate?: SortOrder
     activityEndDate?: SortOrder
     maxParticipants?: SortOrder
+    extraParticipants?: SortOrder
+    volunteersNeeded?: SortOrder
+    volunteersAssigned?: SortOrder
     status?: SortOrder
     imageUrl?: SortOrder
     organizerId?: SortOrder
@@ -40760,6 +40879,9 @@ export namespace Prisma {
 
   export type CommunityActivityAvgOrderByAggregateInput = {
     maxParticipants?: SortOrder
+    extraParticipants?: SortOrder
+    volunteersNeeded?: SortOrder
+    volunteersAssigned?: SortOrder
   }
 
   export type CommunityActivityMaxOrderByAggregateInput = {
@@ -40771,6 +40893,9 @@ export namespace Prisma {
     activityDate?: SortOrder
     activityEndDate?: SortOrder
     maxParticipants?: SortOrder
+    extraParticipants?: SortOrder
+    volunteersNeeded?: SortOrder
+    volunteersAssigned?: SortOrder
     status?: SortOrder
     imageUrl?: SortOrder
     organizerId?: SortOrder
@@ -40789,6 +40914,9 @@ export namespace Prisma {
     activityDate?: SortOrder
     activityEndDate?: SortOrder
     maxParticipants?: SortOrder
+    extraParticipants?: SortOrder
+    volunteersNeeded?: SortOrder
+    volunteersAssigned?: SortOrder
     status?: SortOrder
     imageUrl?: SortOrder
     organizerId?: SortOrder
@@ -40800,6 +40928,9 @@ export namespace Prisma {
 
   export type CommunityActivitySumOrderByAggregateInput = {
     maxParticipants?: SortOrder
+    extraParticipants?: SortOrder
+    volunteersNeeded?: SortOrder
+    volunteersAssigned?: SortOrder
   }
 
   export type CommunityActivityScalarRelationFilter = {
@@ -40819,6 +40950,7 @@ export namespace Prisma {
     userName?: SortOrder
     userPhone?: SortOrder
     status?: SortOrder
+    source?: SortOrder
     registeredAt?: SortOrder
   }
 
@@ -40829,6 +40961,7 @@ export namespace Prisma {
     userName?: SortOrder
     userPhone?: SortOrder
     status?: SortOrder
+    source?: SortOrder
     registeredAt?: SortOrder
   }
 
@@ -40839,6 +40972,7 @@ export namespace Prisma {
     userName?: SortOrder
     userPhone?: SortOrder
     status?: SortOrder
+    source?: SortOrder
     registeredAt?: SortOrder
   }
 
@@ -45796,6 +45930,7 @@ export namespace Prisma {
     userName: string
     userPhone?: string | null
     status?: string
+    source?: string
     registeredAt?: Date | string
   }
 
@@ -45805,6 +45940,7 @@ export namespace Prisma {
     userName: string
     userPhone?: string | null
     status?: string
+    source?: string
     registeredAt?: Date | string
   }
 
@@ -45844,6 +45980,7 @@ export namespace Prisma {
     userName?: StringFilter<"ActivityRegistration"> | string
     userPhone?: StringNullableFilter<"ActivityRegistration"> | string | null
     status?: StringFilter<"ActivityRegistration"> | string
+    source?: StringFilter<"ActivityRegistration"> | string
     registeredAt?: DateTimeFilter<"ActivityRegistration"> | Date | string
   }
 
@@ -45856,6 +45993,9 @@ export namespace Prisma {
     activityDate: Date | string
     activityEndDate?: Date | string | null
     maxParticipants?: number
+    extraParticipants?: number
+    volunteersNeeded?: number
+    volunteersAssigned?: number
     status?: string
     imageUrl?: string | null
     organizerId: string
@@ -45874,6 +46014,9 @@ export namespace Prisma {
     activityDate: Date | string
     activityEndDate?: Date | string | null
     maxParticipants?: number
+    extraParticipants?: number
+    volunteersNeeded?: number
+    volunteersAssigned?: number
     status?: string
     imageUrl?: string | null
     organizerId: string
@@ -45908,6 +46051,9 @@ export namespace Prisma {
     activityDate?: DateTimeFieldUpdateOperationsInput | Date | string
     activityEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     maxParticipants?: IntFieldUpdateOperationsInput | number
+    extraParticipants?: IntFieldUpdateOperationsInput | number
+    volunteersNeeded?: IntFieldUpdateOperationsInput | number
+    volunteersAssigned?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     organizerId?: StringFieldUpdateOperationsInput | string
@@ -45926,6 +46072,9 @@ export namespace Prisma {
     activityDate?: DateTimeFieldUpdateOperationsInput | Date | string
     activityEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     maxParticipants?: IntFieldUpdateOperationsInput | number
+    extraParticipants?: IntFieldUpdateOperationsInput | number
+    volunteersNeeded?: IntFieldUpdateOperationsInput | number
+    volunteersAssigned?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     organizerId?: StringFieldUpdateOperationsInput | string
@@ -47247,6 +47396,7 @@ export namespace Prisma {
     userName: string
     userPhone?: string | null
     status?: string
+    source?: string
     registeredAt?: Date | string
   }
 
@@ -47256,6 +47406,7 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     userPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -47265,6 +47416,7 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     userPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -47274,6 +47426,7 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     userPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
     registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
