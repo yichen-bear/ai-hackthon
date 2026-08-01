@@ -205,16 +205,16 @@ function handleTicketUse(ticketId: string) {
     </nav>
 
     <main class="transport-page" role="main" aria-label="行模組">
-      <!-- 情境智慧推播（所有頁面都顯示） -->
-      <TransportContextPush
-        :suggestions="mockSuggestions"
-        @plan-route="handlePlanRoute"
-        @call-ride="handleCallRide"
-        @dismiss="handleDismiss"
-      />
 
       <!-- 路線規劃 -->
       <template v-if="activeNav === 'route'">
+        <!-- AI 情境推薦（僅路線頁顯示） -->
+        <TransportContextPush
+          :suggestions="mockSuggestions"
+          @plan-route="handlePlanRoute"
+          @call-ride="handleCallRide"
+          @dismiss="handleDismiss"
+        />
         <TransportFavoriteRoutes
           :routes="mockFavoriteRoutes"
           @select-route="handleSelectRoute"

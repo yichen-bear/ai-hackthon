@@ -7,4 +7,9 @@ export default defineNuxtConfig({
 	tailwindcss: {
 		configPath: "tailwind.config.ts",
 	},
+	runtimeConfig: {
+		public: {
+			googleMapsKey: process.env.NUXT_PUBLIC_GOOGLE_MAPS_KEY || '',
+		},
+	},
 });
