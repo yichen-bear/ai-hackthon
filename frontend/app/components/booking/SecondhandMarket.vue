@@ -35,8 +35,8 @@ const activeCategory = ref<ItemCategory>('all')
 const items = ref<SecondhandItem[]>([])
 const isLoading = ref(false)
 
-// 模擬當前用戶
-const currentUser = { id: 'user-001', name: '沈小姐' }
+// 模擬當前用戶（使用 UUID 格式以匹配 DB）
+const currentUser = { id: '00000000-0000-0000-0000-000000000001', name: '沈小姐' }
 
 // ─── 取得商品列表 ───
 async function fetchListings() {
@@ -45,13 +45,12 @@ async function fetchListings() {
     const data: any = await $fetch('/api/listings', { params: { category: activeCategory.value } })
     items.value = data
   } catch {
-    // fallback mock
+    // fallback mock（API 不可用時）
     items.value = [
-      { id: 'sh-1', productName: '嬰兒推車（九成新）', imageUrl: null, price: 800, isFree: false, sellerName: '王媽媽', sellerId: 'user-002', pickupStore: '7-11 信義門市', pickupMethod: '門市面交', carbonSaved: 5.2, category: 'baby', creTime: new Date(Date.now() - 172800000).toISOString() },
-      { id: 'sh-2', productName: '小米空氣清淨機', imageUrl: null, price: 1200, isFree: false, sellerName: '李先生', sellerId: 'user-003', pickupStore: '7-11 松山門市', pickupMethod: '門市代放', carbonSaved: 8.1, category: 'electronics', creTime: new Date(Date.now() - 86400000).toISOString() },
-      { id: 'sh-3', productName: '兒童繪本套組 (20本)', imageUrl: null, price: 0, isFree: true, sellerName: '陳老師', sellerId: 'user-004', pickupStore: '7-11 大安門市', pickupMethod: '門市面交', carbonSaved: 3.0, category: 'baby', creTime: new Date(Date.now() - 10800000).toISOString() },
-      { id: 'sh-4', productName: '瑜珈墊 + 彈力帶', imageUrl: null, price: 0, isFree: true, sellerName: '林小姐', sellerId: 'user-005', pickupStore: '7-11 忠孝門市', pickupMethod: '門市代放', carbonSaved: 1.5, category: 'household', creTime: new Date(Date.now() - 21600000).toISOString() },
-      { id: 'sh-5', productName: '折疊曬衣架', imageUrl: null, price: 150, isFree: false, sellerName: '趙太太', sellerId: 'user-006', pickupStore: '7-11 信義門市', pickupMethod: '門市面交', carbonSaved: 2.0, category: 'household', creTime: new Date(Date.now() - 86400000).toISOString() },
+      { id: '00000000-0000-0000-0000-100000000001', productName: '嬰兒推車（九成新）', imageUrl: null, price: 800, isFree: false, sellerName: '王媽媽', sellerId: '00000000-0000-0000-0000-000000000002', pickupStore: '7-11 信義門市', pickupMethod: '門市面交', carbonSaved: 5.2, category: 'baby', creTime: new Date(Date.now() - 172800000).toISOString() },
+      { id: '00000000-0000-0000-0000-100000000002', productName: '小米空氣清淨機', imageUrl: null, price: 1200, isFree: false, sellerName: '李先生', sellerId: '00000000-0000-0000-0000-000000000003', pickupStore: '7-11 松山門市', pickupMethod: '門市代放', carbonSaved: 8.1, category: 'electronics', creTime: new Date(Date.now() - 86400000).toISOString() },
+      { id: '00000000-0000-0000-0000-100000000003', productName: '兒童繪本套組 (20本)', imageUrl: null, price: 0, isFree: true, sellerName: '陳老師', sellerId: '00000000-0000-0000-0000-000000000004', pickupStore: '7-11 大安門市', pickupMethod: '門市面交', carbonSaved: 3.0, category: 'baby', creTime: new Date(Date.now() - 10800000).toISOString() },
+      { id: '00000000-0000-0000-0000-100000000004', productName: '瑜珈墊 + 彈力帶', imageUrl: null, price: 0, isFree: true, sellerName: '林小姐', sellerId: '00000000-0000-0000-0000-000000000005', pickupStore: '7-11 忠孝門市', pickupMethod: '門市代放', carbonSaved: 1.5, category: 'household', creTime: new Date(Date.now() - 21600000).toISOString() },
     ]
   }
   isLoading.value = false
@@ -107,7 +106,7 @@ async function handlePost() {
         productName: postForm.value.productName,
         description: postForm.value.description,
         price: postForm.value.isFree ? 0 : postForm.value.price,
-        isFree: postForm.value.isFree,
+        isFree: postForm.value.isFree || postForm.value.price === 0,
         category: postForm.value.category,
         imageUrl,
         pickupStore: postForm.value.pickupStore,
@@ -115,10 +114,14 @@ async function handlePost() {
         carbonSaved: Math.round(Math.random() * 5 + 1),
       },
     })
+    alert('✅ 刊登成功！')
     showPostForm.value = false
     resetPostForm()
-    fetchListings()
-  } catch { /* silent */ }
+    await fetchListings()
+  } catch (e: any) {
+    console.error('刊登失敗:', e)
+    alert('❌ 刊登失敗：' + (e?.data?.error || e?.message || '請確認後端已啟動'))
+  }
   isPosting.value = false
 }
 
@@ -138,7 +141,10 @@ async function handleMessage(item: SecondhandItem) {
       body: { senderId: currentUser.id, senderName: currentUser.name, receiverId: item.sellerId, receiverName: item.sellerName, listingId: item.id, content: msg },
     })
     alert('✅ 訊息已發送！可在會員中心「私訊」查看回覆。')
-  } catch { alert('發送失敗，請稍後再試') }
+  } catch (e: any) {
+    console.error('私訊失敗:', e)
+    alert('❌ 發送失敗：' + (e?.data?.error || e?.message || '請確認後端已啟動'))
+  }
 }
 
 // ─── 預約面交 ───
@@ -151,7 +157,10 @@ async function handleReserve(item: SecondhandItem) {
     })
     alert(`✅ 已預約！賣家 ${item.sellerName} 會收到通知。`)
     fetchListings()
-  } catch { alert('預約失敗，請稍後再試') }
+  } catch (e: any) {
+    console.error('預約失敗:', e)
+    alert('❌ 預約失敗：' + (e?.data?.error || e?.message || '請確認後端已啟動'))
+  }
 }
 
 // 統計
@@ -281,6 +290,7 @@ function timeAgo(iso: string): string {
           <button class="sh__form-submit" :disabled="!postForm.productName || isPosting" @click="handlePost">
             {{ isPosting ? '刊登中...' : '確認刊登' }}
           </button>
+          <button class="sh__form-cancel" @click="showPostForm = false; resetPostForm()">取消</button>
         </div>
       </div>
     </Teleport>
@@ -342,6 +352,7 @@ function timeAgo(iso: string): string {
 .sh__method--active { border-color: #16a34a; background: #ecfdf5; color: #16a34a; }
 .sh__form-submit { width: 100%; padding: 14px; background: #16a34a; color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 8px; }
 .sh__form-submit:disabled { opacity: .5; cursor: not-allowed; }
+.sh__form-cancel { width: 100%; padding: 12px; background: transparent; border: 1.5px solid #e2e8f0; border-radius: 12px; font-size: 13px; font-weight: 600; color: #78716c; cursor: pointer; margin-top: 8px; }
 
 /* Image upload */
 .sh__image-upload { position: relative; }
