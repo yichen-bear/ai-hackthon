@@ -11,6 +11,7 @@ router.get('/my', async (req, res) => {
     const memberships = await prisma.groupMember.findMany({
       where: { userId },
       include: { group: true },
+      distinct: ['groupId'],
     })
 
     const groups = await Promise.all(memberships.map(async (m) => {
