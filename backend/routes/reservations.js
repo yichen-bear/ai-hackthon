@@ -104,25 +104,25 @@ router.patch('/:id', async (req, res) => {
       })
     }
 
-    // 發送狀態更新通知
+    // 在原對話中發送狀態通知（由賣家發給買家，在同一個聊天室）
     const statusMsgs = {
-      APPROVED_MEETUP: '✅ 賣家已同意面交！請依約定時間前往。',
-      ITEM_STORED_IN_711: '📦 賣家已將商品寄放門市，請於 7 天內前往取貨。',
+      APPROVED_MEETUP: '✅ 已同意面交！請依約定時間前往取貨。',
+      ITEM_STORED_IN_711: '📦 商品已寄放門市，請於 7 天內前往取貨。',
       COMPLETED: '🎉 交易完成！感謝使用 i二手。',
-      EXPIRED_RETURNED: '⚠️ 買家逾期未取貨，商品已安排退回，請賣家前往取回。',
-      REJECTED: '❌ 賣家已拒絕此交易。',
+      EXPIRED_RETURNED: '⚠️ 逾期未取貨，商品將退回。',
+      REJECTED: '❌ 已拒絕此交易。',
     }
 
     if (statusMsgs[status]) {
       await prisma.chatMessage.create({
         data: {
-          senderId: '00000000-0000-0000-0000-ffffffffffff',
-          senderName: '系統通知',
+          senderId: reservation.sellerId,
+          senderName: reservation.sellerName,
           receiverId: reservation.buyerId,
           receiverName: reservation.buyerName,
           listingId: reservation.listingId,
           content: statusMsgs[status],
-          messageType: 'system',
+          messageType: 'text',
         },
       })
     }
