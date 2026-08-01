@@ -359,13 +359,13 @@ exports.Prisma.MemberAccountScalarFieldEnum = {
   name: 'name',
   nameHash: 'nameHash',
   passwordHash: 'passwordHash',
-  communityNickname: 'communityNickname',
   status: 'status',
   isDeleted: 'isDeleted',
   creId: 'creId',
   creTime: 'creTime',
   updId: 'updId',
-  updTime: 'updTime'
+  updTime: 'updTime',
+  communityNickname: 'communityNickname'
 };
 
 exports.Prisma.MemberAddressScalarFieldEnum = {
@@ -435,6 +435,24 @@ exports.Prisma.ChatMessageScalarFieldEnum = {
   groupId: 'groupId'
 };
 
+exports.Prisma.PickupReservationScalarFieldEnum = {
+  id: 'id',
+  listingId: 'listingId',
+  buyerId: 'buyerId',
+  buyerName: 'buyerName',
+  buyerPhone: 'buyerPhone',
+  sellerId: 'sellerId',
+  sellerName: 'sellerName',
+  pickupStore: 'pickupStore',
+  pickupMethod: 'pickupMethod',
+  status: 'status',
+  scheduledAt: 'scheduledAt',
+  creTime: 'creTime',
+  updTime: 'updTime',
+  pickupDeadline: 'pickupDeadline',
+  storedAt: 'storedAt'
+};
+
 exports.Prisma.CommunityGroupScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -461,24 +479,6 @@ exports.Prisma.GroupMemberScalarFieldEnum = {
   joinedAt: 'joinedAt'
 };
 
-exports.Prisma.PickupReservationScalarFieldEnum = {
-  id: 'id',
-  listingId: 'listingId',
-  buyerId: 'buyerId',
-  buyerName: 'buyerName',
-  buyerPhone: 'buyerPhone',
-  sellerId: 'sellerId',
-  sellerName: 'sellerName',
-  pickupStore: 'pickupStore',
-  pickupMethod: 'pickupMethod',
-  status: 'status',
-  scheduledAt: 'scheduledAt',
-  creTime: 'creTime',
-  updTime: 'updTime',
-  pickupDeadline: 'pickupDeadline',
-  storedAt: 'storedAt'
-};
-
 exports.Prisma.CommunityActivityScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -488,16 +488,16 @@ exports.Prisma.CommunityActivityScalarFieldEnum = {
   activityDate: 'activityDate',
   activityEndDate: 'activityEndDate',
   maxParticipants: 'maxParticipants',
-  extraParticipants: 'extraParticipants',
-  volunteersNeeded: 'volunteersNeeded',
-  volunteersAssigned: 'volunteersAssigned',
   status: 'status',
   imageUrl: 'imageUrl',
   organizerId: 'organizerId',
   organizerName: 'organizerName',
   isDeleted: 'isDeleted',
   creTime: 'creTime',
-  updTime: 'updTime'
+  updTime: 'updTime',
+  extraParticipants: 'extraParticipants',
+  volunteersAssigned: 'volunteersAssigned',
+  volunteersNeeded: 'volunteersNeeded'
 };
 
 exports.Prisma.ActivityRegistrationScalarFieldEnum = {
@@ -507,8 +507,9 @@ exports.Prisma.ActivityRegistrationScalarFieldEnum = {
   userName: 'userName',
   userPhone: 'userPhone',
   status: 'status',
+  registeredAt: 'registeredAt',
   source: 'source',
-  registeredAt: 'registeredAt'
+  special_needs: 'special_needs'
 };
 
 exports.Prisma.CommunityQuestionScalarFieldEnum = {
@@ -524,6 +525,33 @@ exports.Prisma.CommunityQuestionScalarFieldEnum = {
   status: 'status',
   isDeleted: 'isDeleted',
   creTime: 'creTime'
+};
+
+exports.Prisma.RestaurantQueueScalarFieldEnum = {
+  id: 'id',
+  placeId: 'placeId',
+  name: 'name',
+  totalTables: 'totalTables',
+  emptyTables: 'emptyTables',
+  waitingGroups: 'waitingGroups',
+  estimatedMinutes: 'estimatedMinutes',
+  avgServiceMinutes: 'avgServiceMinutes',
+  isOpen: 'isOpen',
+  creTime: 'creTime',
+  updTime: 'updTime'
+};
+
+exports.Prisma.QueueEntryScalarFieldEnum = {
+  id: 'id',
+  queueId: 'queueId',
+  ticketNumber: 'ticketNumber',
+  partySize: 'partySize',
+  customerName: 'customerName',
+  customerPhone: 'customerPhone',
+  note: 'note',
+  status: 'status',
+  creTime: 'creTime',
+  updTime: 'updTime'
 };
 
 exports.Prisma.SortOrder = {
@@ -576,12 +604,14 @@ exports.Prisma.ModelName = {
   VendorUser: 'VendorUser',
   SecondhandListing: 'SecondhandListing',
   ChatMessage: 'ChatMessage',
+  PickupReservation: 'PickupReservation',
   CommunityGroup: 'CommunityGroup',
   GroupMember: 'GroupMember',
-  PickupReservation: 'PickupReservation',
   CommunityActivity: 'CommunityActivity',
   ActivityRegistration: 'ActivityRegistration',
-  CommunityQuestion: 'CommunityQuestion'
+  CommunityQuestion: 'CommunityQuestion',
+  RestaurantQueue: 'RestaurantQueue',
+  QueueEntry: 'QueueEntry'
 };
 
 /**
