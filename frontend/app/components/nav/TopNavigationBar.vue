@@ -78,27 +78,17 @@ onMounted(() => {
   getLocation() // 自動定位
 })
 
-// ---------- 登入者（從 API 取得） ----------
-const user = ref({
-  name: '',
-  avatar: '',
-  isLogin: false,
-})
+// ---------- 登入者（從 composable 取得） ----------
+const { currentUser, isAuthenticated, init: initUser } = useCurrentUser()
 
-async function fetchUser() {
-  try {
-    const res = await $fetch<{ name?: string; role?: string }>('/api/auth/me', {
-      credentials: 'include',
-    })
-    user.value.isLogin = true
-    user.value.name = res.name || '會員'
-  } catch {
-    user.value.isLogin = false
-  }
-}
+const user = computed(() => ({
+  name: currentUser.value.name,
+  avatar: '',
+  isLogin: isAuthenticated.value,
+}))
 
 onMounted(() => {
-  fetchUser()
+  initUser()
 })
 
 // ---------- 下拉選單狀態 ----------
