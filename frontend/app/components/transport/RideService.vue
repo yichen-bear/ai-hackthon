@@ -166,7 +166,7 @@ async function handleDispatch() {
   startCountdown(driverInfo.value.eta)
 }
 
-async async function handleCancel() {
+async function handleCancel() {
   stopCountdown()
   if (currentRideId.value) {
     try { await $fetch(`/api/rides/${currentRideId.value}/cancel`, { method: 'PATCH' }) } catch {}
