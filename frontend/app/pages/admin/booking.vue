@@ -471,6 +471,10 @@ const regionDeliveredCount = computed(() => regionRequests.value.filter(r => r.s
 const storeTab = ref(0)
 const regionTab = ref(0)
 
+// 支援 ?tab=0/1/2 跳轉
+const adminRoute = useRoute()
+onMounted(() => { const t = adminRoute.query.tab; if (t != null) { storeTab.value = Number(t); regionTab.value = Number(t) } })
+
 // ─── 個資遮蔽（區域模式不顯示） ───
 function maskName(name: string): string {
   if (currentRole.value === 'store') return name
