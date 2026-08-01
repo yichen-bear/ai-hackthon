@@ -106,7 +106,7 @@ async function fetchDbActivities() {
               contactPhone: r.userPhone || '',
               registeredAt: new Date(r.registeredAt).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
               status: r.status === 'registered' ? 'confirmed' : r.status,
-              specialNeeds: [],
+              specialNeeds: r.specialNeeds ? [{ type: 'other', note: r.specialNeeds, resolved: false }] : [],
               source: r.source || 'app',
               paymentMethod: '免費',
               amount: 0,

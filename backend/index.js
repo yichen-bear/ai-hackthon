@@ -76,6 +76,7 @@ app.use('/api/upload', uploadRouter);
 app.use('/api/groups', groupsRouter);
 app.use('/api/secondhand-items', require('./routes/secondhand-items'));
 app.use('/api/activities', require('./routes/activities'));
+app.use('/api/rides', require('./routes/rides'));
 
 // 靜態檔案（圖片上傳）
 app.use('/uploads', express.static('public/uploads'));

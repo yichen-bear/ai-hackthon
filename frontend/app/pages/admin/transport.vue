@@ -71,7 +71,11 @@ const tabs = ['叫車訂單', '訂單管理', '車隊狀態']
 
 // 支援 ?tab=0/1/2 跳轉
 const adminRoute = useRoute()
-onMounted(() => { const t = adminRoute.query.tab; if (t != null) activeTab.value = Number(t) })
+onMounted(async () => {
+  const t = adminRoute.query.tab; if (t != null) activeTab.value = Number(t)
+  await fetchDbRides()
+  await fetchDbDrivers()
+})
 
 // ─── Toast 系統 ───
 const toastMessage = ref('')
@@ -81,6 +85,74 @@ function showToast(msg: string) {
   toastMessage.value = msg
   if (toastTimer) clearTimeout(toastTimer)
   toastTimer = setTimeout(() => { toastMessage.value = '' }, 2500)
+}
+
+// ─── 從 DB 載入叫車資料 ───
+async function fetchDbRides() {
+  try {
+    // 待派車
+    const pending: any[] = await $fetch('/api/rides/pending')
+    if (pending.length > 0) {
+      const dbConsults: ConsultationForm[] = pending.map(r => ({
+        id: r.id,
+        feedbackNo: `FB-${r.id.slice(0, 8)}`,
+        contactName: r.passengerName,
+        contactPhone: r.passengerPhone || '',
+        pickup: r.pickup,
+        destination: r.destination,
+        carType: r.carType,
+        mode: r.mode,
+        scheduledTime: r.scheduledAt || undefined,
+        passengers: r.carType === 'van' ? 3 : 1,
+        estimateMin: r.carType === 'van' ? 350 : r.carType === 'accessible' ? 280 : 250,
+        estimateMax: r.carType === 'van' ? 450 : r.carType === 'accessible' ? 350 : 320,
+        aiNote: '',
+        status: 'pending' as const,
+        createdAt: new Date(r.creTime).toLocaleString('zh-TW', { hour12: false, month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+      }))
+      consultations.value = [...dbConsults, ...consultations.value]
+    }
+
+    // 進行中
+    const active: any[] = await $fetch('/api/rides/active')
+    if (active.length > 0) {
+      const dbOrders: Order[] = active.map(r => ({
+        id: r.id,
+        orderNo: `TR-${r.id.slice(0, 8)}`,
+        contactName: r.passengerName,
+        contactPhone: r.passengerPhone || '',
+        pickup: r.pickup,
+        destination: r.destination,
+        carType: r.carType,
+        passengers: r.carType === 'van' ? 3 : 1,
+        assignedDriver: r.driver?.name || '待指派',
+        assignedPlate: r.driver?.plateNumber || '',
+        eta: 5,
+        finalAmount: r.fare || 0,
+        status: r.status === 'dispatched' ? 'dispatched' : 'in_transit',
+        orderTime: new Date(r.creTime).toLocaleString('zh-TW', { hour12: false, month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+      }))
+      orders.value = [...dbOrders, ...orders.value]
+    }
+  } catch { /* use mock fallback */ }
+}
+
+async function fetchDbDrivers() {
+  try {
+    const data: any[] = await $fetch('/api/rides/drivers')
+    if (data.length > 0) {
+      drivers.value = data.map(d => ({
+        id: d.id,
+        name: d.name,
+        plate: d.plateNumber,
+        vehicleType: d.carModel,
+        rating: Number(d.rating),
+        status: d.status === 'available' ? 'idle' : d.status === 'busy' ? 'on_trip' : 'offline',
+        currentLocation: d.status === 'offline' ? '—' : '台北市區',
+        completedToday: d.totalTrips % 15, // 模擬今日完成數
+      }))
+    }
+  } catch { /* use mock fallback */ }
 }
 
 // ─── 車種對應（與客戶端 RideService carOptions 一致） ───
@@ -237,7 +309,7 @@ const idleDriverCount = computed(() =>
 let orderCounter = 3
 
 // ─── Actions：叫車訂單 → 接受派車 ───
-function convertToOrder(consultation: ConsultationForm) {
+async function convertToOrder(consultation: ConsultationForm) {
   // 找到閒置司機
   const available = drivers.value.find(d => d.status === 'idle')
   if (!available) {
@@ -245,10 +317,18 @@ function convertToOrder(consultation: ConsultationForm) {
     return
   }
 
+  // 呼叫 API 派車
+  try {
+    await $fetch(`/api/rides/${consultation.id}/dispatch`, {
+      method: 'PATCH',
+      body: { driverId: available.id },
+    })
+  } catch { /* 如果是 mock 訂單，繼續本地操作 */ }
+
   // 接受派車，建立訂單
   const newOrder: Order = {
-    id: `o-${orderCounter}`,
-    orderNo: `TR-2024-${String(orderCounter).padStart(4, '0')}`,
+    id: consultation.id,
+    orderNo: `TR-${consultation.id.slice(0, 8)}`,
     contactName: consultation.contactName,
     contactPhone: consultation.contactPhone,
     pickup: consultation.pickup,
@@ -262,7 +342,6 @@ function convertToOrder(consultation: ConsultationForm) {
     status: 'dispatched',
     orderTime: new Date().toLocaleString('zh-TW', { hour12: false }),
   }
-  orderCounter++
 
   orders.value.unshift(newOrder)
   consultation.status = 'converted'
@@ -284,6 +363,8 @@ function advanceOrderStatus(order: Order) {
     order.status = flow[idx + 1]
     if (order.status === 'completed') {
       order.completeTime = new Date().toLocaleString('zh-TW', { hour12: false })
+      // 呼叫 API 完成
+      try { $fetch(`/api/rides/${order.id}/complete`, { method: 'PATCH' }) } catch {}
       // 釋放司機
       const driver = drivers.value.find(d => d.name === order.assignedDriver)
       if (driver) {

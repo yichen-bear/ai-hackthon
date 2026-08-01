@@ -508,6 +508,7 @@ exports.Prisma.ActivityRegistrationScalarFieldEnum = {
   userPhone: 'userPhone',
   status: 'status',
   source: 'source',
+  specialNeeds: 'specialNeeds',
   registeredAt: 'registeredAt'
 };
 
@@ -524,6 +525,41 @@ exports.Prisma.CommunityQuestionScalarFieldEnum = {
   status: 'status',
   isDeleted: 'isDeleted',
   creTime: 'creTime'
+};
+
+exports.Prisma.DriverScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  phone: 'phone',
+  plateNumber: 'plateNumber',
+  carModel: 'carModel',
+  carType: 'carType',
+  rating: 'rating',
+  totalTrips: 'totalTrips',
+  status: 'status',
+  isDeleted: 'isDeleted',
+  creTime: 'creTime'
+};
+
+exports.Prisma.RideOrderScalarFieldEnum = {
+  id: 'id',
+  passengerId: 'passengerId',
+  passengerName: 'passengerName',
+  passengerPhone: 'passengerPhone',
+  pickup: 'pickup',
+  destination: 'destination',
+  carType: 'carType',
+  mode: 'mode',
+  scheduledAt: 'scheduledAt',
+  status: 'status',
+  driverId: 'driverId',
+  fare: 'fare',
+  distance: 'distance',
+  rating: 'rating',
+  ratingComment: 'ratingComment',
+  creTime: 'creTime',
+  updTime: 'updTime',
+  completedAt: 'completedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -581,7 +617,9 @@ exports.Prisma.ModelName = {
   PickupReservation: 'PickupReservation',
   CommunityActivity: 'CommunityActivity',
   ActivityRegistration: 'ActivityRegistration',
-  CommunityQuestion: 'CommunityQuestion'
+  CommunityQuestion: 'CommunityQuestion',
+  Driver: 'Driver',
+  RideOrder: 'RideOrder'
 };
 
 /**
