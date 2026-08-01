@@ -28,6 +28,13 @@ const navTabs = [
 type NavKey = (typeof navTabs)[number]['key']
 const activeNav = ref<NavKey>('pickup')
 
+// 支援 ?tab=xxx 直接跳轉
+const route = useRoute()
+onMounted(() => {
+  const tab = route.query.tab as string
+  if (tab && navTabs.some(t => t.key === tab)) activeNav.value = tab as NavKey
+})
+
 function handleNavClick(key: NavKey) {
   activeNav.value = key
 }
