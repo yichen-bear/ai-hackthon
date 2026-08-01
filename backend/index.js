@@ -75,6 +75,7 @@ app.use('/api/reservations', reservationsRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/api/groups', groupsRouter);
 app.use('/api/secondhand-items', require('./routes/secondhand-items'));
+app.use('/api/activities', require('./routes/activities'));
 
 // 靜態檔案（圖片上傳）
 app.use('/uploads', express.static('public/uploads'));
