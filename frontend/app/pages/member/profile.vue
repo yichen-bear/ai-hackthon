@@ -74,6 +74,16 @@ function handleAvatarUpload(event: Event) {
   }
 }
 
+// 登出
+async function handleLogout() {
+  try {
+    await $fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
+  } catch {
+    // 即使 API 失敗也繼續導向登入頁
+  }
+  navigateTo('/login')
+}
+
 // 修改密碼
 const showPasswordForm = ref(false)
 const passwordForm = ref({
@@ -201,7 +211,7 @@ function handleChangePassword() {
       </template>
     </div>
 
-    <button class="logout-btn" @click="navigateTo('/login')">登出</button>
+    <button class="logout-btn" @click="handleLogout">登出</button>
     </template>
   </div>
 </template>

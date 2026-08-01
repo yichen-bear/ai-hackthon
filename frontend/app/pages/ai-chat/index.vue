@@ -553,11 +553,42 @@ function handleOpenGallery() {
   input.click()
 }
 
-/** 處理選取的圖片 — 填入輸入框讓使用者確認 */
+/** 處理選取的圖片 — 上傳到後端，取得 URL 後送出 */
 async function handleImageSelected(files: FileList | null) {
   if (!files || files.length === 0) return
-  const fileNames = Array.from(files).map(f => f.name).join('、')
-  inputText.value = fileNames
+
+  const uploadedUrls: string[] = []
+
+  for (const file of Array.from(files)) {
+    try {
+      const base64 = await fileToBase64(file)
+      const res = await $fetch<{ url: string; filename: string }>('/api/upload', {
+        method: 'POST',
+        body: { image: base64, filename: file.name },
+      })
+      if (res?.url) {
+        uploadedUrls.push(res.url)
+      }
+    } catch {
+      // 單張上傳失敗不中斷整體流程
+    }
+  }
+
+  if (uploadedUrls.length > 0) {
+    await doSend(`已上傳 ${uploadedUrls.length} 張圖片`, 'text')
+  } else {
+    inlineError.value = '圖片上傳失敗，請重試'
+  }
+}
+
+/** 將 File 轉為 base64 data URI */
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = reject
+    reader.readAsDataURL(file)
+  })
 }
 
 function handleNewChat() {

@@ -116,7 +116,8 @@ async function callGroqWhisper(file) {
   const transcription = await client.audio.transcriptions.create({
     file: audioFile,
     model: process.env.GROQ_WHISPER_MODEL || 'whisper-large-v3',
-    language: undefined,
+    language: 'zh',
+    prompt: '以下是繁體中文語音內容，請使用繁體中文輸出。',
     response_format: 'json',
   });
 

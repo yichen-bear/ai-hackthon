@@ -34,6 +34,10 @@ router.get('/unread', async (req, res) => {
     })
     res.json({ unreadCount: count })
   } catch (err) {
+    // 表不存在時回傳 0，避免前端噴紅字
+    if (err.message && err.message.includes('does not exist')) {
+      return res.json({ unreadCount: 0 })
+    }
     console.error('GET /api/messages/unread error:', err)
     res.status(500).json({ error: 'Failed to get unread count' })
   }
