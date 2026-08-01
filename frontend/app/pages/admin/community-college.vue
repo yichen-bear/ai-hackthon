@@ -31,13 +31,13 @@ const selectedInstructor = ref('')
 // ─── Tab ───
 const activeTab = ref(0)
 const tabs = computed(() => viewMode.value === 'overview'
+  ? ['成班率總覽', '報名管理', 'AI 媒合']
+  : ['學員名單', '出缺席', '特殊需求']
+)
 
 // 支援 ?tab=0/1/2 跳轉
 const adminRoute = useRoute()
 onMounted(() => { const t = adminRoute.query.tab; if (t != null) activeTab.value = Number(t) })
-  ? ['成班率總覽', '報名管理', 'AI 媒合']
-  : ['學員名單', '出缺席', '特殊需求']
-)
 
 // ─── Toast ───
 const toastMessage = ref('')
