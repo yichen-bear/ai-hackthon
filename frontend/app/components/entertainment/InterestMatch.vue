@@ -15,8 +15,8 @@ const currentUserId = computed(() => authUser.value.id)
 const currentUserName = computed(() => authUser.value.nickname)
 
 // ─── 篩選標籤（改為篩選制度：未選全列、選了 OR） ───
-const localInterests = ref<string[]>([...props.userInterests])
-watch(() => props.userInterests, (v) => { localInterests.value = [...v] })
+const localInterests = ref<string[]>([])
+watch(() => props.userInterests, (v) => { /* 不自動套用，讓使用者手動選 */ })
 
 function toggleInterest(interest: string) {
   const idx = localInterests.value.indexOf(interest)
