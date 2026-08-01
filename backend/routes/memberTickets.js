@@ -78,7 +78,7 @@ router.get('/', async (req, res) => {
     // 4. 興趣社群（已加入）
     const groupMemberships = await prisma.groupMember.findMany({
       where: { userId },
-      include: { group: { select: { name: true, icon: true, type: true }, include: { members: { select: { id: true } } } } },
+      include: { group: { include: { members: { select: { id: true } } } } },
       orderBy: { joinedAt: 'desc' },
     })
 
