@@ -25,7 +25,7 @@ const PRESETS = {
 }
 
 // ─── 表單 ───
-const originInput = ref(props.origin || PRESETS.current)
+const originInput = ref(props.origin || '📍 我的位置')
 const destinationInput = ref(props.destination || '')
 
 watch(sharedDestination, (v) => { if (v) destinationInput.value = v })
@@ -58,7 +58,8 @@ const routeSummary = ref<{ duration: string; distance: string; carbonEmission: n
 // ─── Google Maps Embed ───
 const directionsMapUrl = computed(() => {
   if (!showMap.value || !destinationInput.value) return ''
-  return `https://www.google.com/maps/embed/v1/directions?key=${GOOGLE_MAPS_KEY}&origin=${encodeURIComponent(originInput.value)}&destination=${encodeURIComponent(destinationInput.value)}&mode=${currentGmapMode.value}`
+  const orig = originInput.value === '📍 我的位置' ? PRESETS.current : originInput.value
+  return `https://www.google.com/maps/embed/v1/directions?key=${GOOGLE_MAPS_KEY}&origin=${encodeURIComponent(orig)}&destination=${encodeURIComponent(destinationInput.value)}&mode=${currentGmapMode.value}`
 })
 
 const defaultMapUrl = computed(() => `https://www.google.com/maps/embed/v1/place?key=${GOOGLE_MAPS_KEY}&q=${encodeURIComponent(PRESETS.current)}&zoom=15`)
@@ -119,10 +120,11 @@ function goToRide() { const { setRideDestination } = useTransportState(); setRid
         <div class="rp__input-row"><span class="rp__dot rp__dot--red">●</span><input v-model="destinationInput" type="text" class="rp__input" placeholder="輸入目的地" /></div>
       </div>
 
-      <!-- 快捷地點 -->
+      <!-- 起點快捷鍵 -->
       <div class="rp__presets">
-        <button class="rp__preset" @click="setPreset('company')">🏢 公司</button>
-        <button class="rp__preset" @click="setPreset('home')">🏠 家</button>
+        <button class="rp__preset" :class="{ 'rp__preset--active': originInput === '📍 我的位置' }" @click="originInput = '📍 我的位置'">📍 目前位置</button>
+        <button class="rp__preset" :class="{ 'rp__preset--active': originInput === PRESETS.company }" @click="originInput = PRESETS.company">🏢 公司</button>
+        <button class="rp__preset" :class="{ 'rp__preset--active': originInput === PRESETS.home }" @click="originInput = PRESETS.home">🏠 家</button>
       </div>
 
       <!-- 運具 -->
@@ -175,6 +177,7 @@ function goToRide() { const { setRideDestination } = useTransportState(); setRid
 .rp__presets { display: flex; gap: 8px; }
 .rp__preset { padding: 8px 14px; border: 1px solid #e2e8f0; border-radius: 9999px; background: #fff; font-size: 12px; font-weight: 500; cursor: pointer; transition: all .15s; }
 .rp__preset:hover { border-color: #f59e0b; background: #fffbeb; }
+.rp__preset--active { border-color: #f59e0b; background: #fffbeb; color: #f59e0b; font-weight: 600; }
 
 .rp__modes { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
 .rp__modes::-webkit-scrollbar { display: none; }
