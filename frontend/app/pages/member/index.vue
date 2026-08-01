@@ -6,6 +6,16 @@
 
 const activeTab = ref<'points' | 'barcode' | 'tickets' | 'badges' | 'groups' | 'messages'>('points')
 
+// 支援 ?tab=xxx 直接跳轉
+const memberRoute = useRoute()
+onMounted(() => {
+  const tab = memberRoute.query.tab as string
+  if (tab && ['points', 'barcode', 'tickets', 'badges', 'groups', 'messages'].includes(tab)) {
+    activeTab.value = tab as any
+    if (tab === 'messages') fetchConversations()
+  }
+})
+
 // ─── 私訊系統 ───
 const currentUserId = '00000000-0000-0000-0000-000000000001'
 const currentUserName = '沈小姐'

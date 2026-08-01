@@ -69,6 +69,10 @@ interface Driver {
 const activeTab = ref<number>(0)
 const tabs = ['叫車訂單', '訂單管理', '車隊狀態']
 
+// 支援 ?tab=0/1/2 跳轉
+const adminRoute = useRoute()
+onMounted(() => { const t = adminRoute.query.tab; if (t != null) activeTab.value = Number(t) })
+
 // ─── Toast 系統 ───
 const toastMessage = ref('')
 let toastTimer: ReturnType<typeof setTimeout> | null = null

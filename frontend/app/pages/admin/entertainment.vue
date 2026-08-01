@@ -42,6 +42,10 @@ interface ResidentQuestion {
 const activeTab = ref(0)
 const tabs = ['報名管理', '活動管理', '通知中心', '居民提問']
 
+// 支援 ?tab=0/1/2/3 跳轉
+const adminRoute = useRoute()
+onMounted(() => { const t = adminRoute.query.tab; if (t != null) activeTab.value = Number(t) })
+
 // ─── 分類篩選 ───
 type FilterCategory = 'all' | ActivityCategory
 const selectedCategory = ref<FilterCategory>('all')
