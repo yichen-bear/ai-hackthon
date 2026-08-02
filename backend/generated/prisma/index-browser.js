@@ -364,7 +364,8 @@ exports.Prisma.MemberAccountScalarFieldEnum = {
   creId: 'creId',
   creTime: 'creTime',
   updId: 'updId',
-  updTime: 'updTime'
+  updTime: 'updTime',
+  community_nickname: 'community_nickname'
 };
 
 exports.Prisma.MemberAddressScalarFieldEnum = {
@@ -474,7 +475,140 @@ exports.Prisma.PickupReservationScalarFieldEnum = {
   scheduledAt: 'scheduledAt',
   creTime: 'creTime',
   updTime: 'updTime',
-  pickupDeadline: 'pickupDeadline'
+  pickupDeadline: 'pickupDeadline',
+  stored_at: 'stored_at'
+};
+
+exports.Prisma.RestaurantQueueScalarFieldEnum = {
+  id: 'id',
+  placeId: 'placeId',
+  name: 'name',
+  totalTables: 'totalTables',
+  emptyTables: 'emptyTables',
+  waitingGroups: 'waitingGroups',
+  estimatedMinutes: 'estimatedMinutes',
+  avgServiceMinutes: 'avgServiceMinutes',
+  isOpen: 'isOpen',
+  updTime: 'updTime',
+  creTime: 'creTime'
+};
+
+exports.Prisma.QueueEntryScalarFieldEnum = {
+  id: 'id',
+  queueId: 'queueId',
+  ticketNumber: 'ticketNumber',
+  partySize: 'partySize',
+  customerName: 'customerName',
+  customerPhone: 'customerPhone',
+  note: 'note',
+  status: 'status',
+  creTime: 'creTime',
+  updTime: 'updTime'
+};
+
+exports.Prisma.ReservationScalarFieldEnum = {
+  id: 'id',
+  placeId: 'placeId',
+  customerName: 'customerName',
+  customerPhone: 'customerPhone',
+  partySize: 'partySize',
+  date: 'date',
+  time: 'time',
+  status: 'status',
+  note: 'note',
+  creTime: 'creTime',
+  updTime: 'updTime'
+};
+
+exports.Prisma.SlotCapacityScalarFieldEnum = {
+  id: 'id',
+  placeId: 'placeId',
+  time: 'time',
+  totalTables: 'totalTables',
+  updTime: 'updTime'
+};
+
+exports.Prisma.Activity_registrationScalarFieldEnum = {
+  id: 'id',
+  activity_id: 'activity_id',
+  user_id: 'user_id',
+  user_name: 'user_name',
+  user_phone: 'user_phone',
+  status: 'status',
+  registered_at: 'registered_at',
+  source: 'source',
+  special_needs: 'special_needs'
+};
+
+exports.Prisma.Community_activityScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  category: 'category',
+  location: 'location',
+  activity_date: 'activity_date',
+  activity_end_date: 'activity_end_date',
+  max_participants: 'max_participants',
+  status: 'status',
+  image_url: 'image_url',
+  organizer_id: 'organizer_id',
+  organizer_name: 'organizer_name',
+  is_deleted: 'is_deleted',
+  cre_time: 'cre_time',
+  upd_time: 'upd_time',
+  extra_participants: 'extra_participants',
+  volunteers_assigned: 'volunteers_assigned',
+  volunteers_needed: 'volunteers_needed'
+};
+
+exports.Prisma.Community_questionScalarFieldEnum = {
+  id: 'id',
+  asker_id: 'asker_id',
+  asker_name: 'asker_name',
+  content: 'content',
+  category: 'category',
+  is_anonymous: 'is_anonymous',
+  reply_content: 'reply_content',
+  replied_at: 'replied_at',
+  replied_by: 'replied_by',
+  status: 'status',
+  is_deleted: 'is_deleted',
+  cre_time: 'cre_time'
+};
+
+exports.Prisma.DriverScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  phone: 'phone',
+  plate_number: 'plate_number',
+  car_model: 'car_model',
+  car_type: 'car_type',
+  rating: 'rating',
+  total_trips: 'total_trips',
+  status: 'status',
+  is_deleted: 'is_deleted',
+  cre_time: 'cre_time'
+};
+
+exports.Prisma.Ride_orderScalarFieldEnum = {
+  id: 'id',
+  passenger_id: 'passenger_id',
+  passenger_name: 'passenger_name',
+  passenger_phone: 'passenger_phone',
+  pickup: 'pickup',
+  destination: 'destination',
+  car_type: 'car_type',
+  mode: 'mode',
+  scheduled_at: 'scheduled_at',
+  status: 'status',
+  driver_id: 'driver_id',
+  fare: 'fare',
+  distance: 'distance',
+  rating: 'rating',
+  rating_comment: 'rating_comment',
+  cre_time: 'cre_time',
+  upd_time: 'upd_time',
+  completed_at: 'completed_at'
 };
 
 exports.Prisma.SortOrder = {
@@ -529,7 +663,16 @@ exports.Prisma.ModelName = {
   ChatMessage: 'ChatMessage',
   CommunityGroup: 'CommunityGroup',
   GroupMember: 'GroupMember',
-  PickupReservation: 'PickupReservation'
+  PickupReservation: 'PickupReservation',
+  RestaurantQueue: 'RestaurantQueue',
+  QueueEntry: 'QueueEntry',
+  Reservation: 'Reservation',
+  SlotCapacity: 'SlotCapacity',
+  activity_registration: 'activity_registration',
+  community_activity: 'community_activity',
+  community_question: 'community_question',
+  driver: 'driver',
+  ride_order: 'ride_order'
 };
 
 /**

@@ -41,9 +41,12 @@ function goBack() {
 
 function handleGoReserve(restaurant: Restaurant) {
   selectedRestaurant.value = restaurant
+  reserveSelectedDate.value = new Date().toISOString().slice(0, 10)
   reserveSelectedTime.value = ''
   reservePartySize.value = 2
+  reserveSuccess.value = false
   currentView.value = 'reserve'
+  fetchClientSlots()
 }
 
 function handleGoQueue(restaurant: Restaurant) {
@@ -148,6 +151,62 @@ async function submitFormFeedback() {
 const userName = '陳小明'
 const userPhone = '0912-345-678'
 const reservePartySize = ref(2)
+const reserveSelectedDate = ref(new Date().toISOString().slice(0, 10))
+const dateStartOffset = ref(0)
+
+const dateOptions = computed(() => {
+  const options = []
+  const weekdays = ['日', '一', '二', '三', '四', '五', '六']
+  for (let i = 0; i < 5; i++) {
+    const d = new Date()
+    d.setDate(d.getDate() + dateStartOffset.value + i)
+    const value = d.toISOString().slice(0, 10)
+    const dayLabel = i === 0 && dateStartOffset.value === 0 ? '今天' : `週${weekdays[d.getDay()]}`
+    const dateLabel = `${d.getMonth() + 1}/${d.getDate()}`
+    options.push({ value, dayLabel, dateLabel })
+  }
+  return options
+})
+
+function shiftDate(dir: number) {
+  dateStartOffset.value += dir
+  if (dateStartOffset.value < 0) dateStartOffset.value = 0
+}
+
+// ─── 即時時段可用性（從 DB 查詢）───
+const liveTimeSlots = ref<{ time: string; available: boolean }[]>([])
+const slotsLoadingClient = ref(false)
+
+async function fetchClientSlots() {
+  slotsLoadingClient.value = true
+  try {
+    const res = await $fetch<{ success: boolean; data: { slots: { time: string; remainingTables: number; status: string }[] } }>(`http://localhost:3001/api/food-reservations/slots/linked_restaurant_01?date=${reserveSelectedDate.value}`)
+    if (res.success) {
+      liveTimeSlots.value = res.data.slots.map(s => ({
+        time: s.time,
+        available: s.status !== 'full',
+      }))
+    }
+  } catch {
+    // Fallback: all available
+    liveTimeSlots.value = [
+      { time: '18:00', available: true },
+      { time: '18:30', available: true },
+      { time: '19:00', available: true },
+      { time: '19:30', available: true },
+      { time: '20:00', available: true },
+    ]
+  } finally {
+    slotsLoadingClient.value = false
+  }
+}
+
+// When date changes, re-fetch slot availability
+watch(reserveSelectedDate, () => {
+  reserveSelectedTime.value = ''
+  fetchClientSlots()
+})
+
 const reserveSelectedTime = ref('')
 
 const reserveEstimatedTotal = computed(() => {
@@ -156,19 +215,38 @@ const reserveEstimatedTotal = computed(() => {
 })
 
 const canConfirmReserve = computed(() =>
-  !!selectedRestaurant.value && !!reserveSelectedTime.value
+  !!selectedRestaurant.value && !!reserveSelectedDate.value && !!reserveSelectedTime.value
 )
 
-function submitReserve() {
+const reserveSubmitting = ref(false)
+const reserveSuccess = ref(false)
+
+async function submitReserve() {
   if (!canConfirmReserve.value || !selectedRestaurant.value) return
-  console.log('訂位確認：', {
-    userName,
-    phone: userPhone,
-    restaurantName: selectedRestaurant.value.name,
-    time: reserveSelectedTime.value,
-    partySize: reservePartySize.value,
-  })
-  goBack()
+  reserveSubmitting.value = true
+  try {
+    await $fetch('http://localhost:3001/api/food-reservations', {
+      method: 'POST',
+      body: {
+        placeId: 'linked_restaurant_01',
+        customerName: userName,
+        customerPhone: userPhone,
+        partySize: reservePartySize.value,
+        date: reserveSelectedDate.value,
+        time: reserveSelectedTime.value,
+      },
+    })
+    reserveSuccess.value = true
+    setTimeout(() => {
+      reserveSuccess.value = false
+      goBack()
+    }, 1500)
+  } catch {
+    // fallback - still go back
+    goBack()
+  } finally {
+    reserveSubmitting.value = false
+  }
 }
 
 /* ─── 候位 Sub-view 狀態 ─── */
@@ -597,12 +675,41 @@ const passportBadges = [
             </div>
           </div>
 
+          <!-- 日期選擇 -->
+          <div class="subview__section">
+            <span class="subview__info-label">📅 選擇日期</span>
+            <div class="subview__date-picker">
+              <button
+                class="subview__date-arrow"
+                :disabled="reserveSelectedDate <= new Date().toISOString().slice(0, 10)"
+                @click="shiftDate(-1)"
+              >◀</button>
+              <button
+                v-for="d in dateOptions"
+                :key="d.value"
+                class="subview__date-btn"
+                :class="{ 'subview__date-btn--selected': d.value === reserveSelectedDate }"
+                @click="reserveSelectedDate = d.value"
+              >
+                <span class="subview__date-btn-day">{{ d.dayLabel }}</span>
+                <span class="subview__date-btn-date">{{ d.dateLabel }}</span>
+              </button>
+              <button
+                class="subview__date-arrow"
+                @click="shiftDate(1)"
+              >▶</button>
+            </div>
+          </div>
+
           <!-- 時段選擇 -->
           <div class="subview__section">
             <span class="subview__info-label">🕐 選擇時段</span>
-            <div class="subview__slots">
+            <div v-if="slotsLoadingClient" class="subview__slots" style="justify-content: center; padding: 8px 0;">
+              <span style="font-size: 12px; color: #78716c;">載入時段中...</span>
+            </div>
+            <div v-else class="subview__slots">
               <button
-                v-for="slot in selectedRestaurant.timeSlots"
+                v-for="slot in liveTimeSlots"
                 :key="slot.time"
                 class="subview__slot-btn"
                 :class="{
@@ -618,10 +725,10 @@ const passportBadges = [
           <!-- 底部按鈕 -->
           <button
             class="subview__submit-btn"
-            :disabled="!canConfirmReserve"
+            :disabled="!canConfirmReserve || reserveSubmitting"
             @click="submitReserve"
-          >確認訂位</button>
-          <p v-if="!reserveSelectedTime" class="subview__hint">請先選擇用餐時段</p>
+          >{{ reserveSubmitting ? '送出中...' : reserveSuccess ? '✅ 訂位成功！' : '確認訂位' }}</button>
+          <p v-if="!reserveSelectedDate || !reserveSelectedTime" class="subview__hint">請先選擇日期與用餐時段</p>
         </div>
 
         <!-- ═══ Sub-view: 現場候位頁 ═══ -->
@@ -2579,6 +2686,76 @@ const passportBadges = [
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+/* ─── 日期選擇器 ─── */
+.subview__date-picker {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.subview__date-picker::-webkit-scrollbar { display: none; }
+
+.subview__date-arrow {
+  width: 28px;
+  height: 44px;
+  border: none;
+  background: none;
+  color: #78716c;
+  font-size: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+  border-radius: 8px;
+  transition: all 0.15s;
+}
+.subview__date-arrow:hover:not(:disabled) {
+  background: #f1f5f9;
+  color: #1c1917;
+}
+.subview__date-arrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.subview__date-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  font-family: inherit;
+}
+
+.subview__date-btn:hover {
+  border-color: var(--color-primary, #ff5252);
+}
+
+.subview__date-btn--selected {
+  background: var(--color-primary, #ff5252);
+  border-color: var(--color-primary, #ff5252);
+  color: #fff;
+}
+
+.subview__date-btn-day {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.subview__date-btn--selected .subview__date-btn-day {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.subview__date-btn-date {
+  font-size: 14px;
+  font-weight: 700;
 }
 
 /* 時段膠囊 */

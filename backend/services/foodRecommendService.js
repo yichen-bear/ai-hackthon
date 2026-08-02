@@ -354,33 +354,22 @@ async function recommendNearby({ lat, lng, radius = 1500, keyword, mode }) {
 }
 
 /**
- * 產生時段（基於當前時間往後推 5 個半小時間隔）
+ * 產生固定的晚餐時段（與餐廳端一致）
  */
 function generateTimeSlots() {
-  const now = new Date();
-  const currentHour = now.getHours();
-  const currentMin = now.getMinutes();
-
-  // 起始時段：往上取最近的半小時 + 1 小時
-  let startHour = currentHour + 1;
-  let startMin = currentMin < 30 ? 0 : 30;
-  if (currentMin >= 30) {
-    startHour += 1;
-    startMin = 0;
+  const slots = [
+    { time: '18:00', available: true },
+    { time: '18:30', available: true },
+    { time: '19:00', available: true },
+    { time: '19:30', available: true },
+    { time: '20:00', available: true },
+  ];
+  // 隨機讓 1~2 個時段滿位，增加真實感
+  const fullCount = Math.floor(Math.random() * 2) + 1;
+  const indices = [0, 1, 2, 3, 4].sort(() => Math.random() - 0.5).slice(0, fullCount);
+  for (const idx of indices) {
+    slots[idx].available = false;
   }
-
-  const slots = [];
-  for (let i = 0; i < 5; i++) {
-    const h = startHour + Math.floor((startMin + i * 30) / 60);
-    const m = (startMin + i * 30) % 60;
-    if (h >= 22) break; // 不超過 22:00
-
-    const time = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
-    // 隨機決定是否有位（70% 有位）
-    const available = Math.random() > 0.3;
-    slots.push({ time, available });
-  }
-
   return slots;
 }
 

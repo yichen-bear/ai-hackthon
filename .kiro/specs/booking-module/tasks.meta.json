@@ -1,0 +1,181 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 擴充 POST /api/diagnosis/appointment 新增 age、date、session 欄位": [
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785618784016
+      },
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785618793849
+      },
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785618864200
+      }
+    ],
+    "1.2 新增 GET /api/diagnosis/appointments endpoint": [
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785618784050
+      },
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785618794520
+      },
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785618864878
+      }
+    ],
+    "2. Checkpoint - 確認後端 API 正常運作": [
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785618784088
+      },
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785618870296
+      }
+    ],
+    "3.1 新增 'booking' view 狀態與入口按鈕": [
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785618784133
+      },
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785618875281
+      },
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785618949058
+      }
+    ],
+    "3.2 實作預約表單 UI 與預填邏輯": [
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785618784193
+      },
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785618964631
+      },
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785619091962
+      }
+    ],
+    "3.3 實作表單驗證與提交邏輯": [
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785618784228
+      },
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785619096883
+      },
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785619227528
+      }
+    ],
+    "4. Checkpoint - 確認病患端表單功能正常": [
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785618784263
+      },
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785619233169
+      }
+    ],
+    "5.1 移除 mockAppointments 並整合 GET API": [
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785618784298
+      },
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785619238408
+      },
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785619375564
+      }
+    ],
+    "5.2 實作批准預約功能（本地狀態更新）": [
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785618784332
+      },
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785619380686
+      },
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785619392776
+      }
+    ],
+    "6. Final Checkpoint - 全模組整合確認": [
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785618784366
+      },
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785619397789
+      }
+    ],
+    "1. 後端 API 擴充與新增": [
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785618864931
+      }
+    ],
+    "3. 病患端預約表單 UI": [
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785619227568
+      }
+    ],
+    "5. 管理後台 API 整合": [
+      {
+        "executionId": "2410a516-6307-4b1a-b9d3-38812f41b052",
+        "chatSessionId": "sess_b6286876-dfc5-47c5-9133-23af468b9075",
+        "timestamp": 1785619392809
+      }
+    ]
+  }
+}
