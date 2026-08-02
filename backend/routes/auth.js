@@ -205,6 +205,7 @@ router.get('/me', verifyToken, async (req, res) => {
 
     return res.status(200).json(result);
   } catch (err) {
+    console.error('[/me] ERROR:', err.message, err.stack);
     return res.status(500).json({ success: false, message: '系統錯誤' });
   }
 });
