@@ -7,7 +7,8 @@
 set -e
 
 # ─── 設定來源（Neon） ───
-NEON_URL="postgresql://neondb_owner:npg_kT5pGP6cJZXI@ep-damp-star-ax84nwqb-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require"
+# 填入你的 Neon 連線字串（包含密碼）
+NEON_URL="postgresql://user:password@your-neon-endpoint/dbname?sslmode=require"
 
 # ─── 設定目標（RDS）── 請填入 RDS 建立後的資訊 ───
 RDS_HOST="你的rds-endpoint.us-west-2.rds.amazonaws.com"
