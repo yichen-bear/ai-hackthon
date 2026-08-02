@@ -28,6 +28,13 @@ const navTabs = [
 type NavKey = (typeof navTabs)[number]['key']
 const activeNav = ref<NavKey>('pickup')
 
+// 支援 ?tab=xxx 直接跳轉
+const route = useRoute()
+onMounted(() => {
+  const tab = route.query.tab as string
+  if (tab && navTabs.some(t => t.key === tab)) activeNav.value = tab as NavKey
+})
+
 function handleNavClick(key: NavKey) {
   activeNav.value = key
 }
@@ -60,19 +67,15 @@ const initialGroups: GroupBuyItem[] = [
 
 // ─── 訂單 ───
 const initialOrders: BookingOrder[] = [
-  { id: 'ord-1', type: 'groupbuy', productName: '舒潔衛生紙 72包/箱', spec: '72包/箱', status: 'pending-group', currentStep: 0, totalSteps: 4, groupProgress: { current: 3, target: 5 }, pickupStore: '7-11 信義門市', createdAt: '2026-07-25' },
-  { id: 'ord-2', type: 'preorder', productName: '中秋限定鳳梨酥禮盒', spec: '12入裝', status: 'shipping', currentStep: 2, totalSteps: 4, estimatedDate: '08/01', pickupStore: '7-11 松山門市', createdAt: '2026-07-20' },
-  { id: 'ord-3', type: 'groupbuy', productName: '可口可樂 24罐裝', spec: '330ml × 24', status: 'ready', currentStep: 3, totalSteps: 4, pickupStore: '7-11 大安門市', createdAt: '2026-07-22' },
-  { id: 'ord-sh-1', type: 'preorder', productName: '【i二手】嬰兒推車（九成新）', spec: '門市面交 · 賣家：王媽媽', status: 'ready', currentStep: 1, totalSteps: 2, pickupStore: '7-11 信義門市', createdAt: '2026-08-01' },
-  { id: 'ord-sh-2', type: 'preorder', productName: '【i二手】小米空氣清淨機', spec: '門市代收 · 賣家：李先生 · 取貨倒數 5 天', status: 'shipping', currentStep: 1, totalSteps: 3, estimatedDate: '08/08', pickupStore: '7-11 松山門市', createdAt: '2026-08-01' },
+  { id: 'ord-1', type: 'groupbuy', productName: '舒潔衛生紙 72包/箱', spec: '72包/箱', status: 'pending-group', currentStep: 0, totalSteps: 4, groupProgress: { current: 3, target: 5 }, pickupStore: '7-ELEVEN 信義門市', createdAt: '2026-07-25' },
+  { id: 'ord-2', type: 'preorder', productName: '中秋限定鳳梨酥禮盒', spec: '12入裝', status: 'shipping', currentStep: 2, totalSteps: 4, estimatedDate: '08/01', pickupStore: '7-ELEVEN 松山門市', createdAt: '2026-07-20' },
+  { id: 'ord-3', type: 'groupbuy', productName: '可口可樂 24罐裝', spec: '330ml × 24', status: 'ready', currentStep: 3, totalSteps: 4, pickupStore: '7-ELEVEN 大安門市', createdAt: '2026-07-22' },
 ]
 
 // ─── 取貨提醒 ───
 const initialPickups: PickupItem[] = [
   { id: 'pk-1', orderId: 'ord-3', productName: '可口可樂 24罐裝', pickupCode: 'PK-20260728-001', store: MOCK_STORES[0], deadline: '2026-07-30', status: 'expiring' },
   { id: 'pk-2', orderId: 'ord-x', productName: '白蘭洗衣精 4瓶裝', pickupCode: 'PK-20260725-003', store: MOCK_STORES[1], deadline: '2026-08-05', status: 'pending' },
-  { id: 'pk-sh-1', orderId: 'ord-sh-1', productName: '【i二手】嬰兒推車 · 面交', pickupCode: 'SH-20260805-001', store: MOCK_STORES[0], deadline: '2026-08-05', status: 'pending' },
-  { id: 'pk-sh-2', orderId: 'ord-sh-2', productName: '【i二手】小米空氣清淨機 · 代收', pickupCode: 'SH-20260801-002', store: MOCK_STORES[1], deadline: '2026-08-08', status: 'pending' },
 ]
 
 // ─── 收藏清單 ───
@@ -89,6 +92,79 @@ const groups = ref<GroupBuyItem[]>(JSON.parse(JSON.stringify(initialGroups)))
 const orders = ref<BookingOrder[]>(JSON.parse(JSON.stringify(initialOrders)))
 const pickups = ref<PickupItem[]>(JSON.parse(JSON.stringify(initialPickups)))
 const wishlist = ref<WishlistItem[]>([...initialWishlist])
+
+// ─── 從 DB 動態讀取 i二手訂單/取貨 ───
+const { currentUser } = useCurrentUser()
+
+async function fetchSecondhandOrders() {
+  try {
+    const data: any[] = await $fetch('/api/reservations/my-orders', { params: { userId: currentUser.value.id } })
+    // 轉換為 BookingOrder 格式並合併
+    const shOrders: BookingOrder[] = data.map(r => {
+      const isMeetup = r.pickupMethod === '門市面交'
+      let status = 'ordered'
+      let currentStep = 0
+      let totalSteps = isMeetup ? 2 : 3
+      let estimatedDate: string | undefined
+
+      if (r.status === 'PENDING_SELLER_APPROVAL') { status = 'ordered'; currentStep = 0 }
+      else if (r.status === 'APPROVED_MEETUP') { status = 'ready'; currentStep = 1 }
+      else if (r.status === 'APPROVED_STORE_PICKUP') { status = 'shipping'; currentStep = 1 }
+      else if (r.status === 'ITEM_STORED_IN_711') { status = 'ready'; currentStep = 2; estimatedDate = r.pickupDeadline ? new Date(r.pickupDeadline).toLocaleDateString('zh-TW', { month: '2-digit', day: '2-digit' }) : undefined }
+      else if (r.status === 'COMPLETED') { status = 'completed'; currentStep = totalSteps }
+
+      const methodLabel = isMeetup ? '面交' : '代收'
+      return {
+        id: `sh-${r.id}`,
+        type: 'preorder' as const,
+        productName: `【i二手】${r.productName}`,
+        spec: `${methodLabel} · 賣家：${r.sellerName}`,
+        status,
+        currentStep,
+        totalSteps,
+        estimatedDate,
+        pickupStore: r.pickupStore,
+        createdAt: new Date(r.creTime).toISOString().split('T')[0],
+      }
+    })
+    // 移除舊的 i二手訂單再合併新的
+    orders.value = [...initialOrders, ...shOrders]
+  } catch { /* silent */ }
+}
+
+async function fetchSecondhandPickups() {
+  try {
+    const data: any[] = await $fetch('/api/reservations/my-pickups', { params: { userId: currentUser.value.id } })
+    const shPickups: PickupItem[] = data.map(r => {
+      const isMeetup = r.pickupMethod === '門市面交'
+      const label = isMeetup ? '面交' : '代收'
+      const deadline = r.pickupDeadline || r.scheduledAt || new Date(Date.now() + 7 * 86400000).toISOString()
+      const now = Date.now()
+      const deadlineMs = new Date(deadline).getTime()
+      const daysLeft = Math.ceil((deadlineMs - now) / 86400000)
+      let pickupStatus: 'pending' | 'expiring' | 'expired' = 'pending'
+      if (daysLeft <= 0) pickupStatus = 'expired'
+      else if (daysLeft <= 2) pickupStatus = 'expiring'
+
+      return {
+        id: `pk-sh-${r.id}`,
+        orderId: `sh-${r.id}`,
+        productName: `【i二手】${r.productName} · ${label}`,
+        pickupCode: `SH-${r.id.slice(0, 8).toUpperCase()}`,
+        store: { id: 'sh-store', name: r.pickupStore, address: r.pickupStore, lat: 25.033, lng: 121.565 },
+        deadline: deadline.split('T')[0],
+        status: pickupStatus,
+      }
+    })
+    // 合併到 pickups
+    pickups.value = [...initialPickups, ...shPickups]
+  } catch { /* silent */ }
+}
+
+onMounted(() => {
+  fetchSecondhandOrders()
+  fetchSecondhandPickups()
+})
 
 // ═══════════════════════════════════════════
 // 事件處理
@@ -239,6 +315,8 @@ function demoReset() {
   pickups.value = JSON.parse(JSON.stringify(initialPickups))
   wishlist.value = [...initialWishlist]
   agentRecommendation.value = null
+  fetchSecondhandOrders()
+  fetchSecondhandPickups()
 }
 </script>
 

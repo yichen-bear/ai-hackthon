@@ -29,6 +29,9 @@ onMounted(() => {
     setRouteDestination(dest)
     activeNav.value = 'route'
   }
+  // 支援 ?tab=xxx 直接跳轉
+  const tab = currentRoute.query.tab as string
+  if (tab && navTabs.some(t => t.key === tab)) activeNav.value = tab as NavKey
 })
 
 // ─── 功能區塊導航列 ───

@@ -26,6 +26,13 @@ const navTabs = [
 type NavKey = typeof navTabs[number]['key']
 const activeNav = ref<NavKey>('ticket')
 
+// 支援 ?tab=xxx 直接跳轉
+const currentRoute = useRoute()
+onMounted(() => {
+  const tab = currentRoute.query.tab as string
+  if (tab && navTabs.some(t => t.key === tab)) activeNav.value = tab as NavKey
+})
+
 function handleNavClick(key: NavKey) {
   activeNav.value = key
 }
@@ -127,11 +134,36 @@ const mockBadges: EntertainmentBadge[] = [
   { id: 'badge-8', icon: '🎓', name: '終身學習', description: '報名 2 堂社大課程', unlocked: false },
 ]
 
-// ─── Mock: 社區活動 ───
-const mockCommunityEvents: CommunityEvent[] = [
-  { id: 'ce-1', name: '中秋社區烤肉大會', date: '2026-09-21', time: '17:00~21:00', location: '信義區仁愛里活動中心中庭', organizer: '仁愛里辦公室', fee: 200, currentParticipants: 32, maxParticipants: 50 },
-  { id: 'ce-2', name: '假日健走活動：象山步道', date: '2026-08-10', time: '07:00~09:00', location: '象山步道入口（信義路五段 150 巷）', organizer: '信義區體育會', fee: 0, currentParticipants: 18, maxParticipants: 30 },
-]
+// ─── 社區活動（從 DB 讀取） ───
+const { currentUser: activityUser } = useCurrentUser()
+const dbCommunityEvents = ref<CommunityEvent[]>([])
+
+async function fetchCommunityActivities() {
+  try {
+    const data: any[] = await $fetch('/api/activities', { params: { status: 'open', userId: activityUser.value.id } })
+    dbCommunityEvents.value = data.map(a => ({
+      id: a.id,
+      name: a.title,
+      date: new Date(a.activityDate).toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' }),
+      time: `${new Date(a.activityDate).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' })}${a.activityEndDate ? '~' + new Date(a.activityEndDate).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }) : ''}`,
+      location: a.location || '待定',
+      organizer: a.organizerName,
+      fee: 0,
+      currentParticipants: a.currentParticipants,
+      maxParticipants: a.maxParticipants,
+      description: a.description || '',
+      isRegistered: a.isRegistered,
+    }))
+  } catch {
+    // fallback mock
+    dbCommunityEvents.value = [
+      { id: 'ce-1', name: '中秋社區烤肉大會', date: '2026-09-21', time: '17:00~21:00', location: '信義區仁愛里活動中心中庭', organizer: '仁愛里辦公室', fee: 200, currentParticipants: 32, maxParticipants: 50 },
+      { id: 'ce-2', name: '假日健走活動：象山步道', date: '2026-08-10', time: '07:00~09:00', location: '象山步道入口（信義路五段 150 巷）', organizer: '信義區體育會', fee: 0, currentParticipants: 18, maxParticipants: 30 },
+    ]
+  }
+}
+onMounted(() => { fetchCommunityActivities() })
+
 const mockCourses: CommunityCourse[] = [
   { id: 'course-1', name: '生活攝影入門', instructor: '林老師', schedule: '每週三 19:00~21:00', credits: 2, sessions: 18, fee: 2000, status: 'open', location: '信義社區大學 201 教室' },
   { id: 'course-2', name: '手沖咖啡實作', instructor: '陳老師', schedule: '每週六 10:00~12:00', credits: 1, sessions: 12, fee: 2500, status: 'almost-full', location: '信義社區大學 生活教室' },
@@ -217,8 +249,8 @@ function handlePointsSpent(amount: number) {
   userPoints.value -= amount
 }
 
-// 社區報名 → 生成票券
-function handleRegister(payload: { eventId: string; type: 'community' | 'course' }) {
+// 社區報名 → 呼叫 API + 生成票券
+async function handleRegister(payload: { eventId: string; type: 'community' | 'course' }) {
   let eventName = ''
   let date = ''
   let time = ''
@@ -227,7 +259,14 @@ function handleRegister(payload: { eventId: string; type: 'community' | 'course'
   let fee = 0
 
   if (payload.type === 'community') {
-    const event = mockCommunityEvents.find(e => e.id === payload.eventId)
+    // 呼叫 API 報名
+    try {
+      await $fetch(`/api/activities/${payload.eventId}/register`, {
+        method: 'POST',
+        body: { userId: activityUser.value.id, userName: activityUser.value.name },
+      })
+    } catch { /* 可能已報名 */ }
+    const event = dbCommunityEvents.value.find(e => e.id === payload.eventId)
     if (event) {
       eventName = event.name
       date = event.date
@@ -235,7 +274,10 @@ function handleRegister(payload: { eventId: string; type: 'community' | 'course'
       venue = event.location
       venueAddress = event.location
       fee = event.fee
+      event.currentParticipants++
     }
+    // 刷新活動列表
+    fetchCommunityActivities()
   } else {
     const course = mockCourses.find(c => c.id === payload.eventId)
     if (course) {
@@ -415,7 +457,7 @@ function demoReset() {
       <!-- 社區 -->
       <template v-if="activeNav === 'community'">
         <EntertainmentCommunityEvents
-          :community-events="mockCommunityEvents"
+          :community-events="dbCommunityEvents"
           :courses="mockCourses"
           @register="handleRegister"
         />

@@ -9,6 +9,8 @@ export interface AuthUser {
   role: 'member' | 'vendor'
   vendorId?: number
   name?: string
+  communityNickname?: string
+  maskedName?: string
 }
 
 export interface RegisterPayload {
@@ -61,6 +63,8 @@ export function useAuth() {
         state.value.isAuthenticated = true
         state.value.user = response.user
         state.value.error = null
+        // 登入成功後立即取得完整使用者資料（name, nickname 等）
+        await fetchUser()
       }
     } catch (err: any) {
       state.value.isAuthenticated = false

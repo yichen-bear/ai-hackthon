@@ -1,13 +1,23 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import FoodBookingCard from '~/components/food/BookingCard.vue'
+import MidpointMap from '~/components/food/MidpointMap.vue'
 import { useFormApi } from '~/composables/useFormApi'
 import type { FeedbackAnswer } from '~/composables/useFormApi'
+import type { Restaurant } from '~/composables/useRestaurantRecommend'
+import { useAiMenu } from '~/composables/useAiMenu'
 
 /* ─── Tab 定義 ─── */
 type TabKey = 'eat' | 'group' | 'calorie' | 'passport'
 
 const activeTab = ref<TabKey>('eat')
+
+// 支援 ?tab=xxx 直接跳轉
+const foodRoute = useRoute()
+onMounted(() => {
+  const tab = foodRoute.query.tab as string
+  if (tab && tabs.some(t => t.key === tab)) activeTab.value = tab as TabKey
+})
 
 const tabs: { key: TabKey; label: string }[] = [
   { key: 'eat', label: '想吃什麼' },
@@ -21,21 +31,6 @@ const eatMode = ref<'dine_in' | 'takeout' | 'delivery'>('dine_in')
 
 /* Sub-view 狀態 */
 const currentView = ref<'list' | 'reserve' | 'queue' | 'menu' | 'form'>('list')
-
-interface Restaurant {
-  id: string
-  name: string
-  tag: string
-  priceMin: number
-  priceMax: number
-  priceAvg: number
-  rating: number
-  distance: string
-  image: string
-  badge?: 'popular' | 'delivery' | 'available'
-  badgeLabel?: string
-  timeSlots: { time: string; available: boolean }[]
-}
 
 const selectedRestaurant = ref<Restaurant | null>(null)
 
@@ -55,13 +50,24 @@ function handleGoQueue(restaurant: Restaurant) {
   selectedRestaurant.value = restaurant
   queuePartySize.value = 2
   queueNote.value = ''
+  queueTicketResult.value = null
   currentView.value = 'queue'
+  fetchQueueStatus(restaurant.id)
 }
 
 function handleGoMenu(restaurant: Restaurant) {
   selectedRestaurant.value = restaurant
-  menuItems.value.forEach(item => (item.qty = 0))
+  resetMenu()
   currentView.value = 'menu'
+  // 呼叫 AI 生成菜單
+  fetchAiMenu({
+    restaurantId: restaurant.id,
+    name: restaurant.name,
+    tag: restaurant.tag,
+    priceAvg: restaurant.priceAvg,
+    priceMin: restaurant.priceMin,
+    priceMax: restaurant.priceMax,
+  })
 }
 
 /* ─── 動態表單 Sub-view 狀態 ─── */
@@ -168,37 +174,107 @@ function submitReserve() {
 /* ─── 候位 Sub-view 狀態 ─── */
 const queuePartySize = ref(2)
 const queueNote = ref('')
-const queueData = {
-  waitingGroups: 3,
-  estimatedMinutes: 15,
-  emptyTables: 2,
+const queueLoading = ref(false)
+const queueError = ref<string | null>(null)
+const queueData = ref({
+  waitingGroups: 0,
+  estimatedMinutes: 0,
+  emptyTables: 0,
+})
+const queueTicketResult = ref<{ ticketNumber: number; waitingAhead: number; estimatedMinutes: number } | null>(null)
+
+/** 共用的候位連動餐廳 ID（與廠商端同步） */
+const LINKED_PLACE_ID = 'linked_restaurant_01'
+
+async function fetchQueueStatus(placeId: string) {
+  queueLoading.value = true
+  queueError.value = null
+  queueTicketResult.value = null
+  try {
+    // 先嘗試用餐廳自身 placeId 查詢，若無資料則用連動 ID
+    let res = await $fetch<{ success: boolean; data: { waitingGroups: number; estimatedMinutes: number; emptyTables: number; notRegistered?: boolean } }>(`http://localhost:3001/api/queue/status/${encodeURIComponent(placeId)}`)
+    if (res.success && res.data.notRegistered) {
+      // 這間餐廳沒有候位系統，用共用連動的餐廳
+      res = await $fetch<{ success: boolean; data: { waitingGroups: number; estimatedMinutes: number; emptyTables: number } }>(`http://localhost:3001/api/queue/status/${LINKED_PLACE_ID}`)
+    }
+    if (res.success) {
+      queueData.value = {
+        waitingGroups: res.data.waitingGroups,
+        estimatedMinutes: res.data.estimatedMinutes,
+        emptyTables: res.data.emptyTables,
+      }
+    }
+  } catch {
+    queueError.value = '無法取得候位資訊'
+  } finally {
+    queueLoading.value = false
+  }
 }
 
-function submitQueue() {
-  console.log('候位抽號：', {
-    restaurant: selectedRestaurant.value?.name,
-    partySize: queuePartySize.value,
-    note: queueNote.value,
-  })
-  goBack()
+async function submitQueue() {
+  if (!selectedRestaurant.value) return
+  queueLoading.value = true
+  queueError.value = null
+  try {
+    const res = await $fetch<{ success: boolean; data: { ticketNumber: number; waitingAhead: number; estimatedMinutes: number }; error?: string }>('http://localhost:3001/api/queue/take-number', {
+      method: 'POST',
+      body: {
+        placeId: LINKED_PLACE_ID,
+        partySize: queuePartySize.value,
+        customerName: userName,
+        customerPhone: userPhone,
+        note: queueNote.value || undefined,
+      },
+    })
+    if (res.success) {
+      queueTicketResult.value = res.data
+      // 刷新看板數據
+      await fetchQueueStatus(selectedRestaurant.value.id)
+    } else {
+      queueError.value = res.error || '抽號失敗'
+    }
+  } catch {
+    queueError.value = '抽號失敗，請稍後再試'
+  } finally {
+    queueLoading.value = false
+  }
 }
 
 /* ─── 點餐 Sub-view 狀態 ─── */
-interface MenuItem {
-  name: string
-  price: number
-  calories: number
-  qty: number
-}
+const { loading: menuLoading, error: menuError, menuItems, fetchMenu: fetchAiMenu, reset: resetMenu } = useAiMenu()
 
-const menuItems = ref<MenuItem[]>([
-  { name: '招牌小籠包', price: 220, calories: 380, qty: 0 },
-  { name: '酸辣湯', price: 80, calories: 150, qty: 0 },
-  { name: '蝦仁炒飯', price: 180, calories: 520, qty: 0 },
-])
-
-const deliveryAddress = '台北市信義區松仁路 100 號'
+const deliveryAddress = ref('定位中...')
+const isEditingAddress = ref(false)
 const deliveryFee = 30
+
+// 進入頁面時用 Geolocation 反查地址
+onMounted(async () => {
+  if (!navigator.geolocation) {
+    deliveryAddress.value = '無法取得定位'
+    return
+  }
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const { latitude, longitude } = position.coords
+      try {
+        const res = await $fetch<{ results: { formatted_address: string }[]; status: string }>(
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&language=zh-TW&key=AIzaSyBxEaw70I-VNOmc4oEJe2Cgbv2qpmwOLc4`
+        )
+        if (res.status === 'OK' && res.results.length > 0) {
+          deliveryAddress.value = res.results[0].formatted_address
+        } else {
+          deliveryAddress.value = `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`
+        }
+      } catch {
+        deliveryAddress.value = `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`
+      }
+    },
+    () => {
+      deliveryAddress.value = '無法取得定位，請手動輸入'
+    },
+    { enableHighAccuracy: true, timeout: 10000 }
+  )
+})
 
 const menuSubtotal = computed(() =>
   menuItems.value.reduce((sum, item) => sum + item.price * item.qty, 0)
@@ -216,42 +292,70 @@ function submitOrder() {
     items: menuItems.value.filter(i => i.qty > 0),
     subtotal: menuSubtotal.value,
     total: menuTotal.value,
-    ...(eatMode.value === 'delivery' ? { address: deliveryAddress, deliveryFee } : {}),
+    ...(eatMode.value === 'delivery' ? { address: deliveryAddress.value, deliveryFee } : {}),
   })
   goBack()
 }
 
 /* ─── Tab 2: 聚餐企劃 ─── */
-const friendLocations = ref(['信義區', '板橋區'])
-const newLocation = ref('')
+import { useMidpoint } from '~/composables/useMidpoint'
+import type { RecommendedRestaurant } from '~/composables/useMidpoint'
+
+const { loading: midpointLoading, error: midpointError, result: midpointResult, fetchRecommendations, reset: resetMidpoint, carpoolLoading, carpoolError, carpoolResult, fetchCarpool, buildCarpoolNavigationUrl } = useMidpoint()
+
 const groupSize = ref(4)
+const groupAddresses = ref<string[]>(['', '', '', ''])
+const cuisineType = ref('')
 const needPrivateRoom = ref(false)
 const specialNote = ref('')
+const selectedMidpointRestaurant = ref<RecommendedRestaurant | null>(null)
 
-const suggestedStation = computed(() => {
-  if (friendLocations.value.includes('信義區') && friendLocations.value.includes('板橋區')) {
-    return '板南線 — 府中站 / 新埔站'
+// 同步人數與地址欄位數量
+watch(groupSize, (newSize, oldSize) => {
+  if (newSize > oldSize) {
+    for (let i = oldSize; i < newSize; i++) {
+      groupAddresses.value.push('')
+    }
+  } else {
+    groupAddresses.value.splice(newSize)
   }
-  if (friendLocations.value.length > 0) return '台北車站周邊'
-  return ''
 })
 
-const groupRestaurants = [
-  { name: '饗食天堂 板橋店', type: '吃到飽', distance: '步行 3 分鐘', emoji: '🍱' },
-  { name: '瓦城泰統 府中店', type: '泰式料理', distance: '步行 5 分鐘', emoji: '🍛' },
-  { name: '海底撈 新埔店', type: '麻辣火鍋', distance: '步行 7 分鐘', emoji: '🍲' },
-]
+// 檢查是否可以送出查詢
+const canSearch = computed(() => {
+  const filledAddresses = groupAddresses.value.filter((a) => a.trim().length > 0)
+  return filledAddresses.length >= 2 && !midpointLoading.value
+})
 
-function addLocation() {
-  const loc = newLocation.value.trim()
-  if (loc && !friendLocations.value.includes(loc)) {
-    friendLocations.value.push(loc)
-  }
-  newLocation.value = ''
+// 執行推薦查詢
+async function searchMidpoint() {
+  const addresses = groupAddresses.value.filter((a) => a.trim().length > 0)
+  if (addresses.length < 2) return
+  await fetchRecommendations(addresses, cuisineType.value || undefined)
 }
 
-function removeLocation(index: number) {
-  friendLocations.value.splice(index, 1)
+// 重置搜尋
+function resetSearch() {
+  resetMidpoint()
+  selectedMidpointRestaurant.value = null
+}
+
+// 選取餐廳（地圖聚焦 + 共乘查詢）
+function selectRestaurantForMap(restaurant: RecommendedRestaurant) {
+  selectedMidpointRestaurant.value = restaurant
+  fetchCarpool(restaurant)
+}
+
+// 取得價位標籤
+function getPriceLevelLabel(level?: number): string {
+  if (level === undefined || level === null) return ''
+  const labels = ['', '$', '$$', '$$$', '$$$$']
+  return labels[level] || ''
+}
+
+// 生成 Google Maps 導航連結
+function getDirectionsUrl(restaurant: RecommendedRestaurant): string {
+  return `https://www.google.com/maps/dir/?api=1&destination=${restaurant.location.lat},${restaurant.location.lng}&destination_place_id=${restaurant.placeId}`
 }
 
 /* ─── Tab 3: 熱量儀表板 ─── */
@@ -447,7 +551,6 @@ const passportBadges = [
           @go-reserve="handleGoReserve"
           @go-queue="handleGoQueue"
           @go-menu="handleGoMenu"
-          @go-form="handleGoForm"
         />
 
         <!-- ═══ Sub-view: 訂位表單頁 ═══ -->
@@ -534,50 +637,75 @@ const passportBadges = [
 
           <!-- AI 提示列 -->
           <div class="subview__ai-hint">
-            ✨ AI 已為你預估現場等候時間
+            ✨ 即時候位資訊由餐廳端同步更新
+          </div>
+
+          <!-- Loading -->
+          <div v-if="queueLoading && !queueTicketResult" class="subview__form-loading">
+            <div class="subview__form-spinner" />
+            <span>載入候位資訊...</span>
+          </div>
+
+          <!-- Error -->
+          <div v-else-if="queueError && !queueTicketResult" class="subview__form-error">
+            {{ queueError }}
+          </div>
+
+          <!-- 抽號成功結果 -->
+          <div v-if="queueTicketResult" class="subview__queue-success">
+            <span class="subview__queue-success-icon">🎫</span>
+            <p class="subview__queue-success-title">您的號碼牌：#{{ queueTicketResult.ticketNumber }}</p>
+            <p class="subview__queue-success-desc">前方還有 {{ queueTicketResult.waitingAhead }} 組，預估等候約 {{ queueTicketResult.estimatedMinutes }} 分鐘</p>
+            <button class="subview__submit-btn subview__submit-btn--green" @click="goBack">返回餐廳列表</button>
           </div>
 
           <!-- 實時候位看板 -->
-          <div class="subview__queue-board">
-            <div class="subview__queue-item">
-              <span class="subview__queue-value">{{ queueData.waitingGroups }} 組</span>
-              <span class="subview__queue-label">目前候位</span>
+          <template v-if="!queueTicketResult">
+            <div class="subview__queue-board">
+              <div class="subview__queue-item">
+                <span class="subview__queue-value">{{ queueData.waitingGroups }} 組</span>
+                <span class="subview__queue-label">目前候位</span>
+              </div>
+              <div class="subview__queue-item">
+                <span class="subview__queue-value">約 {{ queueData.estimatedMinutes }} 分鐘</span>
+                <span class="subview__queue-label">預估等候</span>
+              </div>
+              <div class="subview__queue-item">
+                <span class="subview__queue-value">{{ queueData.emptyTables }} 桌</span>
+                <span class="subview__queue-label">現場空桌</span>
+              </div>
             </div>
-            <div class="subview__queue-item">
-              <span class="subview__queue-value">約 {{ queueData.estimatedMinutes }} 分鐘</span>
-              <span class="subview__queue-label">預估等候</span>
-            </div>
-            <div class="subview__queue-item">
-              <span class="subview__queue-value">{{ queueData.emptyTables }} 桌</span>
-              <span class="subview__queue-label">現場空桌</span>
-            </div>
-          </div>
 
-          <!-- 表單區：用餐人數 -->
-          <div class="subview__section">
-            <span class="subview__info-label">🍴 用餐人數</span>
-            <div class="subview__stepper">
-              <button class="subview__stepper-btn" :disabled="queuePartySize <= 1" @click="queuePartySize--">−</button>
-              <span class="subview__stepper-val">{{ queuePartySize }} 人</span>
-              <button class="subview__stepper-btn" :disabled="queuePartySize >= 10" @click="queuePartySize++">＋</button>
+            <!-- 表單區：用餐人數 -->
+            <div class="subview__section">
+              <span class="subview__info-label">🍴 用餐人數</span>
+              <div class="subview__stepper">
+                <button class="subview__stepper-btn" :disabled="queuePartySize <= 1" @click="queuePartySize--">−</button>
+                <span class="subview__stepper-val">{{ queuePartySize }} 人</span>
+                <button class="subview__stepper-btn" :disabled="queuePartySize >= 10" @click="queuePartySize++">＋</button>
+              </div>
             </div>
-          </div>
 
-          <!-- 表單區：特殊備註 -->
-          <div class="subview__section">
-            <span class="subview__info-label">📝 特殊備註</span>
-            <textarea
-              v-model="queueNote"
-              class="subview__textarea"
-              placeholder="例如：需要嬰兒椅 / 輪椅空間"
-              rows="3"
-            />
-          </div>
+            <!-- 表單區：特殊備註 -->
+            <div class="subview__section">
+              <span class="subview__info-label">📝 特殊備註</span>
+              <textarea
+                v-model="queueNote"
+                class="subview__textarea"
+                placeholder="例如：需要嬰兒椅 / 輪椅空間"
+                rows="3"
+              />
+            </div>
 
-          <!-- 底部按鈕 -->
-          <button class="subview__submit-btn subview__submit-btn--orange" @click="submitQueue">
-            抽取線上候位號碼牌
-          </button>
+            <!-- 底部按鈕 -->
+            <button
+              class="subview__submit-btn subview__submit-btn--orange"
+              :disabled="queueLoading"
+              @click="submitQueue"
+            >
+              {{ queueLoading ? '處理中...' : '抽取線上候位號碼牌' }}
+            </button>
+          </template>
         </div>
 
         <!-- ═══ Sub-view: 外帶/外送點餐頁 ═══ -->
@@ -592,54 +720,78 @@ const passportBadges = [
             </div>
           </div>
 
-          <!-- AI 提示列 -->
-          <div class="subview__ai-hint">
-            ✨ AI 已根據你的飲食偏好推薦品項
-          </div>
+          
+          
 
           <!-- 外送地址（外送模式才顯示） -->
           <div v-if="eatMode === 'delivery'" class="subview__delivery-address">
-            <span class="subview__delivery-address-label">📍 外送地址</span>
-            <span class="subview__delivery-address-value">{{ deliveryAddress }}</span>
+            <div class="subview__delivery-address-header">
+              <span class="subview__delivery-address-label">📍 外送地址</span>
+              <button
+                class="subview__delivery-edit-btn"
+                @click="isEditingAddress = !isEditingAddress"
+              >✏️</button>
+            </div>
+            <input
+              v-if="isEditingAddress"
+              v-model="deliveryAddress"
+              class="subview__delivery-address-input"
+              placeholder="請輸入外送地址"
+              @keyup.enter="isEditingAddress = false"
+            />
+            <span v-else class="subview__delivery-address-value">{{ deliveryAddress }}</span>
+          </div>
+
+          <!-- 菜單 Loading -->
+          <div v-if="menuLoading" class="subview__form-loading">
+            <div class="subview__form-spinner" />
+            <span>AI 正在生成菜單...</span>
+          </div>
+
+          <!-- 菜單 Error -->
+          <div v-else-if="menuError" class="subview__form-error">
+            {{ menuError }}
           </div>
 
           <!-- 菜單列表 -->
-          <div class="subview__menu-list">
-            <div v-for="item in menuItems" :key="item.name" class="subview__menu-item">
-              <div class="subview__menu-item-info">
-                <span class="subview__menu-item-name">{{ item.name }}</span>
-                <span class="subview__menu-item-meta">${{ item.price }} · {{ item.calories }} kcal</span>
+          <template v-else>
+            <div class="subview__menu-list">
+              <div v-for="item in menuItems" :key="item.name" class="subview__menu-item">
+                <div class="subview__menu-item-info">
+                  <span class="subview__menu-item-name">{{ item.name }}</span>
+                  <span class="subview__menu-item-meta">${{ item.price }} · {{ item.calories }} kcal</span>
+                </div>
+                <div class="subview__menu-item-controls">
+                  <button class="subview__stepper-btn" :disabled="item.qty <= 0" @click="item.qty--">−</button>
+                  <span class="subview__stepper-val">{{ item.qty }}</span>
+                  <button class="subview__stepper-btn" @click="item.qty++">＋</button>
+                </div>
               </div>
-              <div class="subview__menu-item-controls">
-                <button class="subview__stepper-btn" :disabled="item.qty <= 0" @click="item.qty--">−</button>
-                <span class="subview__stepper-val">{{ item.qty }}</span>
-                <button class="subview__stepper-btn" @click="item.qty++">＋</button>
+            </div>
+
+            <!-- 金額匯總 -->
+            <div class="subview__summary">
+              <div class="subview__summary-row">
+                <span>小計</span>
+                <span>${{ menuSubtotal }}</span>
+              </div>
+              <div v-if="eatMode === 'delivery'" class="subview__summary-row">
+                <span>外送費</span>
+                <span>${{ deliveryFee }}</span>
+              </div>
+              <div class="subview__summary-row subview__summary-row--total">
+                <span>總金額</span>
+                <strong>${{ menuTotal }}</strong>
               </div>
             </div>
-          </div>
 
-          <!-- 金額匯總 -->
-          <div class="subview__summary">
-            <div class="subview__summary-row">
-              <span>小計</span>
-              <span>${{ menuSubtotal }}</span>
-            </div>
-            <div v-if="eatMode === 'delivery'" class="subview__summary-row">
-              <span>外送費</span>
-              <span>${{ deliveryFee }}</span>
-            </div>
-            <div class="subview__summary-row subview__summary-row--total">
-              <span>總金額</span>
-              <strong>${{ menuTotal }}</strong>
-            </div>
-          </div>
-
-          <!-- 底部按鈕 -->
-          <button
-            class="subview__submit-btn"
-            :disabled="menuSubtotal === 0"
-            @click="submitOrder"
-          >確認送出訂單</button>
+            <!-- 底部按鈕 -->
+            <button
+              class="subview__submit-btn"
+              :disabled="menuSubtotal === 0"
+              @click="submitOrder"
+            >確認送出訂單</button>
+          </template>
         </div>
 
         <!-- ═══ Sub-view: 動態表單（填寫需求）═══ -->
@@ -832,62 +984,225 @@ const passportBadges = [
 
         <!-- 多人中點距離計算器 -->
         <div class="group-card">
-          <h3 class="group-card__title">📍 多人中點距離計算器</h3>
-          <p class="group-card__desc">輸入參與好友位置，自動計算中點並推薦捷運站周邊聚餐餐廳</p>
+          <h3 class="group-card__title">📍 多人中點餐廳推薦</h3>
+          <p class="group-card__desc">輸入每位朋友的出發地址，AI 自動計算最公平的聚餐地點</p>
 
-          <!-- 已加入地點 -->
-          <div class="group-card__locations">
-            <span
-              v-for="(loc, idx) in friendLocations"
+          <!-- 用餐人數 -->
+          <div class="group-booking__row">
+            <label class="group-booking__label">👥 聚餐人數</label>
+            <div class="group-booking__stepper">
+              <button class="stepper-btn" :disabled="groupSize <= 2" @click="groupSize--">−</button>
+              <span class="stepper-val">{{ groupSize }} 人</span>
+              <button class="stepper-btn" :disabled="groupSize >= 10" @click="groupSize++">＋</button>
+            </div>
+          </div>
+
+          <!-- 地址輸入欄位 -->
+          <div class="group-card__addresses">
+            <div
+              v-for="(_, idx) in groupAddresses"
               :key="idx"
-              class="group-card__loc-tag"
+              class="group-card__address-row"
             >
-              {{ loc }}
-              <button class="group-card__loc-remove" @click="removeLocation(idx)">×</button>
-            </span>
+              <span class="group-card__address-label">👤 第 {{ idx + 1 }} 人</span>
+              <input
+                v-model="groupAddresses[idx]"
+                class="group-card__input"
+                :placeholder="`輸入出發地址（如：台北市信義區松仁路100號）`"
+              />
+            </div>
           </div>
 
-          <!-- 輸入新地點 -->
-          <div class="group-card__input-row">
+          <!-- 料理類型偏好（可選） -->
+          <div class="group-card__cuisine-row">
+            <span class="group-card__cuisine-label">🍽️ 料理偏好（可選）</span>
             <input
-              v-model="newLocation"
+              v-model="cuisineType"
               class="group-card__input"
-              placeholder="輸入區域（如：中山區）"
-              @keyup.enter="addLocation"
+              placeholder="例如：日式、火鍋、義大利麵..."
             />
-            <button class="group-card__add-btn" @click="addLocation">加入</button>
           </div>
 
-          <!-- 推薦結果 -->
-          <div v-if="suggestedStation" class="group-card__result">
-            <p class="group-card__station">🚇 推薦中點：<strong>{{ suggestedStation }}</strong></p>
-            <div class="group-card__restaurant-list">
-              <div v-for="r in groupRestaurants" :key="r.name" class="group-card__restaurant">
-                <span class="group-card__restaurant-emoji">{{ r.emoji }}</span>
-                <div class="group-card__restaurant-info">
-                  <span class="group-card__restaurant-name">{{ r.name }}</span>
-                  <span class="group-card__restaurant-meta">{{ r.type }} · {{ r.distance }}</span>
-                </div>
+          <!-- 搜尋按鈕 -->
+          <button
+            class="group-card__search-btn"
+            :disabled="!canSearch"
+            @click="searchMidpoint"
+          >
+            <span v-if="midpointLoading">⏳ 計算中...</span>
+            <span v-else>🔍 搜尋最佳聚餐地點</span>
+          </button>
+
+          <!-- 錯誤訊息 -->
+          <div v-if="midpointError" class="group-card__error">
+            ❌ {{ midpointError }}
+          </div>
+        </div>
+
+        <!-- 地圖顯示（有結果時） -->
+        <div v-if="midpointResult && midpointResult.origins && midpointResult.recommendations.length > 0" class="group-card">
+          <h3 class="group-card__title">🗺️ 地圖總覽</h3>
+          <MidpointMap
+            :origins="midpointResult.origins"
+            :restaurant="selectedMidpointRestaurant ? { name: selectedMidpointRestaurant.name, location: selectedMidpointRestaurant.location } : { name: midpointResult.recommendations[0].name, location: midpointResult.recommendations[0].location }"
+            :centroid="midpointResult.centroid"
+          />
+          <p class="group-card__map-hint">
+            🔵 藍色 = 各人出發地 &nbsp; 🍽️ = {{ selectedMidpointRestaurant?.name || midpointResult.recommendations[0].name }}
+          </p>
+        </div>
+
+        <!-- 推薦結果 -->
+        <div v-if="midpointResult && midpointResult.recommendations.length > 0" class="group-card">
+          <div class="group-card__results-header">
+            <h4 class="group-card__results-title">🎯 推薦餐廳（依公平性 + 評分排序）</h4>
+            <button class="group-card__reset-btn" @click="resetSearch">重新搜尋</button>
+          </div>
+
+          <p v-if="midpointResult.fallbackUsed" class="group-card__fallback-hint">
+            💡 指定料理類型的結果不足，已補充其他推薦
+          </p>
+
+          <!-- 餐廳卡片列表 -->
+          <div
+            v-for="(restaurant, rIdx) in midpointResult.recommendations"
+            :key="restaurant.placeId"
+            class="midpoint-restaurant-card"
+            :class="{ 'midpoint-restaurant-card--selected': selectedMidpointRestaurant?.placeId === restaurant.placeId }"
+            @click="selectRestaurantForMap(restaurant)"
+          >
+            <div class="midpoint-restaurant-card__header">
+              <span class="midpoint-restaurant-card__rank">#{{ rIdx + 1 }}</span>
+              <div class="midpoint-restaurant-card__name-row">
+                <span class="midpoint-restaurant-card__name">{{ restaurant.name }}</span>
+                <span class="midpoint-restaurant-card__rating">⭐ {{ restaurant.rating }}</span>
               </div>
             </div>
+
+            <div class="midpoint-restaurant-card__meta">
+              <span class="midpoint-restaurant-card__address">📍 {{ restaurant.address }}</span>
+              <span v-if="getPriceLevelLabel(restaurant.priceLevel)" class="midpoint-restaurant-card__price">
+                {{ getPriceLevelLabel(restaurant.priceLevel) }}
+              </span>
+              <span v-if="restaurant.openNow !== undefined" class="midpoint-restaurant-card__open" :class="{ 'midpoint-restaurant-card__open--closed': !restaurant.openNow }">
+                {{ restaurant.openNow ? '🟢 營業中' : '🔴 已休息' }}
+              </span>
+            </div>
+
+            <!-- 各人交通時間明細 -->
+            <div class="midpoint-restaurant-card__travel">
+              <span class="midpoint-restaurant-card__travel-title"> 各人交通時間</span>
+              <div class="midpoint-restaurant-card__travel-grid">
+                <div
+                  v-for="(detail, dIdx) in restaurant.travelDetails"
+                  :key="dIdx"
+                  class="midpoint-restaurant-card__travel-item"
+                >
+                  <span class="midpoint-restaurant-card__travel-person">第 {{ dIdx + 1 }} 人</span>
+                  <span class="midpoint-restaurant-card__travel-time">{{ detail.duration }} 分鐘</span>
+                  <span class="midpoint-restaurant-card__travel-mode">{{ detail.modeLabel }}</span>
+                </div>
+              </div>
+              <div class="midpoint-restaurant-card__travel-summary">
+                <span>平均 {{ restaurant.avgTime }} 分鐘</span>
+                <span>·</span>
+                <span>公平性 {{ Math.round(restaurant.fairnessScore * 100) }}%</span>
+              </div>
+            </div>
+
+            <!-- 導航按鈕 -->
+            <div class="midpoint-restaurant-card__actions">
+              <a
+                :href="getDirectionsUrl(restaurant)"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="midpoint-restaurant-card__nav-btn"
+                @click.stop
+              >
+                 個人導航
+              </a>
+              <button
+                class="midpoint-restaurant-card__carpool-btn"
+                @click.stop="selectRestaurantForMap(restaurant)"
+              >
+                 共乘建議
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 共乘建議卡片 -->
+        <div v-if="selectedMidpointRestaurant && (carpoolResult || carpoolLoading || carpoolError)" class="group-card">
+          <h3 class="group-card__title"> 共乘路線建議</h3>
+          <p class="group-card__desc">開車的人如果順路，可以接其他人一起去（繞路 &lt; 10 分鐘）</p>
+
+          <!-- Loading -->
+          <div v-if="carpoolLoading" class="group-card__carpool-loading">
+            ⏳ 計算共乘路線中...
+          </div>
+
+          <!-- 錯誤 -->
+          <div v-else-if="carpoolError" class="group-card__carpool-info">
+            {{ carpoolError }}
+          </div>
+
+          <!-- 結果 -->
+          <template v-else-if="carpoolResult">
+            <div v-if="carpoolResult.carpoolGroups.length === 0" class="group-card__carpool-info">
+               目前的交通方式組合沒有適合的共乘配對
+            </div>
+
+            <div
+              v-for="(group, gIdx) in carpoolResult.carpoolGroups"
+              :key="gIdx"
+              class="carpool-group-card"
+            >
+              <div class="carpool-group-card__driver">
+                <span class="carpool-group-card__driver-icon"></span>
+                <span class="carpool-group-card__driver-label">第 {{ group.driverIndex + 1 }} 人開車（直達 {{ group.directDuration }} 分鐘）</span>
+              </div>
+
+              <div class="carpool-group-card__pickups">
+                <div
+                  v-for="pickup in group.pickups"
+                  :key="pickup.passengerIndex"
+                  class="carpool-group-card__pickup-item"
+                >
+                  <span class="carpool-group-card__pickup-who">可順路接第 {{ pickup.passengerIndex + 1 }} 人</span>
+                  <span class="carpool-group-card__pickup-detour">繞路 +{{ pickup.detourMinutes }} 分鐘</span>
+                  <span class="carpool-group-card__pickup-total">總計 {{ pickup.totalTime }} 分鐘到達</span>
+                </div>
+              </div>
+
+              <!-- 共乘導航連結 -->
+              <a
+                v-for="pickup in group.pickups"
+                :key="`nav-${pickup.passengerIndex}`"
+                :href="buildCarpoolNavigationUrl(group.driverOrigin, [pickup.passengerOrigin], selectedMidpointRestaurant!.location)"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="carpool-group-card__nav-link"
+              >
+                開啟導航：接第 {{ pickup.passengerIndex + 1 }} 人 → {{ selectedMidpointRestaurant!.name }}
+              </a>
+            </div>
+          </template>
+        </div>
+
+        <!-- 無結果提示 -->
+        <div v-if="midpointResult && midpointResult.recommendations.length === 0" class="group-card">
+          <div class="group-card__no-result">
+            <p>在此範圍內找不到符合條件的餐廳</p>
+            <p class="group-card__no-result-hint">{{ midpointResult.message || '請嘗試調整地址或擴大搜索範圍' }}</p>
           </div>
         </div>
 
         <!-- 多人預約設定 -->
         <div class="group-card">
-          <h3 class="group-card__title">🎉 多人預約設定</h3>
+          <h3 class="group-card__title">多人預約設定</h3>
 
           <div class="group-booking__row">
-            <label class="group-booking__label">👥 用餐人數</label>
-            <div class="group-booking__stepper">
-              <button class="stepper-btn" :disabled="groupSize <= 2" @click="groupSize--">−</button>
-              <span class="stepper-val">{{ groupSize }} 人</span>
-              <button class="stepper-btn" :disabled="groupSize >= 20" @click="groupSize++">＋</button>
-            </div>
-          </div>
-
-          <div class="group-booking__row">
-            <label class="group-booking__label">🚪 包廂需求</label>
+            <label class="group-booking__label"> 包廂需求</label>
             <button
               class="toggle-btn"
               :class="{ 'toggle-btn--on': needPrivateRoom }"
@@ -898,7 +1213,7 @@ const passportBadges = [
           </div>
 
           <div class="group-booking__note-section">
-            <label class="group-booking__label">🤖 AI 特殊備註</label>
+            <label class="group-booking__label"> AI 特殊備註</label>
             <textarea
               v-model="specialNote"
               class="group-booking__textarea"
@@ -1005,7 +1320,7 @@ const passportBadges = [
 
         <!-- 區塊 1：總熱量進度條 -->
         <div class="calorie-card">
-          <h3 class="calorie-card__title">🔥 今日熱量攝取</h3>
+          <h3 class="calorie-card__title"> 今日熱量攝取</h3>
           <p class="calorie-card__summary">
             今日已攝取 <strong>{{ calorieIntake.toLocaleString() }}</strong> / {{ calorieGoal.toLocaleString() }} kcal
           </p>
@@ -1049,7 +1364,7 @@ const passportBadges = [
         <!-- 區塊 3：AI 智慧分析建議 -->
         <div class="ai-advice-card">
           <p class="ai-advice-card__text">
-            🤖 <strong>AI 建議：</strong>今日膳食纖維尚有缺口，下一餐建議補充高纖蔬菜！
+             <strong>AI 建議：</strong>今日膳食纖維尚有缺口，下一餐建議補充高纖蔬菜！
           </p>
         </div>
       </section>
@@ -1059,7 +1374,7 @@ const passportBadges = [
 
         <!-- 三層地圖足跡切換 -->
         <div class="passport-card">
-          <h3 class="passport-card__title">📜 地圖足跡</h3>
+          <h3 class="passport-card__title"> 地圖足跡</h3>
 
           <!-- 層級切換 -->
           <div class="passport-level-bar">
@@ -1102,7 +1417,7 @@ const passportBadges = [
 
         <!-- 打卡卡片 -->
         <div class="passport-card">
-          <h3 class="passport-card__title">📌 打卡紀錄</h3>
+          <h3 class="passport-card__title"> 打卡紀錄</h3>
           <div class="checkin-list">
             <div v-for="c in passportCheckins" :key="c.restaurant" class="checkin-item">
               <span class="checkin-item__emoji">{{ c.emoji }}</span>
@@ -1116,7 +1431,7 @@ const passportBadges = [
 
         <!-- 成就徽章 -->
         <div class="passport-card">
-          <h3 class="passport-card__title">🎖️ 成就徽章</h3>
+          <h3 class="passport-card__title"> 成就徽章</h3>
           <div class="badge-grid">
             <div
               v-for="b in passportBadges"
@@ -1285,6 +1600,7 @@ const passportBadges = [
   font-family: inherit;
   outline: none;
   transition: border-color 0.15s;
+  width: 100%;
 }
 .group-card__input:focus {
   border-color: var(--color-primary, #ff5252);
@@ -1390,6 +1706,436 @@ const passportBadges = [
   color: var(--color-primary, #ff5252);
 }
 .stepper-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.stepper-val {
+  font-size: 15px;
+  font-weight: 700;
+  min-width: 36px;
+  text-align: center;
+}
+
+/* ─── 地址輸入區 ─── */
+.group-card__addresses {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.group-card__address-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.group-card__address-label {
+  font-size: 12px;
+  color: #78716c;
+  font-weight: 500;
+}
+
+/* ─── 料理類型偏好 ─── */
+.group-card__cuisine-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.group-card__cuisine-label {
+  font-size: 12px;
+  color: #78716c;
+  font-weight: 500;
+}
+
+/* ─── 搜尋按鈕 ─── */
+.group-card__search-btn {
+  width: 100%;
+  height: 46px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ff5252, #ff8a65);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  letter-spacing: 0.04em;
+}
+.group-card__search-btn:hover:not(:disabled) { opacity: 0.88; }
+.group-card__search-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ─── 錯誤訊息 ─── */
+.group-card__error {
+  font-size: 13px;
+  color: #dc2626;
+  background: #fef2f2;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+/* ─── 推薦結果區 ─── */
+.group-card__results {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.group-card__results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.group-card__results-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1c1917;
+}
+
+.group-card__reset-btn {
+  border: none;
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.group-card__reset-btn:hover {
+  background: #e2e8f0;
+}
+
+.group-card__fallback-hint {
+  margin: 0;
+  font-size: 12px;
+  color: #d97706;
+  background: #fffbeb;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+/* ─── 推薦餐廳卡片 ─── */
+.midpoint-restaurant-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  background: #fafaf9;
+  border-radius: 12px;
+  border: 1px solid #f1f5f9;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.midpoint-restaurant-card:hover {
+  border-color: #e2e8f0;
+}
+
+.midpoint-restaurant-card__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.midpoint-restaurant-card__rank {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff5252, #ff8a65);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.midpoint-restaurant-card__name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.midpoint-restaurant-card__name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1c1917;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.midpoint-restaurant-card__rating {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f59e0b;
+  flex-shrink: 0;
+}
+
+.midpoint-restaurant-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.midpoint-restaurant-card__address {
+  font-size: 12px;
+  color: #78716c;
+}
+
+.midpoint-restaurant-card__price {
+  font-size: 12px;
+  font-weight: 600;
+  color: #16a34a;
+}
+
+.midpoint-restaurant-card__open {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.midpoint-restaurant-card__open--closed {
+  color: #dc2626;
+}
+
+/* 交通時間明細 */
+.midpoint-restaurant-card__travel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  background: #fff;
+  border-radius: 10px;
+}
+
+.midpoint-restaurant-card__travel-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1c1917;
+}
+
+.midpoint-restaurant-card__travel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+}
+
+.midpoint-restaurant-card__travel-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 6px;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+
+.midpoint-restaurant-card__travel-person {
+  font-size: 11px;
+  color: #78716c;
+}
+
+.midpoint-restaurant-card__travel-time {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1c1917;
+}
+
+.midpoint-restaurant-card__travel-mode {
+  font-size: 10px;
+  color: #64748b;
+  padding: 2px 6px;
+  background: #e0f2fe;
+  border-radius: 4px;
+}
+
+.midpoint-restaurant-card__travel-summary {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* 導航按鈕 */
+.midpoint-restaurant-card__nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 38px;
+  border-radius: 10px;
+  background: #3b82f6;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.midpoint-restaurant-card__nav-btn:hover {
+  opacity: 0.88;
+}
+
+/* ─── 無結果 ─── */
+.group-card__no-result {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.group-card__no-result p {
+  margin: 0;
+  font-size: 14px;
+  color: #78716c;
+}
+
+.group-card__no-result-hint {
+  font-size: 12px;
+  color: #a1a1aa;
+  margin-top: 4px;
+}
+
+/* ─── 地圖提示 ─── */
+.group-card__map-hint {
+  margin: 0;
+  font-size: 11px;
+  color: #64748b;
+  text-align: center;
+}
+
+/* ─── 餐廳卡片 selected 狀態 ─── */
+.midpoint-restaurant-card--selected {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+/* ─── 操作按鈕列 ─── */
+.midpoint-restaurant-card__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.midpoint-restaurant-card__carpool-btn {
+  flex: 1;
+  height: 38px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  color: #1c1917;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.midpoint-restaurant-card__carpool-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+/* ─── 共乘 Loading / Info ─── */
+.group-card__carpool-loading {
+  font-size: 13px;
+  color: #78716c;
+  text-align: center;
+  padding: 12px 0;
+}
+
+.group-card__carpool-info {
+  font-size: 13px;
+  color: #78716c;
+  text-align: center;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 10px;
+}
+
+/* ─── 共乘分組卡片 ─── */
+.carpool-group-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  background: #f0fdf4;
+  border-radius: 12px;
+  border: 1px solid #bbf7d0;
+}
+
+.carpool-group-card__driver {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.carpool-group-card__driver-icon {
+  font-size: 18px;
+}
+
+.carpool-group-card__driver-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #166534;
+}
+
+.carpool-group-card__pickups {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.carpool-group-card__pickup-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #fff;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.carpool-group-card__pickup-who {
+  font-weight: 600;
+  color: #1c1917;
+}
+
+.carpool-group-card__pickup-detour {
+  color: #d97706;
+  font-weight: 500;
+}
+
+.carpool-group-card__pickup-total {
+  color: #64748b;
+  margin-left: auto;
+}
+
+.carpool-group-card__nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #16a34a;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.15s;
+  text-align: center;
+  line-height: 1.4;
+}
+.carpool-group-card__nav-link:hover {
+  opacity: 0.88;
+}
 
 .stepper-val {
   font-size: 15px;
@@ -1944,6 +2690,33 @@ const passportBadges = [
   color: #78716c;
 }
 
+/* ─── 候位抽號成功 ─── */
+.subview__queue-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 24px 0;
+  text-align: center;
+}
+
+.subview__queue-success-icon {
+  font-size: 44px;
+}
+
+.subview__queue-success-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1c1917;
+}
+
+.subview__queue-success-desc {
+  margin: 0;
+  font-size: 13px;
+  color: #78716c;
+}
+
 /* ─── 點餐菜單列表 ─── */
 .subview__menu-list {
   display: flex;
@@ -1997,6 +2770,42 @@ const passportBadges = [
   font-size: 11px;
   color: #0369a1;
   font-weight: 500;
+}
+
+.subview__delivery-address-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.subview__delivery-edit-btn {
+  border: none;
+  background: none;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.subview__delivery-edit-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.subview__delivery-address-input {
+  padding: 8px 10px;
+  border: 1.5px solid #7dd3fc;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #0c4a6e;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.15s;
+}
+
+.subview__delivery-address-input:focus {
+  border-color: #0369a1;
 }
 
 .subview__delivery-address-value {

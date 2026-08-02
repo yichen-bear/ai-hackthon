@@ -1,20 +1,6 @@
 <script setup lang="ts">
-/* ─── 型別定義 ─── */
-
-export interface Restaurant {
-  id: string
-  name: string
-  tag: string
-  priceMin: number
-  priceMax: number
-  priceAvg: number
-  rating: number
-  distance: string
-  image: string
-  badge?: 'popular' | 'delivery' | 'available'
-  badgeLabel?: string
-  timeSlots: { time: string; available: boolean }[]
-}
+import { useRestaurantRecommend } from '~/composables/useRestaurantRecommend'
+import type { Restaurant } from '~/composables/useRestaurantRecommend'
 
 /* ─── Props ─── */
 const props = defineProps<{
@@ -26,72 +12,26 @@ const emit = defineEmits<{
   'go-reserve': [restaurant: Restaurant]
   'go-queue': [restaurant: Restaurant]
   'go-menu': [restaurant: Restaurant]
-  'go-form': [restaurant: Restaurant]
 }>()
 
-/* ─── Mock 餐廳資料 ─── */
-const restaurants: Restaurant[] = [
-  {
-    id: 'dintaifung',
-    name: '鼎泰豐 101店',
-    tag: '台式小籠包',
-    priceMin: 500,
-    priceMax: 800,
-    priceAvg: 600,
-    rating: 4.9,
-    distance: '0.3 km',
-    image: '🥟',
-    badge: 'popular',
-    badgeLabel: '🔥 熱門推薦',
-    timeSlots: [
-      { time: '18:00', available: true },
-      { time: '18:30', available: true },
-      { time: '19:00', available: true },
-      { time: '19:30', available: false },
-      { time: '20:00', available: true },
-    ],
-  },
-  {
-    id: 'ichiran',
-    name: '一蘭拉麵 台北店',
-    tag: '日式拉麵',
-    priceMin: 350,
-    priceMax: 500,
-    priceAvg: 420,
-    rating: 4.7,
-    distance: '0.8 km',
-    image: '🍜',
-    badge: 'available',
-    badgeLabel: '🟢 實時有位',
-    timeSlots: [
-      { time: '18:00', available: true },
-      { time: '18:30', available: false },
-      { time: '19:00', available: true },
-      { time: '19:30', available: true },
-      { time: '20:00', available: true },
-    ],
-  },
-  {
-    id: 'dingwang',
-    name: '鼎王麻辣鍋',
-    tag: '麻辣火鍋',
-    priceMin: 800,
-    priceMax: 1200,
-    priceAvg: 950,
-    rating: 4.8,
-    distance: '1.2 km',
-    image: '🍲',
-    badge: 'delivery',
-    badgeLabel: '🛵 支援外送',
-    timeSlots: [
-      { time: '17:30', available: true },
-      { time: '18:00', available: true },
-      { time: '18:30', available: false },
-      { time: '19:00', available: false },
-      { time: '20:00', available: true },
-    ],
-  },
-]
+/* ─── 使用 composable 取得真實推薦資料 ─── */
+const {
+  loading,
+  error,
+  restaurants,
+  locationError,
+  fetchRecommendations,
+} = useRestaurantRecommend()
+
+// 進入頁面時自動載入推薦
+onMounted(() => {
+  fetchRecommendations({ mode: props.eatMode })
+})
+
+// 當用餐模式切換時重新載入
+watch(() => props.eatMode, (newMode) => {
+  fetchRecommendations({ mode: newMode })
+})
 
 /* ─── 輔助 ─── */
 function badgeStyle(type?: string) {
@@ -110,8 +50,31 @@ function badgeStyle(type?: string) {
       <span class="bc__subtitle">為你推薦附近熱門餐廳</span>
     </div>
 
+    <!-- 定位提示 -->
+    <div v-if="locationError" class="bc__location-hint">
+      📍 {{ locationError }}（已使用預設位置）
+    </div>
+
+    <!-- Loading 狀態 -->
+    <div v-if="loading" class="bc__loading">
+      <div class="bc__spinner" />
+      <span>正在尋找附近好餐廳...</span>
+    </div>
+
+    <!-- 錯誤狀態 -->
+    <div v-else-if="error" class="bc__error">
+      <p>❌ {{ error }}</p>
+      <button class="bc__retry-btn" @click="fetchRecommendations({ mode: props.eatMode })">重新搜尋</button>
+    </div>
+
+    <!-- 無結果 -->
+    <div v-else-if="restaurants.length === 0" class="bc__empty">
+      <p>附近暫無推薦餐廳</p>
+      <button class="bc__retry-btn" @click="fetchRecommendations({ mode: props.eatMode, radius: 3000 })">擴大搜索範圍</button>
+    </div>
+
     <!-- 餐廳推薦卡片列表 -->
-    <div class="bc__list">
+    <div v-else class="bc__list">
       <div
         v-for="r in restaurants"
         :key="r.id"
@@ -145,7 +108,7 @@ function badgeStyle(type?: string) {
               :style="badgeStyle(r.badge)"
             >{{ r.badgeLabel }}</span>
 
-            <!-- 內用模式：三個按鈕 -->
+            <!-- 內用模式 -->
             <div v-if="props.eatMode === 'dine_in'" class="bc__footer-btns">
               <button
                 class="bc__action-btn bc__action-btn--sm"
@@ -155,34 +118,14 @@ function badgeStyle(type?: string) {
                 class="bc__action-btn bc__action-btn--sm bc__action-btn--outline"
                 @click="emit('go-reserve', r)"
               >訂位</button>
-              <button
-                class="bc__action-btn bc__action-btn--sm bc__action-btn--green"
-                @click="emit('go-form', r)"
-              >填寫需求</button>
             </div>
 
-            <!-- 外帶模式 -->
-            <div v-else-if="props.eatMode === 'takeout'" class="bc__footer-btns">
-              <button
-                class="bc__action-btn bc__action-btn--sm"
-                @click="emit('go-menu', r)"
-              >點餐</button>
-              <button
-                class="bc__action-btn bc__action-btn--sm bc__action-btn--green"
-                @click="emit('go-form', r)"
-              >填寫需求</button>
-            </div>
-
-            <!-- 外送模式 -->
+            <!-- 外帶 / 外送模式 -->
             <div v-else class="bc__footer-btns">
               <button
                 class="bc__action-btn bc__action-btn--sm"
                 @click="emit('go-menu', r)"
               >點餐</button>
-              <button
-                class="bc__action-btn bc__action-btn--sm bc__action-btn--green"
-                @click="emit('go-form', r)"
-              >填寫需求</button>
             </div>
           </div>
         </div>
@@ -332,7 +275,7 @@ function badgeStyle(type?: string) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 2px;
+  margin-top: auto;
   gap: 6px;
 }
 
@@ -348,11 +291,12 @@ function badgeStyle(type?: string) {
   white-space: nowrap;
 }
 
-/* 右下角按鈕容器（內用雙按鈕） */
+/* 右下角按鈕容器 */
 .bc__footer-btns {
   display: flex;
   gap: 5px;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 /* 動態按鈕（取代舊的 reserve-btn） */
@@ -394,13 +338,74 @@ function badgeStyle(type?: string) {
   opacity: 1;
 }
 
-.bc__action-btn--green {
-  background: #00a86b;
-  border-color: #00a86b;
-  color: #ffffff;
+/* ── Loading / Error / Empty 狀態 ── */
+.bc__location-hint {
+  font-size: 11px;
+  color: #78716c;
+  background: #fff7ed;
+  border-radius: 8px;
+  padding: 8px 12px;
 }
 
-.bc__action-btn--green:hover {
-  opacity: 0.88;
+.bc__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 32px 0;
+  font-size: 13px;
+  color: #78716c;
+}
+
+.bc__spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #f1f5f9;
+  border-top-color: #ff5252;
+  border-radius: 50%;
+  animation: bc-spin 0.7s linear infinite;
+}
+
+@keyframes bc-spin {
+  to { transform: rotate(360deg); }
+}
+
+.bc__error {
+  text-align: center;
+  padding: 20px 0;
+  font-size: 13px;
+  color: #dc2626;
+}
+
+.bc__error p {
+  margin: 0 0 10px;
+}
+
+.bc__empty {
+  text-align: center;
+  padding: 24px 0;
+  font-size: 13px;
+  color: #78716c;
+}
+
+.bc__empty p {
+  margin: 0 0 10px;
+}
+
+.bc__retry-btn {
+  padding: 8px 18px;
+  border: 1.5px solid #ff5252;
+  border-radius: 9999px;
+  background: #fff;
+  color: #ff5252;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.bc__retry-btn:hover {
+  background: #fff1f2;
 }
 </style>

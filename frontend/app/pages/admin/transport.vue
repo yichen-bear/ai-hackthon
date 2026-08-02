@@ -69,6 +69,14 @@ interface Driver {
 const activeTab = ref<number>(0)
 const tabs = ['叫車訂單', '訂單管理', '車隊狀態']
 
+// 支援 ?tab=0/1/2 跳轉
+const adminRoute = useRoute()
+onMounted(async () => {
+  const t = adminRoute.query.tab; if (t != null) activeTab.value = Number(t)
+  await fetchDbRides()
+  await fetchDbDrivers()
+})
+
 // ─── Toast 系統 ───
 const toastMessage = ref('')
 let toastTimer: ReturnType<typeof setTimeout> | null = null
@@ -77,6 +85,74 @@ function showToast(msg: string) {
   toastMessage.value = msg
   if (toastTimer) clearTimeout(toastTimer)
   toastTimer = setTimeout(() => { toastMessage.value = '' }, 2500)
+}
+
+// ─── 從 DB 載入叫車資料 ───
+async function fetchDbRides() {
+  try {
+    // 待派車
+    const pending: any[] = await $fetch('/api/rides/pending')
+    if (pending.length > 0) {
+      const dbConsults: ConsultationForm[] = pending.map(r => ({
+        id: r.id,
+        feedbackNo: `FB-${r.id.slice(0, 8)}`,
+        contactName: r.passengerName,
+        contactPhone: r.passengerPhone || '',
+        pickup: r.pickup,
+        destination: r.destination,
+        carType: r.carType,
+        mode: r.mode,
+        scheduledTime: r.scheduledAt || undefined,
+        passengers: r.carType === 'van' ? 3 : 1,
+        estimateMin: r.carType === 'van' ? 350 : r.carType === 'accessible' ? 280 : 250,
+        estimateMax: r.carType === 'van' ? 450 : r.carType === 'accessible' ? 350 : 320,
+        aiNote: '',
+        status: 'pending' as const,
+        createdAt: new Date(r.creTime).toLocaleString('zh-TW', { hour12: false, month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+      }))
+      consultations.value = [...dbConsults, ...consultations.value]
+    }
+
+    // 進行中
+    const active: any[] = await $fetch('/api/rides/active')
+    if (active.length > 0) {
+      const dbOrders: Order[] = active.map(r => ({
+        id: r.id,
+        orderNo: `TR-${r.id.slice(0, 8)}`,
+        contactName: r.passengerName,
+        contactPhone: r.passengerPhone || '',
+        pickup: r.pickup,
+        destination: r.destination,
+        carType: r.carType,
+        passengers: r.carType === 'van' ? 3 : 1,
+        assignedDriver: r.driver?.name || '待指派',
+        assignedPlate: r.driver?.plateNumber || '',
+        eta: 5,
+        finalAmount: r.fare || 0,
+        status: r.status === 'dispatched' ? 'dispatched' : 'in_transit',
+        orderTime: new Date(r.creTime).toLocaleString('zh-TW', { hour12: false, month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+      }))
+      orders.value = [...dbOrders, ...orders.value]
+    }
+  } catch { /* use mock fallback */ }
+}
+
+async function fetchDbDrivers() {
+  try {
+    const data: any[] = await $fetch('/api/rides/drivers')
+    if (data.length > 0) {
+      drivers.value = data.map(d => ({
+        id: d.id,
+        name: d.name,
+        plate: d.plateNumber,
+        vehicleType: d.carModel,
+        rating: Number(d.rating),
+        status: d.status === 'available' ? 'idle' : d.status === 'busy' ? 'on_trip' : 'offline',
+        currentLocation: d.status === 'offline' ? '—' : '台北市區',
+        completedToday: d.totalTrips % 15, // 模擬今日完成數
+      }))
+    }
+  } catch { /* use mock fallback */ }
 }
 
 // ─── 車種對應（與客戶端 RideService carOptions 一致） ───
@@ -109,7 +185,7 @@ const consultations = ref<ConsultationForm[]>([
     id: 'c-1',
     feedbackNo: 'FB20260731001',
     contactName: '陳先生',
-    contactPhone: '0912-***-678',
+    contactPhone: '0912-345-678',
     pickup: '臺北市中山區南京東路二段50號',
     destination: '桃園國際機場第一航廈',
     carType: 'van',
@@ -126,7 +202,7 @@ const consultations = ref<ConsultationForm[]>([
     id: 'c-2',
     feedbackNo: 'FB20260801001',
     contactName: '林奶奶',
-    contactPhone: '0922-***-789',
+    contactPhone: '0922-456-789',
     pickup: '臺北市大安區忠孝東路四段200號',
     destination: '台大醫院門診大樓',
     carType: 'accessible',
@@ -142,7 +218,7 @@ const consultations = ref<ConsultationForm[]>([
     id: 'c-3',
     feedbackNo: 'FB20260801002',
     contactName: '張小姐',
-    contactPhone: '0933-***-012',
+    contactPhone: '0933-567-012',
     pickup: '臺北市信義區松壽路20號',
     destination: '臺北市內湖區瑞光路300號',
     carType: 'sedan',
@@ -158,7 +234,7 @@ const consultations = ref<ConsultationForm[]>([
     id: 'c-4',
     feedbackNo: 'FB20260801003',
     contactName: '王經理',
-    contactPhone: '0955-***-321',
+    contactPhone: '0955-789-321',
     pickup: '臺北市信義區信義路五段7號B1',
     destination: '桃園國際機場第二航廈',
     carType: 'van',
@@ -179,7 +255,7 @@ const orders = ref<Order[]>([
     id: 'o-1',
     orderNo: 'TR-2026-0001',
     contactName: '劉先生',
-    contactPhone: '0966-***-888',
+    contactPhone: '0966-890-888',
     pickup: '臺北市南港區經貿二路1號',
     destination: '新北市板橋區站前路5號',
     carType: 'sedan',
@@ -196,7 +272,7 @@ const orders = ref<Order[]>([
     id: 'o-2',
     orderNo: 'TR-2026-0002',
     contactName: '許小姐',
-    contactPhone: '0911-***-555',
+    contactPhone: '0911-123-555',
     pickup: '臺北市萬華區中華路一段',
     destination: '臺北市士林區忠誠路二段200號',
     carType: 'sedan',
@@ -233,7 +309,7 @@ const idleDriverCount = computed(() =>
 let orderCounter = 3
 
 // ─── Actions：叫車訂單 → 接受派車 ───
-function convertToOrder(consultation: ConsultationForm) {
+async function convertToOrder(consultation: ConsultationForm) {
   // 找到閒置司機
   const available = drivers.value.find(d => d.status === 'idle')
   if (!available) {
@@ -241,10 +317,18 @@ function convertToOrder(consultation: ConsultationForm) {
     return
   }
 
+  // 呼叫 API 派車
+  try {
+    await $fetch(`/api/rides/${consultation.id}/dispatch`, {
+      method: 'PATCH',
+      body: { driverId: available.id },
+    })
+  } catch { /* 如果是 mock 訂單，繼續本地操作 */ }
+
   // 接受派車，建立訂單
   const newOrder: Order = {
-    id: `o-${orderCounter}`,
-    orderNo: `TR-2024-${String(orderCounter).padStart(4, '0')}`,
+    id: consultation.id,
+    orderNo: `TR-${consultation.id.slice(0, 8)}`,
     contactName: consultation.contactName,
     contactPhone: consultation.contactPhone,
     pickup: consultation.pickup,
@@ -258,7 +342,6 @@ function convertToOrder(consultation: ConsultationForm) {
     status: 'dispatched',
     orderTime: new Date().toLocaleString('zh-TW', { hour12: false }),
   }
-  orderCounter++
 
   orders.value.unshift(newOrder)
   consultation.status = 'converted'
@@ -280,6 +363,8 @@ function advanceOrderStatus(order: Order) {
     order.status = flow[idx + 1]
     if (order.status === 'completed') {
       order.completeTime = new Date().toLocaleString('zh-TW', { hour12: false })
+      // 呼叫 API 完成
+      try { $fetch(`/api/rides/${order.id}/complete`, { method: 'PATCH' }) } catch {}
       // 釋放司機
       const driver = drivers.value.find(d => d.name === order.assignedDriver)
       if (driver) {
@@ -315,13 +400,13 @@ function resetDemo() {
   consultations.value.forEach(c => { c.status = 'pending' })
   orders.value = [
     {
-      id: 'o-1', orderNo: 'TR-2026-0001', contactName: '劉先生', contactPhone: '0966-***-888',
+      id: 'o-1', orderNo: 'TR-2026-0001', contactName: '劉先生', contactPhone: '0966-890-888',
       pickup: '臺北市南港區經貿二路1號', destination: '新北市板橋區站前路5號', carType: 'sedan', passengers: 1,
       assignedDriver: '王志明', assignedPlate: 'DEF-5678', eta: 12, finalAmount: 320,
       status: 'in_transit', orderTime: '2026-07-31 13:50', serviceTime: '2026-07-31 14:02',
     },
     {
-      id: 'o-2', orderNo: 'TR-2026-0002', contactName: '許小姐', contactPhone: '0911-***-555',
+      id: 'o-2', orderNo: 'TR-2026-0002', contactName: '許小姐', contactPhone: '0911-123-555',
       pickup: '臺北市萬華區中華路一段', destination: '臺北市士林區忠誠路二段200號', carType: 'sedan', passengers: 2,
       assignedDriver: '張國榮', assignedPlate: 'PQR-2468', eta: 5, finalAmount: 380,
       status: 'dispatched', orderTime: '2026-07-31 14:20',
@@ -395,10 +480,10 @@ function resetDemo() {
             </span>
           </div>
 
-          <!-- 客戶資訊 -->
+          <!-- 客戶資訊（派車前隱藏，保護乘客個資） -->
           <div class="ta__customer-info">
-            <span class="ta__customer-name">👤 {{ consultation.contactName }}</span>
-            <span class="ta__customer-phone">📞 {{ consultation.contactPhone }}</span>
+            <span class="ta__customer-name">👤 {{ consultation.status === 'pending' ? '待接單' : consultation.contactName }}</span>
+            <span class="ta__customer-phone">📞 {{ consultation.status === 'pending' ? '接單後顯示' : consultation.contactPhone }}</span>
           </div>
 
           <!-- 路線資訊 -->

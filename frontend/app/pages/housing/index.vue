@@ -9,6 +9,13 @@ useHead({
 // ─── Tab 狀態 ───
 const activeTab = ref<'notice' | 'parcel' | 'trash' | 'repair' | 'housework'>('notice')
 
+// 支援 ?tab=xxx 直接跳轉
+const housingRoute = useRoute()
+onMounted(() => {
+  const tab = housingRoute.query.tab as string
+  if (tab && tabs.some(t => t.key === tab)) activeTab.value = tab as any
+})
+
 const tabs = [
   { key: 'notice', label: '社區' },
   { key: 'parcel', label: '包裹' },

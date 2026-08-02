@@ -7,7 +7,7 @@
 
 export type RideMode = 'instant' | 'scheduled'
 export type CarType = 'sedan' | 'van' | 'accessible' | 'pet-friendly'
-export type RideState = 'idle' | 'confirming' | 'waiting' | 'arrived' | 'completed'
+export type RideState = 'idle' | 'confirming' | 'waiting' | 'arrived' | 'riding' | 'completed'
 
 export interface RideRequest {
   pickup: string
@@ -132,7 +132,10 @@ function handleConfirmRide() {
   rideState.value = 'confirming'
 }
 
-function handleDispatch() {
+const { currentUser: rideUser } = useCurrentUser()
+const currentRideId = ref<string | null>(null)
+
+async function handleDispatch() {
   const rideData: RideRequest = {
     pickup: pickupInput.value,
     destination: destinationInput.value,
@@ -141,26 +144,163 @@ function handleDispatch() {
     scheduledTime: rideMode.value === 'scheduled' ? `${scheduledDate.value}T${scheduledTime.value}` : undefined,
   }
   emit('confirm-ride', rideData)
+
+  // 寫入 DB
+  try {
+    const order: any = await $fetch('/api/rides', {
+      method: 'POST',
+      body: {
+        passengerId: rideUser.value.id,
+        passengerName: rideUser.value.name,
+        pickup: rideData.pickup,
+        destination: rideData.destination,
+        carType: rideData.carType,
+        mode: rideData.mode,
+        scheduledAt: rideData.scheduledTime || null,
+      },
+    })
+    currentRideId.value = order.id
+  } catch { /* silent */ }
+
   rideState.value = 'waiting'
-  startCountdown(driverInfo.value.eta)
+  // 開始輪詢等待派車
+  startPolling()
 }
 
-function handleCancel() {
+// ─── 輪詢機制：等待廠商端派車 ───
+let pollTimer: ReturnType<typeof setInterval> | null = null
+const pollingDots = ref('.')
+
+function startPolling() {
+  // 動畫效果
+  pollTimer = setInterval(async () => {
+    pollingDots.value = pollingDots.value.length >= 3 ? '.' : pollingDots.value + '.'
+
+    if (!currentRideId.value) return
+    try {
+      const order: any = await $fetch(`/api/rides`, { params: { userId: rideUser.value.id, status: 'all' } })
+      const myOrder = Array.isArray(order) ? order.find((o: any) => o.id === currentRideId.value) : null
+      if (!myOrder) return
+
+      if (myOrder.status === 'dispatched' || myOrder.status === 'in_progress') {
+        // 廠商已派車！更新司機資訊
+        if (myOrder.driver) {
+          driverInfo.value = {
+            name: myOrder.driver.name,
+            plateNumber: myOrder.driver.plateNumber,
+            carModel: myOrder.driver.carModel || '',
+            rating: Number(myOrder.driver.rating) || 4.5,
+            eta: 300,
+          }
+        }
+        if (myOrder.fare) {
+          // fare 已從 DB 取得，不需額外處理
+        }
+        stopPolling()
+
+        if (myOrder.status === 'in_progress') {
+          rideState.value = 'arrived'
+        } else {
+          rideState.value = 'arrived'
+          // 模擬司機抵達倒數
+          startCountdown(180)
+        }
+      } else if (myOrder.status === 'cancelled') {
+        stopPolling()
+        rideState.value = 'idle'
+      }
+    } catch { /* silent */ }
+  }, 3000)
+}
+
+function stopPolling() {
+  if (pollTimer) { clearInterval(pollTimer); pollTimer = null }
+}
+
+async function handleCancel() {
   stopCountdown()
+  stopPolling()
+  stopRidingPoll()
+  if (currentRideId.value) {
+    try { await $fetch(`/api/rides/${currentRideId.value}/cancel`, { method: 'PATCH' }) } catch {}
+  }
+  currentRideId.value = null
   rideState.value = 'idle'
 }
 
-function handleComplete() {
+// 用戶確認上車 → 進入 riding 狀態 + 通知後端 in_progress + 開始輪詢
+async function handleBoarding() {
+  if (currentRideId.value) {
+    try { await $fetch(`/api/rides/${currentRideId.value}/start`, { method: 'PATCH' }) } catch {}
+  }
+  rideState.value = 'riding'
+  startRidingPoll()
+}
+
+// ─── riding 狀態輪詢：等廠商標記 completed ───
+let ridingPollTimer: ReturnType<typeof setInterval> | null = null
+
+function startRidingPoll() {
+  ridingPollTimer = setInterval(async () => {
+    if (!currentRideId.value) return
+    try {
+      const orders: any[] = await $fetch('/api/rides', { params: { userId: rideUser.value.id, status: 'all' } })
+      const myOrder = orders.find((o: any) => o.id === currentRideId.value)
+      if (!myOrder) return
+      if (myOrder.status === 'completed') {
+        stopRidingPoll()
+        rideState.value = 'completed'
+      }
+    } catch { /* silent */ }
+  }, 3000)
+}
+
+function stopRidingPoll() {
+  if (ridingPollTimer) { clearInterval(ridingPollTimer); ridingPollTimer = null }
+}
+
+async function handleComplete() {
+  // 用戶端不再主動呼叫 complete（由廠商端觸發）
+  // 此函式保留給評分後的 fallback
   rideState.value = 'completed'
+}
+
+// 評分
+const ratingValue = ref(5)
+async function handleRate() {
+  if (currentRideId.value) {
+    try { await $fetch(`/api/rides/${currentRideId.value}/rate`, { method: 'POST', body: { rating: ratingValue.value } }) } catch {}
+  }
+  handleReset()
 }
 
 function handleReset() {
   rideState.value = 'idle'
   destinationInput.value = ''
+  currentRideId.value = null
+  ratingValue.value = 5
+}
+
+// ─── 歷史行程 ───
+const showHistory = ref(false)
+const rideHistory = ref<any[]>([])
+
+async function fetchHistory() {
+  try {
+    const data: any[] = await $fetch('/api/rides', { params: { userId: rideUser.value.id, status: 'completed' } })
+    rideHistory.value = data
+  } catch { rideHistory.value = [] }
+}
+
+function openHistory() {
+  fetchHistory()
+  showHistory.value = true
 }
 
 onUnmounted(() => {
   stopCountdown()
+  stopPolling()
+  stopRidingPoll()
 })
 </script>
 
@@ -305,7 +445,7 @@ onUnmounted(() => {
 
       <!-- waiting 狀態：等候司機 -->
       <div v-else-if="rideState === 'waiting'" class="ride-waiting" aria-live="polite">
-        <h4 class="state-title">司機正在前往中</h4>
+        <h4 class="state-title">🔍 尋找司機中{{ pollingDots }}</h4>
 
         <!-- 叫車資訊卡片 -->
         <div class="ride-trip-info">
@@ -332,6 +472,15 @@ onUnmounted(() => {
           </div>
         </div>
 
+        <p class="waiting-hint">正在為您媒合最近的司機，請稍候...</p>
+        <p class="waiting-hint-sub">廠商端確認派車後會顯示司機資訊</p>
+
+        <button class="cancel-btn" @click="handleCancel">取消叫車</button>
+      </div>
+
+      <!-- arrived 狀態：司機已派車/到達 -->
+      <div v-else-if="rideState === 'arrived'" class="ride-arrived" aria-live="polite">
+        <h4 class="state-title">🎉 司機已指派</h4>
         <!-- 司機資訊 -->
         <div class="driver-card">
           <div class="driver-info">
@@ -343,27 +492,77 @@ onUnmounted(() => {
             <span class="driver-model">{{ driverInfo.carModel }}</span>
           </div>
         </div>
-        <div class="countdown">
-          <span class="countdown-label">預估到達</span>
-          <span class="countdown-time">{{ formatCountdown(countdown) }}</span>
-        </div>
-        <button class="cancel-btn" @click="handleCancel">取消叫車</button>
-      </div>
-
-      <!-- arrived 狀態：司機已到達 -->
-      <div v-else-if="rideState === 'arrived'" class="ride-arrived" aria-live="polite">
-        <h4 class="state-title">🎉 司機已到達</h4>
         <div class="arrived-plate">{{ driverInfo.plateNumber }}</div>
-        <p class="arrived-hint">請至上車地點搭乘</p>
-        <button class="complete-btn" @click="handleComplete">確認上車</button>
+        <p class="arrived-hint">司機正在前往，請至上車地點等候</p>
+        <button class="complete-btn" @click="handleBoarding">確認上車</button>
       </div>
 
-      <!-- completed 狀態：行程結束 -->
+      <!-- riding 狀態：搭車中 -->
+      <div v-else-if="rideState === 'riding'" class="ride-riding" aria-live="polite">
+        <h4 class="state-title">🚗 搭車中</h4>
+        <div class="driver-card">
+          <div class="driver-info">
+            <span class="driver-name">{{ driverInfo.name }}</span>
+            <span class="driver-rating">⭐ {{ driverInfo.rating }}</span>
+          </div>
+          <div class="driver-car">
+            <span class="driver-plate">{{ driverInfo.plateNumber }}</span>
+            <span class="driver-model">{{ driverInfo.carModel }}</span>
+          </div>
+        </div>
+        <div class="riding-route">
+          <p class="riding-from">📍 {{ pickupInput }}</p>
+          <p class="riding-arrow">↓</p>
+          <p class="riding-to">🏁 {{ destinationInput }}</p>
+        </div>
+        <p class="riding-hint">🚗 行程進行中，請繫好安全帶</p>
+        <p class="riding-hint-sub">抵達後由司機確認完成行程</p>
+      </div>
+
+      <!-- completed 狀態：行程結束 + 評分 -->
       <div v-else-if="rideState === 'completed'" class="ride-completed" aria-live="polite">
         <h4 class="state-title">行程完成</h4>
         <p class="completed-text">感謝搭乘 yoxi</p>
-        <button class="reset-btn" @click="handleReset">重新叫車</button>
+        <div class="rating-section">
+          <p class="rating-label">為這趟行程評分：</p>
+          <div class="rating-stars">
+            <button v-for="star in 5" :key="star" class="star-btn" :class="{ active: star <= ratingValue }" @click="ratingValue = star">⭐</button>
+          </div>
+          <button class="rate-btn" @click="handleRate">送出評分</button>
+        </div>
+        <button class="reset-btn" @click="handleReset">跳過，重新叫車</button>
       </div>
+
+      <!-- 歷史行程按鈕 -->
+      <div v-if="rideState === 'idle'" class="history-trigger">
+        <button class="history-btn" @click="openHistory">📋 歷史行程</button>
+      </div>
+
+      <!-- 歷史行程 Overlay -->
+      <Teleport to="body">
+        <div v-if="showHistory" class="history-overlay" @click.self="showHistory = false">
+          <div class="history-panel">
+            <header class="history-header">
+              <button @click="showHistory = false">← 返回</button>
+              <span>歷史行程</span>
+            </header>
+            <div v-if="rideHistory.length === 0" class="history-empty">暫無行程記錄</div>
+            <div v-for="ride in rideHistory" :key="ride.id" class="history-item">
+              <div class="history-route">
+                <p class="history-from">📍 {{ ride.pickup }}</p>
+                <p class="history-to">📍 {{ ride.destination }}</p>
+              </div>
+              <div class="history-meta">
+                <span>${{ ride.fare }}</span>
+                <span>{{ ride.distance }}km</span>
+                <span>{{ ride.driver?.name || '-' }}</span>
+                <span v-if="ride.rating">⭐{{ ride.rating }}</span>
+                <span class="history-date">{{ new Date(ride.completedAt || ride.creTime).toLocaleDateString('zh-TW') }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Teleport>
     </div>
   </section>
 </template>
@@ -814,4 +1013,40 @@ onUnmounted(() => {
   text-align: center;
   margin: 0 0 var(--space-4, 16px) 0;
 }
+
+/* 評分 */
+.rating-section { margin: 16px 0; text-align: center; }
+
+/* 等待提示 */
+.waiting-hint { text-align: center; font-size: 14px; color: #f59e0b; font-weight: 600; margin: 16px 0 4px; }
+.waiting-hint-sub { text-align: center; font-size: 12px; color: #94a3b8; margin: 0 0 16px; }
+
+/* 搭車中 */
+.ride-riding { text-align: center; }
+.riding-route { background: #f0fdf4; border-radius: 12px; padding: 12px; margin: 12px 0; }
+.riding-from { font-size: 13px; color: #059669; margin: 4px 0; }
+.riding-arrow { font-size: 16px; color: #94a3b8; margin: 4px 0; }
+.riding-to { font-size: 13px; color: #dc2626; margin: 4px 0; }
+.riding-hint { font-size: 13px; color: #64748b; margin: 12px 0; }
+.riding-hint-sub { font-size: 12px; color: #94a3b8; margin: 0; }
+.rating-label { font-size: 13px; color: #64748b; margin-bottom: 8px; }
+.rating-stars { display: flex; gap: 4px; justify-content: center; margin-bottom: 12px; }
+.star-btn { background: none; border: none; font-size: 24px; opacity: 0.3; cursor: pointer; transition: opacity 0.15s; }
+.star-btn.active { opacity: 1; }
+.rate-btn { padding: 8px 24px; background: #f59e0b; color: #fff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
+
+/* 歷史 */
+.history-trigger { margin-top: 12px; text-align: center; }
+.history-btn { padding: 8px 20px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 13px; color: #475569; cursor: pointer; }
+.history-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; display: flex; justify-content: center; align-items: flex-end; }
+.history-panel { background: #fff; border-radius: 16px 16px 0 0; width: 100%; max-width: 420px; max-height: 80vh; overflow-y: auto; padding: 16px; }
+.history-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; font-weight: 600; }
+.history-header button { background: none; border: none; font-size: 14px; cursor: pointer; }
+.history-empty { text-align: center; color: #94a3b8; padding: 32px 0; }
+.history-item { border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 8px; }
+.history-route p { margin: 2px 0; font-size: 13px; }
+.history-from { color: #059669; }
+.history-to { color: #dc2626; }
+.history-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; font-size: 12px; color: #64748b; }
+.history-date { margin-left: auto; }
 </style>

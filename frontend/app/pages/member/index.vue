@@ -6,9 +6,30 @@
 
 const activeTab = ref<'points' | 'barcode' | 'tickets' | 'badges' | 'groups' | 'messages'>('points')
 
+// ─── Toast 通知 ───
+const toastMsg = ref('')
+const toastType = ref<'success' | 'error'>('success')
+let toastTimer: ReturnType<typeof setTimeout> | null = null
+function showToast(msg: string, type: 'success' | 'error' = 'success') {
+  toastMsg.value = msg; toastType.value = type
+  if (toastTimer) clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => { toastMsg.value = '' }, 3000)
+}
+
+// 支援 ?tab=xxx 直接跳轉
+const memberRoute = useRoute()
+onMounted(() => {
+  const tab = memberRoute.query.tab as string
+  if (tab && ['points', 'barcode', 'tickets', 'badges', 'groups', 'messages'].includes(tab)) {
+    activeTab.value = tab as any
+    if (tab === 'messages') fetchConversations()
+  }
+})
+
 // ─── 私訊系統 ───
-const currentUserId = '00000000-0000-0000-0000-000000000001'
-const currentUserName = '沈小姐'
+const { currentUser: authUser } = useCurrentUser()
+const currentUserId = computed(() => authUser.value.id)
+const currentUserName = computed(() => authUser.value.maskedName)
 
 interface ChatConversation {
   peerId: string
@@ -28,19 +49,28 @@ const msgUnreadTotal = ref(0)
 
 async function fetchConversations() {
   try {
-    const msgs: any[] = await $fetch('/api/messages', { params: { userId: currentUserId } })
+    const msgs: any[] = await $fetch('/api/messages', { params: { userId: currentUserId.value } })
     // 聚合為對話列表
     const peers = new Map<string, ChatConversation>()
     msgs.forEach((m: any) => {
-      const peerId = m.senderId === currentUserId ? m.receiverId : m.senderId
-      const peerName = m.senderId === currentUserId ? m.receiverName : m.senderName
+      const peerId = m.senderId === currentUserId.value ? m.receiverId : m.senderId
+      const peerName = m.senderId === currentUserId.value ? m.receiverName : m.senderName
+      // 預覽文字：reservation_notice 類型轉為可讀文字
+      let preview = m.content
+      if (m.messageType === 'reservation_notice') {
+        try {
+          const p = JSON.parse(m.content)
+          const method = p.pickupMethod === '門市代收' ? '代收' : '面交'
+          preview = `🤝 ${method}預約 · ${p.pickupStore}`
+        } catch { preview = '🤝 交易預約' }
+      }
       if (!peers.has(peerId)) {
-        peers.set(peerId, { peerId, peerName, lastMessage: m.content, lastTime: m.creTime, unreadCount: 0 })
+        peers.set(peerId, { peerId, peerName, lastMessage: preview, lastTime: m.creTime, unreadCount: 0 })
       } else {
         const p = peers.get(peerId)!
-        if (new Date(m.creTime) > new Date(p.lastTime)) { p.lastMessage = m.content; p.lastTime = m.creTime }
+        if (new Date(m.creTime) > new Date(p.lastTime)) { p.lastMessage = preview; p.lastTime = m.creTime }
       }
-      if (m.receiverId === currentUserId && !m.isRead) {
+      if (m.receiverId === currentUserId.value && !m.isRead) {
         const p = peers.get(peerId)!
         p.unreadCount++
       }
@@ -50,8 +80,8 @@ async function fetchConversations() {
   } catch {
     // mock fallback
     conversations.value = [
-      { peerId: 'user-002', peerName: '王媽媽', lastMessage: '好的，那我們約週六下午 2 點在信義門市面交？', lastTime: new Date(Date.now() - 3600000).toISOString(), unreadCount: 2, listingName: '嬰兒推車' },
-      { peerId: 'user-003', peerName: '李先生', lastMessage: '🤝 沈小姐 已預約面交！', lastTime: new Date(Date.now() - 7200000).toISOString(), unreadCount: 1, listingName: '小米空氣清淨機' },
+      { peerId: 'user-002', peerName: '王O明', lastMessage: '好的，那我們約週六下午 2 點在信義門市面交？', lastTime: new Date(Date.now() - 3600000).toISOString(), unreadCount: 2, listingName: '嬰兒推車' },
+      { peerId: 'user-003', peerName: '李O玲', lastMessage: '🤝 沈O淇 已預約面交！', lastTime: new Date(Date.now() - 7200000).toISOString(), unreadCount: 1, listingName: '小米空氣清淨機' },
     ]
     msgUnreadTotal.value = 3
   }
@@ -64,14 +94,14 @@ async function openChat(conv: ChatConversation) {
   msgUnreadTotal.value = conversations.value.reduce((s, c) => s + c.unreadCount, 0)
 
   try {
-    const msgs: any[] = await $fetch('/api/messages', { params: { userId: currentUserId, peerId: conv.peerId } })
+    const msgs: any[] = await $fetch('/api/messages', { params: { userId: currentUserId.value, peerId: conv.peerId } })
     chatMessages.value = msgs
     // 標記已讀
-    await $fetch('/api/messages/read', { method: 'PATCH', body: { userId: currentUserId, peerId: conv.peerId } })
+    await $fetch('/api/messages/read', { method: 'PATCH', body: { userId: currentUserId.value, peerId: conv.peerId } })
   } catch {
     chatMessages.value = [
       { id: '1', senderId: conv.peerId, senderName: conv.peerName, content: '你好！我對你的商品有興趣', messageType: 'text', creTime: new Date(Date.now() - 7200000).toISOString() },
-      { id: '2', senderId: currentUserId, senderName: currentUserName, content: '好的，什麼時候方便面交呢？', messageType: 'text', creTime: new Date(Date.now() - 3600000).toISOString() },
+      { id: '2', senderId: currentUserId.value, senderName: currentUserName.value, content: '好的，什麼時候方便面交呢？', messageType: 'text', creTime: new Date(Date.now() - 3600000).toISOString() },
       { id: '3', senderId: conv.peerId, senderName: conv.peerName, content: conv.lastMessage, messageType: 'text', creTime: conv.lastTime },
     ]
   }
@@ -82,10 +112,10 @@ async function sendChatMessage() {
   const content = newChatMsg.value.trim()
   newChatMsg.value = ''
 
-  chatMessages.value.push({ id: `msg-${Date.now()}`, senderId: currentUserId, senderName: currentUserName, content, messageType: 'text', creTime: new Date().toISOString() })
+  chatMessages.value.push({ id: `msg-${Date.now()}`, senderId: currentUserId.value, senderName: currentUserName.value, content, messageType: 'text', creTime: new Date().toISOString() })
 
   try {
-    await $fetch('/api/messages', { method: 'POST', body: { senderId: currentUserId, senderName: currentUserName, receiverId: activePeer.value.peerId, receiverName: activePeer.value.peerName, content } })
+    await $fetch('/api/messages', { method: 'POST', body: { senderId: currentUserId.value, senderName: currentUserName.value, receiverId: activePeer.value.peerId, receiverName: activePeer.value.peerName, content } })
   } catch { /* silent */ }
 }
 
@@ -108,18 +138,18 @@ function formatScheduled(iso: string): string {
   return new Date(iso).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
 }
 function getReservationStatusLabel(status: string): string {
-  const map: Record<string, string> = { PENDING_SELLER_APPROVAL: '⏳ 等待賣家確認', APPROVED_MEETUP: '✅ 已同意面交', ITEM_STORED_IN_711: '📦 已到店待取貨', COMPLETED: '🎉 交易完成', EXPIRED_RETURNED: '⚠️ 逾期退回', REJECTED: '❌ 已拒絕' }
+  const map: Record<string, string> = { PENDING_SELLER_APPROVAL: '⏳ 等待賣家確認', APPROVED_MEETUP: '✅ 已同意面交', APPROVED_STORE_PICKUP: '✅ 已同意代收，等待寄放', ITEM_STORED_IN_711: '📦 已到店待取貨', COMPLETED: '🎉 交易完成', EXPIRED_RETURNED: '⚠️ 逾期退回', REJECTED: '❌ 已拒絕' }
   return map[status] || status
 }
 async function confirmReservation(reservationId: string, newStatus: string) {
   if (!reservationId) return
   try {
     await $fetch(`/api/reservations/${reservationId}`, { method: 'PATCH', body: { status: newStatus } })
-    alert(newStatus === 'APPROVED_MEETUP' ? '✅ 已同意面交！' : '❌ 已拒絕交易')
-    // 重新載入對話
-    if (activePeer.value) openChat(activePeer.value)
+    showToast(newStatus === 'APPROVED_MEETUP' ? '✅ 已同意面交！買家已收到通知。' : '❌ 已拒絕交易')
+    // 重新載入對話以更新卡片狀態
+    if (activePeer.value) await openChat(activePeer.value)
   } catch (e: any) {
-    alert('操作失敗：' + (e?.data?.error || e?.message || ''))
+    showToast('操作失敗：' + (e?.data?.error || e?.message || ''), 'error')
   }
 }
 interface ChatMsg { author: string; content: string; time: string; isPinned?: boolean }
@@ -140,7 +170,7 @@ const newGroupMsg = ref('')
 // 從 DB 取得我的社群
 async function fetchMyGroups() {
   try {
-    const data: any[] = await $fetch('/api/groups/my', { params: { userId: currentUserId } })
+    const data: any[] = await $fetch('/api/groups/my', { params: { userId: currentUserId.value } })
     myGroups.value = data.map(g => ({
       id: g.id, name: g.name, type: g.type || 'interest', icon: g.icon || '💡',
       memberCount: g.memberCount || 0, unreadCount: g.unreadCount || 0,
@@ -160,7 +190,7 @@ async function enterGroupChat(group: MyGroup) {
   try {
     const msgs: any[] = await $fetch(`/api/groups/${group.id}/messages`)
     groupChatMessages.value = msgs.map(m => ({
-      author: m.senderId === currentUserId ? '我' : m.senderName,
+      author: m.senderId === currentUserId.value ? '我' : m.senderName,
       content: m.content,
       time: new Date(m.creTime).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }),
       isPinned: false,
@@ -176,13 +206,13 @@ async function sendGroupMsg() {
   newGroupMsg.value = ''
   groupChatMessages.value.push({ author: '我', content, time: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }) })
   try {
-    await $fetch(`/api/groups/${activeGroupChat.value.id}/messages`, { method: 'POST', body: { senderId: currentUserId, senderName: currentUserName, content } })
+    await $fetch(`/api/groups/${activeGroupChat.value.id}/messages`, { method: 'POST', body: { senderId: currentUserId.value, senderName: currentUserName.value, content } })
   } catch { /* silent */ }
 }
 
 async function leaveGroup(group: MyGroup) {
   try {
-    await $fetch('/api/groups/leave', { method: 'POST', body: { groupId: group.id, userId: currentUserId, userName: currentUserName } })
+    await $fetch('/api/groups/leave', { method: 'POST', body: { groupId: group.id, userId: currentUserId.value, userName: currentUserName.value } })
   } catch { /* silent */ }
   myGroups.value = myGroups.value.filter(g => g.id !== group.id)
   if (activeGroupChat.value?.id === group.id) { showGroupChat.value = false; activeGroupChat.value = null }
@@ -198,12 +228,12 @@ async function sendGroupAnnouncement() {
   const msg = prompt('輸入團長公告：')
   if (!msg) return
   groupChatMessages.value.push({ author: '📌 團長公告', content: msg, time: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }), isPinned: true })
-  try { await $fetch(`/api/groups/${activeGroupChat.value.id}/messages`, { method: 'POST', body: { senderId: currentUserId, senderName: '📌 團長公告', content: msg } }) } catch {}
+  try { await $fetch(`/api/groups/${activeGroupChat.value.id}/messages`, { method: 'POST', body: { senderId: currentUserId.value, senderName: '📌 團長公告', content: msg } }) } catch {}
 }
 
 async function disbandGroupFromMember() {
   if (!activeGroupChat.value || !confirm(`確定解散「${activeGroupChat.value.name}」？`)) return
-  try { await $fetch('/api/groups/leave', { method: 'POST', body: { groupId: activeGroupChat.value.id, userId: currentUserId, userName: currentUserName } }) } catch {}
+  try { await $fetch('/api/groups/leave', { method: 'POST', body: { groupId: activeGroupChat.value.id, userId: currentUserId.value, userName: currentUserName.value } }) } catch {}
   myGroups.value = myGroups.value.filter(g => g.id !== activeGroupChat.value!.id)
   closeGroupChatOverlay()
 }
@@ -282,9 +312,60 @@ const mockTickets = ref([
   { id: 'tk1', type: '高鐵', name: '台北→桃園 1309車次', date: '2026-08-02', time: '19:00', venue: '台北車站', status: 'unused', points: 10, link: '/transport', linkLabel: '前往購票', linkQuery: { tab: 'ticket' } },
   { id: 'tk2', type: '棒球', name: '中信兄弟 vs 統一獅', date: '2026-08-02', time: '18:35', venue: '台南亞太棒球場', status: 'unused', points: 20, link: '/entertainment', linkLabel: '前往活動', linkQuery: { tab: 'ticket' } },
   { id: 'tk3', type: '預購', name: '中秋鳳梨酥禮盒', date: '2026-09-15', time: '', venue: '7-11 信義門市', status: 'pending', points: 5, link: '/booking', linkLabel: '前往取貨', linkQuery: { tab: 'pickup' } },
-  { id: 'tk4', type: '社區', name: '中秋社區烤肉大會', date: '2026-09-21', time: '17:00', venue: '仁愛里活動中心', status: 'unused', points: 10, link: '/entertainment', linkLabel: '前往活動', linkQuery: { tab: 'community' } },
-  { id: 'tk5', type: '叫車', name: 'yoxi 叫車紀錄', date: '2026-07-28', time: '14:30', venue: '信義區→公司', status: 'used', points: 5, link: '/transport', linkLabel: '前往叫車', linkQuery: { tab: 'ride' } },
 ])
+
+// 從 DB 載入真實票券
+async function fetchMyTickets() {
+  try {
+    const data: any = await $fetch('/api/member/tickets', { params: { userId: currentUserId.value } })
+    // 社區活動
+    if (data.activities?.length > 0) {
+      const actTks = data.activities.map((a: any) => ({
+        id: a.id, type: '社區', name: a.title,
+        date: new Date(a.date).toLocaleDateString('zh-TW'),
+        time: new Date(a.date).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }),
+        venue: a.location || '', status: a.status === 'used' ? 'used' : 'unused',
+        points: 10, link: '/entertainment', linkLabel: '前往活動', linkQuery: { tab: 'community' },
+        code: a.code,
+      }))
+      mockTickets.value.push(...actTks)
+    }
+    // 叫車行程
+    if (data.rides?.length > 0) {
+      const rideTks = data.rides.map((r: any) => ({
+        id: r.id, type: '叫車', name: `${r.pickup.slice(0, 8)}→${r.destination.slice(0, 8)}`,
+        date: new Date(r.date).toLocaleDateString('zh-TW'),
+        time: '', venue: `${r.driver} · $${r.fare}`, status: 'used',
+        points: 5, link: '/transport', linkLabel: '前往叫車', linkQuery: { tab: 'ride' },
+        code: r.code,
+      }))
+      mockTickets.value.push(...rideTks)
+    }
+    // i二手交易
+    if (data.secondhand?.length > 0) {
+      const shTks = data.secondhand.map((s: any) => ({
+        id: s.id, type: 'i二手', name: s.title,
+        date: new Date(s.date).toLocaleDateString('zh-TW'),
+        time: '', venue: `${s.store} · 🌱${s.carbonSaved}kg`, status: 'used',
+        points: 8, link: '/booking', linkLabel: '前往i二手', linkQuery: { tab: 'secondhand' },
+        code: s.code,
+      }))
+      mockTickets.value.push(...shTks)
+    }
+    // 興趣社群
+    if (data.groups?.length > 0) {
+      const grpTks = data.groups.map((g: any) => ({
+        id: g.id, type: '社群', name: `${g.icon} ${g.title}`,
+        date: new Date(g.date).toLocaleDateString('zh-TW'),
+        time: '', venue: `${g.memberCount} 位成員`, status: 'active',
+        points: 3, link: '/entertainment', linkLabel: '前往社群', linkQuery: { tab: 'interest' },
+        code: g.code,
+      }))
+      mockTickets.value.push(...grpTks)
+    }
+  } catch { /* use mock fallback */ }
+}
+onMounted(() => { fetchMyTickets() })
 
 // QR 碼展開狀態
 const expandedQrId = ref<string | null>(null)
@@ -353,9 +434,19 @@ const allBadges = ref([
 
 <template>
   <div class="member-center">
+    <!-- Toast 通知 -->
+    <Transition name="toast">
+      <div v-if="toastMsg" class="member-toast" :class="{ 'member-toast--error': toastType === 'error' }">
+        {{ toastMsg }}
+      </div>
+    </Transition>
+
     <!-- 頂部資訊 -->
     <div class="member-header">
-      <h1 class="member-title">會員中心</h1>
+      <div>
+        <h1 class="member-title">會員中心</h1>
+        <p class="member-realname">{{ authUser.name }} <span class="verified-badge">🟢 實名認證</span></p>
+      </div>
       <div class="points-badge">🪙 {{ userPoints.toLocaleString() }} 點</div>
     </div>
 
@@ -616,13 +707,27 @@ const allBadges = ref([
               <span v-if="m.senderId !== currentUserId && m.messageType === 'text'" class="msg-author">{{ m.senderName }}</span>
               <!-- 預約卡片 -->
               <div v-if="m.messageType === 'reservation_notice' && isJsonContent(m.content)" class="msg-reservation-card">
-                <p class="msg-reservation-title">🤝 面交預約</p>
+                <p class="msg-reservation-title">🤝 {{ parseReservation(m.content).pickupMethod === '門市代收' ? '門市代收預約' : '面交預約' }}</p>
                 <p class="msg-reservation-detail">📍 {{ parseReservation(m.content).pickupStore }}</p>
                 <p v-if="parseReservation(m.content).scheduledAt" class="msg-reservation-detail">⏰ {{ formatScheduled(parseReservation(m.content).scheduledAt) }}</p>
                 <p class="msg-reservation-status">{{ getReservationStatusLabel(parseReservation(m.content).status) }}</p>
+                <!-- 賣家：等待確認 → 同意/拒絕 -->
                 <div v-if="parseReservation(m.content).status === 'PENDING_SELLER_APPROVAL' && m.receiverId === currentUserId" class="msg-reservation-actions">
-                  <button class="msg-confirm-btn" @click="confirmReservation(parseReservation(m.content).reservationId, 'APPROVED_MEETUP')">✅ 同意面交</button>
+                  <button v-if="parseReservation(m.content).pickupMethod === '門市代收'" class="msg-confirm-btn" @click="confirmReservation(parseReservation(m.content).reservationId, 'APPROVED_STORE_PICKUP')">✅ 同意代收</button>
+                  <button v-else class="msg-confirm-btn" @click="confirmReservation(parseReservation(m.content).reservationId, 'APPROVED_MEETUP')">✅ 同意面交</button>
                   <button class="msg-reject-btn" @click="confirmReservation(parseReservation(m.content).reservationId, 'REJECTED')">❌ 拒絕</button>
+                </div>
+                <!-- 賣家：已同意代收 → 已寄放門市 -->
+                <div v-if="parseReservation(m.content).status === 'APPROVED_STORE_PICKUP' && m.receiverId === currentUserId" class="msg-reservation-actions">
+                  <button class="msg-confirm-btn" @click="confirmReservation(parseReservation(m.content).reservationId, 'ITEM_STORED_IN_711')">📦 已寄放門市</button>
+                </div>
+                <!-- 買家：面交已同意 → 確認已面交 -->
+                <div v-if="parseReservation(m.content).status === 'APPROVED_MEETUP' && m.senderId === currentUserId" class="msg-reservation-actions">
+                  <button class="msg-confirm-btn" @click="confirmReservation(parseReservation(m.content).reservationId, 'COMPLETED')">✅ 確認已面交</button>
+                </div>
+                <!-- 買家：已到店 → 確認已取貨 -->
+                <div v-if="parseReservation(m.content).status === 'ITEM_STORED_IN_711' && m.senderId === currentUserId" class="msg-reservation-actions">
+                  <button class="msg-confirm-btn" @click="confirmReservation(parseReservation(m.content).reservationId, 'COMPLETED')">✅ 確認已取貨</button>
                 </div>
               </div>
               <!-- 普通文字 -->
@@ -720,6 +825,15 @@ const allBadges = ref([
 </template>
 
 <style scoped>
+.member-toast {
+  position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
+  background: #10b981; color: #fff; padding: 10px 24px; border-radius: 12px;
+  font-size: 14px; font-weight: 600; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.member-toast--error { background: #ef4444; }
+.toast-enter-active, .toast-leave-active { transition: all 0.3s ease; }
+.toast-enter-from, .toast-leave-to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+
 .member-center {
   padding: 16px;
   max-width: 430px;
@@ -734,6 +848,17 @@ const allBadges = ref([
 }
 
 .member-title { font-size: 20px; font-weight: 700; margin: 0; }
+
+.member-realname {
+  font-size: 14px;
+  color: #374151;
+  margin: 4px 0 0;
+}
+.verified-badge {
+  font-size: 12px;
+  color: #059669;
+  font-weight: 600;
+}
 
 .points-badge {
   background: linear-gradient(135deg, #f59e0b, #d97706);
