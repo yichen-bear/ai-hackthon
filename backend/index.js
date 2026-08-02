@@ -22,6 +22,9 @@ const foodReservationRouter = require('./routes/reservation');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// 信任 Nginx 反向代理（正確讀取 X-Forwarded-Proto 等 header）
+app.set('trust proxy', 1);
+
 // CORS 設定：允許前端網域發送 cookies
 const allowedOrigins = [
   'http://localhost:3000',

@@ -30,8 +30,9 @@ router.post('/', express.json({ limit: '10mb' }), async (req, res) => {
 
     fs.writeFileSync(filePath, data)
 
-    // 組合完整 URL（跨域部署時前端需要完整路徑）
-    const baseUrl = `${req.protocol}://${req.get('host')}`
+    // 組合完整 URL（Nginx 代理後 req.protocol 為 http，需使用 x-forwarded-proto）
+    const protocol = req.get('x-forwarded-proto') || req.protocol
+    const baseUrl = `${protocol}://${req.get('host')}`
     const url = `${baseUrl}/uploads/${fname}`
     res.status(201).json({ url, filename: fname })
   } catch (err) {
