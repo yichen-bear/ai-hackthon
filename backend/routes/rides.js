@@ -12,16 +12,16 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'passengerId, pickup, destination required' })
     }
 
-    const order = await prisma.rideOrder.create({
+    const order = await prisma.ride_order.create({
       data: {
-        passengerId,
-        passengerName: passengerName || '乘客',
-        passengerPhone: passengerPhone || null,
+        passenger_id: passengerId,
+        passenger_name: passengerName || '乘客',
+        passenger_phone: passengerPhone || null,
         pickup,
         destination,
-        carType: carType || 'sedan',
+        car_type: carType || 'sedan',
         mode: mode || 'instant',
-        scheduledAt: scheduledAt ? new Date(scheduledAt) : null,
+        scheduled_at: scheduledAt ? new Date(scheduledAt) : null,
         status: 'pending',
       },
     })
@@ -38,13 +38,13 @@ router.get('/', async (req, res) => {
   try {
     const { userId, status } = req.query
     const where = {}
-    if (userId) where.passengerId = userId
+    if (userId) where.passenger_id = userId
     if (status && status !== 'all') where.status = status
 
-    const orders = await prisma.rideOrder.findMany({
+    const orders = await prisma.ride_order.findMany({
       where,
-      orderBy: { creTime: 'desc' },
-      include: { driver: { select: { name: true, plateNumber: true, carModel: true, rating: true } } },
+      orderBy: { cre_time: 'desc' },
+      include: { driver: { select: { name: true, plate_number: true, car_model: true, rating: true } } },
     })
 
     res.json(orders)
@@ -57,11 +57,10 @@ router.get('/', async (req, res) => {
 // GET /api/rides/pending - 廠商端：待派車訂單
 router.get('/pending', async (req, res) => {
   try {
-    const orders = await prisma.rideOrder.findMany({
+    const orders = await prisma.ride_order.findMany({
       where: { status: 'pending' },
-      orderBy: { creTime: 'asc' },
+      orderBy: { cre_time: 'asc' },
     })
-    // 廠商端顯示完整乘客資訊
     res.json(orders)
   } catch (err) {
     console.error('GET /api/rides/pending error:', err)
@@ -72,10 +71,10 @@ router.get('/pending', async (req, res) => {
 // GET /api/rides/active - 廠商端：進行中訂單
 router.get('/active', async (req, res) => {
   try {
-    const orders = await prisma.rideOrder.findMany({
+    const orders = await prisma.ride_order.findMany({
       where: { status: { in: ['dispatched', 'in_progress'] } },
-      orderBy: { creTime: 'desc' },
-      include: { driver: { select: { name: true, plateNumber: true, carModel: true } } },
+      orderBy: { cre_time: 'desc' },
+      include: { driver: { select: { name: true, plate_number: true, car_model: true } } },
     })
     res.json(orders)
   } catch (err) {
@@ -87,11 +86,11 @@ router.get('/active', async (req, res) => {
 // GET /api/rides/completed - 廠商端：已完成訂單
 router.get('/completed', async (req, res) => {
   try {
-    const orders = await prisma.rideOrder.findMany({
+    const orders = await prisma.ride_order.findMany({
       where: { status: 'completed' },
-      orderBy: { completedAt: 'desc' },
+      orderBy: { completed_at: 'desc' },
       take: 50,
-      include: { driver: { select: { name: true, plateNumber: true } } },
+      include: { driver: { select: { name: true, plate_number: true } } },
     })
     res.json(orders)
   } catch (err) {
@@ -108,15 +107,15 @@ router.patch('/:id/dispatch', async (req, res) => {
     if (!driverId) return res.status(400).json({ error: 'driverId required' })
 
     // 預估費用（根據車種）
-    const order = await prisma.rideOrder.findUnique({ where: { id } })
+    const order = await prisma.ride_order.findUnique({ where: { id } })
     if (!order) return res.status(404).json({ error: 'Order not found' })
 
     const baseFare = { sedan: 250, van: 350, accessible: 280, 'pet-friendly': 300 }
-    const fare = (baseFare[order.carType] || 250) + Math.floor(Math.random() * 100)
+    const fare = (baseFare[order.car_type] || 250) + Math.floor(Math.random() * 100)
 
-    const updated = await prisma.rideOrder.update({
+    const updated = await prisma.ride_order.update({
       where: { id },
-      data: { status: 'dispatched', driverId, fare },
+      data: { status: 'dispatched', driver_id: driverId, fare },
     })
 
     // 更新司機狀態為 busy
@@ -133,7 +132,7 @@ router.patch('/:id/dispatch', async (req, res) => {
 router.patch('/:id/start', async (req, res) => {
   try {
     const { id } = req.params
-    const updated = await prisma.rideOrder.update({
+    const updated = await prisma.ride_order.update({
       where: { id },
       data: { status: 'in_progress' },
     })
@@ -150,20 +149,20 @@ router.patch('/:id/complete', async (req, res) => {
     const { id } = req.params
     const { distance } = req.body
 
-    const order = await prisma.rideOrder.update({
+    const order = await prisma.ride_order.update({
       where: { id },
       data: {
         status: 'completed',
-        completedAt: new Date(),
+        completed_at: new Date(),
         distance: distance || (Math.random() * 10 + 2).toFixed(1),
       },
     })
 
     // 司機恢復可用 + 累計行程
-    if (order.driverId) {
+    if (order.driver_id) {
       await prisma.driver.update({
-        where: { id: order.driverId },
-        data: { status: 'available', totalTrips: { increment: 1 } },
+        where: { id: order.driver_id },
+        data: { status: 'available', total_trips: { increment: 1 } },
       })
     }
 
@@ -178,13 +177,13 @@ router.patch('/:id/complete', async (req, res) => {
 router.patch('/:id/cancel', async (req, res) => {
   try {
     const { id } = req.params
-    const order = await prisma.rideOrder.update({
+    const order = await prisma.ride_order.update({
       where: { id },
       data: { status: 'cancelled' },
     })
     // 如果已派車，釋放司機
-    if (order.driverId) {
-      await prisma.driver.update({ where: { id: order.driverId }, data: { status: 'available' } })
+    if (order.driver_id) {
+      await prisma.driver.update({ where: { id: order.driver_id }, data: { status: 'available' } })
     }
     res.json(order)
   } catch (err) {
@@ -200,20 +199,20 @@ router.post('/:id/rate', async (req, res) => {
     const { rating, comment } = req.body
     if (!rating || rating < 1 || rating > 5) return res.status(400).json({ error: 'rating 1-5 required' })
 
-    const order = await prisma.rideOrder.update({
+    const order = await prisma.ride_order.update({
       where: { id },
-      data: { rating, ratingComment: comment || null },
+      data: { rating, rating_comment: comment || null },
     })
 
     // 更新司機平均評分
-    if (order.driverId) {
-      const avg = await prisma.rideOrder.aggregate({
-        where: { driverId: order.driverId, rating: { not: null } },
+    if (order.driver_id) {
+      const avg = await prisma.ride_order.aggregate({
+        where: { driver_id: order.driver_id, rating: { not: null } },
         _avg: { rating: true },
       })
       if (avg._avg.rating) {
         await prisma.driver.update({
-          where: { id: order.driverId },
+          where: { id: order.driver_id },
           data: { rating: Math.round(avg._avg.rating * 10) / 10 },
         })
       }
@@ -232,7 +231,7 @@ router.post('/:id/rate', async (req, res) => {
 router.get('/drivers', async (req, res) => {
   try {
     const drivers = await prisma.driver.findMany({
-      where: { isDeleted: false },
+      where: { is_deleted: false },
       orderBy: { name: 'asc' },
     })
     res.json(drivers)
