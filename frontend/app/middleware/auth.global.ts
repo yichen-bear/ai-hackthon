@@ -61,6 +61,11 @@ export default defineNuxtRouteMiddleware(async (to, _from) => {
     return
   }
 
+  // SSR server 端沒有使用者 cookie，跳過認證檢查
+  if (import.meta.server) {
+    return
+  }
+
   const { state, fetchUser } = useAuth()
 
   // 首次載入時透過 fetchUser 檢查 cookie 是否帶有效 token
