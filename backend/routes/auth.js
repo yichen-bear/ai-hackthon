@@ -182,14 +182,14 @@ router.get('/me', verifyToken, async (req, res) => {
     if (role === 'member') {
       const account = await prisma.memberAccount.findUnique({
         where: { id: userId },
-        select: { name: true, email: true, phone: true, creTime: true, communityNickname: true },
+        select: { name: true, email: true, phone: true, creTime: true, community_nickname: true },
       });
       if (account) {
         try { if (account.name) result.name = decryptField(account.name); } catch (e) { console.error('[/me] decrypt name failed:', e.message); }
         try { if (account.email) result.email = decryptField(account.email); } catch (e) { console.error('[/me] decrypt email failed:', e.message); }
         try { if (account.phone) result.phone = decryptField(account.phone); } catch (e) { console.error('[/me] decrypt phone failed:', e.message); }
         if (account.creTime) result.createdAt = account.creTime;
-        if (account.communityNickname) result.communityNickname = account.communityNickname;
+        if (account.community_nickname) result.communityNickname = account.community_nickname;
         if (result.name) result.maskedName = maskName(result.name);
       }
     } else if (role === 'vendor') {
