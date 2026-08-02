@@ -27,6 +27,7 @@ export function useWhisperSpeechRecognition() {
   const transcript = ref('')
   const error = ref<string | null>(null)
   const language = ref<SpeechLanguage>('mandarin')
+  const { apiFetch } = useApi()
 
   let mediaRecorder: MediaRecorder | null = null
   let audioChunks: Blob[] = []
@@ -139,7 +140,7 @@ export function useWhisperSpeechRecognition() {
         ? '/api/speech/taiwanese-asr'
         : '/api/speech/transcribe'
 
-      const response = await $fetch<{ success: boolean; text?: string; message?: string }>(
+      const response = await apiFetch<{ success: boolean; text?: string; message?: string }>(
         endpoint,
         {
           method: 'POST',
