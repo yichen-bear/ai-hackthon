@@ -7,7 +7,8 @@
  */
 export function useApi() {
   const config = useRuntimeConfig()
-  const baseURL = config.public.apiBase as string
+  // Ensure baseURL is never empty - fallback to EC2 backend
+  const baseURL = (config.public.apiBase as string) || 'https://50.112.104.252'
 
   /**
    * 帶有 baseURL 的 fetch wrapper
