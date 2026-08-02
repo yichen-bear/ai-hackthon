@@ -12,6 +12,13 @@ type TabKey = 'eat' | 'group' | 'calorie' | 'passport'
 
 const activeTab = ref<TabKey>('eat')
 
+// 支援 ?tab=xxx 直接跳轉
+const foodRoute = useRoute()
+onMounted(() => {
+  const tab = foodRoute.query.tab as string
+  if (tab && tabs.some(t => t.key === tab)) activeTab.value = tab as TabKey
+})
+
 const tabs: { key: TabKey; label: string }[] = [
   { key: 'eat', label: '想吃什麼' },
   { key: 'group', label: '聚餐企劃' },

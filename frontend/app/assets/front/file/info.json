@@ -6,39 +6,24 @@
     "color": "#ff5252",
     "features": [
       {
-        "name": "AI 智能訂位",
-        "description": "透過語音或文字，快速完成餐廳訂位，系統自動帶入您的偏好。",
-        "link": "/food/booking"
+        "name": "想吃什麼",
+        "description": "AI 推薦附近美食，語音或文字快速搜尋餐廳與外送選項。",
+        "link": "/food?tab=eat"
       },
       {
-        "name": "即時桌位查詢",
-        "description": "查看餐廳當前可訂時段，並直接選取有位時段。",
-        "link": "/food/table"
+        "name": "聚餐企劃",
+        "description": "多人聚餐投票、餐廳篩選、自動分帳，輕鬆搞定團體用餐。",
+        "link": "/food?tab=group"
       },
       {
-        "name": "熱量追蹤",
-        "description": "記錄每餐攝取熱量，並與每日目標比對，掌握健康狀態。",
-        "link": "/food/calorie"
-      },
-      {
-        "name": "熱量追蹤",
-        "description": "記錄每餐攝取熱量，並與每日目標比對，掌握健康狀態。",
-        "link": "/food/calorie"
-      },
-      {
-        "name": "熱量追蹤",
-        "description": "記錄每餐攝取熱量，並與每日目標比對，掌握健康狀態。",
-        "link": "/food/calorie"
-      },
-      {
-        "name": "熱量追蹤",
-        "description": "記錄每餐攝取熱量，並與每日目標比對，掌握健康狀態。",
-        "link": "/food/calorie"
+        "name": "熱量儀表板",
+        "description": "記錄每餐攝取熱量，與每日目標比對，掌握健康飲食狀態。",
+        "link": "/food?tab=calorie"
       },
       {
         "name": "美食護照",
         "description": "收集解鎖的餐廳徽章，記錄您的飲食足跡與成就。",
-        "link": ""
+        "link": "/food?tab=passport"
       }
     ],
     "description": "從訂位到營養，全面管理您的飲食生活",
@@ -51,22 +36,32 @@
     "color": "#3b82f6",
     "features": [
       {
-        "name": "線上問診",
-        "description": "與專業醫師即時視訊或文字諮詢，免去掛號排隊。",
-        "link": "/medical/consult"
+        "name": "健康紀錄",
+        "description": "每日血壓、血糖、體重追蹤，圖表化呈現健康趨勢。",
+        "link": "/medical?tab=daily"
       },
       {
-        "name": "智能預約掛號",
-        "description": "根據症狀推薦科別，一鍵完成醫院掛號。",
-        "link": "/medical/appointment"
+        "name": "AI 診斷",
+        "description": "輸入症狀，AI 推薦可能病因與建議就醫科別。",
+        "link": "/medical?tab=symptom"
       },
       {
-        "name": "用藥提醒",
-        "description": "設定服藥時間，系統定時通知，不再忘記吃藥。",
-        "link": ""
+        "name": "門診掛號",
+        "description": "根據症狀推薦科別，一鍵完成醫院掛號預約。",
+        "link": "/medical?tab=clinic"
+      },
+      {
+        "name": "處方簽",
+        "description": "查看歷史處方記錄，設定用藥提醒不再忘記吃藥。",
+        "link": "/medical?tab=prescription"
+      },
+      {
+        "name": "藥物辨識",
+        "description": "拍照辨識藥物，查看藥品資訊、副作用與交互作用。",
+        "link": "/medical?tab=pharmacy"
       }
     ],
-    "description": "足不出戶，享受專業醫療健康服務",
+    "description": "AI 輔助健康管理，從紀錄到看診一站搞定",
     "route": "/medical"
   },
   {
@@ -76,27 +71,32 @@
     "color": "#8b5cf6",
     "features": [
       {
-        "name": "智能家居控制",
-        "description": "遠端操控燈光、空調與家電，打造舒適居家環境。",
-        "link": "/housing/control"
+        "name": "社區公告",
+        "description": "查看社區公告、管委會通知，即時掌握社區動態。",
+        "link": "/housing?tab=notice"
       },
       {
-        "name": "物業報修",
-        "description": "拍照上傳，即時通報社區管理處處理修繕需求。",
-        "link": "/housing/repair"
+        "name": "包裹代收",
+        "description": "追蹤包裹到貨狀態，7-11 門市代收與退貨代發。",
+        "link": "/housing?tab=parcel"
       },
       {
-        "name": "訪客管理",
-        "description": "提前登記訪客，並發送臨時門禁碼，安全便利。",
-        "link": "/housing/visitor"
+        "name": "垃圾提醒",
+        "description": "垃圾車即時位置追蹤，分類提醒不再錯過收運時間。",
+        "link": "/housing?tab=trash"
       },
       {
-        "name": "社區互動",
-        "description": "查看社區公告、參與活動投票，增進鄰里關係。",
-        "link": ""
+        "name": "水電報修",
+        "description": "拍照上傳報修需求，追蹤處理進度與歷史紀錄。",
+        "link": "/housing?tab=repair"
+      },
+      {
+        "name": "家事服務",
+        "description": "預約清潔、洗衣等家事服務，線上比價與評價。",
+        "link": "/housing?tab=housework"
       }
     ],
-    "description": "打造安全、便捷的智慧居家體驗",
+    "description": "社區公告、包裹、報修，智慧居家一手掌握",
     "route": "/housing"
   },
   {
@@ -106,42 +106,37 @@
     "color": "#f59e0b",
     "features": [
       {
-        "name": "智慧路線規劃",
-        "description": "支援公車、捷運、高鐵、台鐵、汽車、機車多種交通方式，結合即時路況推薦最佳路線。",
-        "link": "/transport"
+        "name": "路線規劃",
+        "description": "支援多種交通方式，結合即時路況推薦最佳路線與導航。",
+        "link": "/transport?tab=route"
       },
       {
-        "name": "叫車服務",
-        "description": "整合 yoxi 叫車平台，支援即時/預約叫車、無障礙專車與寵物友善車。",
-        "link": "/transport"
+        "name": "yoxi 叫車",
+        "description": "即時/預約叫車，支援無障礙專車與寵物友善車，行程全記錄。",
+        "link": "/transport?tab=ride"
       },
       {
-        "name": "模擬購票與票券夾",
-        "description": "高鐵/台鐵模擬購票流程，動態 QR Code 票券夾統一管理。",
-        "link": "/transport"
+        "name": "購票",
+        "description": "高鐵/台鐵模擬購票，動態 QR Code 票券夾統一管理。",
+        "link": "/transport?tab=ticket"
       },
       {
-        "name": "共享運具租賃",
-        "description": "查看周邊 YouBike、GoShare、iRent 站點，一鍵完成租借。",
-        "link": "/transport"
+        "name": "共享租車",
+        "description": "查看周邊 YouBike 站點即時車輛數，一鍵導航前往租借。",
+        "link": "/transport?tab=sharing"
       },
       {
         "name": "停車助手",
         "description": "查詢周邊停車場即時空位，記錄停放位置避免找不到車。",
-        "link": "/transport"
+        "link": "/transport?tab=parking"
       },
       {
-        "name": "情境智慧推播",
-        "description": "依據時間、天氣或餐廳行程，主動詢問是否叫車或規劃路線。",
-        "link": "/transport"
-      },
-      {
-        "name": "碳足跡追蹤",
+        "name": "碳足跡",
         "description": "追蹤交通碳排放量，透過減碳成就徽章鼓勵綠色出行。",
-        "link": "/transport"
+        "link": "/transport?tab=badge"
       }
     ],
-    "description": "讓每一次出行都高效、順暢",
+    "description": "路線、叫車、租車、停車，出行一站搞定",
     "route": "/transport"
   },
   {
@@ -151,32 +146,37 @@
     "color": "#10b981",
     "features": [
       {
+        "name": "取貨提醒",
+        "description": "待取貨清單與門市地圖導航，逾期提醒不漏接。",
+        "link": "/booking?tab=pickup"
+      },
+      {
         "name": "i預購",
-        "description": "線上大賣場虛擬門市貨架，主打節慶禮盒、名店美食、限量預購與獨家商品。",
-        "link": "/booking"
+        "description": "節慶禮盒、名店美食、限量預購，線上虛擬貨架搶先訂。",
+        "link": "/booking?tab=preorder"
       },
       {
         "name": "i划算",
-        "description": "7-11門市在地社群團購，主打日用品箱購、生鮮食材與一人即享團購價。",
-        "link": "/booking"
+        "description": "7-11 門市在地社群團購，日用品箱購一人也享團購價。",
+        "link": "/booking?tab=groupbuy"
       },
       {
-        "name": "AI 對話匹配",
-        "description": "智慧分析需求關鍵字，自動推薦最適合的商品與購買頻道。",
-        "link": "/booking"
+        "name": "i二手",
+        "description": "社區二手物交換平台，門市面交或代收，交易全程私訊追蹤。",
+        "link": "/booking?tab=secondhand"
       },
       {
-        "name": "訂單追蹤與取貨",
-        "description": "即時追蹤預購/團購進度，到貨提醒並導航至取貨門市。",
-        "link": "/booking"
+        "name": "訂單追蹤",
+        "description": "即時追蹤預購/團購/二手交易進度，到貨自動提醒。",
+        "link": "/booking?tab=order"
       },
       {
         "name": "收藏清單",
         "description": "收藏有興趣的商品，降價或即將截止時自動提醒。",
-        "link": "/booking"
+        "link": "/booking?tab=wishlist"
       }
     ],
-    "description": "i預購 × i划算，智慧預購團購一站搞定",
+    "description": "i預購 × i划算 × i二手，智慧預購團購一站搞定",
     "route": "/booking"
   },
   {
@@ -186,37 +186,27 @@
     "color": "#ec4899",
     "features": [
       {
-        "name": "ibon 票務中心",
-        "description": "統一獅球賽門票、展覽演出與星巴克/門市體驗活動，購票後生成電子票券 QR Code。",
-        "link": "/entertainment"
+        "name": "ibon 票務活動",
+        "description": "球賽門票、展覽演出與體驗活動，購票後生成電子票券 QR Code。",
+        "link": "/entertainment?tab=ticket"
       },
       {
-        "name": "AI 週末提案",
-        "description": "AI 偵測休閒意圖，自動推薦熱門活動並內嵌購票卡片，一步完成。",
-        "link": "/entertainment"
+        "name": "興趣媒合聚會",
+        "description": "依興趣標籤推薦同好活動，建立或加入社群，群組互動。",
+        "link": "/entertainment?tab=recommend"
       },
       {
-        "name": "跨模組導流",
-        "description": "購票成功後一鍵跳轉交通規劃/叫車，憑票享 7-11/星巴克優惠。",
-        "link": "/entertainment"
+        "name": "社區活動",
+        "description": "里辦公處活動報名、社大課程瀏覽，QR Code 報到。",
+        "link": "/entertainment?tab=community"
       },
       {
-        "name": "OPEN POINT 點數中心",
-        "description": "購物購票累積點數，兌換咖啡、美食折抵或參加幸運轉盤抽獎。",
-        "link": "/entertainment"
-      },
-      {
-        "name": "在地社區與社大課程",
-        "description": "社區活動報名付款、社區大學課程瀏覽，現場 QR Code 掃碼報到。",
-        "link": "/entertainment"
-      },
-      {
-        "name": "興趣媒合與社群",
-        "description": "依興趣標籤推薦同好活動，創建或加入社群，群組互動與置頂公告。",
-        "link": "/entertainment"
+        "name": "社群互動",
+        "description": "鄰里留言板、社區話題討論，增進鄰里互動。",
+        "link": "/entertainment?tab=board"
       }
     ],
-    "description": "票務、點數、社群，一站滿足你的娛樂生活",
+    "description": "票務、社區活動、興趣社群，一站滿足娛樂生活",
     "route": "/entertainment"
   }
 ]

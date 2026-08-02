@@ -312,9 +312,60 @@ const mockTickets = ref([
   { id: 'tk1', type: '高鐵', name: '台北→桃園 1309車次', date: '2026-08-02', time: '19:00', venue: '台北車站', status: 'unused', points: 10, link: '/transport', linkLabel: '前往購票', linkQuery: { tab: 'ticket' } },
   { id: 'tk2', type: '棒球', name: '中信兄弟 vs 統一獅', date: '2026-08-02', time: '18:35', venue: '台南亞太棒球場', status: 'unused', points: 20, link: '/entertainment', linkLabel: '前往活動', linkQuery: { tab: 'ticket' } },
   { id: 'tk3', type: '預購', name: '中秋鳳梨酥禮盒', date: '2026-09-15', time: '', venue: '7-11 信義門市', status: 'pending', points: 5, link: '/booking', linkLabel: '前往取貨', linkQuery: { tab: 'pickup' } },
-  { id: 'tk4', type: '社區', name: '中秋社區烤肉大會', date: '2026-09-21', time: '17:00', venue: '仁愛里活動中心', status: 'unused', points: 10, link: '/entertainment', linkLabel: '前往活動', linkQuery: { tab: 'community' } },
-  { id: 'tk5', type: '叫車', name: 'yoxi 叫車紀錄', date: '2026-07-28', time: '14:30', venue: '信義區→公司', status: 'used', points: 5, link: '/transport', linkLabel: '前往叫車', linkQuery: { tab: 'ride' } },
 ])
+
+// 從 DB 載入真實票券
+async function fetchMyTickets() {
+  try {
+    const data: any = await $fetch('/api/member/tickets', { params: { userId: currentUserId.value } })
+    // 社區活動
+    if (data.activities?.length > 0) {
+      const actTks = data.activities.map((a: any) => ({
+        id: a.id, type: '社區', name: a.title,
+        date: new Date(a.date).toLocaleDateString('zh-TW'),
+        time: new Date(a.date).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }),
+        venue: a.location || '', status: a.status === 'used' ? 'used' : 'unused',
+        points: 10, link: '/entertainment', linkLabel: '前往活動', linkQuery: { tab: 'community' },
+        code: a.code,
+      }))
+      mockTickets.value.push(...actTks)
+    }
+    // 叫車行程
+    if (data.rides?.length > 0) {
+      const rideTks = data.rides.map((r: any) => ({
+        id: r.id, type: '叫車', name: `${r.pickup.slice(0, 8)}→${r.destination.slice(0, 8)}`,
+        date: new Date(r.date).toLocaleDateString('zh-TW'),
+        time: '', venue: `${r.driver} · $${r.fare}`, status: 'used',
+        points: 5, link: '/transport', linkLabel: '前往叫車', linkQuery: { tab: 'ride' },
+        code: r.code,
+      }))
+      mockTickets.value.push(...rideTks)
+    }
+    // i二手交易
+    if (data.secondhand?.length > 0) {
+      const shTks = data.secondhand.map((s: any) => ({
+        id: s.id, type: 'i二手', name: s.title,
+        date: new Date(s.date).toLocaleDateString('zh-TW'),
+        time: '', venue: `${s.store} · 🌱${s.carbonSaved}kg`, status: 'used',
+        points: 8, link: '/booking', linkLabel: '前往i二手', linkQuery: { tab: 'secondhand' },
+        code: s.code,
+      }))
+      mockTickets.value.push(...shTks)
+    }
+    // 興趣社群
+    if (data.groups?.length > 0) {
+      const grpTks = data.groups.map((g: any) => ({
+        id: g.id, type: '社群', name: `${g.icon} ${g.title}`,
+        date: new Date(g.date).toLocaleDateString('zh-TW'),
+        time: '', venue: `${g.memberCount} 位成員`, status: 'active',
+        points: 3, link: '/entertainment', linkLabel: '前往社群', linkQuery: { tab: 'interest' },
+        code: g.code,
+      }))
+      mockTickets.value.push(...grpTks)
+    }
+  } catch { /* use mock fallback */ }
+}
+onMounted(() => { fetchMyTickets() })
 
 // QR 碼展開狀態
 const expandedQrId = ref<string | null>(null)

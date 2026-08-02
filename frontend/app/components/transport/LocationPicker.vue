@@ -55,13 +55,34 @@ function openPicker() {
   showMap.value = false
   mapSelectedLocation.value = null
   showPicker.value = true
+  // 初始化 Google Places Autocomplete
+  nextTick(() => initGoogleAutocomplete())
 }
 
 function closePicker() {
   showPicker.value = false
 }
 
-// 搜尋邏輯
+// Google Places Autocomplete
+const { initAutocomplete, getMapEmbedUrl } = useGooglePlaces()
+const autocompleteInputRef = ref<HTMLInputElement | null>(null)
+const selectedMapUrl = ref('')
+
+async function initGoogleAutocomplete() {
+  await nextTick()
+  const input = document.querySelector('.loc-search-input') as HTMLInputElement
+  if (!input) return
+  try {
+    await initAutocomplete(input, (place) => {
+      searchQuery.value = place.address
+      selectResult({ name: place.name || place.address, address: place.address, lat: place.lat, lng: place.lng })
+    })
+  } catch {
+    // Google API 不可用，使用 fallback mock 搜尋
+  }
+}
+
+// 搜尋邏輯（fallback when Google not available）
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
 function handleSearchInput() {
   if (searchTimeout) clearTimeout(searchTimeout)
@@ -81,14 +102,50 @@ function handleSearchInput() {
 }
 
 function selectResult(location: LocationResult) {
-  emit('update:modelValue', location.name)
+  emit('update:modelValue', location.address || location.name)
   emit('select', location)
+  selectedMapUrl.value = getMapEmbedUrl(location.address || location.name)
   closePicker()
 }
 
 // 地圖選點
 function toggleMap() {
   showMap.value = !showMap.value
+}
+
+// GPS 定位
+const isGeolocating = ref(false)
+const { getMapEmbedUrl: getGeoMapUrl } = useGooglePlaces()
+
+async function useCurrentLocation() {
+  if (!navigator.geolocation) {
+    selectResult({ name: '目前位置', address: '台北市信義區', lat: 25.033, lng: 121.565 })
+    return
+  }
+  isGeolocating.value = true
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      const { latitude, longitude } = pos.coords
+      // 反向 geocoding 取得地址
+      let address = `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`
+      try {
+        const config = useRuntimeConfig()
+        const apiKey = config.public.googleMapsKey as string
+        const res: any = await $fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}&language=zh-TW`)
+        if (res.results && res.results.length > 0) {
+          address = res.results[0].formatted_address
+        }
+      } catch { /* use coords */ }
+      isGeolocating.value = false
+      selectResult({ name: '目前位置', address, lat: latitude, lng: longitude })
+    },
+    () => {
+      isGeolocating.value = false
+      // fallback 台北信義
+      selectResult({ name: '目前位置', address: '台北市信義區（定位失敗）', lat: 25.033, lng: 121.565 })
+    },
+    { timeout: 8000 }
+  )
 }
 
 function handleMapClick(e: MouseEvent) {
@@ -126,6 +183,14 @@ function confirmMapSelection() {
     </span>
     <span class="location-arrow">›</span>
   </button>
+  <!-- 地圖預覽（選擇地點後顯示） -->
+  <iframe
+    v-if="selectedMapUrl && modelValue"
+    :src="selectedMapUrl"
+    class="loc-map-preview"
+    loading="lazy"
+    allowfullscreen
+  ></iframe>
 
   <!-- 地點選擇器 Overlay -->
   <Teleport to="body">
@@ -138,7 +203,7 @@ function confirmMapSelection() {
             <input
               v-model="searchQuery"
               type="text"
-              class="search-input"
+              class="search-input loc-search-input"
               placeholder="搜尋地點或地址..."
               autofocus
               @input="handleSearchInput"
@@ -147,13 +212,8 @@ function confirmMapSelection() {
           </div>
         </div>
 
-        <!-- 切換地圖模式 -->
-        <button class="map-toggle-btn" @click="toggleMap">
-          {{ showMap ? '📋 切換為搜尋' : '🗺️ 在地圖上選擇' }}
-        </button>
-
         <!-- 搜尋結果列表 -->
-        <div v-if="!showMap" class="search-results">
+        <div class="search-results">
           <button
             v-for="loc in searchResults"
             :key="loc.name + loc.lat"
@@ -174,11 +234,11 @@ function confirmMapSelection() {
           <!-- 快速選擇 -->
           <div v-if="!searchQuery" class="quick-picks">
             <p class="quick-title">常用地點</p>
-            <button class="result-item" @click="selectResult({ name: '我的位置', address: '目前 GPS 位置', lat: 25.033, lng: 121.565 })">
+            <button class="result-item" @click="useCurrentLocation">
               <span class="result-icon">📌</span>
               <div class="result-info">
-                <span class="result-name">我的位置</span>
-                <span class="result-address">使用目前 GPS 定位</span>
+                <span class="result-name">{{ isGeolocating ? '定位中...' : '目前位置' }}</span>
+                <span class="result-address">使用 GPS 定位</span>
               </div>
             </button>
             <button
@@ -196,34 +256,6 @@ function confirmMapSelection() {
           </div>
         </div>
 
-        <!-- 地圖選點 -->
-        <div v-if="showMap" class="map-container">
-          <div class="map-area" @click="handleMapClick" role="img" aria-label="地圖區域，點擊選擇地點">
-            <!-- 模擬地圖（實際專案用 Mapbox / Google Maps） -->
-            <div class="map-placeholder">
-              <div class="map-grid"></div>
-              <div class="map-center-label">台北市</div>
-              <!-- 標記點 -->
-              <div
-                v-if="mapSelectedLocation"
-                class="map-marker"
-                :style="{
-                  top: `${((25.10 - mapSelectedLocation.lat) / 0.15) * 100}%`,
-                  left: `${((mapSelectedLocation.lng - 121.45) / 0.15) * 100}%`
-                }"
-              >
-                📍
-              </div>
-            </div>
-          </div>
-
-          <div v-if="mapSelectedLocation" class="map-selection">
-            <p class="map-selection-name">{{ mapSelectedLocation.name }}</p>
-            <p class="map-selection-address">{{ mapSelectedLocation.address }}</p>
-            <button class="confirm-map-btn" @click="confirmMapSelection">確認選擇此地點</button>
-          </div>
-          <p v-else class="map-hint">點擊地圖選擇目的地</p>
-        </div>
       </div>
     </div>
   </Teleport>
@@ -557,5 +589,13 @@ function confirmMapSelection() {
   font-size: 12px;
   color: var(--color-text-secondary, #78716c);
   margin: 0;
+}
+
+.loc-map-preview {
+  width: 100%;
+  height: 120px;
+  border: none;
+  border-radius: 10px;
+  margin-top: 8px;
 }
 </style>

@@ -104,11 +104,6 @@ export type SecondhandListing = $Result.DefaultSelection<Prisma.$SecondhandListi
  */
 export type ChatMessage = $Result.DefaultSelection<Prisma.$ChatMessagePayload>
 /**
- * Model PickupReservation
- * 
- */
-export type PickupReservation = $Result.DefaultSelection<Prisma.$PickupReservationPayload>
-/**
  * Model CommunityGroup
  * 
  */
@@ -119,30 +114,10 @@ export type CommunityGroup = $Result.DefaultSelection<Prisma.$CommunityGroupPayl
  */
 export type GroupMember = $Result.DefaultSelection<Prisma.$GroupMemberPayload>
 /**
- * Model CommunityActivity
+ * Model PickupReservation
  * 
  */
-export type CommunityActivity = $Result.DefaultSelection<Prisma.$CommunityActivityPayload>
-/**
- * Model ActivityRegistration
- * 
- */
-export type ActivityRegistration = $Result.DefaultSelection<Prisma.$ActivityRegistrationPayload>
-/**
- * Model CommunityQuestion
- * 
- */
-export type CommunityQuestion = $Result.DefaultSelection<Prisma.$CommunityQuestionPayload>
-/**
- * Model Driver
- * 
- */
-export type Driver = $Result.DefaultSelection<Prisma.$DriverPayload>
-/**
- * Model RideOrder
- * 
- */
-export type RideOrder = $Result.DefaultSelection<Prisma.$RideOrderPayload>
+export type PickupReservation = $Result.DefaultSelection<Prisma.$PickupReservationPayload>
 /**
  * Model RestaurantQueue
  * 餐廳即時座位與候位狀態（廠商端控制）
@@ -466,16 +441,6 @@ export class PrismaClient<
   get chatMessage(): Prisma.ChatMessageDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.pickupReservation`: Exposes CRUD operations for the **PickupReservation** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more PickupReservations
-    * const pickupReservations = await prisma.pickupReservation.findMany()
-    * ```
-    */
-  get pickupReservation(): Prisma.PickupReservationDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.communityGroup`: Exposes CRUD operations for the **CommunityGroup** model.
     * Example usage:
     * ```ts
@@ -496,54 +461,14 @@ export class PrismaClient<
   get groupMember(): Prisma.GroupMemberDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.communityActivity`: Exposes CRUD operations for the **CommunityActivity** model.
+   * `prisma.pickupReservation`: Exposes CRUD operations for the **PickupReservation** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more CommunityActivities
-    * const communityActivities = await prisma.communityActivity.findMany()
+    * // Fetch zero or more PickupReservations
+    * const pickupReservations = await prisma.pickupReservation.findMany()
     * ```
     */
-  get communityActivity(): Prisma.CommunityActivityDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.activityRegistration`: Exposes CRUD operations for the **ActivityRegistration** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more ActivityRegistrations
-    * const activityRegistrations = await prisma.activityRegistration.findMany()
-    * ```
-    */
-  get activityRegistration(): Prisma.ActivityRegistrationDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.communityQuestion`: Exposes CRUD operations for the **CommunityQuestion** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more CommunityQuestions
-    * const communityQuestions = await prisma.communityQuestion.findMany()
-    * ```
-    */
-  get communityQuestion(): Prisma.CommunityQuestionDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.driver`: Exposes CRUD operations for the **Driver** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Drivers
-    * const drivers = await prisma.driver.findMany()
-    * ```
-    */
-  get driver(): Prisma.DriverDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.rideOrder`: Exposes CRUD operations for the **RideOrder** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more RideOrders
-    * const rideOrders = await prisma.rideOrder.findMany()
-    * ```
-    */
-  get rideOrder(): Prisma.RideOrderDelegate<ExtArgs, ClientOptions>;
+  get pickupReservation(): Prisma.PickupReservationDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.restaurantQueue`: Exposes CRUD operations for the **RestaurantQueue** model.
@@ -1049,14 +974,9 @@ export namespace Prisma {
     VendorUser: 'VendorUser',
     SecondhandListing: 'SecondhandListing',
     ChatMessage: 'ChatMessage',
-    PickupReservation: 'PickupReservation',
     CommunityGroup: 'CommunityGroup',
     GroupMember: 'GroupMember',
-    CommunityActivity: 'CommunityActivity',
-    ActivityRegistration: 'ActivityRegistration',
-    CommunityQuestion: 'CommunityQuestion',
-    Driver: 'Driver',
-    RideOrder: 'RideOrder',
+    PickupReservation: 'PickupReservation',
     RestaurantQueue: 'RestaurantQueue',
     QueueEntry: 'QueueEntry',
     Reservation: 'Reservation',
@@ -1076,7 +996,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "cmsHomepageServiceVendor" | "cmsHomepageService" | "serviceType" | "sysCounty" | "sysDistrict" | "pmsForm" | "pmsFormGroup" | "pmsFormTopic" | "pmsTopicOption" | "pmsTopicMedia" | "pmsTopicCountyDistrictRelation" | "pmsFormFeedback" | "mmsOrderRecord" | "memberAccount" | "memberAddress" | "vendorUser" | "secondhandListing" | "chatMessage" | "pickupReservation" | "communityGroup" | "groupMember" | "communityActivity" | "activityRegistration" | "communityQuestion" | "driver" | "rideOrder" | "restaurantQueue" | "queueEntry" | "reservation" | "slotCapacity"
+      modelProps: "cmsHomepageServiceVendor" | "cmsHomepageService" | "serviceType" | "sysCounty" | "sysDistrict" | "pmsForm" | "pmsFormGroup" | "pmsFormTopic" | "pmsTopicOption" | "pmsTopicMedia" | "pmsTopicCountyDistrictRelation" | "pmsFormFeedback" | "mmsOrderRecord" | "memberAccount" | "memberAddress" | "vendorUser" | "secondhandListing" | "chatMessage" | "communityGroup" | "groupMember" | "pickupReservation" | "restaurantQueue" | "queueEntry" | "reservation" | "slotCapacity"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2412,80 +2332,6 @@ export namespace Prisma {
           }
         }
       }
-      PickupReservation: {
-        payload: Prisma.$PickupReservationPayload<ExtArgs>
-        fields: Prisma.PickupReservationFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.PickupReservationFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.PickupReservationFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload>
-          }
-          findFirst: {
-            args: Prisma.PickupReservationFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.PickupReservationFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload>
-          }
-          findMany: {
-            args: Prisma.PickupReservationFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload>[]
-          }
-          create: {
-            args: Prisma.PickupReservationCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload>
-          }
-          createMany: {
-            args: Prisma.PickupReservationCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.PickupReservationCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload>[]
-          }
-          delete: {
-            args: Prisma.PickupReservationDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload>
-          }
-          update: {
-            args: Prisma.PickupReservationUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload>
-          }
-          deleteMany: {
-            args: Prisma.PickupReservationDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.PickupReservationUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.PickupReservationUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload>[]
-          }
-          upsert: {
-            args: Prisma.PickupReservationUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload>
-          }
-          aggregate: {
-            args: Prisma.PickupReservationAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregatePickupReservation>
-          }
-          groupBy: {
-            args: Prisma.PickupReservationGroupByArgs<ExtArgs>
-            result: $Utils.Optional<PickupReservationGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.PickupReservationCountArgs<ExtArgs>
-            result: $Utils.Optional<PickupReservationCountAggregateOutputType> | number
-          }
-        }
-      }
       CommunityGroup: {
         payload: Prisma.$CommunityGroupPayload<ExtArgs>
         fields: Prisma.CommunityGroupFieldRefs
@@ -2634,373 +2480,77 @@ export namespace Prisma {
           }
         }
       }
-      CommunityActivity: {
-        payload: Prisma.$CommunityActivityPayload<ExtArgs>
-        fields: Prisma.CommunityActivityFieldRefs
+      PickupReservation: {
+        payload: Prisma.$PickupReservationPayload<ExtArgs>
+        fields: Prisma.PickupReservationFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.CommunityActivityFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityActivityPayload> | null
+            args: Prisma.PickupReservationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.CommunityActivityFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityActivityPayload>
+            args: Prisma.PickupReservationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload>
           }
           findFirst: {
-            args: Prisma.CommunityActivityFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityActivityPayload> | null
+            args: Prisma.PickupReservationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.CommunityActivityFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityActivityPayload>
+            args: Prisma.PickupReservationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload>
           }
           findMany: {
-            args: Prisma.CommunityActivityFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityActivityPayload>[]
+            args: Prisma.PickupReservationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload>[]
           }
           create: {
-            args: Prisma.CommunityActivityCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityActivityPayload>
+            args: Prisma.PickupReservationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload>
           }
           createMany: {
-            args: Prisma.CommunityActivityCreateManyArgs<ExtArgs>
+            args: Prisma.PickupReservationCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.CommunityActivityCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityActivityPayload>[]
+            args: Prisma.PickupReservationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload>[]
           }
           delete: {
-            args: Prisma.CommunityActivityDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityActivityPayload>
+            args: Prisma.PickupReservationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload>
           }
           update: {
-            args: Prisma.CommunityActivityUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityActivityPayload>
+            args: Prisma.PickupReservationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload>
           }
           deleteMany: {
-            args: Prisma.CommunityActivityDeleteManyArgs<ExtArgs>
+            args: Prisma.PickupReservationDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.CommunityActivityUpdateManyArgs<ExtArgs>
+            args: Prisma.PickupReservationUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.CommunityActivityUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityActivityPayload>[]
+            args: Prisma.PickupReservationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload>[]
           }
           upsert: {
-            args: Prisma.CommunityActivityUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityActivityPayload>
+            args: Prisma.PickupReservationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PickupReservationPayload>
           }
           aggregate: {
-            args: Prisma.CommunityActivityAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateCommunityActivity>
+            args: Prisma.PickupReservationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePickupReservation>
           }
           groupBy: {
-            args: Prisma.CommunityActivityGroupByArgs<ExtArgs>
-            result: $Utils.Optional<CommunityActivityGroupByOutputType>[]
+            args: Prisma.PickupReservationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PickupReservationGroupByOutputType>[]
           }
           count: {
-            args: Prisma.CommunityActivityCountArgs<ExtArgs>
-            result: $Utils.Optional<CommunityActivityCountAggregateOutputType> | number
-          }
-        }
-      }
-      ActivityRegistration: {
-        payload: Prisma.$ActivityRegistrationPayload<ExtArgs>
-        fields: Prisma.ActivityRegistrationFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.ActivityRegistrationFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ActivityRegistrationPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.ActivityRegistrationFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ActivityRegistrationPayload>
-          }
-          findFirst: {
-            args: Prisma.ActivityRegistrationFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ActivityRegistrationPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.ActivityRegistrationFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ActivityRegistrationPayload>
-          }
-          findMany: {
-            args: Prisma.ActivityRegistrationFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ActivityRegistrationPayload>[]
-          }
-          create: {
-            args: Prisma.ActivityRegistrationCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ActivityRegistrationPayload>
-          }
-          createMany: {
-            args: Prisma.ActivityRegistrationCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.ActivityRegistrationCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ActivityRegistrationPayload>[]
-          }
-          delete: {
-            args: Prisma.ActivityRegistrationDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ActivityRegistrationPayload>
-          }
-          update: {
-            args: Prisma.ActivityRegistrationUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ActivityRegistrationPayload>
-          }
-          deleteMany: {
-            args: Prisma.ActivityRegistrationDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.ActivityRegistrationUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.ActivityRegistrationUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ActivityRegistrationPayload>[]
-          }
-          upsert: {
-            args: Prisma.ActivityRegistrationUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ActivityRegistrationPayload>
-          }
-          aggregate: {
-            args: Prisma.ActivityRegistrationAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateActivityRegistration>
-          }
-          groupBy: {
-            args: Prisma.ActivityRegistrationGroupByArgs<ExtArgs>
-            result: $Utils.Optional<ActivityRegistrationGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.ActivityRegistrationCountArgs<ExtArgs>
-            result: $Utils.Optional<ActivityRegistrationCountAggregateOutputType> | number
-          }
-        }
-      }
-      CommunityQuestion: {
-        payload: Prisma.$CommunityQuestionPayload<ExtArgs>
-        fields: Prisma.CommunityQuestionFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.CommunityQuestionFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityQuestionPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.CommunityQuestionFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityQuestionPayload>
-          }
-          findFirst: {
-            args: Prisma.CommunityQuestionFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityQuestionPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.CommunityQuestionFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityQuestionPayload>
-          }
-          findMany: {
-            args: Prisma.CommunityQuestionFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityQuestionPayload>[]
-          }
-          create: {
-            args: Prisma.CommunityQuestionCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityQuestionPayload>
-          }
-          createMany: {
-            args: Prisma.CommunityQuestionCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.CommunityQuestionCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityQuestionPayload>[]
-          }
-          delete: {
-            args: Prisma.CommunityQuestionDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityQuestionPayload>
-          }
-          update: {
-            args: Prisma.CommunityQuestionUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityQuestionPayload>
-          }
-          deleteMany: {
-            args: Prisma.CommunityQuestionDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.CommunityQuestionUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.CommunityQuestionUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityQuestionPayload>[]
-          }
-          upsert: {
-            args: Prisma.CommunityQuestionUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommunityQuestionPayload>
-          }
-          aggregate: {
-            args: Prisma.CommunityQuestionAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateCommunityQuestion>
-          }
-          groupBy: {
-            args: Prisma.CommunityQuestionGroupByArgs<ExtArgs>
-            result: $Utils.Optional<CommunityQuestionGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.CommunityQuestionCountArgs<ExtArgs>
-            result: $Utils.Optional<CommunityQuestionCountAggregateOutputType> | number
-          }
-        }
-      }
-      Driver: {
-        payload: Prisma.$DriverPayload<ExtArgs>
-        fields: Prisma.DriverFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.DriverFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DriverPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.DriverFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DriverPayload>
-          }
-          findFirst: {
-            args: Prisma.DriverFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DriverPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.DriverFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DriverPayload>
-          }
-          findMany: {
-            args: Prisma.DriverFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DriverPayload>[]
-          }
-          create: {
-            args: Prisma.DriverCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DriverPayload>
-          }
-          createMany: {
-            args: Prisma.DriverCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.DriverCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DriverPayload>[]
-          }
-          delete: {
-            args: Prisma.DriverDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DriverPayload>
-          }
-          update: {
-            args: Prisma.DriverUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DriverPayload>
-          }
-          deleteMany: {
-            args: Prisma.DriverDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.DriverUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.DriverUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DriverPayload>[]
-          }
-          upsert: {
-            args: Prisma.DriverUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DriverPayload>
-          }
-          aggregate: {
-            args: Prisma.DriverAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateDriver>
-          }
-          groupBy: {
-            args: Prisma.DriverGroupByArgs<ExtArgs>
-            result: $Utils.Optional<DriverGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.DriverCountArgs<ExtArgs>
-            result: $Utils.Optional<DriverCountAggregateOutputType> | number
-          }
-        }
-      }
-      RideOrder: {
-        payload: Prisma.$RideOrderPayload<ExtArgs>
-        fields: Prisma.RideOrderFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.RideOrderFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.RideOrderFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload>
-          }
-          findFirst: {
-            args: Prisma.RideOrderFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.RideOrderFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload>
-          }
-          findMany: {
-            args: Prisma.RideOrderFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload>[]
-          }
-          create: {
-            args: Prisma.RideOrderCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload>
-          }
-          createMany: {
-            args: Prisma.RideOrderCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.RideOrderCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload>[]
-          }
-          delete: {
-            args: Prisma.RideOrderDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload>
-          }
-          update: {
-            args: Prisma.RideOrderUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload>
-          }
-          deleteMany: {
-            args: Prisma.RideOrderDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.RideOrderUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.RideOrderUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload>[]
-          }
-          upsert: {
-            args: Prisma.RideOrderUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RideOrderPayload>
-          }
-          aggregate: {
-            args: Prisma.RideOrderAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateRideOrder>
-          }
-          groupBy: {
-            args: Prisma.RideOrderGroupByArgs<ExtArgs>
-            result: $Utils.Optional<RideOrderGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.RideOrderCountArgs<ExtArgs>
-            result: $Utils.Optional<RideOrderCountAggregateOutputType> | number
+            args: Prisma.PickupReservationCountArgs<ExtArgs>
+            result: $Utils.Optional<PickupReservationCountAggregateOutputType> | number
           }
         }
       }
@@ -3441,14 +2991,9 @@ export namespace Prisma {
     vendorUser?: VendorUserOmit
     secondhandListing?: SecondhandListingOmit
     chatMessage?: ChatMessageOmit
-    pickupReservation?: PickupReservationOmit
     communityGroup?: CommunityGroupOmit
     groupMember?: GroupMemberOmit
-    communityActivity?: CommunityActivityOmit
-    activityRegistration?: ActivityRegistrationOmit
-    communityQuestion?: CommunityQuestionOmit
-    driver?: DriverOmit
-    rideOrder?: RideOrderOmit
+    pickupReservation?: PickupReservationOmit
     restaurantQueue?: RestaurantQueueOmit
     queueEntry?: QueueEntryOmit
     reservation?: ReservationOmit
@@ -3934,68 +3479,6 @@ export namespace Prisma {
    */
   export type CommunityGroupCountOutputTypeCountMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: GroupMemberWhereInput
-  }
-
-
-  /**
-   * Count Type CommunityActivityCountOutputType
-   */
-
-  export type CommunityActivityCountOutputType = {
-    registrations: number
-  }
-
-  export type CommunityActivityCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    registrations?: boolean | CommunityActivityCountOutputTypeCountRegistrationsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * CommunityActivityCountOutputType without action
-   */
-  export type CommunityActivityCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityActivityCountOutputType
-     */
-    select?: CommunityActivityCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * CommunityActivityCountOutputType without action
-   */
-  export type CommunityActivityCountOutputTypeCountRegistrationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ActivityRegistrationWhereInput
-  }
-
-
-  /**
-   * Count Type DriverCountOutputType
-   */
-
-  export type DriverCountOutputType = {
-    rideOrders: number
-  }
-
-  export type DriverCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    rideOrders?: boolean | DriverCountOutputTypeCountRideOrdersArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * DriverCountOutputType without action
-   */
-  export type DriverCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the DriverCountOutputType
-     */
-    select?: DriverCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * DriverCountOutputType without action
-   */
-  export type DriverCountOutputTypeCountRideOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RideOrderWhereInput
   }
 
 
@@ -20483,7 +19966,6 @@ export namespace Prisma {
     creTime: Date | null
     updId: string | null
     updTime: Date | null
-    communityNickname: string | null
   }
 
   export type MemberAccountMaxAggregateOutputType = {
@@ -20501,7 +19983,6 @@ export namespace Prisma {
     creTime: Date | null
     updId: string | null
     updTime: Date | null
-    communityNickname: string | null
   }
 
   export type MemberAccountCountAggregateOutputType = {
@@ -20519,7 +20000,6 @@ export namespace Prisma {
     creTime: number
     updId: number
     updTime: number
-    communityNickname: number
     _all: number
   }
 
@@ -20539,7 +20019,6 @@ export namespace Prisma {
     creTime?: true
     updId?: true
     updTime?: true
-    communityNickname?: true
   }
 
   export type MemberAccountMaxAggregateInputType = {
@@ -20557,7 +20036,6 @@ export namespace Prisma {
     creTime?: true
     updId?: true
     updTime?: true
-    communityNickname?: true
   }
 
   export type MemberAccountCountAggregateInputType = {
@@ -20575,7 +20053,6 @@ export namespace Prisma {
     creTime?: true
     updId?: true
     updTime?: true
-    communityNickname?: true
     _all?: true
   }
 
@@ -20666,7 +20143,6 @@ export namespace Prisma {
     creTime: Date
     updId: string
     updTime: Date
-    communityNickname: string | null
     _count: MemberAccountCountAggregateOutputType | null
     _min: MemberAccountMinAggregateOutputType | null
     _max: MemberAccountMaxAggregateOutputType | null
@@ -20701,7 +20177,6 @@ export namespace Prisma {
     creTime?: boolean
     updId?: boolean
     updTime?: boolean
-    communityNickname?: boolean
     addresses?: boolean | MemberAccount$addressesArgs<ExtArgs>
     _count?: boolean | MemberAccountCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["memberAccount"]>
@@ -20721,7 +20196,6 @@ export namespace Prisma {
     creTime?: boolean
     updId?: boolean
     updTime?: boolean
-    communityNickname?: boolean
   }, ExtArgs["result"]["memberAccount"]>
 
   export type MemberAccountSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -20739,7 +20213,6 @@ export namespace Prisma {
     creTime?: boolean
     updId?: boolean
     updTime?: boolean
-    communityNickname?: boolean
   }, ExtArgs["result"]["memberAccount"]>
 
   export type MemberAccountSelectScalar = {
@@ -20757,10 +20230,9 @@ export namespace Prisma {
     creTime?: boolean
     updId?: boolean
     updTime?: boolean
-    communityNickname?: boolean
   }
 
-  export type MemberAccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "emailHash" | "phone" | "phoneHash" | "name" | "nameHash" | "passwordHash" | "status" | "isDeleted" | "creId" | "creTime" | "updId" | "updTime" | "communityNickname", ExtArgs["result"]["memberAccount"]>
+  export type MemberAccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "emailHash" | "phone" | "phoneHash" | "name" | "nameHash" | "passwordHash" | "status" | "isDeleted" | "creId" | "creTime" | "updId" | "updTime", ExtArgs["result"]["memberAccount"]>
   export type MemberAccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     addresses?: boolean | MemberAccount$addressesArgs<ExtArgs>
     _count?: boolean | MemberAccountCountOutputTypeDefaultArgs<ExtArgs>
@@ -20788,7 +20260,6 @@ export namespace Prisma {
       creTime: Date
       updId: string
       updTime: Date
-      communityNickname: string | null
     }, ExtArgs["result"]["memberAccount"]>
     composites: {}
   }
@@ -21227,7 +20698,6 @@ export namespace Prisma {
     readonly creTime: FieldRef<"MemberAccount", 'DateTime'>
     readonly updId: FieldRef<"MemberAccount", 'String'>
     readonly updTime: FieldRef<"MemberAccount", 'DateTime'>
-    readonly communityNickname: FieldRef<"MemberAccount", 'String'>
   }
     
 
@@ -26516,1199 +25986,6 @@ export namespace Prisma {
 
 
   /**
-   * Model PickupReservation
-   */
-
-  export type AggregatePickupReservation = {
-    _count: PickupReservationCountAggregateOutputType | null
-    _min: PickupReservationMinAggregateOutputType | null
-    _max: PickupReservationMaxAggregateOutputType | null
-  }
-
-  export type PickupReservationMinAggregateOutputType = {
-    id: string | null
-    listingId: string | null
-    buyerId: string | null
-    buyerName: string | null
-    buyerPhone: string | null
-    sellerId: string | null
-    sellerName: string | null
-    pickupStore: string | null
-    pickupMethod: string | null
-    status: string | null
-    scheduledAt: Date | null
-    creTime: Date | null
-    updTime: Date | null
-    pickupDeadline: Date | null
-    storedAt: Date | null
-  }
-
-  export type PickupReservationMaxAggregateOutputType = {
-    id: string | null
-    listingId: string | null
-    buyerId: string | null
-    buyerName: string | null
-    buyerPhone: string | null
-    sellerId: string | null
-    sellerName: string | null
-    pickupStore: string | null
-    pickupMethod: string | null
-    status: string | null
-    scheduledAt: Date | null
-    creTime: Date | null
-    updTime: Date | null
-    pickupDeadline: Date | null
-    storedAt: Date | null
-  }
-
-  export type PickupReservationCountAggregateOutputType = {
-    id: number
-    listingId: number
-    buyerId: number
-    buyerName: number
-    buyerPhone: number
-    sellerId: number
-    sellerName: number
-    pickupStore: number
-    pickupMethod: number
-    status: number
-    scheduledAt: number
-    creTime: number
-    updTime: number
-    pickupDeadline: number
-    storedAt: number
-    _all: number
-  }
-
-
-  export type PickupReservationMinAggregateInputType = {
-    id?: true
-    listingId?: true
-    buyerId?: true
-    buyerName?: true
-    buyerPhone?: true
-    sellerId?: true
-    sellerName?: true
-    pickupStore?: true
-    pickupMethod?: true
-    status?: true
-    scheduledAt?: true
-    creTime?: true
-    updTime?: true
-    pickupDeadline?: true
-    storedAt?: true
-  }
-
-  export type PickupReservationMaxAggregateInputType = {
-    id?: true
-    listingId?: true
-    buyerId?: true
-    buyerName?: true
-    buyerPhone?: true
-    sellerId?: true
-    sellerName?: true
-    pickupStore?: true
-    pickupMethod?: true
-    status?: true
-    scheduledAt?: true
-    creTime?: true
-    updTime?: true
-    pickupDeadline?: true
-    storedAt?: true
-  }
-
-  export type PickupReservationCountAggregateInputType = {
-    id?: true
-    listingId?: true
-    buyerId?: true
-    buyerName?: true
-    buyerPhone?: true
-    sellerId?: true
-    sellerName?: true
-    pickupStore?: true
-    pickupMethod?: true
-    status?: true
-    scheduledAt?: true
-    creTime?: true
-    updTime?: true
-    pickupDeadline?: true
-    storedAt?: true
-    _all?: true
-  }
-
-  export type PickupReservationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which PickupReservation to aggregate.
-     */
-    where?: PickupReservationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of PickupReservations to fetch.
-     */
-    orderBy?: PickupReservationOrderByWithRelationInput | PickupReservationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: PickupReservationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` PickupReservations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` PickupReservations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned PickupReservations
-    **/
-    _count?: true | PickupReservationCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: PickupReservationMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: PickupReservationMaxAggregateInputType
-  }
-
-  export type GetPickupReservationAggregateType<T extends PickupReservationAggregateArgs> = {
-        [P in keyof T & keyof AggregatePickupReservation]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregatePickupReservation[P]>
-      : GetScalarType<T[P], AggregatePickupReservation[P]>
-  }
-
-
-
-
-  export type PickupReservationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PickupReservationWhereInput
-    orderBy?: PickupReservationOrderByWithAggregationInput | PickupReservationOrderByWithAggregationInput[]
-    by: PickupReservationScalarFieldEnum[] | PickupReservationScalarFieldEnum
-    having?: PickupReservationScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: PickupReservationCountAggregateInputType | true
-    _min?: PickupReservationMinAggregateInputType
-    _max?: PickupReservationMaxAggregateInputType
-  }
-
-  export type PickupReservationGroupByOutputType = {
-    id: string
-    listingId: string
-    buyerId: string
-    buyerName: string
-    buyerPhone: string | null
-    sellerId: string
-    sellerName: string
-    pickupStore: string
-    pickupMethod: string
-    status: string
-    scheduledAt: Date | null
-    creTime: Date
-    updTime: Date
-    pickupDeadline: Date | null
-    storedAt: Date | null
-    _count: PickupReservationCountAggregateOutputType | null
-    _min: PickupReservationMinAggregateOutputType | null
-    _max: PickupReservationMaxAggregateOutputType | null
-  }
-
-  type GetPickupReservationGroupByPayload<T extends PickupReservationGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<PickupReservationGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof PickupReservationGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], PickupReservationGroupByOutputType[P]>
-            : GetScalarType<T[P], PickupReservationGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type PickupReservationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    listingId?: boolean
-    buyerId?: boolean
-    buyerName?: boolean
-    buyerPhone?: boolean
-    sellerId?: boolean
-    sellerName?: boolean
-    pickupStore?: boolean
-    pickupMethod?: boolean
-    status?: boolean
-    scheduledAt?: boolean
-    creTime?: boolean
-    updTime?: boolean
-    pickupDeadline?: boolean
-    storedAt?: boolean
-    listing?: boolean | SecondhandListingDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["pickupReservation"]>
-
-  export type PickupReservationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    listingId?: boolean
-    buyerId?: boolean
-    buyerName?: boolean
-    buyerPhone?: boolean
-    sellerId?: boolean
-    sellerName?: boolean
-    pickupStore?: boolean
-    pickupMethod?: boolean
-    status?: boolean
-    scheduledAt?: boolean
-    creTime?: boolean
-    updTime?: boolean
-    pickupDeadline?: boolean
-    storedAt?: boolean
-    listing?: boolean | SecondhandListingDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["pickupReservation"]>
-
-  export type PickupReservationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    listingId?: boolean
-    buyerId?: boolean
-    buyerName?: boolean
-    buyerPhone?: boolean
-    sellerId?: boolean
-    sellerName?: boolean
-    pickupStore?: boolean
-    pickupMethod?: boolean
-    status?: boolean
-    scheduledAt?: boolean
-    creTime?: boolean
-    updTime?: boolean
-    pickupDeadline?: boolean
-    storedAt?: boolean
-    listing?: boolean | SecondhandListingDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["pickupReservation"]>
-
-  export type PickupReservationSelectScalar = {
-    id?: boolean
-    listingId?: boolean
-    buyerId?: boolean
-    buyerName?: boolean
-    buyerPhone?: boolean
-    sellerId?: boolean
-    sellerName?: boolean
-    pickupStore?: boolean
-    pickupMethod?: boolean
-    status?: boolean
-    scheduledAt?: boolean
-    creTime?: boolean
-    updTime?: boolean
-    pickupDeadline?: boolean
-    storedAt?: boolean
-  }
-
-  export type PickupReservationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "listingId" | "buyerId" | "buyerName" | "buyerPhone" | "sellerId" | "sellerName" | "pickupStore" | "pickupMethod" | "status" | "scheduledAt" | "creTime" | "updTime" | "pickupDeadline" | "storedAt", ExtArgs["result"]["pickupReservation"]>
-  export type PickupReservationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    listing?: boolean | SecondhandListingDefaultArgs<ExtArgs>
-  }
-  export type PickupReservationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    listing?: boolean | SecondhandListingDefaultArgs<ExtArgs>
-  }
-  export type PickupReservationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    listing?: boolean | SecondhandListingDefaultArgs<ExtArgs>
-  }
-
-  export type $PickupReservationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "PickupReservation"
-    objects: {
-      listing: Prisma.$SecondhandListingPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      listingId: string
-      buyerId: string
-      buyerName: string
-      buyerPhone: string | null
-      sellerId: string
-      sellerName: string
-      pickupStore: string
-      pickupMethod: string
-      status: string
-      scheduledAt: Date | null
-      creTime: Date
-      updTime: Date
-      pickupDeadline: Date | null
-      storedAt: Date | null
-    }, ExtArgs["result"]["pickupReservation"]>
-    composites: {}
-  }
-
-  type PickupReservationGetPayload<S extends boolean | null | undefined | PickupReservationDefaultArgs> = $Result.GetResult<Prisma.$PickupReservationPayload, S>
-
-  type PickupReservationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<PickupReservationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: PickupReservationCountAggregateInputType | true
-    }
-
-  export interface PickupReservationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PickupReservation'], meta: { name: 'PickupReservation' } }
-    /**
-     * Find zero or one PickupReservation that matches the filter.
-     * @param {PickupReservationFindUniqueArgs} args - Arguments to find a PickupReservation
-     * @example
-     * // Get one PickupReservation
-     * const pickupReservation = await prisma.pickupReservation.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends PickupReservationFindUniqueArgs>(args: SelectSubset<T, PickupReservationFindUniqueArgs<ExtArgs>>): Prisma__PickupReservationClient<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one PickupReservation that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {PickupReservationFindUniqueOrThrowArgs} args - Arguments to find a PickupReservation
-     * @example
-     * // Get one PickupReservation
-     * const pickupReservation = await prisma.pickupReservation.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends PickupReservationFindUniqueOrThrowArgs>(args: SelectSubset<T, PickupReservationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PickupReservationClient<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first PickupReservation that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PickupReservationFindFirstArgs} args - Arguments to find a PickupReservation
-     * @example
-     * // Get one PickupReservation
-     * const pickupReservation = await prisma.pickupReservation.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends PickupReservationFindFirstArgs>(args?: SelectSubset<T, PickupReservationFindFirstArgs<ExtArgs>>): Prisma__PickupReservationClient<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first PickupReservation that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PickupReservationFindFirstOrThrowArgs} args - Arguments to find a PickupReservation
-     * @example
-     * // Get one PickupReservation
-     * const pickupReservation = await prisma.pickupReservation.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends PickupReservationFindFirstOrThrowArgs>(args?: SelectSubset<T, PickupReservationFindFirstOrThrowArgs<ExtArgs>>): Prisma__PickupReservationClient<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more PickupReservations that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PickupReservationFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all PickupReservations
-     * const pickupReservations = await prisma.pickupReservation.findMany()
-     * 
-     * // Get first 10 PickupReservations
-     * const pickupReservations = await prisma.pickupReservation.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const pickupReservationWithIdOnly = await prisma.pickupReservation.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends PickupReservationFindManyArgs>(args?: SelectSubset<T, PickupReservationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a PickupReservation.
-     * @param {PickupReservationCreateArgs} args - Arguments to create a PickupReservation.
-     * @example
-     * // Create one PickupReservation
-     * const PickupReservation = await prisma.pickupReservation.create({
-     *   data: {
-     *     // ... data to create a PickupReservation
-     *   }
-     * })
-     * 
-     */
-    create<T extends PickupReservationCreateArgs>(args: SelectSubset<T, PickupReservationCreateArgs<ExtArgs>>): Prisma__PickupReservationClient<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many PickupReservations.
-     * @param {PickupReservationCreateManyArgs} args - Arguments to create many PickupReservations.
-     * @example
-     * // Create many PickupReservations
-     * const pickupReservation = await prisma.pickupReservation.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends PickupReservationCreateManyArgs>(args?: SelectSubset<T, PickupReservationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many PickupReservations and returns the data saved in the database.
-     * @param {PickupReservationCreateManyAndReturnArgs} args - Arguments to create many PickupReservations.
-     * @example
-     * // Create many PickupReservations
-     * const pickupReservation = await prisma.pickupReservation.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many PickupReservations and only return the `id`
-     * const pickupReservationWithIdOnly = await prisma.pickupReservation.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends PickupReservationCreateManyAndReturnArgs>(args?: SelectSubset<T, PickupReservationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a PickupReservation.
-     * @param {PickupReservationDeleteArgs} args - Arguments to delete one PickupReservation.
-     * @example
-     * // Delete one PickupReservation
-     * const PickupReservation = await prisma.pickupReservation.delete({
-     *   where: {
-     *     // ... filter to delete one PickupReservation
-     *   }
-     * })
-     * 
-     */
-    delete<T extends PickupReservationDeleteArgs>(args: SelectSubset<T, PickupReservationDeleteArgs<ExtArgs>>): Prisma__PickupReservationClient<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one PickupReservation.
-     * @param {PickupReservationUpdateArgs} args - Arguments to update one PickupReservation.
-     * @example
-     * // Update one PickupReservation
-     * const pickupReservation = await prisma.pickupReservation.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends PickupReservationUpdateArgs>(args: SelectSubset<T, PickupReservationUpdateArgs<ExtArgs>>): Prisma__PickupReservationClient<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more PickupReservations.
-     * @param {PickupReservationDeleteManyArgs} args - Arguments to filter PickupReservations to delete.
-     * @example
-     * // Delete a few PickupReservations
-     * const { count } = await prisma.pickupReservation.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends PickupReservationDeleteManyArgs>(args?: SelectSubset<T, PickupReservationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more PickupReservations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PickupReservationUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many PickupReservations
-     * const pickupReservation = await prisma.pickupReservation.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends PickupReservationUpdateManyArgs>(args: SelectSubset<T, PickupReservationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more PickupReservations and returns the data updated in the database.
-     * @param {PickupReservationUpdateManyAndReturnArgs} args - Arguments to update many PickupReservations.
-     * @example
-     * // Update many PickupReservations
-     * const pickupReservation = await prisma.pickupReservation.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more PickupReservations and only return the `id`
-     * const pickupReservationWithIdOnly = await prisma.pickupReservation.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends PickupReservationUpdateManyAndReturnArgs>(args: SelectSubset<T, PickupReservationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one PickupReservation.
-     * @param {PickupReservationUpsertArgs} args - Arguments to update or create a PickupReservation.
-     * @example
-     * // Update or create a PickupReservation
-     * const pickupReservation = await prisma.pickupReservation.upsert({
-     *   create: {
-     *     // ... data to create a PickupReservation
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the PickupReservation we want to update
-     *   }
-     * })
-     */
-    upsert<T extends PickupReservationUpsertArgs>(args: SelectSubset<T, PickupReservationUpsertArgs<ExtArgs>>): Prisma__PickupReservationClient<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of PickupReservations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PickupReservationCountArgs} args - Arguments to filter PickupReservations to count.
-     * @example
-     * // Count the number of PickupReservations
-     * const count = await prisma.pickupReservation.count({
-     *   where: {
-     *     // ... the filter for the PickupReservations we want to count
-     *   }
-     * })
-    **/
-    count<T extends PickupReservationCountArgs>(
-      args?: Subset<T, PickupReservationCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], PickupReservationCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a PickupReservation.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PickupReservationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends PickupReservationAggregateArgs>(args: Subset<T, PickupReservationAggregateArgs>): Prisma.PrismaPromise<GetPickupReservationAggregateType<T>>
-
-    /**
-     * Group by PickupReservation.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PickupReservationGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends PickupReservationGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: PickupReservationGroupByArgs['orderBy'] }
-        : { orderBy?: PickupReservationGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, PickupReservationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPickupReservationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the PickupReservation model
-   */
-  readonly fields: PickupReservationFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for PickupReservation.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__PickupReservationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    listing<T extends SecondhandListingDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SecondhandListingDefaultArgs<ExtArgs>>): Prisma__SecondhandListingClient<$Result.GetResult<Prisma.$SecondhandListingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the PickupReservation model
-   */
-  interface PickupReservationFieldRefs {
-    readonly id: FieldRef<"PickupReservation", 'String'>
-    readonly listingId: FieldRef<"PickupReservation", 'String'>
-    readonly buyerId: FieldRef<"PickupReservation", 'String'>
-    readonly buyerName: FieldRef<"PickupReservation", 'String'>
-    readonly buyerPhone: FieldRef<"PickupReservation", 'String'>
-    readonly sellerId: FieldRef<"PickupReservation", 'String'>
-    readonly sellerName: FieldRef<"PickupReservation", 'String'>
-    readonly pickupStore: FieldRef<"PickupReservation", 'String'>
-    readonly pickupMethod: FieldRef<"PickupReservation", 'String'>
-    readonly status: FieldRef<"PickupReservation", 'String'>
-    readonly scheduledAt: FieldRef<"PickupReservation", 'DateTime'>
-    readonly creTime: FieldRef<"PickupReservation", 'DateTime'>
-    readonly updTime: FieldRef<"PickupReservation", 'DateTime'>
-    readonly pickupDeadline: FieldRef<"PickupReservation", 'DateTime'>
-    readonly storedAt: FieldRef<"PickupReservation", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * PickupReservation findUnique
-   */
-  export type PickupReservationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PickupReservation
-     */
-    select?: PickupReservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PickupReservation
-     */
-    omit?: PickupReservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PickupReservationInclude<ExtArgs> | null
-    /**
-     * Filter, which PickupReservation to fetch.
-     */
-    where: PickupReservationWhereUniqueInput
-  }
-
-  /**
-   * PickupReservation findUniqueOrThrow
-   */
-  export type PickupReservationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PickupReservation
-     */
-    select?: PickupReservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PickupReservation
-     */
-    omit?: PickupReservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PickupReservationInclude<ExtArgs> | null
-    /**
-     * Filter, which PickupReservation to fetch.
-     */
-    where: PickupReservationWhereUniqueInput
-  }
-
-  /**
-   * PickupReservation findFirst
-   */
-  export type PickupReservationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PickupReservation
-     */
-    select?: PickupReservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PickupReservation
-     */
-    omit?: PickupReservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PickupReservationInclude<ExtArgs> | null
-    /**
-     * Filter, which PickupReservation to fetch.
-     */
-    where?: PickupReservationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of PickupReservations to fetch.
-     */
-    orderBy?: PickupReservationOrderByWithRelationInput | PickupReservationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for PickupReservations.
-     */
-    cursor?: PickupReservationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` PickupReservations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` PickupReservations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of PickupReservations.
-     */
-    distinct?: PickupReservationScalarFieldEnum | PickupReservationScalarFieldEnum[]
-  }
-
-  /**
-   * PickupReservation findFirstOrThrow
-   */
-  export type PickupReservationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PickupReservation
-     */
-    select?: PickupReservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PickupReservation
-     */
-    omit?: PickupReservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PickupReservationInclude<ExtArgs> | null
-    /**
-     * Filter, which PickupReservation to fetch.
-     */
-    where?: PickupReservationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of PickupReservations to fetch.
-     */
-    orderBy?: PickupReservationOrderByWithRelationInput | PickupReservationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for PickupReservations.
-     */
-    cursor?: PickupReservationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` PickupReservations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` PickupReservations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of PickupReservations.
-     */
-    distinct?: PickupReservationScalarFieldEnum | PickupReservationScalarFieldEnum[]
-  }
-
-  /**
-   * PickupReservation findMany
-   */
-  export type PickupReservationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PickupReservation
-     */
-    select?: PickupReservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PickupReservation
-     */
-    omit?: PickupReservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PickupReservationInclude<ExtArgs> | null
-    /**
-     * Filter, which PickupReservations to fetch.
-     */
-    where?: PickupReservationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of PickupReservations to fetch.
-     */
-    orderBy?: PickupReservationOrderByWithRelationInput | PickupReservationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing PickupReservations.
-     */
-    cursor?: PickupReservationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` PickupReservations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` PickupReservations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of PickupReservations.
-     */
-    distinct?: PickupReservationScalarFieldEnum | PickupReservationScalarFieldEnum[]
-  }
-
-  /**
-   * PickupReservation create
-   */
-  export type PickupReservationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PickupReservation
-     */
-    select?: PickupReservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PickupReservation
-     */
-    omit?: PickupReservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PickupReservationInclude<ExtArgs> | null
-    /**
-     * The data needed to create a PickupReservation.
-     */
-    data: XOR<PickupReservationCreateInput, PickupReservationUncheckedCreateInput>
-  }
-
-  /**
-   * PickupReservation createMany
-   */
-  export type PickupReservationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many PickupReservations.
-     */
-    data: PickupReservationCreateManyInput | PickupReservationCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * PickupReservation createManyAndReturn
-   */
-  export type PickupReservationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PickupReservation
-     */
-    select?: PickupReservationSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the PickupReservation
-     */
-    omit?: PickupReservationOmit<ExtArgs> | null
-    /**
-     * The data used to create many PickupReservations.
-     */
-    data: PickupReservationCreateManyInput | PickupReservationCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PickupReservationIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * PickupReservation update
-   */
-  export type PickupReservationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PickupReservation
-     */
-    select?: PickupReservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PickupReservation
-     */
-    omit?: PickupReservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PickupReservationInclude<ExtArgs> | null
-    /**
-     * The data needed to update a PickupReservation.
-     */
-    data: XOR<PickupReservationUpdateInput, PickupReservationUncheckedUpdateInput>
-    /**
-     * Choose, which PickupReservation to update.
-     */
-    where: PickupReservationWhereUniqueInput
-  }
-
-  /**
-   * PickupReservation updateMany
-   */
-  export type PickupReservationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update PickupReservations.
-     */
-    data: XOR<PickupReservationUpdateManyMutationInput, PickupReservationUncheckedUpdateManyInput>
-    /**
-     * Filter which PickupReservations to update
-     */
-    where?: PickupReservationWhereInput
-    /**
-     * Limit how many PickupReservations to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * PickupReservation updateManyAndReturn
-   */
-  export type PickupReservationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PickupReservation
-     */
-    select?: PickupReservationSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the PickupReservation
-     */
-    omit?: PickupReservationOmit<ExtArgs> | null
-    /**
-     * The data used to update PickupReservations.
-     */
-    data: XOR<PickupReservationUpdateManyMutationInput, PickupReservationUncheckedUpdateManyInput>
-    /**
-     * Filter which PickupReservations to update
-     */
-    where?: PickupReservationWhereInput
-    /**
-     * Limit how many PickupReservations to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PickupReservationIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * PickupReservation upsert
-   */
-  export type PickupReservationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PickupReservation
-     */
-    select?: PickupReservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PickupReservation
-     */
-    omit?: PickupReservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PickupReservationInclude<ExtArgs> | null
-    /**
-     * The filter to search for the PickupReservation to update in case it exists.
-     */
-    where: PickupReservationWhereUniqueInput
-    /**
-     * In case the PickupReservation found by the `where` argument doesn't exist, create a new PickupReservation with this data.
-     */
-    create: XOR<PickupReservationCreateInput, PickupReservationUncheckedCreateInput>
-    /**
-     * In case the PickupReservation was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<PickupReservationUpdateInput, PickupReservationUncheckedUpdateInput>
-  }
-
-  /**
-   * PickupReservation delete
-   */
-  export type PickupReservationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PickupReservation
-     */
-    select?: PickupReservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PickupReservation
-     */
-    omit?: PickupReservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PickupReservationInclude<ExtArgs> | null
-    /**
-     * Filter which PickupReservation to delete.
-     */
-    where: PickupReservationWhereUniqueInput
-  }
-
-  /**
-   * PickupReservation deleteMany
-   */
-  export type PickupReservationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which PickupReservations to delete
-     */
-    where?: PickupReservationWhereInput
-    /**
-     * Limit how many PickupReservations to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * PickupReservation without action
-   */
-  export type PickupReservationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PickupReservation
-     */
-    select?: PickupReservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PickupReservation
-     */
-    omit?: PickupReservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PickupReservationInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model CommunityGroup
    */
 
@@ -30035,5235 +28312,458 @@ export namespace Prisma {
 
 
   /**
-   * Model CommunityActivity
+   * Model PickupReservation
    */
 
-  export type AggregateCommunityActivity = {
-    _count: CommunityActivityCountAggregateOutputType | null
-    _avg: CommunityActivityAvgAggregateOutputType | null
-    _sum: CommunityActivitySumAggregateOutputType | null
-    _min: CommunityActivityMinAggregateOutputType | null
-    _max: CommunityActivityMaxAggregateOutputType | null
+  export type AggregatePickupReservation = {
+    _count: PickupReservationCountAggregateOutputType | null
+    _min: PickupReservationMinAggregateOutputType | null
+    _max: PickupReservationMaxAggregateOutputType | null
   }
 
-  export type CommunityActivityAvgAggregateOutputType = {
-    maxParticipants: number | null
-    extraParticipants: number | null
-    volunteersAssigned: number | null
-    volunteersNeeded: number | null
-  }
-
-  export type CommunityActivitySumAggregateOutputType = {
-    maxParticipants: number | null
-    extraParticipants: number | null
-    volunteersAssigned: number | null
-    volunteersNeeded: number | null
-  }
-
-  export type CommunityActivityMinAggregateOutputType = {
+  export type PickupReservationMinAggregateOutputType = {
     id: string | null
-    title: string | null
-    description: string | null
-    category: string | null
-    location: string | null
-    activityDate: Date | null
-    activityEndDate: Date | null
-    maxParticipants: number | null
+    listingId: string | null
+    buyerId: string | null
+    buyerName: string | null
+    buyerPhone: string | null
+    sellerId: string | null
+    sellerName: string | null
+    pickupStore: string | null
+    pickupMethod: string | null
     status: string | null
-    imageUrl: string | null
-    organizerId: string | null
-    organizerName: string | null
-    isDeleted: boolean | null
-    creTime: Date | null
-    updTime: Date | null
-    extraParticipants: number | null
-    volunteersAssigned: number | null
-    volunteersNeeded: number | null
-  }
-
-  export type CommunityActivityMaxAggregateOutputType = {
-    id: string | null
-    title: string | null
-    description: string | null
-    category: string | null
-    location: string | null
-    activityDate: Date | null
-    activityEndDate: Date | null
-    maxParticipants: number | null
-    status: string | null
-    imageUrl: string | null
-    organizerId: string | null
-    organizerName: string | null
-    isDeleted: boolean | null
-    creTime: Date | null
-    updTime: Date | null
-    extraParticipants: number | null
-    volunteersAssigned: number | null
-    volunteersNeeded: number | null
-  }
-
-  export type CommunityActivityCountAggregateOutputType = {
-    id: number
-    title: number
-    description: number
-    category: number
-    location: number
-    activityDate: number
-    activityEndDate: number
-    maxParticipants: number
-    status: number
-    imageUrl: number
-    organizerId: number
-    organizerName: number
-    isDeleted: number
-    creTime: number
-    updTime: number
-    extraParticipants: number
-    volunteersAssigned: number
-    volunteersNeeded: number
-    _all: number
-  }
-
-
-  export type CommunityActivityAvgAggregateInputType = {
-    maxParticipants?: true
-    extraParticipants?: true
-    volunteersAssigned?: true
-    volunteersNeeded?: true
-  }
-
-  export type CommunityActivitySumAggregateInputType = {
-    maxParticipants?: true
-    extraParticipants?: true
-    volunteersAssigned?: true
-    volunteersNeeded?: true
-  }
-
-  export type CommunityActivityMinAggregateInputType = {
-    id?: true
-    title?: true
-    description?: true
-    category?: true
-    location?: true
-    activityDate?: true
-    activityEndDate?: true
-    maxParticipants?: true
-    status?: true
-    imageUrl?: true
-    organizerId?: true
-    organizerName?: true
-    isDeleted?: true
-    creTime?: true
-    updTime?: true
-    extraParticipants?: true
-    volunteersAssigned?: true
-    volunteersNeeded?: true
-  }
-
-  export type CommunityActivityMaxAggregateInputType = {
-    id?: true
-    title?: true
-    description?: true
-    category?: true
-    location?: true
-    activityDate?: true
-    activityEndDate?: true
-    maxParticipants?: true
-    status?: true
-    imageUrl?: true
-    organizerId?: true
-    organizerName?: true
-    isDeleted?: true
-    creTime?: true
-    updTime?: true
-    extraParticipants?: true
-    volunteersAssigned?: true
-    volunteersNeeded?: true
-  }
-
-  export type CommunityActivityCountAggregateInputType = {
-    id?: true
-    title?: true
-    description?: true
-    category?: true
-    location?: true
-    activityDate?: true
-    activityEndDate?: true
-    maxParticipants?: true
-    status?: true
-    imageUrl?: true
-    organizerId?: true
-    organizerName?: true
-    isDeleted?: true
-    creTime?: true
-    updTime?: true
-    extraParticipants?: true
-    volunteersAssigned?: true
-    volunteersNeeded?: true
-    _all?: true
-  }
-
-  export type CommunityActivityAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which CommunityActivity to aggregate.
-     */
-    where?: CommunityActivityWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of CommunityActivities to fetch.
-     */
-    orderBy?: CommunityActivityOrderByWithRelationInput | CommunityActivityOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: CommunityActivityWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` CommunityActivities from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` CommunityActivities.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned CommunityActivities
-    **/
-    _count?: true | CommunityActivityCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: CommunityActivityAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: CommunityActivitySumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: CommunityActivityMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: CommunityActivityMaxAggregateInputType
-  }
-
-  export type GetCommunityActivityAggregateType<T extends CommunityActivityAggregateArgs> = {
-        [P in keyof T & keyof AggregateCommunityActivity]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateCommunityActivity[P]>
-      : GetScalarType<T[P], AggregateCommunityActivity[P]>
-  }
-
-
-
-
-  export type CommunityActivityGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CommunityActivityWhereInput
-    orderBy?: CommunityActivityOrderByWithAggregationInput | CommunityActivityOrderByWithAggregationInput[]
-    by: CommunityActivityScalarFieldEnum[] | CommunityActivityScalarFieldEnum
-    having?: CommunityActivityScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: CommunityActivityCountAggregateInputType | true
-    _avg?: CommunityActivityAvgAggregateInputType
-    _sum?: CommunityActivitySumAggregateInputType
-    _min?: CommunityActivityMinAggregateInputType
-    _max?: CommunityActivityMaxAggregateInputType
-  }
-
-  export type CommunityActivityGroupByOutputType = {
-    id: string
-    title: string
-    description: string | null
-    category: string
-    location: string | null
-    activityDate: Date
-    activityEndDate: Date | null
-    maxParticipants: number
-    status: string
-    imageUrl: string | null
-    organizerId: string
-    organizerName: string
-    isDeleted: boolean
-    creTime: Date
-    updTime: Date
-    extraParticipants: number
-    volunteersAssigned: number
-    volunteersNeeded: number
-    _count: CommunityActivityCountAggregateOutputType | null
-    _avg: CommunityActivityAvgAggregateOutputType | null
-    _sum: CommunityActivitySumAggregateOutputType | null
-    _min: CommunityActivityMinAggregateOutputType | null
-    _max: CommunityActivityMaxAggregateOutputType | null
-  }
-
-  type GetCommunityActivityGroupByPayload<T extends CommunityActivityGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<CommunityActivityGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof CommunityActivityGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], CommunityActivityGroupByOutputType[P]>
-            : GetScalarType<T[P], CommunityActivityGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type CommunityActivitySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    title?: boolean
-    description?: boolean
-    category?: boolean
-    location?: boolean
-    activityDate?: boolean
-    activityEndDate?: boolean
-    maxParticipants?: boolean
-    status?: boolean
-    imageUrl?: boolean
-    organizerId?: boolean
-    organizerName?: boolean
-    isDeleted?: boolean
-    creTime?: boolean
-    updTime?: boolean
-    extraParticipants?: boolean
-    volunteersAssigned?: boolean
-    volunteersNeeded?: boolean
-    registrations?: boolean | CommunityActivity$registrationsArgs<ExtArgs>
-    _count?: boolean | CommunityActivityCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["communityActivity"]>
-
-  export type CommunityActivitySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    title?: boolean
-    description?: boolean
-    category?: boolean
-    location?: boolean
-    activityDate?: boolean
-    activityEndDate?: boolean
-    maxParticipants?: boolean
-    status?: boolean
-    imageUrl?: boolean
-    organizerId?: boolean
-    organizerName?: boolean
-    isDeleted?: boolean
-    creTime?: boolean
-    updTime?: boolean
-    extraParticipants?: boolean
-    volunteersAssigned?: boolean
-    volunteersNeeded?: boolean
-  }, ExtArgs["result"]["communityActivity"]>
-
-  export type CommunityActivitySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    title?: boolean
-    description?: boolean
-    category?: boolean
-    location?: boolean
-    activityDate?: boolean
-    activityEndDate?: boolean
-    maxParticipants?: boolean
-    status?: boolean
-    imageUrl?: boolean
-    organizerId?: boolean
-    organizerName?: boolean
-    isDeleted?: boolean
-    creTime?: boolean
-    updTime?: boolean
-    extraParticipants?: boolean
-    volunteersAssigned?: boolean
-    volunteersNeeded?: boolean
-  }, ExtArgs["result"]["communityActivity"]>
-
-  export type CommunityActivitySelectScalar = {
-    id?: boolean
-    title?: boolean
-    description?: boolean
-    category?: boolean
-    location?: boolean
-    activityDate?: boolean
-    activityEndDate?: boolean
-    maxParticipants?: boolean
-    status?: boolean
-    imageUrl?: boolean
-    organizerId?: boolean
-    organizerName?: boolean
-    isDeleted?: boolean
-    creTime?: boolean
-    updTime?: boolean
-    extraParticipants?: boolean
-    volunteersAssigned?: boolean
-    volunteersNeeded?: boolean
-  }
-
-  export type CommunityActivityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "category" | "location" | "activityDate" | "activityEndDate" | "maxParticipants" | "status" | "imageUrl" | "organizerId" | "organizerName" | "isDeleted" | "creTime" | "updTime" | "extraParticipants" | "volunteersAssigned" | "volunteersNeeded", ExtArgs["result"]["communityActivity"]>
-  export type CommunityActivityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    registrations?: boolean | CommunityActivity$registrationsArgs<ExtArgs>
-    _count?: boolean | CommunityActivityCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type CommunityActivityIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type CommunityActivityIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-
-  export type $CommunityActivityPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "CommunityActivity"
-    objects: {
-      registrations: Prisma.$ActivityRegistrationPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      title: string
-      description: string | null
-      category: string
-      location: string | null
-      activityDate: Date
-      activityEndDate: Date | null
-      maxParticipants: number
-      status: string
-      imageUrl: string | null
-      organizerId: string
-      organizerName: string
-      isDeleted: boolean
-      creTime: Date
-      updTime: Date
-      extraParticipants: number
-      volunteersAssigned: number
-      volunteersNeeded: number
-    }, ExtArgs["result"]["communityActivity"]>
-    composites: {}
-  }
-
-  type CommunityActivityGetPayload<S extends boolean | null | undefined | CommunityActivityDefaultArgs> = $Result.GetResult<Prisma.$CommunityActivityPayload, S>
-
-  type CommunityActivityCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<CommunityActivityFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: CommunityActivityCountAggregateInputType | true
-    }
-
-  export interface CommunityActivityDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CommunityActivity'], meta: { name: 'CommunityActivity' } }
-    /**
-     * Find zero or one CommunityActivity that matches the filter.
-     * @param {CommunityActivityFindUniqueArgs} args - Arguments to find a CommunityActivity
-     * @example
-     * // Get one CommunityActivity
-     * const communityActivity = await prisma.communityActivity.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends CommunityActivityFindUniqueArgs>(args: SelectSubset<T, CommunityActivityFindUniqueArgs<ExtArgs>>): Prisma__CommunityActivityClient<$Result.GetResult<Prisma.$CommunityActivityPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one CommunityActivity that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {CommunityActivityFindUniqueOrThrowArgs} args - Arguments to find a CommunityActivity
-     * @example
-     * // Get one CommunityActivity
-     * const communityActivity = await prisma.communityActivity.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends CommunityActivityFindUniqueOrThrowArgs>(args: SelectSubset<T, CommunityActivityFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CommunityActivityClient<$Result.GetResult<Prisma.$CommunityActivityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first CommunityActivity that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommunityActivityFindFirstArgs} args - Arguments to find a CommunityActivity
-     * @example
-     * // Get one CommunityActivity
-     * const communityActivity = await prisma.communityActivity.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends CommunityActivityFindFirstArgs>(args?: SelectSubset<T, CommunityActivityFindFirstArgs<ExtArgs>>): Prisma__CommunityActivityClient<$Result.GetResult<Prisma.$CommunityActivityPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first CommunityActivity that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommunityActivityFindFirstOrThrowArgs} args - Arguments to find a CommunityActivity
-     * @example
-     * // Get one CommunityActivity
-     * const communityActivity = await prisma.communityActivity.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends CommunityActivityFindFirstOrThrowArgs>(args?: SelectSubset<T, CommunityActivityFindFirstOrThrowArgs<ExtArgs>>): Prisma__CommunityActivityClient<$Result.GetResult<Prisma.$CommunityActivityPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more CommunityActivities that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommunityActivityFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all CommunityActivities
-     * const communityActivities = await prisma.communityActivity.findMany()
-     * 
-     * // Get first 10 CommunityActivities
-     * const communityActivities = await prisma.communityActivity.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const communityActivityWithIdOnly = await prisma.communityActivity.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends CommunityActivityFindManyArgs>(args?: SelectSubset<T, CommunityActivityFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommunityActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a CommunityActivity.
-     * @param {CommunityActivityCreateArgs} args - Arguments to create a CommunityActivity.
-     * @example
-     * // Create one CommunityActivity
-     * const CommunityActivity = await prisma.communityActivity.create({
-     *   data: {
-     *     // ... data to create a CommunityActivity
-     *   }
-     * })
-     * 
-     */
-    create<T extends CommunityActivityCreateArgs>(args: SelectSubset<T, CommunityActivityCreateArgs<ExtArgs>>): Prisma__CommunityActivityClient<$Result.GetResult<Prisma.$CommunityActivityPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many CommunityActivities.
-     * @param {CommunityActivityCreateManyArgs} args - Arguments to create many CommunityActivities.
-     * @example
-     * // Create many CommunityActivities
-     * const communityActivity = await prisma.communityActivity.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends CommunityActivityCreateManyArgs>(args?: SelectSubset<T, CommunityActivityCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many CommunityActivities and returns the data saved in the database.
-     * @param {CommunityActivityCreateManyAndReturnArgs} args - Arguments to create many CommunityActivities.
-     * @example
-     * // Create many CommunityActivities
-     * const communityActivity = await prisma.communityActivity.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many CommunityActivities and only return the `id`
-     * const communityActivityWithIdOnly = await prisma.communityActivity.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends CommunityActivityCreateManyAndReturnArgs>(args?: SelectSubset<T, CommunityActivityCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommunityActivityPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a CommunityActivity.
-     * @param {CommunityActivityDeleteArgs} args - Arguments to delete one CommunityActivity.
-     * @example
-     * // Delete one CommunityActivity
-     * const CommunityActivity = await prisma.communityActivity.delete({
-     *   where: {
-     *     // ... filter to delete one CommunityActivity
-     *   }
-     * })
-     * 
-     */
-    delete<T extends CommunityActivityDeleteArgs>(args: SelectSubset<T, CommunityActivityDeleteArgs<ExtArgs>>): Prisma__CommunityActivityClient<$Result.GetResult<Prisma.$CommunityActivityPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one CommunityActivity.
-     * @param {CommunityActivityUpdateArgs} args - Arguments to update one CommunityActivity.
-     * @example
-     * // Update one CommunityActivity
-     * const communityActivity = await prisma.communityActivity.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends CommunityActivityUpdateArgs>(args: SelectSubset<T, CommunityActivityUpdateArgs<ExtArgs>>): Prisma__CommunityActivityClient<$Result.GetResult<Prisma.$CommunityActivityPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more CommunityActivities.
-     * @param {CommunityActivityDeleteManyArgs} args - Arguments to filter CommunityActivities to delete.
-     * @example
-     * // Delete a few CommunityActivities
-     * const { count } = await prisma.communityActivity.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends CommunityActivityDeleteManyArgs>(args?: SelectSubset<T, CommunityActivityDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more CommunityActivities.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommunityActivityUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many CommunityActivities
-     * const communityActivity = await prisma.communityActivity.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends CommunityActivityUpdateManyArgs>(args: SelectSubset<T, CommunityActivityUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more CommunityActivities and returns the data updated in the database.
-     * @param {CommunityActivityUpdateManyAndReturnArgs} args - Arguments to update many CommunityActivities.
-     * @example
-     * // Update many CommunityActivities
-     * const communityActivity = await prisma.communityActivity.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more CommunityActivities and only return the `id`
-     * const communityActivityWithIdOnly = await prisma.communityActivity.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends CommunityActivityUpdateManyAndReturnArgs>(args: SelectSubset<T, CommunityActivityUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommunityActivityPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one CommunityActivity.
-     * @param {CommunityActivityUpsertArgs} args - Arguments to update or create a CommunityActivity.
-     * @example
-     * // Update or create a CommunityActivity
-     * const communityActivity = await prisma.communityActivity.upsert({
-     *   create: {
-     *     // ... data to create a CommunityActivity
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the CommunityActivity we want to update
-     *   }
-     * })
-     */
-    upsert<T extends CommunityActivityUpsertArgs>(args: SelectSubset<T, CommunityActivityUpsertArgs<ExtArgs>>): Prisma__CommunityActivityClient<$Result.GetResult<Prisma.$CommunityActivityPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of CommunityActivities.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommunityActivityCountArgs} args - Arguments to filter CommunityActivities to count.
-     * @example
-     * // Count the number of CommunityActivities
-     * const count = await prisma.communityActivity.count({
-     *   where: {
-     *     // ... the filter for the CommunityActivities we want to count
-     *   }
-     * })
-    **/
-    count<T extends CommunityActivityCountArgs>(
-      args?: Subset<T, CommunityActivityCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], CommunityActivityCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a CommunityActivity.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommunityActivityAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends CommunityActivityAggregateArgs>(args: Subset<T, CommunityActivityAggregateArgs>): Prisma.PrismaPromise<GetCommunityActivityAggregateType<T>>
-
-    /**
-     * Group by CommunityActivity.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommunityActivityGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends CommunityActivityGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: CommunityActivityGroupByArgs['orderBy'] }
-        : { orderBy?: CommunityActivityGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, CommunityActivityGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCommunityActivityGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the CommunityActivity model
-   */
-  readonly fields: CommunityActivityFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for CommunityActivity.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__CommunityActivityClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    registrations<T extends CommunityActivity$registrationsArgs<ExtArgs> = {}>(args?: Subset<T, CommunityActivity$registrationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityRegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the CommunityActivity model
-   */
-  interface CommunityActivityFieldRefs {
-    readonly id: FieldRef<"CommunityActivity", 'String'>
-    readonly title: FieldRef<"CommunityActivity", 'String'>
-    readonly description: FieldRef<"CommunityActivity", 'String'>
-    readonly category: FieldRef<"CommunityActivity", 'String'>
-    readonly location: FieldRef<"CommunityActivity", 'String'>
-    readonly activityDate: FieldRef<"CommunityActivity", 'DateTime'>
-    readonly activityEndDate: FieldRef<"CommunityActivity", 'DateTime'>
-    readonly maxParticipants: FieldRef<"CommunityActivity", 'Int'>
-    readonly status: FieldRef<"CommunityActivity", 'String'>
-    readonly imageUrl: FieldRef<"CommunityActivity", 'String'>
-    readonly organizerId: FieldRef<"CommunityActivity", 'String'>
-    readonly organizerName: FieldRef<"CommunityActivity", 'String'>
-    readonly isDeleted: FieldRef<"CommunityActivity", 'Boolean'>
-    readonly creTime: FieldRef<"CommunityActivity", 'DateTime'>
-    readonly updTime: FieldRef<"CommunityActivity", 'DateTime'>
-    readonly extraParticipants: FieldRef<"CommunityActivity", 'Int'>
-    readonly volunteersAssigned: FieldRef<"CommunityActivity", 'Int'>
-    readonly volunteersNeeded: FieldRef<"CommunityActivity", 'Int'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * CommunityActivity findUnique
-   */
-  export type CommunityActivityFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityActivity
-     */
-    select?: CommunityActivitySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityActivity
-     */
-    omit?: CommunityActivityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommunityActivityInclude<ExtArgs> | null
-    /**
-     * Filter, which CommunityActivity to fetch.
-     */
-    where: CommunityActivityWhereUniqueInput
-  }
-
-  /**
-   * CommunityActivity findUniqueOrThrow
-   */
-  export type CommunityActivityFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityActivity
-     */
-    select?: CommunityActivitySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityActivity
-     */
-    omit?: CommunityActivityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommunityActivityInclude<ExtArgs> | null
-    /**
-     * Filter, which CommunityActivity to fetch.
-     */
-    where: CommunityActivityWhereUniqueInput
-  }
-
-  /**
-   * CommunityActivity findFirst
-   */
-  export type CommunityActivityFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityActivity
-     */
-    select?: CommunityActivitySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityActivity
-     */
-    omit?: CommunityActivityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommunityActivityInclude<ExtArgs> | null
-    /**
-     * Filter, which CommunityActivity to fetch.
-     */
-    where?: CommunityActivityWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of CommunityActivities to fetch.
-     */
-    orderBy?: CommunityActivityOrderByWithRelationInput | CommunityActivityOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for CommunityActivities.
-     */
-    cursor?: CommunityActivityWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` CommunityActivities from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` CommunityActivities.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of CommunityActivities.
-     */
-    distinct?: CommunityActivityScalarFieldEnum | CommunityActivityScalarFieldEnum[]
-  }
-
-  /**
-   * CommunityActivity findFirstOrThrow
-   */
-  export type CommunityActivityFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityActivity
-     */
-    select?: CommunityActivitySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityActivity
-     */
-    omit?: CommunityActivityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommunityActivityInclude<ExtArgs> | null
-    /**
-     * Filter, which CommunityActivity to fetch.
-     */
-    where?: CommunityActivityWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of CommunityActivities to fetch.
-     */
-    orderBy?: CommunityActivityOrderByWithRelationInput | CommunityActivityOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for CommunityActivities.
-     */
-    cursor?: CommunityActivityWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` CommunityActivities from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` CommunityActivities.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of CommunityActivities.
-     */
-    distinct?: CommunityActivityScalarFieldEnum | CommunityActivityScalarFieldEnum[]
-  }
-
-  /**
-   * CommunityActivity findMany
-   */
-  export type CommunityActivityFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityActivity
-     */
-    select?: CommunityActivitySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityActivity
-     */
-    omit?: CommunityActivityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommunityActivityInclude<ExtArgs> | null
-    /**
-     * Filter, which CommunityActivities to fetch.
-     */
-    where?: CommunityActivityWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of CommunityActivities to fetch.
-     */
-    orderBy?: CommunityActivityOrderByWithRelationInput | CommunityActivityOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing CommunityActivities.
-     */
-    cursor?: CommunityActivityWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` CommunityActivities from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` CommunityActivities.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of CommunityActivities.
-     */
-    distinct?: CommunityActivityScalarFieldEnum | CommunityActivityScalarFieldEnum[]
-  }
-
-  /**
-   * CommunityActivity create
-   */
-  export type CommunityActivityCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityActivity
-     */
-    select?: CommunityActivitySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityActivity
-     */
-    omit?: CommunityActivityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommunityActivityInclude<ExtArgs> | null
-    /**
-     * The data needed to create a CommunityActivity.
-     */
-    data: XOR<CommunityActivityCreateInput, CommunityActivityUncheckedCreateInput>
-  }
-
-  /**
-   * CommunityActivity createMany
-   */
-  export type CommunityActivityCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many CommunityActivities.
-     */
-    data: CommunityActivityCreateManyInput | CommunityActivityCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * CommunityActivity createManyAndReturn
-   */
-  export type CommunityActivityCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityActivity
-     */
-    select?: CommunityActivitySelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityActivity
-     */
-    omit?: CommunityActivityOmit<ExtArgs> | null
-    /**
-     * The data used to create many CommunityActivities.
-     */
-    data: CommunityActivityCreateManyInput | CommunityActivityCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * CommunityActivity update
-   */
-  export type CommunityActivityUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityActivity
-     */
-    select?: CommunityActivitySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityActivity
-     */
-    omit?: CommunityActivityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommunityActivityInclude<ExtArgs> | null
-    /**
-     * The data needed to update a CommunityActivity.
-     */
-    data: XOR<CommunityActivityUpdateInput, CommunityActivityUncheckedUpdateInput>
-    /**
-     * Choose, which CommunityActivity to update.
-     */
-    where: CommunityActivityWhereUniqueInput
-  }
-
-  /**
-   * CommunityActivity updateMany
-   */
-  export type CommunityActivityUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update CommunityActivities.
-     */
-    data: XOR<CommunityActivityUpdateManyMutationInput, CommunityActivityUncheckedUpdateManyInput>
-    /**
-     * Filter which CommunityActivities to update
-     */
-    where?: CommunityActivityWhereInput
-    /**
-     * Limit how many CommunityActivities to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * CommunityActivity updateManyAndReturn
-   */
-  export type CommunityActivityUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityActivity
-     */
-    select?: CommunityActivitySelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityActivity
-     */
-    omit?: CommunityActivityOmit<ExtArgs> | null
-    /**
-     * The data used to update CommunityActivities.
-     */
-    data: XOR<CommunityActivityUpdateManyMutationInput, CommunityActivityUncheckedUpdateManyInput>
-    /**
-     * Filter which CommunityActivities to update
-     */
-    where?: CommunityActivityWhereInput
-    /**
-     * Limit how many CommunityActivities to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * CommunityActivity upsert
-   */
-  export type CommunityActivityUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityActivity
-     */
-    select?: CommunityActivitySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityActivity
-     */
-    omit?: CommunityActivityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommunityActivityInclude<ExtArgs> | null
-    /**
-     * The filter to search for the CommunityActivity to update in case it exists.
-     */
-    where: CommunityActivityWhereUniqueInput
-    /**
-     * In case the CommunityActivity found by the `where` argument doesn't exist, create a new CommunityActivity with this data.
-     */
-    create: XOR<CommunityActivityCreateInput, CommunityActivityUncheckedCreateInput>
-    /**
-     * In case the CommunityActivity was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<CommunityActivityUpdateInput, CommunityActivityUncheckedUpdateInput>
-  }
-
-  /**
-   * CommunityActivity delete
-   */
-  export type CommunityActivityDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityActivity
-     */
-    select?: CommunityActivitySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityActivity
-     */
-    omit?: CommunityActivityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommunityActivityInclude<ExtArgs> | null
-    /**
-     * Filter which CommunityActivity to delete.
-     */
-    where: CommunityActivityWhereUniqueInput
-  }
-
-  /**
-   * CommunityActivity deleteMany
-   */
-  export type CommunityActivityDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which CommunityActivities to delete
-     */
-    where?: CommunityActivityWhereInput
-    /**
-     * Limit how many CommunityActivities to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * CommunityActivity.registrations
-   */
-  export type CommunityActivity$registrationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ActivityRegistration
-     */
-    select?: ActivityRegistrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ActivityRegistration
-     */
-    omit?: ActivityRegistrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ActivityRegistrationInclude<ExtArgs> | null
-    where?: ActivityRegistrationWhereInput
-    orderBy?: ActivityRegistrationOrderByWithRelationInput | ActivityRegistrationOrderByWithRelationInput[]
-    cursor?: ActivityRegistrationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ActivityRegistrationScalarFieldEnum | ActivityRegistrationScalarFieldEnum[]
-  }
-
-  /**
-   * CommunityActivity without action
-   */
-  export type CommunityActivityDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityActivity
-     */
-    select?: CommunityActivitySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityActivity
-     */
-    omit?: CommunityActivityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommunityActivityInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model ActivityRegistration
-   */
-
-  export type AggregateActivityRegistration = {
-    _count: ActivityRegistrationCountAggregateOutputType | null
-    _min: ActivityRegistrationMinAggregateOutputType | null
-    _max: ActivityRegistrationMaxAggregateOutputType | null
-  }
-
-  export type ActivityRegistrationMinAggregateOutputType = {
-    id: string | null
-    activityId: string | null
-    userId: string | null
-    userName: string | null
-    userPhone: string | null
-    status: string | null
-    registeredAt: Date | null
-    source: string | null
-    specialNeeds: string | null
-  }
-
-  export type ActivityRegistrationMaxAggregateOutputType = {
-    id: string | null
-    activityId: string | null
-    userId: string | null
-    userName: string | null
-    userPhone: string | null
-    status: string | null
-    registeredAt: Date | null
-    source: string | null
-    specialNeeds: string | null
-  }
-
-  export type ActivityRegistrationCountAggregateOutputType = {
-    id: number
-    activityId: number
-    userId: number
-    userName: number
-    userPhone: number
-    status: number
-    registeredAt: number
-    source: number
-    specialNeeds: number
-    _all: number
-  }
-
-
-  export type ActivityRegistrationMinAggregateInputType = {
-    id?: true
-    activityId?: true
-    userId?: true
-    userName?: true
-    userPhone?: true
-    status?: true
-    registeredAt?: true
-    source?: true
-    specialNeeds?: true
-  }
-
-  export type ActivityRegistrationMaxAggregateInputType = {
-    id?: true
-    activityId?: true
-    userId?: true
-    userName?: true
-    userPhone?: true
-    status?: true
-    registeredAt?: true
-    source?: true
-    specialNeeds?: true
-  }
-
-  export type ActivityRegistrationCountAggregateInputType = {
-    id?: true
-    activityId?: true
-    userId?: true
-    userName?: true
-    userPhone?: true
-    status?: true
-    registeredAt?: true
-    source?: true
-    specialNeeds?: true
-    _all?: true
-  }
-
-  export type ActivityRegistrationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which ActivityRegistration to aggregate.
-     */
-    where?: ActivityRegistrationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of ActivityRegistrations to fetch.
-     */
-    orderBy?: ActivityRegistrationOrderByWithRelationInput | ActivityRegistrationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: ActivityRegistrationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` ActivityRegistrations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` ActivityRegistrations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned ActivityRegistrations
-    **/
-    _count?: true | ActivityRegistrationCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: ActivityRegistrationMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: ActivityRegistrationMaxAggregateInputType
-  }
-
-  export type GetActivityRegistrationAggregateType<T extends ActivityRegistrationAggregateArgs> = {
-        [P in keyof T & keyof AggregateActivityRegistration]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateActivityRegistration[P]>
-      : GetScalarType<T[P], AggregateActivityRegistration[P]>
-  }
-
-
-
-
-  export type ActivityRegistrationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ActivityRegistrationWhereInput
-    orderBy?: ActivityRegistrationOrderByWithAggregationInput | ActivityRegistrationOrderByWithAggregationInput[]
-    by: ActivityRegistrationScalarFieldEnum[] | ActivityRegistrationScalarFieldEnum
-    having?: ActivityRegistrationScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: ActivityRegistrationCountAggregateInputType | true
-    _min?: ActivityRegistrationMinAggregateInputType
-    _max?: ActivityRegistrationMaxAggregateInputType
-  }
-
-  export type ActivityRegistrationGroupByOutputType = {
-    id: string
-    activityId: string
-    userId: string
-    userName: string
-    userPhone: string | null
-    status: string
-    registeredAt: Date
-    source: string
-    specialNeeds: string | null
-    _count: ActivityRegistrationCountAggregateOutputType | null
-    _min: ActivityRegistrationMinAggregateOutputType | null
-    _max: ActivityRegistrationMaxAggregateOutputType | null
-  }
-
-  type GetActivityRegistrationGroupByPayload<T extends ActivityRegistrationGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<ActivityRegistrationGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof ActivityRegistrationGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], ActivityRegistrationGroupByOutputType[P]>
-            : GetScalarType<T[P], ActivityRegistrationGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type ActivityRegistrationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    activityId?: boolean
-    userId?: boolean
-    userName?: boolean
-    userPhone?: boolean
-    status?: boolean
-    registeredAt?: boolean
-    source?: boolean
-    specialNeeds?: boolean
-    activity?: boolean | CommunityActivityDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["activityRegistration"]>
-
-  export type ActivityRegistrationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    activityId?: boolean
-    userId?: boolean
-    userName?: boolean
-    userPhone?: boolean
-    status?: boolean
-    registeredAt?: boolean
-    source?: boolean
-    specialNeeds?: boolean
-    activity?: boolean | CommunityActivityDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["activityRegistration"]>
-
-  export type ActivityRegistrationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    activityId?: boolean
-    userId?: boolean
-    userName?: boolean
-    userPhone?: boolean
-    status?: boolean
-    registeredAt?: boolean
-    source?: boolean
-    specialNeeds?: boolean
-    activity?: boolean | CommunityActivityDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["activityRegistration"]>
-
-  export type ActivityRegistrationSelectScalar = {
-    id?: boolean
-    activityId?: boolean
-    userId?: boolean
-    userName?: boolean
-    userPhone?: boolean
-    status?: boolean
-    registeredAt?: boolean
-    source?: boolean
-    specialNeeds?: boolean
-  }
-
-  export type ActivityRegistrationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "activityId" | "userId" | "userName" | "userPhone" | "status" | "registeredAt" | "source" | "specialNeeds", ExtArgs["result"]["activityRegistration"]>
-  export type ActivityRegistrationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    activity?: boolean | CommunityActivityDefaultArgs<ExtArgs>
-  }
-  export type ActivityRegistrationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    activity?: boolean | CommunityActivityDefaultArgs<ExtArgs>
-  }
-  export type ActivityRegistrationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    activity?: boolean | CommunityActivityDefaultArgs<ExtArgs>
-  }
-
-  export type $ActivityRegistrationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "ActivityRegistration"
-    objects: {
-      activity: Prisma.$CommunityActivityPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      activityId: string
-      userId: string
-      userName: string
-      userPhone: string | null
-      status: string
-      registeredAt: Date
-      source: string
-      specialNeeds: string | null
-    }, ExtArgs["result"]["activityRegistration"]>
-    composites: {}
-  }
-
-  type ActivityRegistrationGetPayload<S extends boolean | null | undefined | ActivityRegistrationDefaultArgs> = $Result.GetResult<Prisma.$ActivityRegistrationPayload, S>
-
-  type ActivityRegistrationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ActivityRegistrationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: ActivityRegistrationCountAggregateInputType | true
-    }
-
-  export interface ActivityRegistrationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ActivityRegistration'], meta: { name: 'ActivityRegistration' } }
-    /**
-     * Find zero or one ActivityRegistration that matches the filter.
-     * @param {ActivityRegistrationFindUniqueArgs} args - Arguments to find a ActivityRegistration
-     * @example
-     * // Get one ActivityRegistration
-     * const activityRegistration = await prisma.activityRegistration.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends ActivityRegistrationFindUniqueArgs>(args: SelectSubset<T, ActivityRegistrationFindUniqueArgs<ExtArgs>>): Prisma__ActivityRegistrationClient<$Result.GetResult<Prisma.$ActivityRegistrationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one ActivityRegistration that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {ActivityRegistrationFindUniqueOrThrowArgs} args - Arguments to find a ActivityRegistration
-     * @example
-     * // Get one ActivityRegistration
-     * const activityRegistration = await prisma.activityRegistration.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends ActivityRegistrationFindUniqueOrThrowArgs>(args: SelectSubset<T, ActivityRegistrationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ActivityRegistrationClient<$Result.GetResult<Prisma.$ActivityRegistrationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first ActivityRegistration that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ActivityRegistrationFindFirstArgs} args - Arguments to find a ActivityRegistration
-     * @example
-     * // Get one ActivityRegistration
-     * const activityRegistration = await prisma.activityRegistration.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends ActivityRegistrationFindFirstArgs>(args?: SelectSubset<T, ActivityRegistrationFindFirstArgs<ExtArgs>>): Prisma__ActivityRegistrationClient<$Result.GetResult<Prisma.$ActivityRegistrationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first ActivityRegistration that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ActivityRegistrationFindFirstOrThrowArgs} args - Arguments to find a ActivityRegistration
-     * @example
-     * // Get one ActivityRegistration
-     * const activityRegistration = await prisma.activityRegistration.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends ActivityRegistrationFindFirstOrThrowArgs>(args?: SelectSubset<T, ActivityRegistrationFindFirstOrThrowArgs<ExtArgs>>): Prisma__ActivityRegistrationClient<$Result.GetResult<Prisma.$ActivityRegistrationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more ActivityRegistrations that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ActivityRegistrationFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all ActivityRegistrations
-     * const activityRegistrations = await prisma.activityRegistration.findMany()
-     * 
-     * // Get first 10 ActivityRegistrations
-     * const activityRegistrations = await prisma.activityRegistration.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const activityRegistrationWithIdOnly = await prisma.activityRegistration.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends ActivityRegistrationFindManyArgs>(args?: SelectSubset<T, ActivityRegistrationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityRegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a ActivityRegistration.
-     * @param {ActivityRegistrationCreateArgs} args - Arguments to create a ActivityRegistration.
-     * @example
-     * // Create one ActivityRegistration
-     * const ActivityRegistration = await prisma.activityRegistration.create({
-     *   data: {
-     *     // ... data to create a ActivityRegistration
-     *   }
-     * })
-     * 
-     */
-    create<T extends ActivityRegistrationCreateArgs>(args: SelectSubset<T, ActivityRegistrationCreateArgs<ExtArgs>>): Prisma__ActivityRegistrationClient<$Result.GetResult<Prisma.$ActivityRegistrationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many ActivityRegistrations.
-     * @param {ActivityRegistrationCreateManyArgs} args - Arguments to create many ActivityRegistrations.
-     * @example
-     * // Create many ActivityRegistrations
-     * const activityRegistration = await prisma.activityRegistration.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends ActivityRegistrationCreateManyArgs>(args?: SelectSubset<T, ActivityRegistrationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many ActivityRegistrations and returns the data saved in the database.
-     * @param {ActivityRegistrationCreateManyAndReturnArgs} args - Arguments to create many ActivityRegistrations.
-     * @example
-     * // Create many ActivityRegistrations
-     * const activityRegistration = await prisma.activityRegistration.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many ActivityRegistrations and only return the `id`
-     * const activityRegistrationWithIdOnly = await prisma.activityRegistration.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends ActivityRegistrationCreateManyAndReturnArgs>(args?: SelectSubset<T, ActivityRegistrationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityRegistrationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a ActivityRegistration.
-     * @param {ActivityRegistrationDeleteArgs} args - Arguments to delete one ActivityRegistration.
-     * @example
-     * // Delete one ActivityRegistration
-     * const ActivityRegistration = await prisma.activityRegistration.delete({
-     *   where: {
-     *     // ... filter to delete one ActivityRegistration
-     *   }
-     * })
-     * 
-     */
-    delete<T extends ActivityRegistrationDeleteArgs>(args: SelectSubset<T, ActivityRegistrationDeleteArgs<ExtArgs>>): Prisma__ActivityRegistrationClient<$Result.GetResult<Prisma.$ActivityRegistrationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one ActivityRegistration.
-     * @param {ActivityRegistrationUpdateArgs} args - Arguments to update one ActivityRegistration.
-     * @example
-     * // Update one ActivityRegistration
-     * const activityRegistration = await prisma.activityRegistration.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends ActivityRegistrationUpdateArgs>(args: SelectSubset<T, ActivityRegistrationUpdateArgs<ExtArgs>>): Prisma__ActivityRegistrationClient<$Result.GetResult<Prisma.$ActivityRegistrationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more ActivityRegistrations.
-     * @param {ActivityRegistrationDeleteManyArgs} args - Arguments to filter ActivityRegistrations to delete.
-     * @example
-     * // Delete a few ActivityRegistrations
-     * const { count } = await prisma.activityRegistration.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends ActivityRegistrationDeleteManyArgs>(args?: SelectSubset<T, ActivityRegistrationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more ActivityRegistrations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ActivityRegistrationUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many ActivityRegistrations
-     * const activityRegistration = await prisma.activityRegistration.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends ActivityRegistrationUpdateManyArgs>(args: SelectSubset<T, ActivityRegistrationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more ActivityRegistrations and returns the data updated in the database.
-     * @param {ActivityRegistrationUpdateManyAndReturnArgs} args - Arguments to update many ActivityRegistrations.
-     * @example
-     * // Update many ActivityRegistrations
-     * const activityRegistration = await prisma.activityRegistration.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more ActivityRegistrations and only return the `id`
-     * const activityRegistrationWithIdOnly = await prisma.activityRegistration.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends ActivityRegistrationUpdateManyAndReturnArgs>(args: SelectSubset<T, ActivityRegistrationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityRegistrationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one ActivityRegistration.
-     * @param {ActivityRegistrationUpsertArgs} args - Arguments to update or create a ActivityRegistration.
-     * @example
-     * // Update or create a ActivityRegistration
-     * const activityRegistration = await prisma.activityRegistration.upsert({
-     *   create: {
-     *     // ... data to create a ActivityRegistration
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the ActivityRegistration we want to update
-     *   }
-     * })
-     */
-    upsert<T extends ActivityRegistrationUpsertArgs>(args: SelectSubset<T, ActivityRegistrationUpsertArgs<ExtArgs>>): Prisma__ActivityRegistrationClient<$Result.GetResult<Prisma.$ActivityRegistrationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of ActivityRegistrations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ActivityRegistrationCountArgs} args - Arguments to filter ActivityRegistrations to count.
-     * @example
-     * // Count the number of ActivityRegistrations
-     * const count = await prisma.activityRegistration.count({
-     *   where: {
-     *     // ... the filter for the ActivityRegistrations we want to count
-     *   }
-     * })
-    **/
-    count<T extends ActivityRegistrationCountArgs>(
-      args?: Subset<T, ActivityRegistrationCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], ActivityRegistrationCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a ActivityRegistration.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ActivityRegistrationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends ActivityRegistrationAggregateArgs>(args: Subset<T, ActivityRegistrationAggregateArgs>): Prisma.PrismaPromise<GetActivityRegistrationAggregateType<T>>
-
-    /**
-     * Group by ActivityRegistration.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ActivityRegistrationGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends ActivityRegistrationGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: ActivityRegistrationGroupByArgs['orderBy'] }
-        : { orderBy?: ActivityRegistrationGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, ActivityRegistrationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetActivityRegistrationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the ActivityRegistration model
-   */
-  readonly fields: ActivityRegistrationFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for ActivityRegistration.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__ActivityRegistrationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    activity<T extends CommunityActivityDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CommunityActivityDefaultArgs<ExtArgs>>): Prisma__CommunityActivityClient<$Result.GetResult<Prisma.$CommunityActivityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the ActivityRegistration model
-   */
-  interface ActivityRegistrationFieldRefs {
-    readonly id: FieldRef<"ActivityRegistration", 'String'>
-    readonly activityId: FieldRef<"ActivityRegistration", 'String'>
-    readonly userId: FieldRef<"ActivityRegistration", 'String'>
-    readonly userName: FieldRef<"ActivityRegistration", 'String'>
-    readonly userPhone: FieldRef<"ActivityRegistration", 'String'>
-    readonly status: FieldRef<"ActivityRegistration", 'String'>
-    readonly registeredAt: FieldRef<"ActivityRegistration", 'DateTime'>
-    readonly source: FieldRef<"ActivityRegistration", 'String'>
-    readonly specialNeeds: FieldRef<"ActivityRegistration", 'String'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * ActivityRegistration findUnique
-   */
-  export type ActivityRegistrationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ActivityRegistration
-     */
-    select?: ActivityRegistrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ActivityRegistration
-     */
-    omit?: ActivityRegistrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ActivityRegistrationInclude<ExtArgs> | null
-    /**
-     * Filter, which ActivityRegistration to fetch.
-     */
-    where: ActivityRegistrationWhereUniqueInput
-  }
-
-  /**
-   * ActivityRegistration findUniqueOrThrow
-   */
-  export type ActivityRegistrationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ActivityRegistration
-     */
-    select?: ActivityRegistrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ActivityRegistration
-     */
-    omit?: ActivityRegistrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ActivityRegistrationInclude<ExtArgs> | null
-    /**
-     * Filter, which ActivityRegistration to fetch.
-     */
-    where: ActivityRegistrationWhereUniqueInput
-  }
-
-  /**
-   * ActivityRegistration findFirst
-   */
-  export type ActivityRegistrationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ActivityRegistration
-     */
-    select?: ActivityRegistrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ActivityRegistration
-     */
-    omit?: ActivityRegistrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ActivityRegistrationInclude<ExtArgs> | null
-    /**
-     * Filter, which ActivityRegistration to fetch.
-     */
-    where?: ActivityRegistrationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of ActivityRegistrations to fetch.
-     */
-    orderBy?: ActivityRegistrationOrderByWithRelationInput | ActivityRegistrationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for ActivityRegistrations.
-     */
-    cursor?: ActivityRegistrationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` ActivityRegistrations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` ActivityRegistrations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of ActivityRegistrations.
-     */
-    distinct?: ActivityRegistrationScalarFieldEnum | ActivityRegistrationScalarFieldEnum[]
-  }
-
-  /**
-   * ActivityRegistration findFirstOrThrow
-   */
-  export type ActivityRegistrationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ActivityRegistration
-     */
-    select?: ActivityRegistrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ActivityRegistration
-     */
-    omit?: ActivityRegistrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ActivityRegistrationInclude<ExtArgs> | null
-    /**
-     * Filter, which ActivityRegistration to fetch.
-     */
-    where?: ActivityRegistrationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of ActivityRegistrations to fetch.
-     */
-    orderBy?: ActivityRegistrationOrderByWithRelationInput | ActivityRegistrationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for ActivityRegistrations.
-     */
-    cursor?: ActivityRegistrationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` ActivityRegistrations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` ActivityRegistrations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of ActivityRegistrations.
-     */
-    distinct?: ActivityRegistrationScalarFieldEnum | ActivityRegistrationScalarFieldEnum[]
-  }
-
-  /**
-   * ActivityRegistration findMany
-   */
-  export type ActivityRegistrationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ActivityRegistration
-     */
-    select?: ActivityRegistrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ActivityRegistration
-     */
-    omit?: ActivityRegistrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ActivityRegistrationInclude<ExtArgs> | null
-    /**
-     * Filter, which ActivityRegistrations to fetch.
-     */
-    where?: ActivityRegistrationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of ActivityRegistrations to fetch.
-     */
-    orderBy?: ActivityRegistrationOrderByWithRelationInput | ActivityRegistrationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing ActivityRegistrations.
-     */
-    cursor?: ActivityRegistrationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` ActivityRegistrations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` ActivityRegistrations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of ActivityRegistrations.
-     */
-    distinct?: ActivityRegistrationScalarFieldEnum | ActivityRegistrationScalarFieldEnum[]
-  }
-
-  /**
-   * ActivityRegistration create
-   */
-  export type ActivityRegistrationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ActivityRegistration
-     */
-    select?: ActivityRegistrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ActivityRegistration
-     */
-    omit?: ActivityRegistrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ActivityRegistrationInclude<ExtArgs> | null
-    /**
-     * The data needed to create a ActivityRegistration.
-     */
-    data: XOR<ActivityRegistrationCreateInput, ActivityRegistrationUncheckedCreateInput>
-  }
-
-  /**
-   * ActivityRegistration createMany
-   */
-  export type ActivityRegistrationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many ActivityRegistrations.
-     */
-    data: ActivityRegistrationCreateManyInput | ActivityRegistrationCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * ActivityRegistration createManyAndReturn
-   */
-  export type ActivityRegistrationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ActivityRegistration
-     */
-    select?: ActivityRegistrationSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the ActivityRegistration
-     */
-    omit?: ActivityRegistrationOmit<ExtArgs> | null
-    /**
-     * The data used to create many ActivityRegistrations.
-     */
-    data: ActivityRegistrationCreateManyInput | ActivityRegistrationCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ActivityRegistrationIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * ActivityRegistration update
-   */
-  export type ActivityRegistrationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ActivityRegistration
-     */
-    select?: ActivityRegistrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ActivityRegistration
-     */
-    omit?: ActivityRegistrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ActivityRegistrationInclude<ExtArgs> | null
-    /**
-     * The data needed to update a ActivityRegistration.
-     */
-    data: XOR<ActivityRegistrationUpdateInput, ActivityRegistrationUncheckedUpdateInput>
-    /**
-     * Choose, which ActivityRegistration to update.
-     */
-    where: ActivityRegistrationWhereUniqueInput
-  }
-
-  /**
-   * ActivityRegistration updateMany
-   */
-  export type ActivityRegistrationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update ActivityRegistrations.
-     */
-    data: XOR<ActivityRegistrationUpdateManyMutationInput, ActivityRegistrationUncheckedUpdateManyInput>
-    /**
-     * Filter which ActivityRegistrations to update
-     */
-    where?: ActivityRegistrationWhereInput
-    /**
-     * Limit how many ActivityRegistrations to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * ActivityRegistration updateManyAndReturn
-   */
-  export type ActivityRegistrationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ActivityRegistration
-     */
-    select?: ActivityRegistrationSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the ActivityRegistration
-     */
-    omit?: ActivityRegistrationOmit<ExtArgs> | null
-    /**
-     * The data used to update ActivityRegistrations.
-     */
-    data: XOR<ActivityRegistrationUpdateManyMutationInput, ActivityRegistrationUncheckedUpdateManyInput>
-    /**
-     * Filter which ActivityRegistrations to update
-     */
-    where?: ActivityRegistrationWhereInput
-    /**
-     * Limit how many ActivityRegistrations to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ActivityRegistrationIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * ActivityRegistration upsert
-   */
-  export type ActivityRegistrationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ActivityRegistration
-     */
-    select?: ActivityRegistrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ActivityRegistration
-     */
-    omit?: ActivityRegistrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ActivityRegistrationInclude<ExtArgs> | null
-    /**
-     * The filter to search for the ActivityRegistration to update in case it exists.
-     */
-    where: ActivityRegistrationWhereUniqueInput
-    /**
-     * In case the ActivityRegistration found by the `where` argument doesn't exist, create a new ActivityRegistration with this data.
-     */
-    create: XOR<ActivityRegistrationCreateInput, ActivityRegistrationUncheckedCreateInput>
-    /**
-     * In case the ActivityRegistration was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<ActivityRegistrationUpdateInput, ActivityRegistrationUncheckedUpdateInput>
-  }
-
-  /**
-   * ActivityRegistration delete
-   */
-  export type ActivityRegistrationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ActivityRegistration
-     */
-    select?: ActivityRegistrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ActivityRegistration
-     */
-    omit?: ActivityRegistrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ActivityRegistrationInclude<ExtArgs> | null
-    /**
-     * Filter which ActivityRegistration to delete.
-     */
-    where: ActivityRegistrationWhereUniqueInput
-  }
-
-  /**
-   * ActivityRegistration deleteMany
-   */
-  export type ActivityRegistrationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which ActivityRegistrations to delete
-     */
-    where?: ActivityRegistrationWhereInput
-    /**
-     * Limit how many ActivityRegistrations to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * ActivityRegistration without action
-   */
-  export type ActivityRegistrationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ActivityRegistration
-     */
-    select?: ActivityRegistrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ActivityRegistration
-     */
-    omit?: ActivityRegistrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ActivityRegistrationInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model CommunityQuestion
-   */
-
-  export type AggregateCommunityQuestion = {
-    _count: CommunityQuestionCountAggregateOutputType | null
-    _min: CommunityQuestionMinAggregateOutputType | null
-    _max: CommunityQuestionMaxAggregateOutputType | null
-  }
-
-  export type CommunityQuestionMinAggregateOutputType = {
-    id: string | null
-    askerId: string | null
-    askerName: string | null
-    content: string | null
-    category: string | null
-    isAnonymous: boolean | null
-    replyContent: string | null
-    repliedAt: Date | null
-    repliedBy: string | null
-    status: string | null
-    isDeleted: boolean | null
-    creTime: Date | null
-  }
-
-  export type CommunityQuestionMaxAggregateOutputType = {
-    id: string | null
-    askerId: string | null
-    askerName: string | null
-    content: string | null
-    category: string | null
-    isAnonymous: boolean | null
-    replyContent: string | null
-    repliedAt: Date | null
-    repliedBy: string | null
-    status: string | null
-    isDeleted: boolean | null
-    creTime: Date | null
-  }
-
-  export type CommunityQuestionCountAggregateOutputType = {
-    id: number
-    askerId: number
-    askerName: number
-    content: number
-    category: number
-    isAnonymous: number
-    replyContent: number
-    repliedAt: number
-    repliedBy: number
-    status: number
-    isDeleted: number
-    creTime: number
-    _all: number
-  }
-
-
-  export type CommunityQuestionMinAggregateInputType = {
-    id?: true
-    askerId?: true
-    askerName?: true
-    content?: true
-    category?: true
-    isAnonymous?: true
-    replyContent?: true
-    repliedAt?: true
-    repliedBy?: true
-    status?: true
-    isDeleted?: true
-    creTime?: true
-  }
-
-  export type CommunityQuestionMaxAggregateInputType = {
-    id?: true
-    askerId?: true
-    askerName?: true
-    content?: true
-    category?: true
-    isAnonymous?: true
-    replyContent?: true
-    repliedAt?: true
-    repliedBy?: true
-    status?: true
-    isDeleted?: true
-    creTime?: true
-  }
-
-  export type CommunityQuestionCountAggregateInputType = {
-    id?: true
-    askerId?: true
-    askerName?: true
-    content?: true
-    category?: true
-    isAnonymous?: true
-    replyContent?: true
-    repliedAt?: true
-    repliedBy?: true
-    status?: true
-    isDeleted?: true
-    creTime?: true
-    _all?: true
-  }
-
-  export type CommunityQuestionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which CommunityQuestion to aggregate.
-     */
-    where?: CommunityQuestionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of CommunityQuestions to fetch.
-     */
-    orderBy?: CommunityQuestionOrderByWithRelationInput | CommunityQuestionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: CommunityQuestionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` CommunityQuestions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` CommunityQuestions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned CommunityQuestions
-    **/
-    _count?: true | CommunityQuestionCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: CommunityQuestionMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: CommunityQuestionMaxAggregateInputType
-  }
-
-  export type GetCommunityQuestionAggregateType<T extends CommunityQuestionAggregateArgs> = {
-        [P in keyof T & keyof AggregateCommunityQuestion]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateCommunityQuestion[P]>
-      : GetScalarType<T[P], AggregateCommunityQuestion[P]>
-  }
-
-
-
-
-  export type CommunityQuestionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CommunityQuestionWhereInput
-    orderBy?: CommunityQuestionOrderByWithAggregationInput | CommunityQuestionOrderByWithAggregationInput[]
-    by: CommunityQuestionScalarFieldEnum[] | CommunityQuestionScalarFieldEnum
-    having?: CommunityQuestionScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: CommunityQuestionCountAggregateInputType | true
-    _min?: CommunityQuestionMinAggregateInputType
-    _max?: CommunityQuestionMaxAggregateInputType
-  }
-
-  export type CommunityQuestionGroupByOutputType = {
-    id: string
-    askerId: string
-    askerName: string
-    content: string
-    category: string
-    isAnonymous: boolean
-    replyContent: string | null
-    repliedAt: Date | null
-    repliedBy: string | null
-    status: string
-    isDeleted: boolean
-    creTime: Date
-    _count: CommunityQuestionCountAggregateOutputType | null
-    _min: CommunityQuestionMinAggregateOutputType | null
-    _max: CommunityQuestionMaxAggregateOutputType | null
-  }
-
-  type GetCommunityQuestionGroupByPayload<T extends CommunityQuestionGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<CommunityQuestionGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof CommunityQuestionGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], CommunityQuestionGroupByOutputType[P]>
-            : GetScalarType<T[P], CommunityQuestionGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type CommunityQuestionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    askerId?: boolean
-    askerName?: boolean
-    content?: boolean
-    category?: boolean
-    isAnonymous?: boolean
-    replyContent?: boolean
-    repliedAt?: boolean
-    repliedBy?: boolean
-    status?: boolean
-    isDeleted?: boolean
-    creTime?: boolean
-  }, ExtArgs["result"]["communityQuestion"]>
-
-  export type CommunityQuestionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    askerId?: boolean
-    askerName?: boolean
-    content?: boolean
-    category?: boolean
-    isAnonymous?: boolean
-    replyContent?: boolean
-    repliedAt?: boolean
-    repliedBy?: boolean
-    status?: boolean
-    isDeleted?: boolean
-    creTime?: boolean
-  }, ExtArgs["result"]["communityQuestion"]>
-
-  export type CommunityQuestionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    askerId?: boolean
-    askerName?: boolean
-    content?: boolean
-    category?: boolean
-    isAnonymous?: boolean
-    replyContent?: boolean
-    repliedAt?: boolean
-    repliedBy?: boolean
-    status?: boolean
-    isDeleted?: boolean
-    creTime?: boolean
-  }, ExtArgs["result"]["communityQuestion"]>
-
-  export type CommunityQuestionSelectScalar = {
-    id?: boolean
-    askerId?: boolean
-    askerName?: boolean
-    content?: boolean
-    category?: boolean
-    isAnonymous?: boolean
-    replyContent?: boolean
-    repliedAt?: boolean
-    repliedBy?: boolean
-    status?: boolean
-    isDeleted?: boolean
-    creTime?: boolean
-  }
-
-  export type CommunityQuestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "askerId" | "askerName" | "content" | "category" | "isAnonymous" | "replyContent" | "repliedAt" | "repliedBy" | "status" | "isDeleted" | "creTime", ExtArgs["result"]["communityQuestion"]>
-
-  export type $CommunityQuestionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "CommunityQuestion"
-    objects: {}
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      askerId: string
-      askerName: string
-      content: string
-      category: string
-      isAnonymous: boolean
-      replyContent: string | null
-      repliedAt: Date | null
-      repliedBy: string | null
-      status: string
-      isDeleted: boolean
-      creTime: Date
-    }, ExtArgs["result"]["communityQuestion"]>
-    composites: {}
-  }
-
-  type CommunityQuestionGetPayload<S extends boolean | null | undefined | CommunityQuestionDefaultArgs> = $Result.GetResult<Prisma.$CommunityQuestionPayload, S>
-
-  type CommunityQuestionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<CommunityQuestionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: CommunityQuestionCountAggregateInputType | true
-    }
-
-  export interface CommunityQuestionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CommunityQuestion'], meta: { name: 'CommunityQuestion' } }
-    /**
-     * Find zero or one CommunityQuestion that matches the filter.
-     * @param {CommunityQuestionFindUniqueArgs} args - Arguments to find a CommunityQuestion
-     * @example
-     * // Get one CommunityQuestion
-     * const communityQuestion = await prisma.communityQuestion.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends CommunityQuestionFindUniqueArgs>(args: SelectSubset<T, CommunityQuestionFindUniqueArgs<ExtArgs>>): Prisma__CommunityQuestionClient<$Result.GetResult<Prisma.$CommunityQuestionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one CommunityQuestion that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {CommunityQuestionFindUniqueOrThrowArgs} args - Arguments to find a CommunityQuestion
-     * @example
-     * // Get one CommunityQuestion
-     * const communityQuestion = await prisma.communityQuestion.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends CommunityQuestionFindUniqueOrThrowArgs>(args: SelectSubset<T, CommunityQuestionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CommunityQuestionClient<$Result.GetResult<Prisma.$CommunityQuestionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first CommunityQuestion that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommunityQuestionFindFirstArgs} args - Arguments to find a CommunityQuestion
-     * @example
-     * // Get one CommunityQuestion
-     * const communityQuestion = await prisma.communityQuestion.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends CommunityQuestionFindFirstArgs>(args?: SelectSubset<T, CommunityQuestionFindFirstArgs<ExtArgs>>): Prisma__CommunityQuestionClient<$Result.GetResult<Prisma.$CommunityQuestionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first CommunityQuestion that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommunityQuestionFindFirstOrThrowArgs} args - Arguments to find a CommunityQuestion
-     * @example
-     * // Get one CommunityQuestion
-     * const communityQuestion = await prisma.communityQuestion.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends CommunityQuestionFindFirstOrThrowArgs>(args?: SelectSubset<T, CommunityQuestionFindFirstOrThrowArgs<ExtArgs>>): Prisma__CommunityQuestionClient<$Result.GetResult<Prisma.$CommunityQuestionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more CommunityQuestions that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommunityQuestionFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all CommunityQuestions
-     * const communityQuestions = await prisma.communityQuestion.findMany()
-     * 
-     * // Get first 10 CommunityQuestions
-     * const communityQuestions = await prisma.communityQuestion.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const communityQuestionWithIdOnly = await prisma.communityQuestion.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends CommunityQuestionFindManyArgs>(args?: SelectSubset<T, CommunityQuestionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommunityQuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a CommunityQuestion.
-     * @param {CommunityQuestionCreateArgs} args - Arguments to create a CommunityQuestion.
-     * @example
-     * // Create one CommunityQuestion
-     * const CommunityQuestion = await prisma.communityQuestion.create({
-     *   data: {
-     *     // ... data to create a CommunityQuestion
-     *   }
-     * })
-     * 
-     */
-    create<T extends CommunityQuestionCreateArgs>(args: SelectSubset<T, CommunityQuestionCreateArgs<ExtArgs>>): Prisma__CommunityQuestionClient<$Result.GetResult<Prisma.$CommunityQuestionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many CommunityQuestions.
-     * @param {CommunityQuestionCreateManyArgs} args - Arguments to create many CommunityQuestions.
-     * @example
-     * // Create many CommunityQuestions
-     * const communityQuestion = await prisma.communityQuestion.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends CommunityQuestionCreateManyArgs>(args?: SelectSubset<T, CommunityQuestionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many CommunityQuestions and returns the data saved in the database.
-     * @param {CommunityQuestionCreateManyAndReturnArgs} args - Arguments to create many CommunityQuestions.
-     * @example
-     * // Create many CommunityQuestions
-     * const communityQuestion = await prisma.communityQuestion.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many CommunityQuestions and only return the `id`
-     * const communityQuestionWithIdOnly = await prisma.communityQuestion.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends CommunityQuestionCreateManyAndReturnArgs>(args?: SelectSubset<T, CommunityQuestionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommunityQuestionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a CommunityQuestion.
-     * @param {CommunityQuestionDeleteArgs} args - Arguments to delete one CommunityQuestion.
-     * @example
-     * // Delete one CommunityQuestion
-     * const CommunityQuestion = await prisma.communityQuestion.delete({
-     *   where: {
-     *     // ... filter to delete one CommunityQuestion
-     *   }
-     * })
-     * 
-     */
-    delete<T extends CommunityQuestionDeleteArgs>(args: SelectSubset<T, CommunityQuestionDeleteArgs<ExtArgs>>): Prisma__CommunityQuestionClient<$Result.GetResult<Prisma.$CommunityQuestionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one CommunityQuestion.
-     * @param {CommunityQuestionUpdateArgs} args - Arguments to update one CommunityQuestion.
-     * @example
-     * // Update one CommunityQuestion
-     * const communityQuestion = await prisma.communityQuestion.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends CommunityQuestionUpdateArgs>(args: SelectSubset<T, CommunityQuestionUpdateArgs<ExtArgs>>): Prisma__CommunityQuestionClient<$Result.GetResult<Prisma.$CommunityQuestionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more CommunityQuestions.
-     * @param {CommunityQuestionDeleteManyArgs} args - Arguments to filter CommunityQuestions to delete.
-     * @example
-     * // Delete a few CommunityQuestions
-     * const { count } = await prisma.communityQuestion.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends CommunityQuestionDeleteManyArgs>(args?: SelectSubset<T, CommunityQuestionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more CommunityQuestions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommunityQuestionUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many CommunityQuestions
-     * const communityQuestion = await prisma.communityQuestion.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends CommunityQuestionUpdateManyArgs>(args: SelectSubset<T, CommunityQuestionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more CommunityQuestions and returns the data updated in the database.
-     * @param {CommunityQuestionUpdateManyAndReturnArgs} args - Arguments to update many CommunityQuestions.
-     * @example
-     * // Update many CommunityQuestions
-     * const communityQuestion = await prisma.communityQuestion.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more CommunityQuestions and only return the `id`
-     * const communityQuestionWithIdOnly = await prisma.communityQuestion.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends CommunityQuestionUpdateManyAndReturnArgs>(args: SelectSubset<T, CommunityQuestionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommunityQuestionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one CommunityQuestion.
-     * @param {CommunityQuestionUpsertArgs} args - Arguments to update or create a CommunityQuestion.
-     * @example
-     * // Update or create a CommunityQuestion
-     * const communityQuestion = await prisma.communityQuestion.upsert({
-     *   create: {
-     *     // ... data to create a CommunityQuestion
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the CommunityQuestion we want to update
-     *   }
-     * })
-     */
-    upsert<T extends CommunityQuestionUpsertArgs>(args: SelectSubset<T, CommunityQuestionUpsertArgs<ExtArgs>>): Prisma__CommunityQuestionClient<$Result.GetResult<Prisma.$CommunityQuestionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of CommunityQuestions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommunityQuestionCountArgs} args - Arguments to filter CommunityQuestions to count.
-     * @example
-     * // Count the number of CommunityQuestions
-     * const count = await prisma.communityQuestion.count({
-     *   where: {
-     *     // ... the filter for the CommunityQuestions we want to count
-     *   }
-     * })
-    **/
-    count<T extends CommunityQuestionCountArgs>(
-      args?: Subset<T, CommunityQuestionCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], CommunityQuestionCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a CommunityQuestion.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommunityQuestionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends CommunityQuestionAggregateArgs>(args: Subset<T, CommunityQuestionAggregateArgs>): Prisma.PrismaPromise<GetCommunityQuestionAggregateType<T>>
-
-    /**
-     * Group by CommunityQuestion.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommunityQuestionGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends CommunityQuestionGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: CommunityQuestionGroupByArgs['orderBy'] }
-        : { orderBy?: CommunityQuestionGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, CommunityQuestionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCommunityQuestionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the CommunityQuestion model
-   */
-  readonly fields: CommunityQuestionFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for CommunityQuestion.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__CommunityQuestionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the CommunityQuestion model
-   */
-  interface CommunityQuestionFieldRefs {
-    readonly id: FieldRef<"CommunityQuestion", 'String'>
-    readonly askerId: FieldRef<"CommunityQuestion", 'String'>
-    readonly askerName: FieldRef<"CommunityQuestion", 'String'>
-    readonly content: FieldRef<"CommunityQuestion", 'String'>
-    readonly category: FieldRef<"CommunityQuestion", 'String'>
-    readonly isAnonymous: FieldRef<"CommunityQuestion", 'Boolean'>
-    readonly replyContent: FieldRef<"CommunityQuestion", 'String'>
-    readonly repliedAt: FieldRef<"CommunityQuestion", 'DateTime'>
-    readonly repliedBy: FieldRef<"CommunityQuestion", 'String'>
-    readonly status: FieldRef<"CommunityQuestion", 'String'>
-    readonly isDeleted: FieldRef<"CommunityQuestion", 'Boolean'>
-    readonly creTime: FieldRef<"CommunityQuestion", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * CommunityQuestion findUnique
-   */
-  export type CommunityQuestionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityQuestion
-     */
-    select?: CommunityQuestionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityQuestion
-     */
-    omit?: CommunityQuestionOmit<ExtArgs> | null
-    /**
-     * Filter, which CommunityQuestion to fetch.
-     */
-    where: CommunityQuestionWhereUniqueInput
-  }
-
-  /**
-   * CommunityQuestion findUniqueOrThrow
-   */
-  export type CommunityQuestionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityQuestion
-     */
-    select?: CommunityQuestionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityQuestion
-     */
-    omit?: CommunityQuestionOmit<ExtArgs> | null
-    /**
-     * Filter, which CommunityQuestion to fetch.
-     */
-    where: CommunityQuestionWhereUniqueInput
-  }
-
-  /**
-   * CommunityQuestion findFirst
-   */
-  export type CommunityQuestionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityQuestion
-     */
-    select?: CommunityQuestionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityQuestion
-     */
-    omit?: CommunityQuestionOmit<ExtArgs> | null
-    /**
-     * Filter, which CommunityQuestion to fetch.
-     */
-    where?: CommunityQuestionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of CommunityQuestions to fetch.
-     */
-    orderBy?: CommunityQuestionOrderByWithRelationInput | CommunityQuestionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for CommunityQuestions.
-     */
-    cursor?: CommunityQuestionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` CommunityQuestions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` CommunityQuestions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of CommunityQuestions.
-     */
-    distinct?: CommunityQuestionScalarFieldEnum | CommunityQuestionScalarFieldEnum[]
-  }
-
-  /**
-   * CommunityQuestion findFirstOrThrow
-   */
-  export type CommunityQuestionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityQuestion
-     */
-    select?: CommunityQuestionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityQuestion
-     */
-    omit?: CommunityQuestionOmit<ExtArgs> | null
-    /**
-     * Filter, which CommunityQuestion to fetch.
-     */
-    where?: CommunityQuestionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of CommunityQuestions to fetch.
-     */
-    orderBy?: CommunityQuestionOrderByWithRelationInput | CommunityQuestionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for CommunityQuestions.
-     */
-    cursor?: CommunityQuestionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` CommunityQuestions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` CommunityQuestions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of CommunityQuestions.
-     */
-    distinct?: CommunityQuestionScalarFieldEnum | CommunityQuestionScalarFieldEnum[]
-  }
-
-  /**
-   * CommunityQuestion findMany
-   */
-  export type CommunityQuestionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityQuestion
-     */
-    select?: CommunityQuestionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityQuestion
-     */
-    omit?: CommunityQuestionOmit<ExtArgs> | null
-    /**
-     * Filter, which CommunityQuestions to fetch.
-     */
-    where?: CommunityQuestionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of CommunityQuestions to fetch.
-     */
-    orderBy?: CommunityQuestionOrderByWithRelationInput | CommunityQuestionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing CommunityQuestions.
-     */
-    cursor?: CommunityQuestionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` CommunityQuestions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` CommunityQuestions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of CommunityQuestions.
-     */
-    distinct?: CommunityQuestionScalarFieldEnum | CommunityQuestionScalarFieldEnum[]
-  }
-
-  /**
-   * CommunityQuestion create
-   */
-  export type CommunityQuestionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityQuestion
-     */
-    select?: CommunityQuestionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityQuestion
-     */
-    omit?: CommunityQuestionOmit<ExtArgs> | null
-    /**
-     * The data needed to create a CommunityQuestion.
-     */
-    data: XOR<CommunityQuestionCreateInput, CommunityQuestionUncheckedCreateInput>
-  }
-
-  /**
-   * CommunityQuestion createMany
-   */
-  export type CommunityQuestionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many CommunityQuestions.
-     */
-    data: CommunityQuestionCreateManyInput | CommunityQuestionCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * CommunityQuestion createManyAndReturn
-   */
-  export type CommunityQuestionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityQuestion
-     */
-    select?: CommunityQuestionSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityQuestion
-     */
-    omit?: CommunityQuestionOmit<ExtArgs> | null
-    /**
-     * The data used to create many CommunityQuestions.
-     */
-    data: CommunityQuestionCreateManyInput | CommunityQuestionCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * CommunityQuestion update
-   */
-  export type CommunityQuestionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityQuestion
-     */
-    select?: CommunityQuestionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityQuestion
-     */
-    omit?: CommunityQuestionOmit<ExtArgs> | null
-    /**
-     * The data needed to update a CommunityQuestion.
-     */
-    data: XOR<CommunityQuestionUpdateInput, CommunityQuestionUncheckedUpdateInput>
-    /**
-     * Choose, which CommunityQuestion to update.
-     */
-    where: CommunityQuestionWhereUniqueInput
-  }
-
-  /**
-   * CommunityQuestion updateMany
-   */
-  export type CommunityQuestionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update CommunityQuestions.
-     */
-    data: XOR<CommunityQuestionUpdateManyMutationInput, CommunityQuestionUncheckedUpdateManyInput>
-    /**
-     * Filter which CommunityQuestions to update
-     */
-    where?: CommunityQuestionWhereInput
-    /**
-     * Limit how many CommunityQuestions to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * CommunityQuestion updateManyAndReturn
-   */
-  export type CommunityQuestionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityQuestion
-     */
-    select?: CommunityQuestionSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityQuestion
-     */
-    omit?: CommunityQuestionOmit<ExtArgs> | null
-    /**
-     * The data used to update CommunityQuestions.
-     */
-    data: XOR<CommunityQuestionUpdateManyMutationInput, CommunityQuestionUncheckedUpdateManyInput>
-    /**
-     * Filter which CommunityQuestions to update
-     */
-    where?: CommunityQuestionWhereInput
-    /**
-     * Limit how many CommunityQuestions to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * CommunityQuestion upsert
-   */
-  export type CommunityQuestionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityQuestion
-     */
-    select?: CommunityQuestionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityQuestion
-     */
-    omit?: CommunityQuestionOmit<ExtArgs> | null
-    /**
-     * The filter to search for the CommunityQuestion to update in case it exists.
-     */
-    where: CommunityQuestionWhereUniqueInput
-    /**
-     * In case the CommunityQuestion found by the `where` argument doesn't exist, create a new CommunityQuestion with this data.
-     */
-    create: XOR<CommunityQuestionCreateInput, CommunityQuestionUncheckedCreateInput>
-    /**
-     * In case the CommunityQuestion was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<CommunityQuestionUpdateInput, CommunityQuestionUncheckedUpdateInput>
-  }
-
-  /**
-   * CommunityQuestion delete
-   */
-  export type CommunityQuestionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityQuestion
-     */
-    select?: CommunityQuestionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityQuestion
-     */
-    omit?: CommunityQuestionOmit<ExtArgs> | null
-    /**
-     * Filter which CommunityQuestion to delete.
-     */
-    where: CommunityQuestionWhereUniqueInput
-  }
-
-  /**
-   * CommunityQuestion deleteMany
-   */
-  export type CommunityQuestionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which CommunityQuestions to delete
-     */
-    where?: CommunityQuestionWhereInput
-    /**
-     * Limit how many CommunityQuestions to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * CommunityQuestion without action
-   */
-  export type CommunityQuestionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityQuestion
-     */
-    select?: CommunityQuestionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CommunityQuestion
-     */
-    omit?: CommunityQuestionOmit<ExtArgs> | null
-  }
-
-
-  /**
-   * Model Driver
-   */
-
-  export type AggregateDriver = {
-    _count: DriverCountAggregateOutputType | null
-    _avg: DriverAvgAggregateOutputType | null
-    _sum: DriverSumAggregateOutputType | null
-    _min: DriverMinAggregateOutputType | null
-    _max: DriverMaxAggregateOutputType | null
-  }
-
-  export type DriverAvgAggregateOutputType = {
-    rating: Decimal | null
-    totalTrips: number | null
-  }
-
-  export type DriverSumAggregateOutputType = {
-    rating: Decimal | null
-    totalTrips: number | null
-  }
-
-  export type DriverMinAggregateOutputType = {
-    id: string | null
-    name: string | null
-    phone: string | null
-    plateNumber: string | null
-    carModel: string | null
-    carType: string | null
-    rating: Decimal | null
-    totalTrips: number | null
-    status: string | null
-    isDeleted: boolean | null
-    creTime: Date | null
-  }
-
-  export type DriverMaxAggregateOutputType = {
-    id: string | null
-    name: string | null
-    phone: string | null
-    plateNumber: string | null
-    carModel: string | null
-    carType: string | null
-    rating: Decimal | null
-    totalTrips: number | null
-    status: string | null
-    isDeleted: boolean | null
-    creTime: Date | null
-  }
-
-  export type DriverCountAggregateOutputType = {
-    id: number
-    name: number
-    phone: number
-    plateNumber: number
-    carModel: number
-    carType: number
-    rating: number
-    totalTrips: number
-    status: number
-    isDeleted: number
-    creTime: number
-    _all: number
-  }
-
-
-  export type DriverAvgAggregateInputType = {
-    rating?: true
-    totalTrips?: true
-  }
-
-  export type DriverSumAggregateInputType = {
-    rating?: true
-    totalTrips?: true
-  }
-
-  export type DriverMinAggregateInputType = {
-    id?: true
-    name?: true
-    phone?: true
-    plateNumber?: true
-    carModel?: true
-    carType?: true
-    rating?: true
-    totalTrips?: true
-    status?: true
-    isDeleted?: true
-    creTime?: true
-  }
-
-  export type DriverMaxAggregateInputType = {
-    id?: true
-    name?: true
-    phone?: true
-    plateNumber?: true
-    carModel?: true
-    carType?: true
-    rating?: true
-    totalTrips?: true
-    status?: true
-    isDeleted?: true
-    creTime?: true
-  }
-
-  export type DriverCountAggregateInputType = {
-    id?: true
-    name?: true
-    phone?: true
-    plateNumber?: true
-    carModel?: true
-    carType?: true
-    rating?: true
-    totalTrips?: true
-    status?: true
-    isDeleted?: true
-    creTime?: true
-    _all?: true
-  }
-
-  export type DriverAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Driver to aggregate.
-     */
-    where?: DriverWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Drivers to fetch.
-     */
-    orderBy?: DriverOrderByWithRelationInput | DriverOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: DriverWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Drivers from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Drivers.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Drivers
-    **/
-    _count?: true | DriverCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: DriverAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: DriverSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: DriverMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: DriverMaxAggregateInputType
-  }
-
-  export type GetDriverAggregateType<T extends DriverAggregateArgs> = {
-        [P in keyof T & keyof AggregateDriver]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateDriver[P]>
-      : GetScalarType<T[P], AggregateDriver[P]>
-  }
-
-
-
-
-  export type DriverGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: DriverWhereInput
-    orderBy?: DriverOrderByWithAggregationInput | DriverOrderByWithAggregationInput[]
-    by: DriverScalarFieldEnum[] | DriverScalarFieldEnum
-    having?: DriverScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: DriverCountAggregateInputType | true
-    _avg?: DriverAvgAggregateInputType
-    _sum?: DriverSumAggregateInputType
-    _min?: DriverMinAggregateInputType
-    _max?: DriverMaxAggregateInputType
-  }
-
-  export type DriverGroupByOutputType = {
-    id: string
-    name: string
-    phone: string
-    plateNumber: string
-    carModel: string
-    carType: string
-    rating: Decimal
-    totalTrips: number
-    status: string
-    isDeleted: boolean
-    creTime: Date
-    _count: DriverCountAggregateOutputType | null
-    _avg: DriverAvgAggregateOutputType | null
-    _sum: DriverSumAggregateOutputType | null
-    _min: DriverMinAggregateOutputType | null
-    _max: DriverMaxAggregateOutputType | null
-  }
-
-  type GetDriverGroupByPayload<T extends DriverGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<DriverGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof DriverGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], DriverGroupByOutputType[P]>
-            : GetScalarType<T[P], DriverGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type DriverSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    phone?: boolean
-    plateNumber?: boolean
-    carModel?: boolean
-    carType?: boolean
-    rating?: boolean
-    totalTrips?: boolean
-    status?: boolean
-    isDeleted?: boolean
-    creTime?: boolean
-    rideOrders?: boolean | Driver$rideOrdersArgs<ExtArgs>
-    _count?: boolean | DriverCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["driver"]>
-
-  export type DriverSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    phone?: boolean
-    plateNumber?: boolean
-    carModel?: boolean
-    carType?: boolean
-    rating?: boolean
-    totalTrips?: boolean
-    status?: boolean
-    isDeleted?: boolean
-    creTime?: boolean
-  }, ExtArgs["result"]["driver"]>
-
-  export type DriverSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    phone?: boolean
-    plateNumber?: boolean
-    carModel?: boolean
-    carType?: boolean
-    rating?: boolean
-    totalTrips?: boolean
-    status?: boolean
-    isDeleted?: boolean
-    creTime?: boolean
-  }, ExtArgs["result"]["driver"]>
-
-  export type DriverSelectScalar = {
-    id?: boolean
-    name?: boolean
-    phone?: boolean
-    plateNumber?: boolean
-    carModel?: boolean
-    carType?: boolean
-    rating?: boolean
-    totalTrips?: boolean
-    status?: boolean
-    isDeleted?: boolean
-    creTime?: boolean
-  }
-
-  export type DriverOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phone" | "plateNumber" | "carModel" | "carType" | "rating" | "totalTrips" | "status" | "isDeleted" | "creTime", ExtArgs["result"]["driver"]>
-  export type DriverInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    rideOrders?: boolean | Driver$rideOrdersArgs<ExtArgs>
-    _count?: boolean | DriverCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type DriverIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type DriverIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-
-  export type $DriverPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Driver"
-    objects: {
-      rideOrders: Prisma.$RideOrderPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      name: string
-      phone: string
-      plateNumber: string
-      carModel: string
-      carType: string
-      rating: Prisma.Decimal
-      totalTrips: number
-      status: string
-      isDeleted: boolean
-      creTime: Date
-    }, ExtArgs["result"]["driver"]>
-    composites: {}
-  }
-
-  type DriverGetPayload<S extends boolean | null | undefined | DriverDefaultArgs> = $Result.GetResult<Prisma.$DriverPayload, S>
-
-  type DriverCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<DriverFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: DriverCountAggregateInputType | true
-    }
-
-  export interface DriverDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Driver'], meta: { name: 'Driver' } }
-    /**
-     * Find zero or one Driver that matches the filter.
-     * @param {DriverFindUniqueArgs} args - Arguments to find a Driver
-     * @example
-     * // Get one Driver
-     * const driver = await prisma.driver.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends DriverFindUniqueArgs>(args: SelectSubset<T, DriverFindUniqueArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Driver that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {DriverFindUniqueOrThrowArgs} args - Arguments to find a Driver
-     * @example
-     * // Get one Driver
-     * const driver = await prisma.driver.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends DriverFindUniqueOrThrowArgs>(args: SelectSubset<T, DriverFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Driver that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {DriverFindFirstArgs} args - Arguments to find a Driver
-     * @example
-     * // Get one Driver
-     * const driver = await prisma.driver.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends DriverFindFirstArgs>(args?: SelectSubset<T, DriverFindFirstArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Driver that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {DriverFindFirstOrThrowArgs} args - Arguments to find a Driver
-     * @example
-     * // Get one Driver
-     * const driver = await prisma.driver.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends DriverFindFirstOrThrowArgs>(args?: SelectSubset<T, DriverFindFirstOrThrowArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Drivers that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {DriverFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Drivers
-     * const drivers = await prisma.driver.findMany()
-     * 
-     * // Get first 10 Drivers
-     * const drivers = await prisma.driver.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const driverWithIdOnly = await prisma.driver.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends DriverFindManyArgs>(args?: SelectSubset<T, DriverFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Driver.
-     * @param {DriverCreateArgs} args - Arguments to create a Driver.
-     * @example
-     * // Create one Driver
-     * const Driver = await prisma.driver.create({
-     *   data: {
-     *     // ... data to create a Driver
-     *   }
-     * })
-     * 
-     */
-    create<T extends DriverCreateArgs>(args: SelectSubset<T, DriverCreateArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Drivers.
-     * @param {DriverCreateManyArgs} args - Arguments to create many Drivers.
-     * @example
-     * // Create many Drivers
-     * const driver = await prisma.driver.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends DriverCreateManyArgs>(args?: SelectSubset<T, DriverCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Drivers and returns the data saved in the database.
-     * @param {DriverCreateManyAndReturnArgs} args - Arguments to create many Drivers.
-     * @example
-     * // Create many Drivers
-     * const driver = await prisma.driver.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Drivers and only return the `id`
-     * const driverWithIdOnly = await prisma.driver.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends DriverCreateManyAndReturnArgs>(args?: SelectSubset<T, DriverCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Driver.
-     * @param {DriverDeleteArgs} args - Arguments to delete one Driver.
-     * @example
-     * // Delete one Driver
-     * const Driver = await prisma.driver.delete({
-     *   where: {
-     *     // ... filter to delete one Driver
-     *   }
-     * })
-     * 
-     */
-    delete<T extends DriverDeleteArgs>(args: SelectSubset<T, DriverDeleteArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Driver.
-     * @param {DriverUpdateArgs} args - Arguments to update one Driver.
-     * @example
-     * // Update one Driver
-     * const driver = await prisma.driver.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends DriverUpdateArgs>(args: SelectSubset<T, DriverUpdateArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Drivers.
-     * @param {DriverDeleteManyArgs} args - Arguments to filter Drivers to delete.
-     * @example
-     * // Delete a few Drivers
-     * const { count } = await prisma.driver.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends DriverDeleteManyArgs>(args?: SelectSubset<T, DriverDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Drivers.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {DriverUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Drivers
-     * const driver = await prisma.driver.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends DriverUpdateManyArgs>(args: SelectSubset<T, DriverUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Drivers and returns the data updated in the database.
-     * @param {DriverUpdateManyAndReturnArgs} args - Arguments to update many Drivers.
-     * @example
-     * // Update many Drivers
-     * const driver = await prisma.driver.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Drivers and only return the `id`
-     * const driverWithIdOnly = await prisma.driver.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends DriverUpdateManyAndReturnArgs>(args: SelectSubset<T, DriverUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Driver.
-     * @param {DriverUpsertArgs} args - Arguments to update or create a Driver.
-     * @example
-     * // Update or create a Driver
-     * const driver = await prisma.driver.upsert({
-     *   create: {
-     *     // ... data to create a Driver
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Driver we want to update
-     *   }
-     * })
-     */
-    upsert<T extends DriverUpsertArgs>(args: SelectSubset<T, DriverUpsertArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Drivers.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {DriverCountArgs} args - Arguments to filter Drivers to count.
-     * @example
-     * // Count the number of Drivers
-     * const count = await prisma.driver.count({
-     *   where: {
-     *     // ... the filter for the Drivers we want to count
-     *   }
-     * })
-    **/
-    count<T extends DriverCountArgs>(
-      args?: Subset<T, DriverCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], DriverCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Driver.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {DriverAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends DriverAggregateArgs>(args: Subset<T, DriverAggregateArgs>): Prisma.PrismaPromise<GetDriverAggregateType<T>>
-
-    /**
-     * Group by Driver.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {DriverGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends DriverGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: DriverGroupByArgs['orderBy'] }
-        : { orderBy?: DriverGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, DriverGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDriverGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Driver model
-   */
-  readonly fields: DriverFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Driver.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__DriverClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    rideOrders<T extends Driver$rideOrdersArgs<ExtArgs> = {}>(args?: Subset<T, Driver$rideOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Driver model
-   */
-  interface DriverFieldRefs {
-    readonly id: FieldRef<"Driver", 'String'>
-    readonly name: FieldRef<"Driver", 'String'>
-    readonly phone: FieldRef<"Driver", 'String'>
-    readonly plateNumber: FieldRef<"Driver", 'String'>
-    readonly carModel: FieldRef<"Driver", 'String'>
-    readonly carType: FieldRef<"Driver", 'String'>
-    readonly rating: FieldRef<"Driver", 'Decimal'>
-    readonly totalTrips: FieldRef<"Driver", 'Int'>
-    readonly status: FieldRef<"Driver", 'String'>
-    readonly isDeleted: FieldRef<"Driver", 'Boolean'>
-    readonly creTime: FieldRef<"Driver", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Driver findUnique
-   */
-  export type DriverFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Driver
-     */
-    select?: DriverSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Driver
-     */
-    omit?: DriverOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DriverInclude<ExtArgs> | null
-    /**
-     * Filter, which Driver to fetch.
-     */
-    where: DriverWhereUniqueInput
-  }
-
-  /**
-   * Driver findUniqueOrThrow
-   */
-  export type DriverFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Driver
-     */
-    select?: DriverSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Driver
-     */
-    omit?: DriverOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DriverInclude<ExtArgs> | null
-    /**
-     * Filter, which Driver to fetch.
-     */
-    where: DriverWhereUniqueInput
-  }
-
-  /**
-   * Driver findFirst
-   */
-  export type DriverFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Driver
-     */
-    select?: DriverSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Driver
-     */
-    omit?: DriverOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DriverInclude<ExtArgs> | null
-    /**
-     * Filter, which Driver to fetch.
-     */
-    where?: DriverWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Drivers to fetch.
-     */
-    orderBy?: DriverOrderByWithRelationInput | DriverOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Drivers.
-     */
-    cursor?: DriverWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Drivers from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Drivers.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Drivers.
-     */
-    distinct?: DriverScalarFieldEnum | DriverScalarFieldEnum[]
-  }
-
-  /**
-   * Driver findFirstOrThrow
-   */
-  export type DriverFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Driver
-     */
-    select?: DriverSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Driver
-     */
-    omit?: DriverOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DriverInclude<ExtArgs> | null
-    /**
-     * Filter, which Driver to fetch.
-     */
-    where?: DriverWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Drivers to fetch.
-     */
-    orderBy?: DriverOrderByWithRelationInput | DriverOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Drivers.
-     */
-    cursor?: DriverWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Drivers from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Drivers.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Drivers.
-     */
-    distinct?: DriverScalarFieldEnum | DriverScalarFieldEnum[]
-  }
-
-  /**
-   * Driver findMany
-   */
-  export type DriverFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Driver
-     */
-    select?: DriverSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Driver
-     */
-    omit?: DriverOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DriverInclude<ExtArgs> | null
-    /**
-     * Filter, which Drivers to fetch.
-     */
-    where?: DriverWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Drivers to fetch.
-     */
-    orderBy?: DriverOrderByWithRelationInput | DriverOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Drivers.
-     */
-    cursor?: DriverWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Drivers from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Drivers.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Drivers.
-     */
-    distinct?: DriverScalarFieldEnum | DriverScalarFieldEnum[]
-  }
-
-  /**
-   * Driver create
-   */
-  export type DriverCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Driver
-     */
-    select?: DriverSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Driver
-     */
-    omit?: DriverOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DriverInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Driver.
-     */
-    data: XOR<DriverCreateInput, DriverUncheckedCreateInput>
-  }
-
-  /**
-   * Driver createMany
-   */
-  export type DriverCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Drivers.
-     */
-    data: DriverCreateManyInput | DriverCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Driver createManyAndReturn
-   */
-  export type DriverCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Driver
-     */
-    select?: DriverSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Driver
-     */
-    omit?: DriverOmit<ExtArgs> | null
-    /**
-     * The data used to create many Drivers.
-     */
-    data: DriverCreateManyInput | DriverCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Driver update
-   */
-  export type DriverUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Driver
-     */
-    select?: DriverSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Driver
-     */
-    omit?: DriverOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DriverInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Driver.
-     */
-    data: XOR<DriverUpdateInput, DriverUncheckedUpdateInput>
-    /**
-     * Choose, which Driver to update.
-     */
-    where: DriverWhereUniqueInput
-  }
-
-  /**
-   * Driver updateMany
-   */
-  export type DriverUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Drivers.
-     */
-    data: XOR<DriverUpdateManyMutationInput, DriverUncheckedUpdateManyInput>
-    /**
-     * Filter which Drivers to update
-     */
-    where?: DriverWhereInput
-    /**
-     * Limit how many Drivers to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Driver updateManyAndReturn
-   */
-  export type DriverUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Driver
-     */
-    select?: DriverSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Driver
-     */
-    omit?: DriverOmit<ExtArgs> | null
-    /**
-     * The data used to update Drivers.
-     */
-    data: XOR<DriverUpdateManyMutationInput, DriverUncheckedUpdateManyInput>
-    /**
-     * Filter which Drivers to update
-     */
-    where?: DriverWhereInput
-    /**
-     * Limit how many Drivers to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Driver upsert
-   */
-  export type DriverUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Driver
-     */
-    select?: DriverSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Driver
-     */
-    omit?: DriverOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DriverInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Driver to update in case it exists.
-     */
-    where: DriverWhereUniqueInput
-    /**
-     * In case the Driver found by the `where` argument doesn't exist, create a new Driver with this data.
-     */
-    create: XOR<DriverCreateInput, DriverUncheckedCreateInput>
-    /**
-     * In case the Driver was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<DriverUpdateInput, DriverUncheckedUpdateInput>
-  }
-
-  /**
-   * Driver delete
-   */
-  export type DriverDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Driver
-     */
-    select?: DriverSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Driver
-     */
-    omit?: DriverOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DriverInclude<ExtArgs> | null
-    /**
-     * Filter which Driver to delete.
-     */
-    where: DriverWhereUniqueInput
-  }
-
-  /**
-   * Driver deleteMany
-   */
-  export type DriverDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Drivers to delete
-     */
-    where?: DriverWhereInput
-    /**
-     * Limit how many Drivers to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Driver.rideOrders
-   */
-  export type Driver$rideOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RideOrder
-     */
-    select?: RideOrderSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RideOrder
-     */
-    omit?: RideOrderOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RideOrderInclude<ExtArgs> | null
-    where?: RideOrderWhereInput
-    orderBy?: RideOrderOrderByWithRelationInput | RideOrderOrderByWithRelationInput[]
-    cursor?: RideOrderWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: RideOrderScalarFieldEnum | RideOrderScalarFieldEnum[]
-  }
-
-  /**
-   * Driver without action
-   */
-  export type DriverDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Driver
-     */
-    select?: DriverSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Driver
-     */
-    omit?: DriverOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DriverInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model RideOrder
-   */
-
-  export type AggregateRideOrder = {
-    _count: RideOrderCountAggregateOutputType | null
-    _avg: RideOrderAvgAggregateOutputType | null
-    _sum: RideOrderSumAggregateOutputType | null
-    _min: RideOrderMinAggregateOutputType | null
-    _max: RideOrderMaxAggregateOutputType | null
-  }
-
-  export type RideOrderAvgAggregateOutputType = {
-    fare: number | null
-    distance: Decimal | null
-    rating: number | null
-  }
-
-  export type RideOrderSumAggregateOutputType = {
-    fare: number | null
-    distance: Decimal | null
-    rating: number | null
-  }
-
-  export type RideOrderMinAggregateOutputType = {
-    id: string | null
-    passengerId: string | null
-    passengerName: string | null
-    passengerPhone: string | null
-    pickup: string | null
-    destination: string | null
-    carType: string | null
-    mode: string | null
     scheduledAt: Date | null
-    status: string | null
-    driverId: string | null
-    fare: number | null
-    distance: Decimal | null
-    rating: number | null
-    ratingComment: string | null
     creTime: Date | null
     updTime: Date | null
-    completedAt: Date | null
+    pickupDeadline: Date | null
   }
 
-  export type RideOrderMaxAggregateOutputType = {
+  export type PickupReservationMaxAggregateOutputType = {
     id: string | null
-    passengerId: string | null
-    passengerName: string | null
-    passengerPhone: string | null
-    pickup: string | null
-    destination: string | null
-    carType: string | null
-    mode: string | null
-    scheduledAt: Date | null
+    listingId: string | null
+    buyerId: string | null
+    buyerName: string | null
+    buyerPhone: string | null
+    sellerId: string | null
+    sellerName: string | null
+    pickupStore: string | null
+    pickupMethod: string | null
     status: string | null
-    driverId: string | null
-    fare: number | null
-    distance: Decimal | null
-    rating: number | null
-    ratingComment: string | null
+    scheduledAt: Date | null
     creTime: Date | null
     updTime: Date | null
-    completedAt: Date | null
+    pickupDeadline: Date | null
   }
 
-  export type RideOrderCountAggregateOutputType = {
+  export type PickupReservationCountAggregateOutputType = {
     id: number
-    passengerId: number
-    passengerName: number
-    passengerPhone: number
-    pickup: number
-    destination: number
-    carType: number
-    mode: number
+    listingId: number
+    buyerId: number
+    buyerName: number
+    buyerPhone: number
+    sellerId: number
+    sellerName: number
+    pickupStore: number
+    pickupMethod: number
+    status: number
     scheduledAt: number
-    status: number
-    driverId: number
-    fare: number
-    distance: number
-    rating: number
-    ratingComment: number
     creTime: number
     updTime: number
-    completedAt: number
+    pickupDeadline: number
     _all: number
   }
 
 
-  export type RideOrderAvgAggregateInputType = {
-    fare?: true
-    distance?: true
-    rating?: true
-  }
-
-  export type RideOrderSumAggregateInputType = {
-    fare?: true
-    distance?: true
-    rating?: true
-  }
-
-  export type RideOrderMinAggregateInputType = {
+  export type PickupReservationMinAggregateInputType = {
     id?: true
-    passengerId?: true
-    passengerName?: true
-    passengerPhone?: true
-    pickup?: true
-    destination?: true
-    carType?: true
-    mode?: true
-    scheduledAt?: true
+    listingId?: true
+    buyerId?: true
+    buyerName?: true
+    buyerPhone?: true
+    sellerId?: true
+    sellerName?: true
+    pickupStore?: true
+    pickupMethod?: true
     status?: true
-    driverId?: true
-    fare?: true
-    distance?: true
-    rating?: true
-    ratingComment?: true
+    scheduledAt?: true
     creTime?: true
     updTime?: true
-    completedAt?: true
+    pickupDeadline?: true
   }
 
-  export type RideOrderMaxAggregateInputType = {
+  export type PickupReservationMaxAggregateInputType = {
     id?: true
-    passengerId?: true
-    passengerName?: true
-    passengerPhone?: true
-    pickup?: true
-    destination?: true
-    carType?: true
-    mode?: true
-    scheduledAt?: true
+    listingId?: true
+    buyerId?: true
+    buyerName?: true
+    buyerPhone?: true
+    sellerId?: true
+    sellerName?: true
+    pickupStore?: true
+    pickupMethod?: true
     status?: true
-    driverId?: true
-    fare?: true
-    distance?: true
-    rating?: true
-    ratingComment?: true
+    scheduledAt?: true
     creTime?: true
     updTime?: true
-    completedAt?: true
+    pickupDeadline?: true
   }
 
-  export type RideOrderCountAggregateInputType = {
+  export type PickupReservationCountAggregateInputType = {
     id?: true
-    passengerId?: true
-    passengerName?: true
-    passengerPhone?: true
-    pickup?: true
-    destination?: true
-    carType?: true
-    mode?: true
-    scheduledAt?: true
+    listingId?: true
+    buyerId?: true
+    buyerName?: true
+    buyerPhone?: true
+    sellerId?: true
+    sellerName?: true
+    pickupStore?: true
+    pickupMethod?: true
     status?: true
-    driverId?: true
-    fare?: true
-    distance?: true
-    rating?: true
-    ratingComment?: true
+    scheduledAt?: true
     creTime?: true
     updTime?: true
-    completedAt?: true
+    pickupDeadline?: true
     _all?: true
   }
 
-  export type RideOrderAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PickupReservationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which RideOrder to aggregate.
+     * Filter which PickupReservation to aggregate.
      */
-    where?: RideOrderWhereInput
+    where?: PickupReservationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of RideOrders to fetch.
+     * Determine the order of PickupReservations to fetch.
      */
-    orderBy?: RideOrderOrderByWithRelationInput | RideOrderOrderByWithRelationInput[]
+    orderBy?: PickupReservationOrderByWithRelationInput | PickupReservationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: RideOrderWhereUniqueInput
+    cursor?: PickupReservationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` RideOrders from the position of the cursor.
+     * Take `±n` PickupReservations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` RideOrders.
+     * Skip the first `n` PickupReservations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned RideOrders
+     * Count returned PickupReservations
     **/
-    _count?: true | RideOrderCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: RideOrderAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: RideOrderSumAggregateInputType
+    _count?: true | PickupReservationCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: RideOrderMinAggregateInputType
+    _min?: PickupReservationMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: RideOrderMaxAggregateInputType
+    _max?: PickupReservationMaxAggregateInputType
   }
 
-  export type GetRideOrderAggregateType<T extends RideOrderAggregateArgs> = {
-        [P in keyof T & keyof AggregateRideOrder]: P extends '_count' | 'count'
+  export type GetPickupReservationAggregateType<T extends PickupReservationAggregateArgs> = {
+        [P in keyof T & keyof AggregatePickupReservation]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateRideOrder[P]>
-      : GetScalarType<T[P], AggregateRideOrder[P]>
+        : GetScalarType<T[P], AggregatePickupReservation[P]>
+      : GetScalarType<T[P], AggregatePickupReservation[P]>
   }
 
 
 
 
-  export type RideOrderGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RideOrderWhereInput
-    orderBy?: RideOrderOrderByWithAggregationInput | RideOrderOrderByWithAggregationInput[]
-    by: RideOrderScalarFieldEnum[] | RideOrderScalarFieldEnum
-    having?: RideOrderScalarWhereWithAggregatesInput
+  export type PickupReservationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PickupReservationWhereInput
+    orderBy?: PickupReservationOrderByWithAggregationInput | PickupReservationOrderByWithAggregationInput[]
+    by: PickupReservationScalarFieldEnum[] | PickupReservationScalarFieldEnum
+    having?: PickupReservationScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: RideOrderCountAggregateInputType | true
-    _avg?: RideOrderAvgAggregateInputType
-    _sum?: RideOrderSumAggregateInputType
-    _min?: RideOrderMinAggregateInputType
-    _max?: RideOrderMaxAggregateInputType
+    _count?: PickupReservationCountAggregateInputType | true
+    _min?: PickupReservationMinAggregateInputType
+    _max?: PickupReservationMaxAggregateInputType
   }
 
-  export type RideOrderGroupByOutputType = {
+  export type PickupReservationGroupByOutputType = {
     id: string
-    passengerId: string
-    passengerName: string
-    passengerPhone: string | null
-    pickup: string
-    destination: string
-    carType: string
-    mode: string
-    scheduledAt: Date | null
+    listingId: string
+    buyerId: string
+    buyerName: string
+    buyerPhone: string | null
+    sellerId: string
+    sellerName: string
+    pickupStore: string
+    pickupMethod: string
     status: string
-    driverId: string | null
-    fare: number | null
-    distance: Decimal | null
-    rating: number | null
-    ratingComment: string | null
+    scheduledAt: Date | null
     creTime: Date
     updTime: Date
-    completedAt: Date | null
-    _count: RideOrderCountAggregateOutputType | null
-    _avg: RideOrderAvgAggregateOutputType | null
-    _sum: RideOrderSumAggregateOutputType | null
-    _min: RideOrderMinAggregateOutputType | null
-    _max: RideOrderMaxAggregateOutputType | null
+    pickupDeadline: Date | null
+    _count: PickupReservationCountAggregateOutputType | null
+    _min: PickupReservationMinAggregateOutputType | null
+    _max: PickupReservationMaxAggregateOutputType | null
   }
 
-  type GetRideOrderGroupByPayload<T extends RideOrderGroupByArgs> = Prisma.PrismaPromise<
+  type GetPickupReservationGroupByPayload<T extends PickupReservationGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<RideOrderGroupByOutputType, T['by']> &
+      PickEnumerable<PickupReservationGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof RideOrderGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof PickupReservationGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], RideOrderGroupByOutputType[P]>
-            : GetScalarType<T[P], RideOrderGroupByOutputType[P]>
+              : GetScalarType<T[P], PickupReservationGroupByOutputType[P]>
+            : GetScalarType<T[P], PickupReservationGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type RideOrderSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type PickupReservationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    passengerId?: boolean
-    passengerName?: boolean
-    passengerPhone?: boolean
-    pickup?: boolean
-    destination?: boolean
-    carType?: boolean
-    mode?: boolean
-    scheduledAt?: boolean
+    listingId?: boolean
+    buyerId?: boolean
+    buyerName?: boolean
+    buyerPhone?: boolean
+    sellerId?: boolean
+    sellerName?: boolean
+    pickupStore?: boolean
+    pickupMethod?: boolean
     status?: boolean
-    driverId?: boolean
-    fare?: boolean
-    distance?: boolean
-    rating?: boolean
-    ratingComment?: boolean
+    scheduledAt?: boolean
     creTime?: boolean
     updTime?: boolean
-    completedAt?: boolean
-    driver?: boolean | RideOrder$driverArgs<ExtArgs>
-  }, ExtArgs["result"]["rideOrder"]>
+    pickupDeadline?: boolean
+    listing?: boolean | SecondhandListingDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pickupReservation"]>
 
-  export type RideOrderSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type PickupReservationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    passengerId?: boolean
-    passengerName?: boolean
-    passengerPhone?: boolean
-    pickup?: boolean
-    destination?: boolean
-    carType?: boolean
-    mode?: boolean
-    scheduledAt?: boolean
+    listingId?: boolean
+    buyerId?: boolean
+    buyerName?: boolean
+    buyerPhone?: boolean
+    sellerId?: boolean
+    sellerName?: boolean
+    pickupStore?: boolean
+    pickupMethod?: boolean
     status?: boolean
-    driverId?: boolean
-    fare?: boolean
-    distance?: boolean
-    rating?: boolean
-    ratingComment?: boolean
+    scheduledAt?: boolean
     creTime?: boolean
     updTime?: boolean
-    completedAt?: boolean
-    driver?: boolean | RideOrder$driverArgs<ExtArgs>
-  }, ExtArgs["result"]["rideOrder"]>
+    pickupDeadline?: boolean
+    listing?: boolean | SecondhandListingDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pickupReservation"]>
 
-  export type RideOrderSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type PickupReservationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    passengerId?: boolean
-    passengerName?: boolean
-    passengerPhone?: boolean
-    pickup?: boolean
-    destination?: boolean
-    carType?: boolean
-    mode?: boolean
-    scheduledAt?: boolean
+    listingId?: boolean
+    buyerId?: boolean
+    buyerName?: boolean
+    buyerPhone?: boolean
+    sellerId?: boolean
+    sellerName?: boolean
+    pickupStore?: boolean
+    pickupMethod?: boolean
     status?: boolean
-    driverId?: boolean
-    fare?: boolean
-    distance?: boolean
-    rating?: boolean
-    ratingComment?: boolean
+    scheduledAt?: boolean
     creTime?: boolean
     updTime?: boolean
-    completedAt?: boolean
-    driver?: boolean | RideOrder$driverArgs<ExtArgs>
-  }, ExtArgs["result"]["rideOrder"]>
+    pickupDeadline?: boolean
+    listing?: boolean | SecondhandListingDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pickupReservation"]>
 
-  export type RideOrderSelectScalar = {
+  export type PickupReservationSelectScalar = {
     id?: boolean
-    passengerId?: boolean
-    passengerName?: boolean
-    passengerPhone?: boolean
-    pickup?: boolean
-    destination?: boolean
-    carType?: boolean
-    mode?: boolean
-    scheduledAt?: boolean
+    listingId?: boolean
+    buyerId?: boolean
+    buyerName?: boolean
+    buyerPhone?: boolean
+    sellerId?: boolean
+    sellerName?: boolean
+    pickupStore?: boolean
+    pickupMethod?: boolean
     status?: boolean
-    driverId?: boolean
-    fare?: boolean
-    distance?: boolean
-    rating?: boolean
-    ratingComment?: boolean
+    scheduledAt?: boolean
     creTime?: boolean
     updTime?: boolean
-    completedAt?: boolean
+    pickupDeadline?: boolean
   }
 
-  export type RideOrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "passengerId" | "passengerName" | "passengerPhone" | "pickup" | "destination" | "carType" | "mode" | "scheduledAt" | "status" | "driverId" | "fare" | "distance" | "rating" | "ratingComment" | "creTime" | "updTime" | "completedAt", ExtArgs["result"]["rideOrder"]>
-  export type RideOrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    driver?: boolean | RideOrder$driverArgs<ExtArgs>
+  export type PickupReservationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "listingId" | "buyerId" | "buyerName" | "buyerPhone" | "sellerId" | "sellerName" | "pickupStore" | "pickupMethod" | "status" | "scheduledAt" | "creTime" | "updTime" | "pickupDeadline", ExtArgs["result"]["pickupReservation"]>
+  export type PickupReservationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    listing?: boolean | SecondhandListingDefaultArgs<ExtArgs>
   }
-  export type RideOrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    driver?: boolean | RideOrder$driverArgs<ExtArgs>
+  export type PickupReservationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    listing?: boolean | SecondhandListingDefaultArgs<ExtArgs>
   }
-  export type RideOrderIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    driver?: boolean | RideOrder$driverArgs<ExtArgs>
+  export type PickupReservationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    listing?: boolean | SecondhandListingDefaultArgs<ExtArgs>
   }
 
-  export type $RideOrderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "RideOrder"
+  export type $PickupReservationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PickupReservation"
     objects: {
-      driver: Prisma.$DriverPayload<ExtArgs> | null
+      listing: Prisma.$SecondhandListingPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      passengerId: string
-      passengerName: string
-      passengerPhone: string | null
-      pickup: string
-      destination: string
-      carType: string
-      mode: string
-      scheduledAt: Date | null
+      listingId: string
+      buyerId: string
+      buyerName: string
+      buyerPhone: string | null
+      sellerId: string
+      sellerName: string
+      pickupStore: string
+      pickupMethod: string
       status: string
-      driverId: string | null
-      fare: number | null
-      distance: Prisma.Decimal | null
-      rating: number | null
-      ratingComment: string | null
+      scheduledAt: Date | null
       creTime: Date
       updTime: Date
-      completedAt: Date | null
-    }, ExtArgs["result"]["rideOrder"]>
+      pickupDeadline: Date | null
+    }, ExtArgs["result"]["pickupReservation"]>
     composites: {}
   }
 
-  type RideOrderGetPayload<S extends boolean | null | undefined | RideOrderDefaultArgs> = $Result.GetResult<Prisma.$RideOrderPayload, S>
+  type PickupReservationGetPayload<S extends boolean | null | undefined | PickupReservationDefaultArgs> = $Result.GetResult<Prisma.$PickupReservationPayload, S>
 
-  type RideOrderCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<RideOrderFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: RideOrderCountAggregateInputType | true
+  type PickupReservationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PickupReservationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PickupReservationCountAggregateInputType | true
     }
 
-  export interface RideOrderDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RideOrder'], meta: { name: 'RideOrder' } }
+  export interface PickupReservationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PickupReservation'], meta: { name: 'PickupReservation' } }
     /**
-     * Find zero or one RideOrder that matches the filter.
-     * @param {RideOrderFindUniqueArgs} args - Arguments to find a RideOrder
+     * Find zero or one PickupReservation that matches the filter.
+     * @param {PickupReservationFindUniqueArgs} args - Arguments to find a PickupReservation
      * @example
-     * // Get one RideOrder
-     * const rideOrder = await prisma.rideOrder.findUnique({
+     * // Get one PickupReservation
+     * const pickupReservation = await prisma.pickupReservation.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends RideOrderFindUniqueArgs>(args: SelectSubset<T, RideOrderFindUniqueArgs<ExtArgs>>): Prisma__RideOrderClient<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends PickupReservationFindUniqueArgs>(args: SelectSubset<T, PickupReservationFindUniqueArgs<ExtArgs>>): Prisma__PickupReservationClient<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one RideOrder that matches the filter or throw an error with `error.code='P2025'`
+     * Find one PickupReservation that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {RideOrderFindUniqueOrThrowArgs} args - Arguments to find a RideOrder
+     * @param {PickupReservationFindUniqueOrThrowArgs} args - Arguments to find a PickupReservation
      * @example
-     * // Get one RideOrder
-     * const rideOrder = await prisma.rideOrder.findUniqueOrThrow({
+     * // Get one PickupReservation
+     * const pickupReservation = await prisma.pickupReservation.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends RideOrderFindUniqueOrThrowArgs>(args: SelectSubset<T, RideOrderFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RideOrderClient<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends PickupReservationFindUniqueOrThrowArgs>(args: SelectSubset<T, PickupReservationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PickupReservationClient<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first RideOrder that matches the filter.
+     * Find the first PickupReservation that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RideOrderFindFirstArgs} args - Arguments to find a RideOrder
+     * @param {PickupReservationFindFirstArgs} args - Arguments to find a PickupReservation
      * @example
-     * // Get one RideOrder
-     * const rideOrder = await prisma.rideOrder.findFirst({
+     * // Get one PickupReservation
+     * const pickupReservation = await prisma.pickupReservation.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends RideOrderFindFirstArgs>(args?: SelectSubset<T, RideOrderFindFirstArgs<ExtArgs>>): Prisma__RideOrderClient<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends PickupReservationFindFirstArgs>(args?: SelectSubset<T, PickupReservationFindFirstArgs<ExtArgs>>): Prisma__PickupReservationClient<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first RideOrder that matches the filter or
+     * Find the first PickupReservation that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RideOrderFindFirstOrThrowArgs} args - Arguments to find a RideOrder
+     * @param {PickupReservationFindFirstOrThrowArgs} args - Arguments to find a PickupReservation
      * @example
-     * // Get one RideOrder
-     * const rideOrder = await prisma.rideOrder.findFirstOrThrow({
+     * // Get one PickupReservation
+     * const pickupReservation = await prisma.pickupReservation.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends RideOrderFindFirstOrThrowArgs>(args?: SelectSubset<T, RideOrderFindFirstOrThrowArgs<ExtArgs>>): Prisma__RideOrderClient<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends PickupReservationFindFirstOrThrowArgs>(args?: SelectSubset<T, PickupReservationFindFirstOrThrowArgs<ExtArgs>>): Prisma__PickupReservationClient<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more RideOrders that matches the filter.
+     * Find zero or more PickupReservations that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RideOrderFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {PickupReservationFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all RideOrders
-     * const rideOrders = await prisma.rideOrder.findMany()
+     * // Get all PickupReservations
+     * const pickupReservations = await prisma.pickupReservation.findMany()
      * 
-     * // Get first 10 RideOrders
-     * const rideOrders = await prisma.rideOrder.findMany({ take: 10 })
+     * // Get first 10 PickupReservations
+     * const pickupReservations = await prisma.pickupReservation.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const rideOrderWithIdOnly = await prisma.rideOrder.findMany({ select: { id: true } })
+     * const pickupReservationWithIdOnly = await prisma.pickupReservation.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends RideOrderFindManyArgs>(args?: SelectSubset<T, RideOrderFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends PickupReservationFindManyArgs>(args?: SelectSubset<T, PickupReservationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a RideOrder.
-     * @param {RideOrderCreateArgs} args - Arguments to create a RideOrder.
+     * Create a PickupReservation.
+     * @param {PickupReservationCreateArgs} args - Arguments to create a PickupReservation.
      * @example
-     * // Create one RideOrder
-     * const RideOrder = await prisma.rideOrder.create({
+     * // Create one PickupReservation
+     * const PickupReservation = await prisma.pickupReservation.create({
      *   data: {
-     *     // ... data to create a RideOrder
+     *     // ... data to create a PickupReservation
      *   }
      * })
      * 
      */
-    create<T extends RideOrderCreateArgs>(args: SelectSubset<T, RideOrderCreateArgs<ExtArgs>>): Prisma__RideOrderClient<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends PickupReservationCreateArgs>(args: SelectSubset<T, PickupReservationCreateArgs<ExtArgs>>): Prisma__PickupReservationClient<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many RideOrders.
-     * @param {RideOrderCreateManyArgs} args - Arguments to create many RideOrders.
+     * Create many PickupReservations.
+     * @param {PickupReservationCreateManyArgs} args - Arguments to create many PickupReservations.
      * @example
-     * // Create many RideOrders
-     * const rideOrder = await prisma.rideOrder.createMany({
+     * // Create many PickupReservations
+     * const pickupReservation = await prisma.pickupReservation.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends RideOrderCreateManyArgs>(args?: SelectSubset<T, RideOrderCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends PickupReservationCreateManyArgs>(args?: SelectSubset<T, PickupReservationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many RideOrders and returns the data saved in the database.
-     * @param {RideOrderCreateManyAndReturnArgs} args - Arguments to create many RideOrders.
+     * Create many PickupReservations and returns the data saved in the database.
+     * @param {PickupReservationCreateManyAndReturnArgs} args - Arguments to create many PickupReservations.
      * @example
-     * // Create many RideOrders
-     * const rideOrder = await prisma.rideOrder.createManyAndReturn({
+     * // Create many PickupReservations
+     * const pickupReservation = await prisma.pickupReservation.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many RideOrders and only return the `id`
-     * const rideOrderWithIdOnly = await prisma.rideOrder.createManyAndReturn({
+     * // Create many PickupReservations and only return the `id`
+     * const pickupReservationWithIdOnly = await prisma.pickupReservation.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -35273,28 +28773,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends RideOrderCreateManyAndReturnArgs>(args?: SelectSubset<T, RideOrderCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends PickupReservationCreateManyAndReturnArgs>(args?: SelectSubset<T, PickupReservationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a RideOrder.
-     * @param {RideOrderDeleteArgs} args - Arguments to delete one RideOrder.
+     * Delete a PickupReservation.
+     * @param {PickupReservationDeleteArgs} args - Arguments to delete one PickupReservation.
      * @example
-     * // Delete one RideOrder
-     * const RideOrder = await prisma.rideOrder.delete({
+     * // Delete one PickupReservation
+     * const PickupReservation = await prisma.pickupReservation.delete({
      *   where: {
-     *     // ... filter to delete one RideOrder
+     *     // ... filter to delete one PickupReservation
      *   }
      * })
      * 
      */
-    delete<T extends RideOrderDeleteArgs>(args: SelectSubset<T, RideOrderDeleteArgs<ExtArgs>>): Prisma__RideOrderClient<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends PickupReservationDeleteArgs>(args: SelectSubset<T, PickupReservationDeleteArgs<ExtArgs>>): Prisma__PickupReservationClient<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one RideOrder.
-     * @param {RideOrderUpdateArgs} args - Arguments to update one RideOrder.
+     * Update one PickupReservation.
+     * @param {PickupReservationUpdateArgs} args - Arguments to update one PickupReservation.
      * @example
-     * // Update one RideOrder
-     * const rideOrder = await prisma.rideOrder.update({
+     * // Update one PickupReservation
+     * const pickupReservation = await prisma.pickupReservation.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -35304,30 +28804,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends RideOrderUpdateArgs>(args: SelectSubset<T, RideOrderUpdateArgs<ExtArgs>>): Prisma__RideOrderClient<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends PickupReservationUpdateArgs>(args: SelectSubset<T, PickupReservationUpdateArgs<ExtArgs>>): Prisma__PickupReservationClient<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more RideOrders.
-     * @param {RideOrderDeleteManyArgs} args - Arguments to filter RideOrders to delete.
+     * Delete zero or more PickupReservations.
+     * @param {PickupReservationDeleteManyArgs} args - Arguments to filter PickupReservations to delete.
      * @example
-     * // Delete a few RideOrders
-     * const { count } = await prisma.rideOrder.deleteMany({
+     * // Delete a few PickupReservations
+     * const { count } = await prisma.pickupReservation.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends RideOrderDeleteManyArgs>(args?: SelectSubset<T, RideOrderDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends PickupReservationDeleteManyArgs>(args?: SelectSubset<T, PickupReservationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more RideOrders.
+     * Update zero or more PickupReservations.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RideOrderUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {PickupReservationUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many RideOrders
-     * const rideOrder = await prisma.rideOrder.updateMany({
+     * // Update many PickupReservations
+     * const pickupReservation = await prisma.pickupReservation.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -35337,14 +28837,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends RideOrderUpdateManyArgs>(args: SelectSubset<T, RideOrderUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends PickupReservationUpdateManyArgs>(args: SelectSubset<T, PickupReservationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more RideOrders and returns the data updated in the database.
-     * @param {RideOrderUpdateManyAndReturnArgs} args - Arguments to update many RideOrders.
+     * Update zero or more PickupReservations and returns the data updated in the database.
+     * @param {PickupReservationUpdateManyAndReturnArgs} args - Arguments to update many PickupReservations.
      * @example
-     * // Update many RideOrders
-     * const rideOrder = await prisma.rideOrder.updateManyAndReturn({
+     * // Update many PickupReservations
+     * const pickupReservation = await prisma.pickupReservation.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -35353,8 +28853,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more RideOrders and only return the `id`
-     * const rideOrderWithIdOnly = await prisma.rideOrder.updateManyAndReturn({
+     * // Update zero or more PickupReservations and only return the `id`
+     * const pickupReservationWithIdOnly = await prisma.pickupReservation.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -35367,56 +28867,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends RideOrderUpdateManyAndReturnArgs>(args: SelectSubset<T, RideOrderUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends PickupReservationUpdateManyAndReturnArgs>(args: SelectSubset<T, PickupReservationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one RideOrder.
-     * @param {RideOrderUpsertArgs} args - Arguments to update or create a RideOrder.
+     * Create or update one PickupReservation.
+     * @param {PickupReservationUpsertArgs} args - Arguments to update or create a PickupReservation.
      * @example
-     * // Update or create a RideOrder
-     * const rideOrder = await prisma.rideOrder.upsert({
+     * // Update or create a PickupReservation
+     * const pickupReservation = await prisma.pickupReservation.upsert({
      *   create: {
-     *     // ... data to create a RideOrder
+     *     // ... data to create a PickupReservation
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the RideOrder we want to update
+     *     // ... the filter for the PickupReservation we want to update
      *   }
      * })
      */
-    upsert<T extends RideOrderUpsertArgs>(args: SelectSubset<T, RideOrderUpsertArgs<ExtArgs>>): Prisma__RideOrderClient<$Result.GetResult<Prisma.$RideOrderPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends PickupReservationUpsertArgs>(args: SelectSubset<T, PickupReservationUpsertArgs<ExtArgs>>): Prisma__PickupReservationClient<$Result.GetResult<Prisma.$PickupReservationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of RideOrders.
+     * Count the number of PickupReservations.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RideOrderCountArgs} args - Arguments to filter RideOrders to count.
+     * @param {PickupReservationCountArgs} args - Arguments to filter PickupReservations to count.
      * @example
-     * // Count the number of RideOrders
-     * const count = await prisma.rideOrder.count({
+     * // Count the number of PickupReservations
+     * const count = await prisma.pickupReservation.count({
      *   where: {
-     *     // ... the filter for the RideOrders we want to count
+     *     // ... the filter for the PickupReservations we want to count
      *   }
      * })
     **/
-    count<T extends RideOrderCountArgs>(
-      args?: Subset<T, RideOrderCountArgs>,
+    count<T extends PickupReservationCountArgs>(
+      args?: Subset<T, PickupReservationCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], RideOrderCountAggregateOutputType>
+          : GetScalarType<T['select'], PickupReservationCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a RideOrder.
+     * Allows you to perform aggregations operations on a PickupReservation.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RideOrderAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {PickupReservationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -35436,13 +28936,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends RideOrderAggregateArgs>(args: Subset<T, RideOrderAggregateArgs>): Prisma.PrismaPromise<GetRideOrderAggregateType<T>>
+    aggregate<T extends PickupReservationAggregateArgs>(args: Subset<T, PickupReservationAggregateArgs>): Prisma.PrismaPromise<GetPickupReservationAggregateType<T>>
 
     /**
-     * Group by RideOrder.
+     * Group by PickupReservation.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RideOrderGroupByArgs} args - Group by arguments.
+     * @param {PickupReservationGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -35457,14 +28957,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends RideOrderGroupByArgs,
+      T extends PickupReservationGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: RideOrderGroupByArgs['orderBy'] }
-        : { orderBy?: RideOrderGroupByArgs['orderBy'] },
+        ? { orderBy: PickupReservationGroupByArgs['orderBy'] }
+        : { orderBy?: PickupReservationGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -35513,22 +29013,22 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, RideOrderGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRideOrderGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, PickupReservationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPickupReservationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the RideOrder model
+   * Fields of the PickupReservation model
    */
-  readonly fields: RideOrderFieldRefs;
+  readonly fields: PickupReservationFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for RideOrder.
+   * The delegate class that acts as a "Promise-like" for PickupReservation.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__RideOrderClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__PickupReservationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    driver<T extends RideOrder$driverArgs<ExtArgs> = {}>(args?: Subset<T, RideOrder$driverArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    listing<T extends SecondhandListingDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SecondhandListingDefaultArgs<ExtArgs>>): Prisma__SecondhandListingClient<$Result.GetResult<Prisma.$SecondhandListingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -35555,462 +29055,439 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the RideOrder model
+   * Fields of the PickupReservation model
    */
-  interface RideOrderFieldRefs {
-    readonly id: FieldRef<"RideOrder", 'String'>
-    readonly passengerId: FieldRef<"RideOrder", 'String'>
-    readonly passengerName: FieldRef<"RideOrder", 'String'>
-    readonly passengerPhone: FieldRef<"RideOrder", 'String'>
-    readonly pickup: FieldRef<"RideOrder", 'String'>
-    readonly destination: FieldRef<"RideOrder", 'String'>
-    readonly carType: FieldRef<"RideOrder", 'String'>
-    readonly mode: FieldRef<"RideOrder", 'String'>
-    readonly scheduledAt: FieldRef<"RideOrder", 'DateTime'>
-    readonly status: FieldRef<"RideOrder", 'String'>
-    readonly driverId: FieldRef<"RideOrder", 'String'>
-    readonly fare: FieldRef<"RideOrder", 'Int'>
-    readonly distance: FieldRef<"RideOrder", 'Decimal'>
-    readonly rating: FieldRef<"RideOrder", 'Int'>
-    readonly ratingComment: FieldRef<"RideOrder", 'String'>
-    readonly creTime: FieldRef<"RideOrder", 'DateTime'>
-    readonly updTime: FieldRef<"RideOrder", 'DateTime'>
-    readonly completedAt: FieldRef<"RideOrder", 'DateTime'>
+  interface PickupReservationFieldRefs {
+    readonly id: FieldRef<"PickupReservation", 'String'>
+    readonly listingId: FieldRef<"PickupReservation", 'String'>
+    readonly buyerId: FieldRef<"PickupReservation", 'String'>
+    readonly buyerName: FieldRef<"PickupReservation", 'String'>
+    readonly buyerPhone: FieldRef<"PickupReservation", 'String'>
+    readonly sellerId: FieldRef<"PickupReservation", 'String'>
+    readonly sellerName: FieldRef<"PickupReservation", 'String'>
+    readonly pickupStore: FieldRef<"PickupReservation", 'String'>
+    readonly pickupMethod: FieldRef<"PickupReservation", 'String'>
+    readonly status: FieldRef<"PickupReservation", 'String'>
+    readonly scheduledAt: FieldRef<"PickupReservation", 'DateTime'>
+    readonly creTime: FieldRef<"PickupReservation", 'DateTime'>
+    readonly updTime: FieldRef<"PickupReservation", 'DateTime'>
+    readonly pickupDeadline: FieldRef<"PickupReservation", 'DateTime'>
   }
     
 
   // Custom InputTypes
   /**
-   * RideOrder findUnique
+   * PickupReservation findUnique
    */
-  export type RideOrderFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PickupReservationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RideOrder
+     * Select specific fields to fetch from the PickupReservation
      */
-    select?: RideOrderSelect<ExtArgs> | null
+    select?: PickupReservationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RideOrder
+     * Omit specific fields from the PickupReservation
      */
-    omit?: RideOrderOmit<ExtArgs> | null
+    omit?: PickupReservationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RideOrderInclude<ExtArgs> | null
+    include?: PickupReservationInclude<ExtArgs> | null
     /**
-     * Filter, which RideOrder to fetch.
+     * Filter, which PickupReservation to fetch.
      */
-    where: RideOrderWhereUniqueInput
+    where: PickupReservationWhereUniqueInput
   }
 
   /**
-   * RideOrder findUniqueOrThrow
+   * PickupReservation findUniqueOrThrow
    */
-  export type RideOrderFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PickupReservationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RideOrder
+     * Select specific fields to fetch from the PickupReservation
      */
-    select?: RideOrderSelect<ExtArgs> | null
+    select?: PickupReservationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RideOrder
+     * Omit specific fields from the PickupReservation
      */
-    omit?: RideOrderOmit<ExtArgs> | null
+    omit?: PickupReservationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RideOrderInclude<ExtArgs> | null
+    include?: PickupReservationInclude<ExtArgs> | null
     /**
-     * Filter, which RideOrder to fetch.
+     * Filter, which PickupReservation to fetch.
      */
-    where: RideOrderWhereUniqueInput
+    where: PickupReservationWhereUniqueInput
   }
 
   /**
-   * RideOrder findFirst
+   * PickupReservation findFirst
    */
-  export type RideOrderFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PickupReservationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RideOrder
+     * Select specific fields to fetch from the PickupReservation
      */
-    select?: RideOrderSelect<ExtArgs> | null
+    select?: PickupReservationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RideOrder
+     * Omit specific fields from the PickupReservation
      */
-    omit?: RideOrderOmit<ExtArgs> | null
+    omit?: PickupReservationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RideOrderInclude<ExtArgs> | null
+    include?: PickupReservationInclude<ExtArgs> | null
     /**
-     * Filter, which RideOrder to fetch.
+     * Filter, which PickupReservation to fetch.
      */
-    where?: RideOrderWhereInput
+    where?: PickupReservationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of RideOrders to fetch.
+     * Determine the order of PickupReservations to fetch.
      */
-    orderBy?: RideOrderOrderByWithRelationInput | RideOrderOrderByWithRelationInput[]
+    orderBy?: PickupReservationOrderByWithRelationInput | PickupReservationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for RideOrders.
+     * Sets the position for searching for PickupReservations.
      */
-    cursor?: RideOrderWhereUniqueInput
+    cursor?: PickupReservationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` RideOrders from the position of the cursor.
+     * Take `±n` PickupReservations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` RideOrders.
+     * Skip the first `n` PickupReservations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of RideOrders.
+     * Filter by unique combinations of PickupReservations.
      */
-    distinct?: RideOrderScalarFieldEnum | RideOrderScalarFieldEnum[]
+    distinct?: PickupReservationScalarFieldEnum | PickupReservationScalarFieldEnum[]
   }
 
   /**
-   * RideOrder findFirstOrThrow
+   * PickupReservation findFirstOrThrow
    */
-  export type RideOrderFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PickupReservationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RideOrder
+     * Select specific fields to fetch from the PickupReservation
      */
-    select?: RideOrderSelect<ExtArgs> | null
+    select?: PickupReservationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RideOrder
+     * Omit specific fields from the PickupReservation
      */
-    omit?: RideOrderOmit<ExtArgs> | null
+    omit?: PickupReservationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RideOrderInclude<ExtArgs> | null
+    include?: PickupReservationInclude<ExtArgs> | null
     /**
-     * Filter, which RideOrder to fetch.
+     * Filter, which PickupReservation to fetch.
      */
-    where?: RideOrderWhereInput
+    where?: PickupReservationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of RideOrders to fetch.
+     * Determine the order of PickupReservations to fetch.
      */
-    orderBy?: RideOrderOrderByWithRelationInput | RideOrderOrderByWithRelationInput[]
+    orderBy?: PickupReservationOrderByWithRelationInput | PickupReservationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for RideOrders.
+     * Sets the position for searching for PickupReservations.
      */
-    cursor?: RideOrderWhereUniqueInput
+    cursor?: PickupReservationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` RideOrders from the position of the cursor.
+     * Take `±n` PickupReservations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` RideOrders.
+     * Skip the first `n` PickupReservations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of RideOrders.
+     * Filter by unique combinations of PickupReservations.
      */
-    distinct?: RideOrderScalarFieldEnum | RideOrderScalarFieldEnum[]
+    distinct?: PickupReservationScalarFieldEnum | PickupReservationScalarFieldEnum[]
   }
 
   /**
-   * RideOrder findMany
+   * PickupReservation findMany
    */
-  export type RideOrderFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PickupReservationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RideOrder
+     * Select specific fields to fetch from the PickupReservation
      */
-    select?: RideOrderSelect<ExtArgs> | null
+    select?: PickupReservationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RideOrder
+     * Omit specific fields from the PickupReservation
      */
-    omit?: RideOrderOmit<ExtArgs> | null
+    omit?: PickupReservationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RideOrderInclude<ExtArgs> | null
+    include?: PickupReservationInclude<ExtArgs> | null
     /**
-     * Filter, which RideOrders to fetch.
+     * Filter, which PickupReservations to fetch.
      */
-    where?: RideOrderWhereInput
+    where?: PickupReservationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of RideOrders to fetch.
+     * Determine the order of PickupReservations to fetch.
      */
-    orderBy?: RideOrderOrderByWithRelationInput | RideOrderOrderByWithRelationInput[]
+    orderBy?: PickupReservationOrderByWithRelationInput | PickupReservationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing RideOrders.
+     * Sets the position for listing PickupReservations.
      */
-    cursor?: RideOrderWhereUniqueInput
+    cursor?: PickupReservationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` RideOrders from the position of the cursor.
+     * Take `±n` PickupReservations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` RideOrders.
+     * Skip the first `n` PickupReservations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of RideOrders.
+     * Filter by unique combinations of PickupReservations.
      */
-    distinct?: RideOrderScalarFieldEnum | RideOrderScalarFieldEnum[]
+    distinct?: PickupReservationScalarFieldEnum | PickupReservationScalarFieldEnum[]
   }
 
   /**
-   * RideOrder create
+   * PickupReservation create
    */
-  export type RideOrderCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PickupReservationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RideOrder
+     * Select specific fields to fetch from the PickupReservation
      */
-    select?: RideOrderSelect<ExtArgs> | null
+    select?: PickupReservationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RideOrder
+     * Omit specific fields from the PickupReservation
      */
-    omit?: RideOrderOmit<ExtArgs> | null
+    omit?: PickupReservationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RideOrderInclude<ExtArgs> | null
+    include?: PickupReservationInclude<ExtArgs> | null
     /**
-     * The data needed to create a RideOrder.
+     * The data needed to create a PickupReservation.
      */
-    data: XOR<RideOrderCreateInput, RideOrderUncheckedCreateInput>
+    data: XOR<PickupReservationCreateInput, PickupReservationUncheckedCreateInput>
   }
 
   /**
-   * RideOrder createMany
+   * PickupReservation createMany
    */
-  export type RideOrderCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PickupReservationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many RideOrders.
+     * The data used to create many PickupReservations.
      */
-    data: RideOrderCreateManyInput | RideOrderCreateManyInput[]
+    data: PickupReservationCreateManyInput | PickupReservationCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * RideOrder createManyAndReturn
+   * PickupReservation createManyAndReturn
    */
-  export type RideOrderCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PickupReservationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RideOrder
+     * Select specific fields to fetch from the PickupReservation
      */
-    select?: RideOrderSelectCreateManyAndReturn<ExtArgs> | null
+    select?: PickupReservationSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the RideOrder
+     * Omit specific fields from the PickupReservation
      */
-    omit?: RideOrderOmit<ExtArgs> | null
+    omit?: PickupReservationOmit<ExtArgs> | null
     /**
-     * The data used to create many RideOrders.
+     * The data used to create many PickupReservations.
      */
-    data: RideOrderCreateManyInput | RideOrderCreateManyInput[]
+    data: PickupReservationCreateManyInput | PickupReservationCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RideOrderIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: PickupReservationIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * RideOrder update
+   * PickupReservation update
    */
-  export type RideOrderUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PickupReservationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RideOrder
+     * Select specific fields to fetch from the PickupReservation
      */
-    select?: RideOrderSelect<ExtArgs> | null
+    select?: PickupReservationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RideOrder
+     * Omit specific fields from the PickupReservation
      */
-    omit?: RideOrderOmit<ExtArgs> | null
+    omit?: PickupReservationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RideOrderInclude<ExtArgs> | null
+    include?: PickupReservationInclude<ExtArgs> | null
     /**
-     * The data needed to update a RideOrder.
+     * The data needed to update a PickupReservation.
      */
-    data: XOR<RideOrderUpdateInput, RideOrderUncheckedUpdateInput>
+    data: XOR<PickupReservationUpdateInput, PickupReservationUncheckedUpdateInput>
     /**
-     * Choose, which RideOrder to update.
+     * Choose, which PickupReservation to update.
      */
-    where: RideOrderWhereUniqueInput
+    where: PickupReservationWhereUniqueInput
   }
 
   /**
-   * RideOrder updateMany
+   * PickupReservation updateMany
    */
-  export type RideOrderUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PickupReservationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update RideOrders.
+     * The data used to update PickupReservations.
      */
-    data: XOR<RideOrderUpdateManyMutationInput, RideOrderUncheckedUpdateManyInput>
+    data: XOR<PickupReservationUpdateManyMutationInput, PickupReservationUncheckedUpdateManyInput>
     /**
-     * Filter which RideOrders to update
+     * Filter which PickupReservations to update
      */
-    where?: RideOrderWhereInput
+    where?: PickupReservationWhereInput
     /**
-     * Limit how many RideOrders to update.
+     * Limit how many PickupReservations to update.
      */
     limit?: number
   }
 
   /**
-   * RideOrder updateManyAndReturn
+   * PickupReservation updateManyAndReturn
    */
-  export type RideOrderUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PickupReservationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RideOrder
+     * Select specific fields to fetch from the PickupReservation
      */
-    select?: RideOrderSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: PickupReservationSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the RideOrder
+     * Omit specific fields from the PickupReservation
      */
-    omit?: RideOrderOmit<ExtArgs> | null
+    omit?: PickupReservationOmit<ExtArgs> | null
     /**
-     * The data used to update RideOrders.
+     * The data used to update PickupReservations.
      */
-    data: XOR<RideOrderUpdateManyMutationInput, RideOrderUncheckedUpdateManyInput>
+    data: XOR<PickupReservationUpdateManyMutationInput, PickupReservationUncheckedUpdateManyInput>
     /**
-     * Filter which RideOrders to update
+     * Filter which PickupReservations to update
      */
-    where?: RideOrderWhereInput
+    where?: PickupReservationWhereInput
     /**
-     * Limit how many RideOrders to update.
+     * Limit how many PickupReservations to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RideOrderIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: PickupReservationIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * RideOrder upsert
+   * PickupReservation upsert
    */
-  export type RideOrderUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PickupReservationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RideOrder
+     * Select specific fields to fetch from the PickupReservation
      */
-    select?: RideOrderSelect<ExtArgs> | null
+    select?: PickupReservationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RideOrder
+     * Omit specific fields from the PickupReservation
      */
-    omit?: RideOrderOmit<ExtArgs> | null
+    omit?: PickupReservationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RideOrderInclude<ExtArgs> | null
+    include?: PickupReservationInclude<ExtArgs> | null
     /**
-     * The filter to search for the RideOrder to update in case it exists.
+     * The filter to search for the PickupReservation to update in case it exists.
      */
-    where: RideOrderWhereUniqueInput
+    where: PickupReservationWhereUniqueInput
     /**
-     * In case the RideOrder found by the `where` argument doesn't exist, create a new RideOrder with this data.
+     * In case the PickupReservation found by the `where` argument doesn't exist, create a new PickupReservation with this data.
      */
-    create: XOR<RideOrderCreateInput, RideOrderUncheckedCreateInput>
+    create: XOR<PickupReservationCreateInput, PickupReservationUncheckedCreateInput>
     /**
-     * In case the RideOrder was found with the provided `where` argument, update it with this data.
+     * In case the PickupReservation was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<RideOrderUpdateInput, RideOrderUncheckedUpdateInput>
+    update: XOR<PickupReservationUpdateInput, PickupReservationUncheckedUpdateInput>
   }
 
   /**
-   * RideOrder delete
+   * PickupReservation delete
    */
-  export type RideOrderDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PickupReservationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RideOrder
+     * Select specific fields to fetch from the PickupReservation
      */
-    select?: RideOrderSelect<ExtArgs> | null
+    select?: PickupReservationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RideOrder
+     * Omit specific fields from the PickupReservation
      */
-    omit?: RideOrderOmit<ExtArgs> | null
+    omit?: PickupReservationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RideOrderInclude<ExtArgs> | null
+    include?: PickupReservationInclude<ExtArgs> | null
     /**
-     * Filter which RideOrder to delete.
+     * Filter which PickupReservation to delete.
      */
-    where: RideOrderWhereUniqueInput
+    where: PickupReservationWhereUniqueInput
   }
 
   /**
-   * RideOrder deleteMany
+   * PickupReservation deleteMany
    */
-  export type RideOrderDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PickupReservationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which RideOrders to delete
+     * Filter which PickupReservations to delete
      */
-    where?: RideOrderWhereInput
+    where?: PickupReservationWhereInput
     /**
-     * Limit how many RideOrders to delete.
+     * Limit how many PickupReservations to delete.
      */
     limit?: number
   }
 
   /**
-   * RideOrder.driver
+   * PickupReservation without action
    */
-  export type RideOrder$driverArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PickupReservationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Driver
+     * Select specific fields to fetch from the PickupReservation
      */
-    select?: DriverSelect<ExtArgs> | null
+    select?: PickupReservationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Driver
+     * Omit specific fields from the PickupReservation
      */
-    omit?: DriverOmit<ExtArgs> | null
+    omit?: PickupReservationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: DriverInclude<ExtArgs> | null
-    where?: DriverWhereInput
-  }
-
-  /**
-   * RideOrder without action
-   */
-  export type RideOrderDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RideOrder
-     */
-    select?: RideOrderSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RideOrder
-     */
-    omit?: RideOrderOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RideOrderInclude<ExtArgs> | null
+    include?: PickupReservationInclude<ExtArgs> | null
   }
 
 
@@ -40846,8 +34323,7 @@ export namespace Prisma {
     creId: 'creId',
     creTime: 'creTime',
     updId: 'updId',
-    updTime: 'updTime',
-    communityNickname: 'communityNickname'
+    updTime: 'updTime'
   };
 
   export type MemberAccountScalarFieldEnum = (typeof MemberAccountScalarFieldEnum)[keyof typeof MemberAccountScalarFieldEnum]
@@ -40932,27 +34408,6 @@ export namespace Prisma {
   export type ChatMessageScalarFieldEnum = (typeof ChatMessageScalarFieldEnum)[keyof typeof ChatMessageScalarFieldEnum]
 
 
-  export const PickupReservationScalarFieldEnum: {
-    id: 'id',
-    listingId: 'listingId',
-    buyerId: 'buyerId',
-    buyerName: 'buyerName',
-    buyerPhone: 'buyerPhone',
-    sellerId: 'sellerId',
-    sellerName: 'sellerName',
-    pickupStore: 'pickupStore',
-    pickupMethod: 'pickupMethod',
-    status: 'status',
-    scheduledAt: 'scheduledAt',
-    creTime: 'creTime',
-    updTime: 'updTime',
-    pickupDeadline: 'pickupDeadline',
-    storedAt: 'storedAt'
-  };
-
-  export type PickupReservationScalarFieldEnum = (typeof PickupReservationScalarFieldEnum)[keyof typeof PickupReservationScalarFieldEnum]
-
-
   export const CommunityGroupScalarFieldEnum: {
     id: 'id',
     name: 'name',
@@ -40985,102 +34440,24 @@ export namespace Prisma {
   export type GroupMemberScalarFieldEnum = (typeof GroupMemberScalarFieldEnum)[keyof typeof GroupMemberScalarFieldEnum]
 
 
-  export const CommunityActivityScalarFieldEnum: {
+  export const PickupReservationScalarFieldEnum: {
     id: 'id',
-    title: 'title',
-    description: 'description',
-    category: 'category',
-    location: 'location',
-    activityDate: 'activityDate',
-    activityEndDate: 'activityEndDate',
-    maxParticipants: 'maxParticipants',
+    listingId: 'listingId',
+    buyerId: 'buyerId',
+    buyerName: 'buyerName',
+    buyerPhone: 'buyerPhone',
+    sellerId: 'sellerId',
+    sellerName: 'sellerName',
+    pickupStore: 'pickupStore',
+    pickupMethod: 'pickupMethod',
     status: 'status',
-    imageUrl: 'imageUrl',
-    organizerId: 'organizerId',
-    organizerName: 'organizerName',
-    isDeleted: 'isDeleted',
-    creTime: 'creTime',
-    updTime: 'updTime',
-    extraParticipants: 'extraParticipants',
-    volunteersAssigned: 'volunteersAssigned',
-    volunteersNeeded: 'volunteersNeeded'
-  };
-
-  export type CommunityActivityScalarFieldEnum = (typeof CommunityActivityScalarFieldEnum)[keyof typeof CommunityActivityScalarFieldEnum]
-
-
-  export const ActivityRegistrationScalarFieldEnum: {
-    id: 'id',
-    activityId: 'activityId',
-    userId: 'userId',
-    userName: 'userName',
-    userPhone: 'userPhone',
-    status: 'status',
-    registeredAt: 'registeredAt',
-    source: 'source',
-    specialNeeds: 'specialNeeds'
-  };
-
-  export type ActivityRegistrationScalarFieldEnum = (typeof ActivityRegistrationScalarFieldEnum)[keyof typeof ActivityRegistrationScalarFieldEnum]
-
-
-  export const CommunityQuestionScalarFieldEnum: {
-    id: 'id',
-    askerId: 'askerId',
-    askerName: 'askerName',
-    content: 'content',
-    category: 'category',
-    isAnonymous: 'isAnonymous',
-    replyContent: 'replyContent',
-    repliedAt: 'repliedAt',
-    repliedBy: 'repliedBy',
-    status: 'status',
-    isDeleted: 'isDeleted',
-    creTime: 'creTime'
-  };
-
-  export type CommunityQuestionScalarFieldEnum = (typeof CommunityQuestionScalarFieldEnum)[keyof typeof CommunityQuestionScalarFieldEnum]
-
-
-  export const DriverScalarFieldEnum: {
-    id: 'id',
-    name: 'name',
-    phone: 'phone',
-    plateNumber: 'plateNumber',
-    carModel: 'carModel',
-    carType: 'carType',
-    rating: 'rating',
-    totalTrips: 'totalTrips',
-    status: 'status',
-    isDeleted: 'isDeleted',
-    creTime: 'creTime'
-  };
-
-  export type DriverScalarFieldEnum = (typeof DriverScalarFieldEnum)[keyof typeof DriverScalarFieldEnum]
-
-
-  export const RideOrderScalarFieldEnum: {
-    id: 'id',
-    passengerId: 'passengerId',
-    passengerName: 'passengerName',
-    passengerPhone: 'passengerPhone',
-    pickup: 'pickup',
-    destination: 'destination',
-    carType: 'carType',
-    mode: 'mode',
     scheduledAt: 'scheduledAt',
-    status: 'status',
-    driverId: 'driverId',
-    fare: 'fare',
-    distance: 'distance',
-    rating: 'rating',
-    ratingComment: 'ratingComment',
     creTime: 'creTime',
     updTime: 'updTime',
-    completedAt: 'completedAt'
+    pickupDeadline: 'pickupDeadline'
   };
 
-  export type RideOrderScalarFieldEnum = (typeof RideOrderScalarFieldEnum)[keyof typeof RideOrderScalarFieldEnum]
+  export type PickupReservationScalarFieldEnum = (typeof PickupReservationScalarFieldEnum)[keyof typeof PickupReservationScalarFieldEnum]
 
 
   export const RestaurantQueueScalarFieldEnum: {
@@ -42761,7 +36138,6 @@ export namespace Prisma {
     creTime?: DateTimeFilter<"MemberAccount"> | Date | string
     updId?: UuidFilter<"MemberAccount"> | string
     updTime?: DateTimeFilter<"MemberAccount"> | Date | string
-    communityNickname?: StringNullableFilter<"MemberAccount"> | string | null
     addresses?: MemberAddressListRelationFilter
   }
 
@@ -42780,7 +36156,6 @@ export namespace Prisma {
     creTime?: SortOrder
     updId?: SortOrder
     updTime?: SortOrder
-    communityNickname?: SortOrderInput | SortOrder
     addresses?: MemberAddressOrderByRelationAggregateInput
   }
 
@@ -42802,7 +36177,6 @@ export namespace Prisma {
     creTime?: DateTimeFilter<"MemberAccount"> | Date | string
     updId?: UuidFilter<"MemberAccount"> | string
     updTime?: DateTimeFilter<"MemberAccount"> | Date | string
-    communityNickname?: StringNullableFilter<"MemberAccount"> | string | null
     addresses?: MemberAddressListRelationFilter
   }, "id" | "emailHash" | "phoneHash">
 
@@ -42821,7 +36195,6 @@ export namespace Prisma {
     creTime?: SortOrder
     updId?: SortOrder
     updTime?: SortOrder
-    communityNickname?: SortOrderInput | SortOrder
     _count?: MemberAccountCountOrderByAggregateInput
     _max?: MemberAccountMaxOrderByAggregateInput
     _min?: MemberAccountMinOrderByAggregateInput
@@ -42845,7 +36218,6 @@ export namespace Prisma {
     creTime?: DateTimeWithAggregatesFilter<"MemberAccount"> | Date | string
     updId?: UuidWithAggregatesFilter<"MemberAccount"> | string
     updTime?: DateTimeWithAggregatesFilter<"MemberAccount"> | Date | string
-    communityNickname?: StringNullableWithAggregatesFilter<"MemberAccount"> | string | null
   }
 
   export type MemberAddressWhereInput = {
@@ -43258,111 +36630,6 @@ export namespace Prisma {
     groupId?: UuidNullableWithAggregatesFilter<"ChatMessage"> | string | null
   }
 
-  export type PickupReservationWhereInput = {
-    AND?: PickupReservationWhereInput | PickupReservationWhereInput[]
-    OR?: PickupReservationWhereInput[]
-    NOT?: PickupReservationWhereInput | PickupReservationWhereInput[]
-    id?: UuidFilter<"PickupReservation"> | string
-    listingId?: UuidFilter<"PickupReservation"> | string
-    buyerId?: UuidFilter<"PickupReservation"> | string
-    buyerName?: StringFilter<"PickupReservation"> | string
-    buyerPhone?: StringNullableFilter<"PickupReservation"> | string | null
-    sellerId?: UuidFilter<"PickupReservation"> | string
-    sellerName?: StringFilter<"PickupReservation"> | string
-    pickupStore?: StringFilter<"PickupReservation"> | string
-    pickupMethod?: StringFilter<"PickupReservation"> | string
-    status?: StringFilter<"PickupReservation"> | string
-    scheduledAt?: DateTimeNullableFilter<"PickupReservation"> | Date | string | null
-    creTime?: DateTimeFilter<"PickupReservation"> | Date | string
-    updTime?: DateTimeFilter<"PickupReservation"> | Date | string
-    pickupDeadline?: DateTimeNullableFilter<"PickupReservation"> | Date | string | null
-    storedAt?: DateTimeNullableFilter<"PickupReservation"> | Date | string | null
-    listing?: XOR<SecondhandListingScalarRelationFilter, SecondhandListingWhereInput>
-  }
-
-  export type PickupReservationOrderByWithRelationInput = {
-    id?: SortOrder
-    listingId?: SortOrder
-    buyerId?: SortOrder
-    buyerName?: SortOrder
-    buyerPhone?: SortOrderInput | SortOrder
-    sellerId?: SortOrder
-    sellerName?: SortOrder
-    pickupStore?: SortOrder
-    pickupMethod?: SortOrder
-    status?: SortOrder
-    scheduledAt?: SortOrderInput | SortOrder
-    creTime?: SortOrder
-    updTime?: SortOrder
-    pickupDeadline?: SortOrderInput | SortOrder
-    storedAt?: SortOrderInput | SortOrder
-    listing?: SecondhandListingOrderByWithRelationInput
-  }
-
-  export type PickupReservationWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: PickupReservationWhereInput | PickupReservationWhereInput[]
-    OR?: PickupReservationWhereInput[]
-    NOT?: PickupReservationWhereInput | PickupReservationWhereInput[]
-    listingId?: UuidFilter<"PickupReservation"> | string
-    buyerId?: UuidFilter<"PickupReservation"> | string
-    buyerName?: StringFilter<"PickupReservation"> | string
-    buyerPhone?: StringNullableFilter<"PickupReservation"> | string | null
-    sellerId?: UuidFilter<"PickupReservation"> | string
-    sellerName?: StringFilter<"PickupReservation"> | string
-    pickupStore?: StringFilter<"PickupReservation"> | string
-    pickupMethod?: StringFilter<"PickupReservation"> | string
-    status?: StringFilter<"PickupReservation"> | string
-    scheduledAt?: DateTimeNullableFilter<"PickupReservation"> | Date | string | null
-    creTime?: DateTimeFilter<"PickupReservation"> | Date | string
-    updTime?: DateTimeFilter<"PickupReservation"> | Date | string
-    pickupDeadline?: DateTimeNullableFilter<"PickupReservation"> | Date | string | null
-    storedAt?: DateTimeNullableFilter<"PickupReservation"> | Date | string | null
-    listing?: XOR<SecondhandListingScalarRelationFilter, SecondhandListingWhereInput>
-  }, "id">
-
-  export type PickupReservationOrderByWithAggregationInput = {
-    id?: SortOrder
-    listingId?: SortOrder
-    buyerId?: SortOrder
-    buyerName?: SortOrder
-    buyerPhone?: SortOrderInput | SortOrder
-    sellerId?: SortOrder
-    sellerName?: SortOrder
-    pickupStore?: SortOrder
-    pickupMethod?: SortOrder
-    status?: SortOrder
-    scheduledAt?: SortOrderInput | SortOrder
-    creTime?: SortOrder
-    updTime?: SortOrder
-    pickupDeadline?: SortOrderInput | SortOrder
-    storedAt?: SortOrderInput | SortOrder
-    _count?: PickupReservationCountOrderByAggregateInput
-    _max?: PickupReservationMaxOrderByAggregateInput
-    _min?: PickupReservationMinOrderByAggregateInput
-  }
-
-  export type PickupReservationScalarWhereWithAggregatesInput = {
-    AND?: PickupReservationScalarWhereWithAggregatesInput | PickupReservationScalarWhereWithAggregatesInput[]
-    OR?: PickupReservationScalarWhereWithAggregatesInput[]
-    NOT?: PickupReservationScalarWhereWithAggregatesInput | PickupReservationScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"PickupReservation"> | string
-    listingId?: UuidWithAggregatesFilter<"PickupReservation"> | string
-    buyerId?: UuidWithAggregatesFilter<"PickupReservation"> | string
-    buyerName?: StringWithAggregatesFilter<"PickupReservation"> | string
-    buyerPhone?: StringNullableWithAggregatesFilter<"PickupReservation"> | string | null
-    sellerId?: UuidWithAggregatesFilter<"PickupReservation"> | string
-    sellerName?: StringWithAggregatesFilter<"PickupReservation"> | string
-    pickupStore?: StringWithAggregatesFilter<"PickupReservation"> | string
-    pickupMethod?: StringWithAggregatesFilter<"PickupReservation"> | string
-    status?: StringWithAggregatesFilter<"PickupReservation"> | string
-    scheduledAt?: DateTimeNullableWithAggregatesFilter<"PickupReservation"> | Date | string | null
-    creTime?: DateTimeWithAggregatesFilter<"PickupReservation"> | Date | string
-    updTime?: DateTimeWithAggregatesFilter<"PickupReservation"> | Date | string
-    pickupDeadline?: DateTimeNullableWithAggregatesFilter<"PickupReservation"> | Date | string | null
-    storedAt?: DateTimeNullableWithAggregatesFilter<"PickupReservation"> | Date | string | null
-  }
-
   export type CommunityGroupWhereInput = {
     AND?: CommunityGroupWhereInput | CommunityGroupWhereInput[]
     OR?: CommunityGroupWhereInput[]
@@ -43529,498 +36796,104 @@ export namespace Prisma {
     joinedAt?: DateTimeWithAggregatesFilter<"GroupMember"> | Date | string
   }
 
-  export type CommunityActivityWhereInput = {
-    AND?: CommunityActivityWhereInput | CommunityActivityWhereInput[]
-    OR?: CommunityActivityWhereInput[]
-    NOT?: CommunityActivityWhereInput | CommunityActivityWhereInput[]
-    id?: UuidFilter<"CommunityActivity"> | string
-    title?: StringFilter<"CommunityActivity"> | string
-    description?: StringNullableFilter<"CommunityActivity"> | string | null
-    category?: StringFilter<"CommunityActivity"> | string
-    location?: StringNullableFilter<"CommunityActivity"> | string | null
-    activityDate?: DateTimeFilter<"CommunityActivity"> | Date | string
-    activityEndDate?: DateTimeNullableFilter<"CommunityActivity"> | Date | string | null
-    maxParticipants?: IntFilter<"CommunityActivity"> | number
-    status?: StringFilter<"CommunityActivity"> | string
-    imageUrl?: StringNullableFilter<"CommunityActivity"> | string | null
-    organizerId?: UuidFilter<"CommunityActivity"> | string
-    organizerName?: StringFilter<"CommunityActivity"> | string
-    isDeleted?: BoolFilter<"CommunityActivity"> | boolean
-    creTime?: DateTimeFilter<"CommunityActivity"> | Date | string
-    updTime?: DateTimeFilter<"CommunityActivity"> | Date | string
-    extraParticipants?: IntFilter<"CommunityActivity"> | number
-    volunteersAssigned?: IntFilter<"CommunityActivity"> | number
-    volunteersNeeded?: IntFilter<"CommunityActivity"> | number
-    registrations?: ActivityRegistrationListRelationFilter
+  export type PickupReservationWhereInput = {
+    AND?: PickupReservationWhereInput | PickupReservationWhereInput[]
+    OR?: PickupReservationWhereInput[]
+    NOT?: PickupReservationWhereInput | PickupReservationWhereInput[]
+    id?: UuidFilter<"PickupReservation"> | string
+    listingId?: UuidFilter<"PickupReservation"> | string
+    buyerId?: UuidFilter<"PickupReservation"> | string
+    buyerName?: StringFilter<"PickupReservation"> | string
+    buyerPhone?: StringNullableFilter<"PickupReservation"> | string | null
+    sellerId?: UuidFilter<"PickupReservation"> | string
+    sellerName?: StringFilter<"PickupReservation"> | string
+    pickupStore?: StringFilter<"PickupReservation"> | string
+    pickupMethod?: StringFilter<"PickupReservation"> | string
+    status?: StringFilter<"PickupReservation"> | string
+    scheduledAt?: DateTimeNullableFilter<"PickupReservation"> | Date | string | null
+    creTime?: DateTimeFilter<"PickupReservation"> | Date | string
+    updTime?: DateTimeFilter<"PickupReservation"> | Date | string
+    pickupDeadline?: DateTimeNullableFilter<"PickupReservation"> | Date | string | null
+    listing?: XOR<SecondhandListingScalarRelationFilter, SecondhandListingWhereInput>
   }
 
-  export type CommunityActivityOrderByWithRelationInput = {
+  export type PickupReservationOrderByWithRelationInput = {
     id?: SortOrder
-    title?: SortOrder
-    description?: SortOrderInput | SortOrder
-    category?: SortOrder
-    location?: SortOrderInput | SortOrder
-    activityDate?: SortOrder
-    activityEndDate?: SortOrderInput | SortOrder
-    maxParticipants?: SortOrder
+    listingId?: SortOrder
+    buyerId?: SortOrder
+    buyerName?: SortOrder
+    buyerPhone?: SortOrderInput | SortOrder
+    sellerId?: SortOrder
+    sellerName?: SortOrder
+    pickupStore?: SortOrder
+    pickupMethod?: SortOrder
     status?: SortOrder
-    imageUrl?: SortOrderInput | SortOrder
-    organizerId?: SortOrder
-    organizerName?: SortOrder
-    isDeleted?: SortOrder
-    creTime?: SortOrder
-    updTime?: SortOrder
-    extraParticipants?: SortOrder
-    volunteersAssigned?: SortOrder
-    volunteersNeeded?: SortOrder
-    registrations?: ActivityRegistrationOrderByRelationAggregateInput
-  }
-
-  export type CommunityActivityWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: CommunityActivityWhereInput | CommunityActivityWhereInput[]
-    OR?: CommunityActivityWhereInput[]
-    NOT?: CommunityActivityWhereInput | CommunityActivityWhereInput[]
-    title?: StringFilter<"CommunityActivity"> | string
-    description?: StringNullableFilter<"CommunityActivity"> | string | null
-    category?: StringFilter<"CommunityActivity"> | string
-    location?: StringNullableFilter<"CommunityActivity"> | string | null
-    activityDate?: DateTimeFilter<"CommunityActivity"> | Date | string
-    activityEndDate?: DateTimeNullableFilter<"CommunityActivity"> | Date | string | null
-    maxParticipants?: IntFilter<"CommunityActivity"> | number
-    status?: StringFilter<"CommunityActivity"> | string
-    imageUrl?: StringNullableFilter<"CommunityActivity"> | string | null
-    organizerId?: UuidFilter<"CommunityActivity"> | string
-    organizerName?: StringFilter<"CommunityActivity"> | string
-    isDeleted?: BoolFilter<"CommunityActivity"> | boolean
-    creTime?: DateTimeFilter<"CommunityActivity"> | Date | string
-    updTime?: DateTimeFilter<"CommunityActivity"> | Date | string
-    extraParticipants?: IntFilter<"CommunityActivity"> | number
-    volunteersAssigned?: IntFilter<"CommunityActivity"> | number
-    volunteersNeeded?: IntFilter<"CommunityActivity"> | number
-    registrations?: ActivityRegistrationListRelationFilter
-  }, "id">
-
-  export type CommunityActivityOrderByWithAggregationInput = {
-    id?: SortOrder
-    title?: SortOrder
-    description?: SortOrderInput | SortOrder
-    category?: SortOrder
-    location?: SortOrderInput | SortOrder
-    activityDate?: SortOrder
-    activityEndDate?: SortOrderInput | SortOrder
-    maxParticipants?: SortOrder
-    status?: SortOrder
-    imageUrl?: SortOrderInput | SortOrder
-    organizerId?: SortOrder
-    organizerName?: SortOrder
-    isDeleted?: SortOrder
-    creTime?: SortOrder
-    updTime?: SortOrder
-    extraParticipants?: SortOrder
-    volunteersAssigned?: SortOrder
-    volunteersNeeded?: SortOrder
-    _count?: CommunityActivityCountOrderByAggregateInput
-    _avg?: CommunityActivityAvgOrderByAggregateInput
-    _max?: CommunityActivityMaxOrderByAggregateInput
-    _min?: CommunityActivityMinOrderByAggregateInput
-    _sum?: CommunityActivitySumOrderByAggregateInput
-  }
-
-  export type CommunityActivityScalarWhereWithAggregatesInput = {
-    AND?: CommunityActivityScalarWhereWithAggregatesInput | CommunityActivityScalarWhereWithAggregatesInput[]
-    OR?: CommunityActivityScalarWhereWithAggregatesInput[]
-    NOT?: CommunityActivityScalarWhereWithAggregatesInput | CommunityActivityScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"CommunityActivity"> | string
-    title?: StringWithAggregatesFilter<"CommunityActivity"> | string
-    description?: StringNullableWithAggregatesFilter<"CommunityActivity"> | string | null
-    category?: StringWithAggregatesFilter<"CommunityActivity"> | string
-    location?: StringNullableWithAggregatesFilter<"CommunityActivity"> | string | null
-    activityDate?: DateTimeWithAggregatesFilter<"CommunityActivity"> | Date | string
-    activityEndDate?: DateTimeNullableWithAggregatesFilter<"CommunityActivity"> | Date | string | null
-    maxParticipants?: IntWithAggregatesFilter<"CommunityActivity"> | number
-    status?: StringWithAggregatesFilter<"CommunityActivity"> | string
-    imageUrl?: StringNullableWithAggregatesFilter<"CommunityActivity"> | string | null
-    organizerId?: UuidWithAggregatesFilter<"CommunityActivity"> | string
-    organizerName?: StringWithAggregatesFilter<"CommunityActivity"> | string
-    isDeleted?: BoolWithAggregatesFilter<"CommunityActivity"> | boolean
-    creTime?: DateTimeWithAggregatesFilter<"CommunityActivity"> | Date | string
-    updTime?: DateTimeWithAggregatesFilter<"CommunityActivity"> | Date | string
-    extraParticipants?: IntWithAggregatesFilter<"CommunityActivity"> | number
-    volunteersAssigned?: IntWithAggregatesFilter<"CommunityActivity"> | number
-    volunteersNeeded?: IntWithAggregatesFilter<"CommunityActivity"> | number
-  }
-
-  export type ActivityRegistrationWhereInput = {
-    AND?: ActivityRegistrationWhereInput | ActivityRegistrationWhereInput[]
-    OR?: ActivityRegistrationWhereInput[]
-    NOT?: ActivityRegistrationWhereInput | ActivityRegistrationWhereInput[]
-    id?: UuidFilter<"ActivityRegistration"> | string
-    activityId?: UuidFilter<"ActivityRegistration"> | string
-    userId?: UuidFilter<"ActivityRegistration"> | string
-    userName?: StringFilter<"ActivityRegistration"> | string
-    userPhone?: StringNullableFilter<"ActivityRegistration"> | string | null
-    status?: StringFilter<"ActivityRegistration"> | string
-    registeredAt?: DateTimeFilter<"ActivityRegistration"> | Date | string
-    source?: StringFilter<"ActivityRegistration"> | string
-    specialNeeds?: StringNullableFilter<"ActivityRegistration"> | string | null
-    activity?: XOR<CommunityActivityScalarRelationFilter, CommunityActivityWhereInput>
-  }
-
-  export type ActivityRegistrationOrderByWithRelationInput = {
-    id?: SortOrder
-    activityId?: SortOrder
-    userId?: SortOrder
-    userName?: SortOrder
-    userPhone?: SortOrderInput | SortOrder
-    status?: SortOrder
-    registeredAt?: SortOrder
-    source?: SortOrder
-    specialNeeds?: SortOrderInput | SortOrder
-    activity?: CommunityActivityOrderByWithRelationInput
-  }
-
-  export type ActivityRegistrationWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    activityId_userId?: ActivityRegistrationActivityIdUserIdCompoundUniqueInput
-    AND?: ActivityRegistrationWhereInput | ActivityRegistrationWhereInput[]
-    OR?: ActivityRegistrationWhereInput[]
-    NOT?: ActivityRegistrationWhereInput | ActivityRegistrationWhereInput[]
-    activityId?: UuidFilter<"ActivityRegistration"> | string
-    userId?: UuidFilter<"ActivityRegistration"> | string
-    userName?: StringFilter<"ActivityRegistration"> | string
-    userPhone?: StringNullableFilter<"ActivityRegistration"> | string | null
-    status?: StringFilter<"ActivityRegistration"> | string
-    registeredAt?: DateTimeFilter<"ActivityRegistration"> | Date | string
-    source?: StringFilter<"ActivityRegistration"> | string
-    specialNeeds?: StringNullableFilter<"ActivityRegistration"> | string | null
-    activity?: XOR<CommunityActivityScalarRelationFilter, CommunityActivityWhereInput>
-  }, "id" | "activityId_userId">
-
-  export type ActivityRegistrationOrderByWithAggregationInput = {
-    id?: SortOrder
-    activityId?: SortOrder
-    userId?: SortOrder
-    userName?: SortOrder
-    userPhone?: SortOrderInput | SortOrder
-    status?: SortOrder
-    registeredAt?: SortOrder
-    source?: SortOrder
-    specialNeeds?: SortOrderInput | SortOrder
-    _count?: ActivityRegistrationCountOrderByAggregateInput
-    _max?: ActivityRegistrationMaxOrderByAggregateInput
-    _min?: ActivityRegistrationMinOrderByAggregateInput
-  }
-
-  export type ActivityRegistrationScalarWhereWithAggregatesInput = {
-    AND?: ActivityRegistrationScalarWhereWithAggregatesInput | ActivityRegistrationScalarWhereWithAggregatesInput[]
-    OR?: ActivityRegistrationScalarWhereWithAggregatesInput[]
-    NOT?: ActivityRegistrationScalarWhereWithAggregatesInput | ActivityRegistrationScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"ActivityRegistration"> | string
-    activityId?: UuidWithAggregatesFilter<"ActivityRegistration"> | string
-    userId?: UuidWithAggregatesFilter<"ActivityRegistration"> | string
-    userName?: StringWithAggregatesFilter<"ActivityRegistration"> | string
-    userPhone?: StringNullableWithAggregatesFilter<"ActivityRegistration"> | string | null
-    status?: StringWithAggregatesFilter<"ActivityRegistration"> | string
-    registeredAt?: DateTimeWithAggregatesFilter<"ActivityRegistration"> | Date | string
-    source?: StringWithAggregatesFilter<"ActivityRegistration"> | string
-    specialNeeds?: StringNullableWithAggregatesFilter<"ActivityRegistration"> | string | null
-  }
-
-  export type CommunityQuestionWhereInput = {
-    AND?: CommunityQuestionWhereInput | CommunityQuestionWhereInput[]
-    OR?: CommunityQuestionWhereInput[]
-    NOT?: CommunityQuestionWhereInput | CommunityQuestionWhereInput[]
-    id?: UuidFilter<"CommunityQuestion"> | string
-    askerId?: UuidFilter<"CommunityQuestion"> | string
-    askerName?: StringFilter<"CommunityQuestion"> | string
-    content?: StringFilter<"CommunityQuestion"> | string
-    category?: StringFilter<"CommunityQuestion"> | string
-    isAnonymous?: BoolFilter<"CommunityQuestion"> | boolean
-    replyContent?: StringNullableFilter<"CommunityQuestion"> | string | null
-    repliedAt?: DateTimeNullableFilter<"CommunityQuestion"> | Date | string | null
-    repliedBy?: StringNullableFilter<"CommunityQuestion"> | string | null
-    status?: StringFilter<"CommunityQuestion"> | string
-    isDeleted?: BoolFilter<"CommunityQuestion"> | boolean
-    creTime?: DateTimeFilter<"CommunityQuestion"> | Date | string
-  }
-
-  export type CommunityQuestionOrderByWithRelationInput = {
-    id?: SortOrder
-    askerId?: SortOrder
-    askerName?: SortOrder
-    content?: SortOrder
-    category?: SortOrder
-    isAnonymous?: SortOrder
-    replyContent?: SortOrderInput | SortOrder
-    repliedAt?: SortOrderInput | SortOrder
-    repliedBy?: SortOrderInput | SortOrder
-    status?: SortOrder
-    isDeleted?: SortOrder
-    creTime?: SortOrder
-  }
-
-  export type CommunityQuestionWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: CommunityQuestionWhereInput | CommunityQuestionWhereInput[]
-    OR?: CommunityQuestionWhereInput[]
-    NOT?: CommunityQuestionWhereInput | CommunityQuestionWhereInput[]
-    askerId?: UuidFilter<"CommunityQuestion"> | string
-    askerName?: StringFilter<"CommunityQuestion"> | string
-    content?: StringFilter<"CommunityQuestion"> | string
-    category?: StringFilter<"CommunityQuestion"> | string
-    isAnonymous?: BoolFilter<"CommunityQuestion"> | boolean
-    replyContent?: StringNullableFilter<"CommunityQuestion"> | string | null
-    repliedAt?: DateTimeNullableFilter<"CommunityQuestion"> | Date | string | null
-    repliedBy?: StringNullableFilter<"CommunityQuestion"> | string | null
-    status?: StringFilter<"CommunityQuestion"> | string
-    isDeleted?: BoolFilter<"CommunityQuestion"> | boolean
-    creTime?: DateTimeFilter<"CommunityQuestion"> | Date | string
-  }, "id">
-
-  export type CommunityQuestionOrderByWithAggregationInput = {
-    id?: SortOrder
-    askerId?: SortOrder
-    askerName?: SortOrder
-    content?: SortOrder
-    category?: SortOrder
-    isAnonymous?: SortOrder
-    replyContent?: SortOrderInput | SortOrder
-    repliedAt?: SortOrderInput | SortOrder
-    repliedBy?: SortOrderInput | SortOrder
-    status?: SortOrder
-    isDeleted?: SortOrder
-    creTime?: SortOrder
-    _count?: CommunityQuestionCountOrderByAggregateInput
-    _max?: CommunityQuestionMaxOrderByAggregateInput
-    _min?: CommunityQuestionMinOrderByAggregateInput
-  }
-
-  export type CommunityQuestionScalarWhereWithAggregatesInput = {
-    AND?: CommunityQuestionScalarWhereWithAggregatesInput | CommunityQuestionScalarWhereWithAggregatesInput[]
-    OR?: CommunityQuestionScalarWhereWithAggregatesInput[]
-    NOT?: CommunityQuestionScalarWhereWithAggregatesInput | CommunityQuestionScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"CommunityQuestion"> | string
-    askerId?: UuidWithAggregatesFilter<"CommunityQuestion"> | string
-    askerName?: StringWithAggregatesFilter<"CommunityQuestion"> | string
-    content?: StringWithAggregatesFilter<"CommunityQuestion"> | string
-    category?: StringWithAggregatesFilter<"CommunityQuestion"> | string
-    isAnonymous?: BoolWithAggregatesFilter<"CommunityQuestion"> | boolean
-    replyContent?: StringNullableWithAggregatesFilter<"CommunityQuestion"> | string | null
-    repliedAt?: DateTimeNullableWithAggregatesFilter<"CommunityQuestion"> | Date | string | null
-    repliedBy?: StringNullableWithAggregatesFilter<"CommunityQuestion"> | string | null
-    status?: StringWithAggregatesFilter<"CommunityQuestion"> | string
-    isDeleted?: BoolWithAggregatesFilter<"CommunityQuestion"> | boolean
-    creTime?: DateTimeWithAggregatesFilter<"CommunityQuestion"> | Date | string
-  }
-
-  export type DriverWhereInput = {
-    AND?: DriverWhereInput | DriverWhereInput[]
-    OR?: DriverWhereInput[]
-    NOT?: DriverWhereInput | DriverWhereInput[]
-    id?: UuidFilter<"Driver"> | string
-    name?: StringFilter<"Driver"> | string
-    phone?: StringFilter<"Driver"> | string
-    plateNumber?: StringFilter<"Driver"> | string
-    carModel?: StringFilter<"Driver"> | string
-    carType?: StringFilter<"Driver"> | string
-    rating?: DecimalFilter<"Driver"> | Decimal | DecimalJsLike | number | string
-    totalTrips?: IntFilter<"Driver"> | number
-    status?: StringFilter<"Driver"> | string
-    isDeleted?: BoolFilter<"Driver"> | boolean
-    creTime?: DateTimeFilter<"Driver"> | Date | string
-    rideOrders?: RideOrderListRelationFilter
-  }
-
-  export type DriverOrderByWithRelationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    phone?: SortOrder
-    plateNumber?: SortOrder
-    carModel?: SortOrder
-    carType?: SortOrder
-    rating?: SortOrder
-    totalTrips?: SortOrder
-    status?: SortOrder
-    isDeleted?: SortOrder
-    creTime?: SortOrder
-    rideOrders?: RideOrderOrderByRelationAggregateInput
-  }
-
-  export type DriverWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: DriverWhereInput | DriverWhereInput[]
-    OR?: DriverWhereInput[]
-    NOT?: DriverWhereInput | DriverWhereInput[]
-    name?: StringFilter<"Driver"> | string
-    phone?: StringFilter<"Driver"> | string
-    plateNumber?: StringFilter<"Driver"> | string
-    carModel?: StringFilter<"Driver"> | string
-    carType?: StringFilter<"Driver"> | string
-    rating?: DecimalFilter<"Driver"> | Decimal | DecimalJsLike | number | string
-    totalTrips?: IntFilter<"Driver"> | number
-    status?: StringFilter<"Driver"> | string
-    isDeleted?: BoolFilter<"Driver"> | boolean
-    creTime?: DateTimeFilter<"Driver"> | Date | string
-    rideOrders?: RideOrderListRelationFilter
-  }, "id">
-
-  export type DriverOrderByWithAggregationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    phone?: SortOrder
-    plateNumber?: SortOrder
-    carModel?: SortOrder
-    carType?: SortOrder
-    rating?: SortOrder
-    totalTrips?: SortOrder
-    status?: SortOrder
-    isDeleted?: SortOrder
-    creTime?: SortOrder
-    _count?: DriverCountOrderByAggregateInput
-    _avg?: DriverAvgOrderByAggregateInput
-    _max?: DriverMaxOrderByAggregateInput
-    _min?: DriverMinOrderByAggregateInput
-    _sum?: DriverSumOrderByAggregateInput
-  }
-
-  export type DriverScalarWhereWithAggregatesInput = {
-    AND?: DriverScalarWhereWithAggregatesInput | DriverScalarWhereWithAggregatesInput[]
-    OR?: DriverScalarWhereWithAggregatesInput[]
-    NOT?: DriverScalarWhereWithAggregatesInput | DriverScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"Driver"> | string
-    name?: StringWithAggregatesFilter<"Driver"> | string
-    phone?: StringWithAggregatesFilter<"Driver"> | string
-    plateNumber?: StringWithAggregatesFilter<"Driver"> | string
-    carModel?: StringWithAggregatesFilter<"Driver"> | string
-    carType?: StringWithAggregatesFilter<"Driver"> | string
-    rating?: DecimalWithAggregatesFilter<"Driver"> | Decimal | DecimalJsLike | number | string
-    totalTrips?: IntWithAggregatesFilter<"Driver"> | number
-    status?: StringWithAggregatesFilter<"Driver"> | string
-    isDeleted?: BoolWithAggregatesFilter<"Driver"> | boolean
-    creTime?: DateTimeWithAggregatesFilter<"Driver"> | Date | string
-  }
-
-  export type RideOrderWhereInput = {
-    AND?: RideOrderWhereInput | RideOrderWhereInput[]
-    OR?: RideOrderWhereInput[]
-    NOT?: RideOrderWhereInput | RideOrderWhereInput[]
-    id?: UuidFilter<"RideOrder"> | string
-    passengerId?: UuidFilter<"RideOrder"> | string
-    passengerName?: StringFilter<"RideOrder"> | string
-    passengerPhone?: StringNullableFilter<"RideOrder"> | string | null
-    pickup?: StringFilter<"RideOrder"> | string
-    destination?: StringFilter<"RideOrder"> | string
-    carType?: StringFilter<"RideOrder"> | string
-    mode?: StringFilter<"RideOrder"> | string
-    scheduledAt?: DateTimeNullableFilter<"RideOrder"> | Date | string | null
-    status?: StringFilter<"RideOrder"> | string
-    driverId?: UuidNullableFilter<"RideOrder"> | string | null
-    fare?: IntNullableFilter<"RideOrder"> | number | null
-    distance?: DecimalNullableFilter<"RideOrder"> | Decimal | DecimalJsLike | number | string | null
-    rating?: IntNullableFilter<"RideOrder"> | number | null
-    ratingComment?: StringNullableFilter<"RideOrder"> | string | null
-    creTime?: DateTimeFilter<"RideOrder"> | Date | string
-    updTime?: DateTimeFilter<"RideOrder"> | Date | string
-    completedAt?: DateTimeNullableFilter<"RideOrder"> | Date | string | null
-    driver?: XOR<DriverNullableScalarRelationFilter, DriverWhereInput> | null
-  }
-
-  export type RideOrderOrderByWithRelationInput = {
-    id?: SortOrder
-    passengerId?: SortOrder
-    passengerName?: SortOrder
-    passengerPhone?: SortOrderInput | SortOrder
-    pickup?: SortOrder
-    destination?: SortOrder
-    carType?: SortOrder
-    mode?: SortOrder
     scheduledAt?: SortOrderInput | SortOrder
-    status?: SortOrder
-    driverId?: SortOrderInput | SortOrder
-    fare?: SortOrderInput | SortOrder
-    distance?: SortOrderInput | SortOrder
-    rating?: SortOrderInput | SortOrder
-    ratingComment?: SortOrderInput | SortOrder
     creTime?: SortOrder
     updTime?: SortOrder
-    completedAt?: SortOrderInput | SortOrder
-    driver?: DriverOrderByWithRelationInput
+    pickupDeadline?: SortOrderInput | SortOrder
+    listing?: SecondhandListingOrderByWithRelationInput
   }
 
-  export type RideOrderWhereUniqueInput = Prisma.AtLeast<{
+  export type PickupReservationWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    AND?: RideOrderWhereInput | RideOrderWhereInput[]
-    OR?: RideOrderWhereInput[]
-    NOT?: RideOrderWhereInput | RideOrderWhereInput[]
-    passengerId?: UuidFilter<"RideOrder"> | string
-    passengerName?: StringFilter<"RideOrder"> | string
-    passengerPhone?: StringNullableFilter<"RideOrder"> | string | null
-    pickup?: StringFilter<"RideOrder"> | string
-    destination?: StringFilter<"RideOrder"> | string
-    carType?: StringFilter<"RideOrder"> | string
-    mode?: StringFilter<"RideOrder"> | string
-    scheduledAt?: DateTimeNullableFilter<"RideOrder"> | Date | string | null
-    status?: StringFilter<"RideOrder"> | string
-    driverId?: UuidNullableFilter<"RideOrder"> | string | null
-    fare?: IntNullableFilter<"RideOrder"> | number | null
-    distance?: DecimalNullableFilter<"RideOrder"> | Decimal | DecimalJsLike | number | string | null
-    rating?: IntNullableFilter<"RideOrder"> | number | null
-    ratingComment?: StringNullableFilter<"RideOrder"> | string | null
-    creTime?: DateTimeFilter<"RideOrder"> | Date | string
-    updTime?: DateTimeFilter<"RideOrder"> | Date | string
-    completedAt?: DateTimeNullableFilter<"RideOrder"> | Date | string | null
-    driver?: XOR<DriverNullableScalarRelationFilter, DriverWhereInput> | null
+    AND?: PickupReservationWhereInput | PickupReservationWhereInput[]
+    OR?: PickupReservationWhereInput[]
+    NOT?: PickupReservationWhereInput | PickupReservationWhereInput[]
+    listingId?: UuidFilter<"PickupReservation"> | string
+    buyerId?: UuidFilter<"PickupReservation"> | string
+    buyerName?: StringFilter<"PickupReservation"> | string
+    buyerPhone?: StringNullableFilter<"PickupReservation"> | string | null
+    sellerId?: UuidFilter<"PickupReservation"> | string
+    sellerName?: StringFilter<"PickupReservation"> | string
+    pickupStore?: StringFilter<"PickupReservation"> | string
+    pickupMethod?: StringFilter<"PickupReservation"> | string
+    status?: StringFilter<"PickupReservation"> | string
+    scheduledAt?: DateTimeNullableFilter<"PickupReservation"> | Date | string | null
+    creTime?: DateTimeFilter<"PickupReservation"> | Date | string
+    updTime?: DateTimeFilter<"PickupReservation"> | Date | string
+    pickupDeadline?: DateTimeNullableFilter<"PickupReservation"> | Date | string | null
+    listing?: XOR<SecondhandListingScalarRelationFilter, SecondhandListingWhereInput>
   }, "id">
 
-  export type RideOrderOrderByWithAggregationInput = {
+  export type PickupReservationOrderByWithAggregationInput = {
     id?: SortOrder
-    passengerId?: SortOrder
-    passengerName?: SortOrder
-    passengerPhone?: SortOrderInput | SortOrder
-    pickup?: SortOrder
-    destination?: SortOrder
-    carType?: SortOrder
-    mode?: SortOrder
-    scheduledAt?: SortOrderInput | SortOrder
+    listingId?: SortOrder
+    buyerId?: SortOrder
+    buyerName?: SortOrder
+    buyerPhone?: SortOrderInput | SortOrder
+    sellerId?: SortOrder
+    sellerName?: SortOrder
+    pickupStore?: SortOrder
+    pickupMethod?: SortOrder
     status?: SortOrder
-    driverId?: SortOrderInput | SortOrder
-    fare?: SortOrderInput | SortOrder
-    distance?: SortOrderInput | SortOrder
-    rating?: SortOrderInput | SortOrder
-    ratingComment?: SortOrderInput | SortOrder
+    scheduledAt?: SortOrderInput | SortOrder
     creTime?: SortOrder
     updTime?: SortOrder
-    completedAt?: SortOrderInput | SortOrder
-    _count?: RideOrderCountOrderByAggregateInput
-    _avg?: RideOrderAvgOrderByAggregateInput
-    _max?: RideOrderMaxOrderByAggregateInput
-    _min?: RideOrderMinOrderByAggregateInput
-    _sum?: RideOrderSumOrderByAggregateInput
+    pickupDeadline?: SortOrderInput | SortOrder
+    _count?: PickupReservationCountOrderByAggregateInput
+    _max?: PickupReservationMaxOrderByAggregateInput
+    _min?: PickupReservationMinOrderByAggregateInput
   }
 
-  export type RideOrderScalarWhereWithAggregatesInput = {
-    AND?: RideOrderScalarWhereWithAggregatesInput | RideOrderScalarWhereWithAggregatesInput[]
-    OR?: RideOrderScalarWhereWithAggregatesInput[]
-    NOT?: RideOrderScalarWhereWithAggregatesInput | RideOrderScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"RideOrder"> | string
-    passengerId?: UuidWithAggregatesFilter<"RideOrder"> | string
-    passengerName?: StringWithAggregatesFilter<"RideOrder"> | string
-    passengerPhone?: StringNullableWithAggregatesFilter<"RideOrder"> | string | null
-    pickup?: StringWithAggregatesFilter<"RideOrder"> | string
-    destination?: StringWithAggregatesFilter<"RideOrder"> | string
-    carType?: StringWithAggregatesFilter<"RideOrder"> | string
-    mode?: StringWithAggregatesFilter<"RideOrder"> | string
-    scheduledAt?: DateTimeNullableWithAggregatesFilter<"RideOrder"> | Date | string | null
-    status?: StringWithAggregatesFilter<"RideOrder"> | string
-    driverId?: UuidNullableWithAggregatesFilter<"RideOrder"> | string | null
-    fare?: IntNullableWithAggregatesFilter<"RideOrder"> | number | null
-    distance?: DecimalNullableWithAggregatesFilter<"RideOrder"> | Decimal | DecimalJsLike | number | string | null
-    rating?: IntNullableWithAggregatesFilter<"RideOrder"> | number | null
-    ratingComment?: StringNullableWithAggregatesFilter<"RideOrder"> | string | null
-    creTime?: DateTimeWithAggregatesFilter<"RideOrder"> | Date | string
-    updTime?: DateTimeWithAggregatesFilter<"RideOrder"> | Date | string
-    completedAt?: DateTimeNullableWithAggregatesFilter<"RideOrder"> | Date | string | null
+  export type PickupReservationScalarWhereWithAggregatesInput = {
+    AND?: PickupReservationScalarWhereWithAggregatesInput | PickupReservationScalarWhereWithAggregatesInput[]
+    OR?: PickupReservationScalarWhereWithAggregatesInput[]
+    NOT?: PickupReservationScalarWhereWithAggregatesInput | PickupReservationScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"PickupReservation"> | string
+    listingId?: UuidWithAggregatesFilter<"PickupReservation"> | string
+    buyerId?: UuidWithAggregatesFilter<"PickupReservation"> | string
+    buyerName?: StringWithAggregatesFilter<"PickupReservation"> | string
+    buyerPhone?: StringNullableWithAggregatesFilter<"PickupReservation"> | string | null
+    sellerId?: UuidWithAggregatesFilter<"PickupReservation"> | string
+    sellerName?: StringWithAggregatesFilter<"PickupReservation"> | string
+    pickupStore?: StringWithAggregatesFilter<"PickupReservation"> | string
+    pickupMethod?: StringWithAggregatesFilter<"PickupReservation"> | string
+    status?: StringWithAggregatesFilter<"PickupReservation"> | string
+    scheduledAt?: DateTimeNullableWithAggregatesFilter<"PickupReservation"> | Date | string | null
+    creTime?: DateTimeWithAggregatesFilter<"PickupReservation"> | Date | string
+    updTime?: DateTimeWithAggregatesFilter<"PickupReservation"> | Date | string
+    pickupDeadline?: DateTimeNullableWithAggregatesFilter<"PickupReservation"> | Date | string | null
   }
 
   export type RestaurantQueueWhereInput = {
@@ -45985,7 +38858,6 @@ export namespace Prisma {
     creTime?: Date | string
     updId: string
     updTime?: Date | string
-    communityNickname?: string | null
     addresses?: MemberAddressCreateNestedManyWithoutMemberInput
   }
 
@@ -46004,7 +38876,6 @@ export namespace Prisma {
     creTime?: Date | string
     updId: string
     updTime?: Date | string
-    communityNickname?: string | null
     addresses?: MemberAddressUncheckedCreateNestedManyWithoutMemberInput
   }
 
@@ -46023,7 +38894,6 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updId?: StringFieldUpdateOperationsInput | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    communityNickname?: NullableStringFieldUpdateOperationsInput | string | null
     addresses?: MemberAddressUpdateManyWithoutMemberNestedInput
   }
 
@@ -46042,7 +38912,6 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updId?: StringFieldUpdateOperationsInput | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    communityNickname?: NullableStringFieldUpdateOperationsInput | string | null
     addresses?: MemberAddressUncheckedUpdateManyWithoutMemberNestedInput
   }
 
@@ -46061,7 +38930,6 @@ export namespace Prisma {
     creTime?: Date | string
     updId: string
     updTime?: Date | string
-    communityNickname?: string | null
   }
 
   export type MemberAccountUpdateManyMutationInput = {
@@ -46079,7 +38947,6 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updId?: StringFieldUpdateOperationsInput | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    communityNickname?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MemberAccountUncheckedUpdateManyInput = {
@@ -46097,7 +38964,6 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updId?: StringFieldUpdateOperationsInput | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    communityNickname?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MemberAddressCreateInput = {
@@ -46569,131 +39435,6 @@ export namespace Prisma {
     groupId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type PickupReservationCreateInput = {
-    id?: string
-    buyerId: string
-    buyerName: string
-    buyerPhone?: string | null
-    sellerId: string
-    sellerName: string
-    pickupStore: string
-    pickupMethod: string
-    status?: string
-    scheduledAt?: Date | string | null
-    creTime?: Date | string
-    updTime?: Date | string
-    pickupDeadline?: Date | string | null
-    storedAt?: Date | string | null
-    listing: SecondhandListingCreateNestedOneWithoutReservationsInput
-  }
-
-  export type PickupReservationUncheckedCreateInput = {
-    id?: string
-    listingId: string
-    buyerId: string
-    buyerName: string
-    buyerPhone?: string | null
-    sellerId: string
-    sellerName: string
-    pickupStore: string
-    pickupMethod: string
-    status?: string
-    scheduledAt?: Date | string | null
-    creTime?: Date | string
-    updTime?: Date | string
-    pickupDeadline?: Date | string | null
-    storedAt?: Date | string | null
-  }
-
-  export type PickupReservationUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    buyerId?: StringFieldUpdateOperationsInput | string
-    buyerName?: StringFieldUpdateOperationsInput | string
-    buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    sellerId?: StringFieldUpdateOperationsInput | string
-    sellerName?: StringFieldUpdateOperationsInput | string
-    pickupStore?: StringFieldUpdateOperationsInput | string
-    pickupMethod?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    pickupDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    storedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    listing?: SecondhandListingUpdateOneRequiredWithoutReservationsNestedInput
-  }
-
-  export type PickupReservationUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    listingId?: StringFieldUpdateOperationsInput | string
-    buyerId?: StringFieldUpdateOperationsInput | string
-    buyerName?: StringFieldUpdateOperationsInput | string
-    buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    sellerId?: StringFieldUpdateOperationsInput | string
-    sellerName?: StringFieldUpdateOperationsInput | string
-    pickupStore?: StringFieldUpdateOperationsInput | string
-    pickupMethod?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    pickupDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    storedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type PickupReservationCreateManyInput = {
-    id?: string
-    listingId: string
-    buyerId: string
-    buyerName: string
-    buyerPhone?: string | null
-    sellerId: string
-    sellerName: string
-    pickupStore: string
-    pickupMethod: string
-    status?: string
-    scheduledAt?: Date | string | null
-    creTime?: Date | string
-    updTime?: Date | string
-    pickupDeadline?: Date | string | null
-    storedAt?: Date | string | null
-  }
-
-  export type PickupReservationUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    buyerId?: StringFieldUpdateOperationsInput | string
-    buyerName?: StringFieldUpdateOperationsInput | string
-    buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    sellerId?: StringFieldUpdateOperationsInput | string
-    sellerName?: StringFieldUpdateOperationsInput | string
-    pickupStore?: StringFieldUpdateOperationsInput | string
-    pickupMethod?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    pickupDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    storedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type PickupReservationUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    listingId?: StringFieldUpdateOperationsInput | string
-    buyerId?: StringFieldUpdateOperationsInput | string
-    buyerName?: StringFieldUpdateOperationsInput | string
-    buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    sellerId?: StringFieldUpdateOperationsInput | string
-    sellerName?: StringFieldUpdateOperationsInput | string
-    pickupStore?: StringFieldUpdateOperationsInput | string
-    pickupMethod?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    pickupDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    storedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
   export type CommunityGroupCreateInput = {
     id?: string
     name: string
@@ -46883,591 +39624,122 @@ export namespace Prisma {
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type CommunityActivityCreateInput = {
+  export type PickupReservationCreateInput = {
     id?: string
-    title: string
-    description?: string | null
-    category?: string
-    location?: string | null
-    activityDate: Date | string
-    activityEndDate?: Date | string | null
-    maxParticipants?: number
+    buyerId: string
+    buyerName: string
+    buyerPhone?: string | null
+    sellerId: string
+    sellerName: string
+    pickupStore: string
+    pickupMethod: string
     status?: string
-    imageUrl?: string | null
-    organizerId: string
-    organizerName: string
-    isDeleted?: boolean
-    creTime?: Date | string
-    updTime?: Date | string
-    extraParticipants?: number
-    volunteersAssigned?: number
-    volunteersNeeded?: number
-    registrations?: ActivityRegistrationCreateNestedManyWithoutActivityInput
-  }
-
-  export type CommunityActivityUncheckedCreateInput = {
-    id?: string
-    title: string
-    description?: string | null
-    category?: string
-    location?: string | null
-    activityDate: Date | string
-    activityEndDate?: Date | string | null
-    maxParticipants?: number
-    status?: string
-    imageUrl?: string | null
-    organizerId: string
-    organizerName: string
-    isDeleted?: boolean
-    creTime?: Date | string
-    updTime?: Date | string
-    extraParticipants?: number
-    volunteersAssigned?: number
-    volunteersNeeded?: number
-    registrations?: ActivityRegistrationUncheckedCreateNestedManyWithoutActivityInput
-  }
-
-  export type CommunityActivityUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    activityDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    activityEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    maxParticipants?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    organizerId?: StringFieldUpdateOperationsInput | string
-    organizerName?: StringFieldUpdateOperationsInput | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    extraParticipants?: IntFieldUpdateOperationsInput | number
-    volunteersAssigned?: IntFieldUpdateOperationsInput | number
-    volunteersNeeded?: IntFieldUpdateOperationsInput | number
-    registrations?: ActivityRegistrationUpdateManyWithoutActivityNestedInput
-  }
-
-  export type CommunityActivityUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    activityDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    activityEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    maxParticipants?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    organizerId?: StringFieldUpdateOperationsInput | string
-    organizerName?: StringFieldUpdateOperationsInput | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    extraParticipants?: IntFieldUpdateOperationsInput | number
-    volunteersAssigned?: IntFieldUpdateOperationsInput | number
-    volunteersNeeded?: IntFieldUpdateOperationsInput | number
-    registrations?: ActivityRegistrationUncheckedUpdateManyWithoutActivityNestedInput
-  }
-
-  export type CommunityActivityCreateManyInput = {
-    id?: string
-    title: string
-    description?: string | null
-    category?: string
-    location?: string | null
-    activityDate: Date | string
-    activityEndDate?: Date | string | null
-    maxParticipants?: number
-    status?: string
-    imageUrl?: string | null
-    organizerId: string
-    organizerName: string
-    isDeleted?: boolean
-    creTime?: Date | string
-    updTime?: Date | string
-    extraParticipants?: number
-    volunteersAssigned?: number
-    volunteersNeeded?: number
-  }
-
-  export type CommunityActivityUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    activityDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    activityEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    maxParticipants?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    organizerId?: StringFieldUpdateOperationsInput | string
-    organizerName?: StringFieldUpdateOperationsInput | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    extraParticipants?: IntFieldUpdateOperationsInput | number
-    volunteersAssigned?: IntFieldUpdateOperationsInput | number
-    volunteersNeeded?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type CommunityActivityUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    activityDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    activityEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    maxParticipants?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    organizerId?: StringFieldUpdateOperationsInput | string
-    organizerName?: StringFieldUpdateOperationsInput | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    extraParticipants?: IntFieldUpdateOperationsInput | number
-    volunteersAssigned?: IntFieldUpdateOperationsInput | number
-    volunteersNeeded?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type ActivityRegistrationCreateInput = {
-    id?: string
-    userId: string
-    userName: string
-    userPhone?: string | null
-    status?: string
-    registeredAt?: Date | string
-    source?: string
-    specialNeeds?: string | null
-    activity: CommunityActivityCreateNestedOneWithoutRegistrationsInput
-  }
-
-  export type ActivityRegistrationUncheckedCreateInput = {
-    id?: string
-    activityId: string
-    userId: string
-    userName: string
-    userPhone?: string | null
-    status?: string
-    registeredAt?: Date | string
-    source?: string
-    specialNeeds?: string | null
-  }
-
-  export type ActivityRegistrationUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    userName?: StringFieldUpdateOperationsInput | string
-    userPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    source?: StringFieldUpdateOperationsInput | string
-    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
-    activity?: CommunityActivityUpdateOneRequiredWithoutRegistrationsNestedInput
-  }
-
-  export type ActivityRegistrationUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    activityId?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    userName?: StringFieldUpdateOperationsInput | string
-    userPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    source?: StringFieldUpdateOperationsInput | string
-    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type ActivityRegistrationCreateManyInput = {
-    id?: string
-    activityId: string
-    userId: string
-    userName: string
-    userPhone?: string | null
-    status?: string
-    registeredAt?: Date | string
-    source?: string
-    specialNeeds?: string | null
-  }
-
-  export type ActivityRegistrationUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    userName?: StringFieldUpdateOperationsInput | string
-    userPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    source?: StringFieldUpdateOperationsInput | string
-    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type ActivityRegistrationUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    activityId?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    userName?: StringFieldUpdateOperationsInput | string
-    userPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    source?: StringFieldUpdateOperationsInput | string
-    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type CommunityQuestionCreateInput = {
-    id?: string
-    askerId: string
-    askerName: string
-    content: string
-    category?: string
-    isAnonymous?: boolean
-    replyContent?: string | null
-    repliedAt?: Date | string | null
-    repliedBy?: string | null
-    status?: string
-    isDeleted?: boolean
-    creTime?: Date | string
-  }
-
-  export type CommunityQuestionUncheckedCreateInput = {
-    id?: string
-    askerId: string
-    askerName: string
-    content: string
-    category?: string
-    isAnonymous?: boolean
-    replyContent?: string | null
-    repliedAt?: Date | string | null
-    repliedBy?: string | null
-    status?: string
-    isDeleted?: boolean
-    creTime?: Date | string
-  }
-
-  export type CommunityQuestionUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    askerId?: StringFieldUpdateOperationsInput | string
-    askerName?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    replyContent?: NullableStringFieldUpdateOperationsInput | string | null
-    repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    repliedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CommunityQuestionUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    askerId?: StringFieldUpdateOperationsInput | string
-    askerName?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    replyContent?: NullableStringFieldUpdateOperationsInput | string | null
-    repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    repliedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CommunityQuestionCreateManyInput = {
-    id?: string
-    askerId: string
-    askerName: string
-    content: string
-    category?: string
-    isAnonymous?: boolean
-    replyContent?: string | null
-    repliedAt?: Date | string | null
-    repliedBy?: string | null
-    status?: string
-    isDeleted?: boolean
-    creTime?: Date | string
-  }
-
-  export type CommunityQuestionUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    askerId?: StringFieldUpdateOperationsInput | string
-    askerName?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    replyContent?: NullableStringFieldUpdateOperationsInput | string | null
-    repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    repliedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CommunityQuestionUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    askerId?: StringFieldUpdateOperationsInput | string
-    askerName?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    replyContent?: NullableStringFieldUpdateOperationsInput | string | null
-    repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    repliedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DriverCreateInput = {
-    id?: string
-    name: string
-    phone: string
-    plateNumber: string
-    carModel: string
-    carType?: string
-    rating?: Decimal | DecimalJsLike | number | string
-    totalTrips?: number
-    status?: string
-    isDeleted?: boolean
-    creTime?: Date | string
-    rideOrders?: RideOrderCreateNestedManyWithoutDriverInput
-  }
-
-  export type DriverUncheckedCreateInput = {
-    id?: string
-    name: string
-    phone: string
-    plateNumber: string
-    carModel: string
-    carType?: string
-    rating?: Decimal | DecimalJsLike | number | string
-    totalTrips?: number
-    status?: string
-    isDeleted?: boolean
-    creTime?: Date | string
-    rideOrders?: RideOrderUncheckedCreateNestedManyWithoutDriverInput
-  }
-
-  export type DriverUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    plateNumber?: StringFieldUpdateOperationsInput | string
-    carModel?: StringFieldUpdateOperationsInput | string
-    carType?: StringFieldUpdateOperationsInput | string
-    rating?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    totalTrips?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    rideOrders?: RideOrderUpdateManyWithoutDriverNestedInput
-  }
-
-  export type DriverUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    plateNumber?: StringFieldUpdateOperationsInput | string
-    carModel?: StringFieldUpdateOperationsInput | string
-    carType?: StringFieldUpdateOperationsInput | string
-    rating?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    totalTrips?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    rideOrders?: RideOrderUncheckedUpdateManyWithoutDriverNestedInput
-  }
-
-  export type DriverCreateManyInput = {
-    id?: string
-    name: string
-    phone: string
-    plateNumber: string
-    carModel: string
-    carType?: string
-    rating?: Decimal | DecimalJsLike | number | string
-    totalTrips?: number
-    status?: string
-    isDeleted?: boolean
-    creTime?: Date | string
-  }
-
-  export type DriverUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    plateNumber?: StringFieldUpdateOperationsInput | string
-    carModel?: StringFieldUpdateOperationsInput | string
-    carType?: StringFieldUpdateOperationsInput | string
-    rating?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    totalTrips?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DriverUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    plateNumber?: StringFieldUpdateOperationsInput | string
-    carModel?: StringFieldUpdateOperationsInput | string
-    carType?: StringFieldUpdateOperationsInput | string
-    rating?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    totalTrips?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type RideOrderCreateInput = {
-    id?: string
-    passengerId: string
-    passengerName: string
-    passengerPhone?: string | null
-    pickup: string
-    destination: string
-    carType?: string
-    mode?: string
     scheduledAt?: Date | string | null
-    status?: string
-    fare?: number | null
-    distance?: Decimal | DecimalJsLike | number | string | null
-    rating?: number | null
-    ratingComment?: string | null
     creTime?: Date | string
     updTime?: Date | string
-    completedAt?: Date | string | null
-    driver?: DriverCreateNestedOneWithoutRideOrdersInput
+    pickupDeadline?: Date | string | null
+    listing: SecondhandListingCreateNestedOneWithoutReservationsInput
   }
 
-  export type RideOrderUncheckedCreateInput = {
+  export type PickupReservationUncheckedCreateInput = {
     id?: string
-    passengerId: string
-    passengerName: string
-    passengerPhone?: string | null
-    pickup: string
-    destination: string
-    carType?: string
-    mode?: string
-    scheduledAt?: Date | string | null
+    listingId: string
+    buyerId: string
+    buyerName: string
+    buyerPhone?: string | null
+    sellerId: string
+    sellerName: string
+    pickupStore: string
+    pickupMethod: string
     status?: string
-    driverId?: string | null
-    fare?: number | null
-    distance?: Decimal | DecimalJsLike | number | string | null
-    rating?: number | null
-    ratingComment?: string | null
+    scheduledAt?: Date | string | null
     creTime?: Date | string
     updTime?: Date | string
-    completedAt?: Date | string | null
+    pickupDeadline?: Date | string | null
   }
 
-  export type RideOrderUpdateInput = {
+  export type PickupReservationUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    passengerId?: StringFieldUpdateOperationsInput | string
-    passengerName?: StringFieldUpdateOperationsInput | string
-    passengerPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    pickup?: StringFieldUpdateOperationsInput | string
-    destination?: StringFieldUpdateOperationsInput | string
-    carType?: StringFieldUpdateOperationsInput | string
-    mode?: StringFieldUpdateOperationsInput | string
-    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    buyerId?: StringFieldUpdateOperationsInput | string
+    buyerName?: StringFieldUpdateOperationsInput | string
+    buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    sellerId?: StringFieldUpdateOperationsInput | string
+    sellerName?: StringFieldUpdateOperationsInput | string
+    pickupStore?: StringFieldUpdateOperationsInput | string
+    pickupMethod?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
-    fare?: NullableIntFieldUpdateOperationsInput | number | null
-    distance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    rating?: NullableIntFieldUpdateOperationsInput | number | null
-    ratingComment?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    driver?: DriverUpdateOneWithoutRideOrdersNestedInput
+    pickupDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    listing?: SecondhandListingUpdateOneRequiredWithoutReservationsNestedInput
   }
 
-  export type RideOrderUncheckedUpdateInput = {
+  export type PickupReservationUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    passengerId?: StringFieldUpdateOperationsInput | string
-    passengerName?: StringFieldUpdateOperationsInput | string
-    passengerPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    pickup?: StringFieldUpdateOperationsInput | string
-    destination?: StringFieldUpdateOperationsInput | string
-    carType?: StringFieldUpdateOperationsInput | string
-    mode?: StringFieldUpdateOperationsInput | string
-    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    listingId?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    buyerName?: StringFieldUpdateOperationsInput | string
+    buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    sellerId?: StringFieldUpdateOperationsInput | string
+    sellerName?: StringFieldUpdateOperationsInput | string
+    pickupStore?: StringFieldUpdateOperationsInput | string
+    pickupMethod?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
-    driverId?: NullableStringFieldUpdateOperationsInput | string | null
-    fare?: NullableIntFieldUpdateOperationsInput | number | null
-    distance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    rating?: NullableIntFieldUpdateOperationsInput | number | null
-    ratingComment?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pickupDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-  export type RideOrderCreateManyInput = {
+  export type PickupReservationCreateManyInput = {
     id?: string
-    passengerId: string
-    passengerName: string
-    passengerPhone?: string | null
-    pickup: string
-    destination: string
-    carType?: string
-    mode?: string
-    scheduledAt?: Date | string | null
+    listingId: string
+    buyerId: string
+    buyerName: string
+    buyerPhone?: string | null
+    sellerId: string
+    sellerName: string
+    pickupStore: string
+    pickupMethod: string
     status?: string
-    driverId?: string | null
-    fare?: number | null
-    distance?: Decimal | DecimalJsLike | number | string | null
-    rating?: number | null
-    ratingComment?: string | null
+    scheduledAt?: Date | string | null
     creTime?: Date | string
     updTime?: Date | string
-    completedAt?: Date | string | null
+    pickupDeadline?: Date | string | null
   }
 
-  export type RideOrderUpdateManyMutationInput = {
+  export type PickupReservationUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    passengerId?: StringFieldUpdateOperationsInput | string
-    passengerName?: StringFieldUpdateOperationsInput | string
-    passengerPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    pickup?: StringFieldUpdateOperationsInput | string
-    destination?: StringFieldUpdateOperationsInput | string
-    carType?: StringFieldUpdateOperationsInput | string
-    mode?: StringFieldUpdateOperationsInput | string
-    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    buyerId?: StringFieldUpdateOperationsInput | string
+    buyerName?: StringFieldUpdateOperationsInput | string
+    buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    sellerId?: StringFieldUpdateOperationsInput | string
+    sellerName?: StringFieldUpdateOperationsInput | string
+    pickupStore?: StringFieldUpdateOperationsInput | string
+    pickupMethod?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
-    fare?: NullableIntFieldUpdateOperationsInput | number | null
-    distance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    rating?: NullableIntFieldUpdateOperationsInput | number | null
-    ratingComment?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pickupDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-  export type RideOrderUncheckedUpdateManyInput = {
+  export type PickupReservationUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    passengerId?: StringFieldUpdateOperationsInput | string
-    passengerName?: StringFieldUpdateOperationsInput | string
-    passengerPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    pickup?: StringFieldUpdateOperationsInput | string
-    destination?: StringFieldUpdateOperationsInput | string
-    carType?: StringFieldUpdateOperationsInput | string
-    mode?: StringFieldUpdateOperationsInput | string
-    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    listingId?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    buyerName?: StringFieldUpdateOperationsInput | string
+    buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    sellerId?: StringFieldUpdateOperationsInput | string
+    sellerName?: StringFieldUpdateOperationsInput | string
+    pickupStore?: StringFieldUpdateOperationsInput | string
+    pickupMethod?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
-    driverId?: NullableStringFieldUpdateOperationsInput | string | null
-    fare?: NullableIntFieldUpdateOperationsInput | number | null
-    distance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    rating?: NullableIntFieldUpdateOperationsInput | number | null
-    ratingComment?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pickupDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type RestaurantQueueCreateInput = {
@@ -49228,7 +41500,6 @@ export namespace Prisma {
     creTime?: SortOrder
     updId?: SortOrder
     updTime?: SortOrder
-    communityNickname?: SortOrder
   }
 
   export type MemberAccountMaxOrderByAggregateInput = {
@@ -49246,7 +41517,6 @@ export namespace Prisma {
     creTime?: SortOrder
     updId?: SortOrder
     updTime?: SortOrder
-    communityNickname?: SortOrder
   }
 
   export type MemberAccountMinOrderByAggregateInput = {
@@ -49264,7 +41534,6 @@ export namespace Prisma {
     creTime?: SortOrder
     updId?: SortOrder
     updTime?: SortOrder
-    communityNickname?: SortOrder
   }
 
   export type MemberAccountScalarRelationFilter = {
@@ -49529,65 +41798,6 @@ export namespace Prisma {
     groupId?: SortOrder
   }
 
-  export type SecondhandListingScalarRelationFilter = {
-    is?: SecondhandListingWhereInput
-    isNot?: SecondhandListingWhereInput
-  }
-
-  export type PickupReservationCountOrderByAggregateInput = {
-    id?: SortOrder
-    listingId?: SortOrder
-    buyerId?: SortOrder
-    buyerName?: SortOrder
-    buyerPhone?: SortOrder
-    sellerId?: SortOrder
-    sellerName?: SortOrder
-    pickupStore?: SortOrder
-    pickupMethod?: SortOrder
-    status?: SortOrder
-    scheduledAt?: SortOrder
-    creTime?: SortOrder
-    updTime?: SortOrder
-    pickupDeadline?: SortOrder
-    storedAt?: SortOrder
-  }
-
-  export type PickupReservationMaxOrderByAggregateInput = {
-    id?: SortOrder
-    listingId?: SortOrder
-    buyerId?: SortOrder
-    buyerName?: SortOrder
-    buyerPhone?: SortOrder
-    sellerId?: SortOrder
-    sellerName?: SortOrder
-    pickupStore?: SortOrder
-    pickupMethod?: SortOrder
-    status?: SortOrder
-    scheduledAt?: SortOrder
-    creTime?: SortOrder
-    updTime?: SortOrder
-    pickupDeadline?: SortOrder
-    storedAt?: SortOrder
-  }
-
-  export type PickupReservationMinOrderByAggregateInput = {
-    id?: SortOrder
-    listingId?: SortOrder
-    buyerId?: SortOrder
-    buyerName?: SortOrder
-    buyerPhone?: SortOrder
-    sellerId?: SortOrder
-    sellerName?: SortOrder
-    pickupStore?: SortOrder
-    pickupMethod?: SortOrder
-    status?: SortOrder
-    scheduledAt?: SortOrder
-    creTime?: SortOrder
-    updTime?: SortOrder
-    pickupDeadline?: SortOrder
-    storedAt?: SortOrder
-  }
-
   export type StringNullableListFilter<$PrismaModel = never> = {
     equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     has?: string | StringFieldRefInput<$PrismaModel> | null
@@ -49700,351 +41910,60 @@ export namespace Prisma {
     joinedAt?: SortOrder
   }
 
-  export type ActivityRegistrationListRelationFilter = {
-    every?: ActivityRegistrationWhereInput
-    some?: ActivityRegistrationWhereInput
-    none?: ActivityRegistrationWhereInput
+  export type SecondhandListingScalarRelationFilter = {
+    is?: SecondhandListingWhereInput
+    isNot?: SecondhandListingWhereInput
   }
 
-  export type ActivityRegistrationOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type CommunityActivityCountOrderByAggregateInput = {
+  export type PickupReservationCountOrderByAggregateInput = {
     id?: SortOrder
-    title?: SortOrder
-    description?: SortOrder
-    category?: SortOrder
-    location?: SortOrder
-    activityDate?: SortOrder
-    activityEndDate?: SortOrder
-    maxParticipants?: SortOrder
+    listingId?: SortOrder
+    buyerId?: SortOrder
+    buyerName?: SortOrder
+    buyerPhone?: SortOrder
+    sellerId?: SortOrder
+    sellerName?: SortOrder
+    pickupStore?: SortOrder
+    pickupMethod?: SortOrder
     status?: SortOrder
-    imageUrl?: SortOrder
-    organizerId?: SortOrder
-    organizerName?: SortOrder
-    isDeleted?: SortOrder
-    creTime?: SortOrder
-    updTime?: SortOrder
-    extraParticipants?: SortOrder
-    volunteersAssigned?: SortOrder
-    volunteersNeeded?: SortOrder
-  }
-
-  export type CommunityActivityAvgOrderByAggregateInput = {
-    maxParticipants?: SortOrder
-    extraParticipants?: SortOrder
-    volunteersAssigned?: SortOrder
-    volunteersNeeded?: SortOrder
-  }
-
-  export type CommunityActivityMaxOrderByAggregateInput = {
-    id?: SortOrder
-    title?: SortOrder
-    description?: SortOrder
-    category?: SortOrder
-    location?: SortOrder
-    activityDate?: SortOrder
-    activityEndDate?: SortOrder
-    maxParticipants?: SortOrder
-    status?: SortOrder
-    imageUrl?: SortOrder
-    organizerId?: SortOrder
-    organizerName?: SortOrder
-    isDeleted?: SortOrder
-    creTime?: SortOrder
-    updTime?: SortOrder
-    extraParticipants?: SortOrder
-    volunteersAssigned?: SortOrder
-    volunteersNeeded?: SortOrder
-  }
-
-  export type CommunityActivityMinOrderByAggregateInput = {
-    id?: SortOrder
-    title?: SortOrder
-    description?: SortOrder
-    category?: SortOrder
-    location?: SortOrder
-    activityDate?: SortOrder
-    activityEndDate?: SortOrder
-    maxParticipants?: SortOrder
-    status?: SortOrder
-    imageUrl?: SortOrder
-    organizerId?: SortOrder
-    organizerName?: SortOrder
-    isDeleted?: SortOrder
-    creTime?: SortOrder
-    updTime?: SortOrder
-    extraParticipants?: SortOrder
-    volunteersAssigned?: SortOrder
-    volunteersNeeded?: SortOrder
-  }
-
-  export type CommunityActivitySumOrderByAggregateInput = {
-    maxParticipants?: SortOrder
-    extraParticipants?: SortOrder
-    volunteersAssigned?: SortOrder
-    volunteersNeeded?: SortOrder
-  }
-
-  export type CommunityActivityScalarRelationFilter = {
-    is?: CommunityActivityWhereInput
-    isNot?: CommunityActivityWhereInput
-  }
-
-  export type ActivityRegistrationActivityIdUserIdCompoundUniqueInput = {
-    activityId: string
-    userId: string
-  }
-
-  export type ActivityRegistrationCountOrderByAggregateInput = {
-    id?: SortOrder
-    activityId?: SortOrder
-    userId?: SortOrder
-    userName?: SortOrder
-    userPhone?: SortOrder
-    status?: SortOrder
-    registeredAt?: SortOrder
-    source?: SortOrder
-    specialNeeds?: SortOrder
-  }
-
-  export type ActivityRegistrationMaxOrderByAggregateInput = {
-    id?: SortOrder
-    activityId?: SortOrder
-    userId?: SortOrder
-    userName?: SortOrder
-    userPhone?: SortOrder
-    status?: SortOrder
-    registeredAt?: SortOrder
-    source?: SortOrder
-    specialNeeds?: SortOrder
-  }
-
-  export type ActivityRegistrationMinOrderByAggregateInput = {
-    id?: SortOrder
-    activityId?: SortOrder
-    userId?: SortOrder
-    userName?: SortOrder
-    userPhone?: SortOrder
-    status?: SortOrder
-    registeredAt?: SortOrder
-    source?: SortOrder
-    specialNeeds?: SortOrder
-  }
-
-  export type CommunityQuestionCountOrderByAggregateInput = {
-    id?: SortOrder
-    askerId?: SortOrder
-    askerName?: SortOrder
-    content?: SortOrder
-    category?: SortOrder
-    isAnonymous?: SortOrder
-    replyContent?: SortOrder
-    repliedAt?: SortOrder
-    repliedBy?: SortOrder
-    status?: SortOrder
-    isDeleted?: SortOrder
-    creTime?: SortOrder
-  }
-
-  export type CommunityQuestionMaxOrderByAggregateInput = {
-    id?: SortOrder
-    askerId?: SortOrder
-    askerName?: SortOrder
-    content?: SortOrder
-    category?: SortOrder
-    isAnonymous?: SortOrder
-    replyContent?: SortOrder
-    repliedAt?: SortOrder
-    repliedBy?: SortOrder
-    status?: SortOrder
-    isDeleted?: SortOrder
-    creTime?: SortOrder
-  }
-
-  export type CommunityQuestionMinOrderByAggregateInput = {
-    id?: SortOrder
-    askerId?: SortOrder
-    askerName?: SortOrder
-    content?: SortOrder
-    category?: SortOrder
-    isAnonymous?: SortOrder
-    replyContent?: SortOrder
-    repliedAt?: SortOrder
-    repliedBy?: SortOrder
-    status?: SortOrder
-    isDeleted?: SortOrder
-    creTime?: SortOrder
-  }
-
-  export type RideOrderListRelationFilter = {
-    every?: RideOrderWhereInput
-    some?: RideOrderWhereInput
-    none?: RideOrderWhereInput
-  }
-
-  export type RideOrderOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type DriverCountOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    phone?: SortOrder
-    plateNumber?: SortOrder
-    carModel?: SortOrder
-    carType?: SortOrder
-    rating?: SortOrder
-    totalTrips?: SortOrder
-    status?: SortOrder
-    isDeleted?: SortOrder
-    creTime?: SortOrder
-  }
-
-  export type DriverAvgOrderByAggregateInput = {
-    rating?: SortOrder
-    totalTrips?: SortOrder
-  }
-
-  export type DriverMaxOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    phone?: SortOrder
-    plateNumber?: SortOrder
-    carModel?: SortOrder
-    carType?: SortOrder
-    rating?: SortOrder
-    totalTrips?: SortOrder
-    status?: SortOrder
-    isDeleted?: SortOrder
-    creTime?: SortOrder
-  }
-
-  export type DriverMinOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    phone?: SortOrder
-    plateNumber?: SortOrder
-    carModel?: SortOrder
-    carType?: SortOrder
-    rating?: SortOrder
-    totalTrips?: SortOrder
-    status?: SortOrder
-    isDeleted?: SortOrder
-    creTime?: SortOrder
-  }
-
-  export type DriverSumOrderByAggregateInput = {
-    rating?: SortOrder
-    totalTrips?: SortOrder
-  }
-
-  export type DecimalNullableFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
-  export type DriverNullableScalarRelationFilter = {
-    is?: DriverWhereInput | null
-    isNot?: DriverWhereInput | null
-  }
-
-  export type RideOrderCountOrderByAggregateInput = {
-    id?: SortOrder
-    passengerId?: SortOrder
-    passengerName?: SortOrder
-    passengerPhone?: SortOrder
-    pickup?: SortOrder
-    destination?: SortOrder
-    carType?: SortOrder
-    mode?: SortOrder
     scheduledAt?: SortOrder
-    status?: SortOrder
-    driverId?: SortOrder
-    fare?: SortOrder
-    distance?: SortOrder
-    rating?: SortOrder
-    ratingComment?: SortOrder
     creTime?: SortOrder
     updTime?: SortOrder
-    completedAt?: SortOrder
+    pickupDeadline?: SortOrder
   }
 
-  export type RideOrderAvgOrderByAggregateInput = {
-    fare?: SortOrder
-    distance?: SortOrder
-    rating?: SortOrder
-  }
-
-  export type RideOrderMaxOrderByAggregateInput = {
+  export type PickupReservationMaxOrderByAggregateInput = {
     id?: SortOrder
-    passengerId?: SortOrder
-    passengerName?: SortOrder
-    passengerPhone?: SortOrder
-    pickup?: SortOrder
-    destination?: SortOrder
-    carType?: SortOrder
-    mode?: SortOrder
-    scheduledAt?: SortOrder
+    listingId?: SortOrder
+    buyerId?: SortOrder
+    buyerName?: SortOrder
+    buyerPhone?: SortOrder
+    sellerId?: SortOrder
+    sellerName?: SortOrder
+    pickupStore?: SortOrder
+    pickupMethod?: SortOrder
     status?: SortOrder
-    driverId?: SortOrder
-    fare?: SortOrder
-    distance?: SortOrder
-    rating?: SortOrder
-    ratingComment?: SortOrder
+    scheduledAt?: SortOrder
     creTime?: SortOrder
     updTime?: SortOrder
-    completedAt?: SortOrder
+    pickupDeadline?: SortOrder
   }
 
-  export type RideOrderMinOrderByAggregateInput = {
+  export type PickupReservationMinOrderByAggregateInput = {
     id?: SortOrder
-    passengerId?: SortOrder
-    passengerName?: SortOrder
-    passengerPhone?: SortOrder
-    pickup?: SortOrder
-    destination?: SortOrder
-    carType?: SortOrder
-    mode?: SortOrder
-    scheduledAt?: SortOrder
+    listingId?: SortOrder
+    buyerId?: SortOrder
+    buyerName?: SortOrder
+    buyerPhone?: SortOrder
+    sellerId?: SortOrder
+    sellerName?: SortOrder
+    pickupStore?: SortOrder
+    pickupMethod?: SortOrder
     status?: SortOrder
-    driverId?: SortOrder
-    fare?: SortOrder
-    distance?: SortOrder
-    rating?: SortOrder
-    ratingComment?: SortOrder
+    scheduledAt?: SortOrder
     creTime?: SortOrder
     updTime?: SortOrder
-    completedAt?: SortOrder
-  }
-
-  export type RideOrderSumOrderByAggregateInput = {
-    fare?: SortOrder
-    distance?: SortOrder
-    rating?: SortOrder
-  }
-
-  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
+    pickupDeadline?: SortOrder
   }
 
   export type QueueEntryListRelationFilter = {
@@ -51394,20 +43313,6 @@ export namespace Prisma {
     update?: XOR<XOR<SecondhandListingUpdateToOneWithWhereWithoutMessagesInput, SecondhandListingUpdateWithoutMessagesInput>, SecondhandListingUncheckedUpdateWithoutMessagesInput>
   }
 
-  export type SecondhandListingCreateNestedOneWithoutReservationsInput = {
-    create?: XOR<SecondhandListingCreateWithoutReservationsInput, SecondhandListingUncheckedCreateWithoutReservationsInput>
-    connectOrCreate?: SecondhandListingCreateOrConnectWithoutReservationsInput
-    connect?: SecondhandListingWhereUniqueInput
-  }
-
-  export type SecondhandListingUpdateOneRequiredWithoutReservationsNestedInput = {
-    create?: XOR<SecondhandListingCreateWithoutReservationsInput, SecondhandListingUncheckedCreateWithoutReservationsInput>
-    connectOrCreate?: SecondhandListingCreateOrConnectWithoutReservationsInput
-    upsert?: SecondhandListingUpsertWithoutReservationsInput
-    connect?: SecondhandListingWhereUniqueInput
-    update?: XOR<XOR<SecondhandListingUpdateToOneWithWhereWithoutReservationsInput, SecondhandListingUpdateWithoutReservationsInput>, SecondhandListingUncheckedUpdateWithoutReservationsInput>
-  }
-
   export type CommunityGroupCreatetagsInput = {
     set: string[]
   }
@@ -51515,126 +43420,18 @@ export namespace Prisma {
     update?: XOR<XOR<CommunityGroupUpdateToOneWithWhereWithoutMembersInput, CommunityGroupUpdateWithoutMembersInput>, CommunityGroupUncheckedUpdateWithoutMembersInput>
   }
 
-  export type ActivityRegistrationCreateNestedManyWithoutActivityInput = {
-    create?: XOR<ActivityRegistrationCreateWithoutActivityInput, ActivityRegistrationUncheckedCreateWithoutActivityInput> | ActivityRegistrationCreateWithoutActivityInput[] | ActivityRegistrationUncheckedCreateWithoutActivityInput[]
-    connectOrCreate?: ActivityRegistrationCreateOrConnectWithoutActivityInput | ActivityRegistrationCreateOrConnectWithoutActivityInput[]
-    createMany?: ActivityRegistrationCreateManyActivityInputEnvelope
-    connect?: ActivityRegistrationWhereUniqueInput | ActivityRegistrationWhereUniqueInput[]
+  export type SecondhandListingCreateNestedOneWithoutReservationsInput = {
+    create?: XOR<SecondhandListingCreateWithoutReservationsInput, SecondhandListingUncheckedCreateWithoutReservationsInput>
+    connectOrCreate?: SecondhandListingCreateOrConnectWithoutReservationsInput
+    connect?: SecondhandListingWhereUniqueInput
   }
 
-  export type ActivityRegistrationUncheckedCreateNestedManyWithoutActivityInput = {
-    create?: XOR<ActivityRegistrationCreateWithoutActivityInput, ActivityRegistrationUncheckedCreateWithoutActivityInput> | ActivityRegistrationCreateWithoutActivityInput[] | ActivityRegistrationUncheckedCreateWithoutActivityInput[]
-    connectOrCreate?: ActivityRegistrationCreateOrConnectWithoutActivityInput | ActivityRegistrationCreateOrConnectWithoutActivityInput[]
-    createMany?: ActivityRegistrationCreateManyActivityInputEnvelope
-    connect?: ActivityRegistrationWhereUniqueInput | ActivityRegistrationWhereUniqueInput[]
-  }
-
-  export type ActivityRegistrationUpdateManyWithoutActivityNestedInput = {
-    create?: XOR<ActivityRegistrationCreateWithoutActivityInput, ActivityRegistrationUncheckedCreateWithoutActivityInput> | ActivityRegistrationCreateWithoutActivityInput[] | ActivityRegistrationUncheckedCreateWithoutActivityInput[]
-    connectOrCreate?: ActivityRegistrationCreateOrConnectWithoutActivityInput | ActivityRegistrationCreateOrConnectWithoutActivityInput[]
-    upsert?: ActivityRegistrationUpsertWithWhereUniqueWithoutActivityInput | ActivityRegistrationUpsertWithWhereUniqueWithoutActivityInput[]
-    createMany?: ActivityRegistrationCreateManyActivityInputEnvelope
-    set?: ActivityRegistrationWhereUniqueInput | ActivityRegistrationWhereUniqueInput[]
-    disconnect?: ActivityRegistrationWhereUniqueInput | ActivityRegistrationWhereUniqueInput[]
-    delete?: ActivityRegistrationWhereUniqueInput | ActivityRegistrationWhereUniqueInput[]
-    connect?: ActivityRegistrationWhereUniqueInput | ActivityRegistrationWhereUniqueInput[]
-    update?: ActivityRegistrationUpdateWithWhereUniqueWithoutActivityInput | ActivityRegistrationUpdateWithWhereUniqueWithoutActivityInput[]
-    updateMany?: ActivityRegistrationUpdateManyWithWhereWithoutActivityInput | ActivityRegistrationUpdateManyWithWhereWithoutActivityInput[]
-    deleteMany?: ActivityRegistrationScalarWhereInput | ActivityRegistrationScalarWhereInput[]
-  }
-
-  export type ActivityRegistrationUncheckedUpdateManyWithoutActivityNestedInput = {
-    create?: XOR<ActivityRegistrationCreateWithoutActivityInput, ActivityRegistrationUncheckedCreateWithoutActivityInput> | ActivityRegistrationCreateWithoutActivityInput[] | ActivityRegistrationUncheckedCreateWithoutActivityInput[]
-    connectOrCreate?: ActivityRegistrationCreateOrConnectWithoutActivityInput | ActivityRegistrationCreateOrConnectWithoutActivityInput[]
-    upsert?: ActivityRegistrationUpsertWithWhereUniqueWithoutActivityInput | ActivityRegistrationUpsertWithWhereUniqueWithoutActivityInput[]
-    createMany?: ActivityRegistrationCreateManyActivityInputEnvelope
-    set?: ActivityRegistrationWhereUniqueInput | ActivityRegistrationWhereUniqueInput[]
-    disconnect?: ActivityRegistrationWhereUniqueInput | ActivityRegistrationWhereUniqueInput[]
-    delete?: ActivityRegistrationWhereUniqueInput | ActivityRegistrationWhereUniqueInput[]
-    connect?: ActivityRegistrationWhereUniqueInput | ActivityRegistrationWhereUniqueInput[]
-    update?: ActivityRegistrationUpdateWithWhereUniqueWithoutActivityInput | ActivityRegistrationUpdateWithWhereUniqueWithoutActivityInput[]
-    updateMany?: ActivityRegistrationUpdateManyWithWhereWithoutActivityInput | ActivityRegistrationUpdateManyWithWhereWithoutActivityInput[]
-    deleteMany?: ActivityRegistrationScalarWhereInput | ActivityRegistrationScalarWhereInput[]
-  }
-
-  export type CommunityActivityCreateNestedOneWithoutRegistrationsInput = {
-    create?: XOR<CommunityActivityCreateWithoutRegistrationsInput, CommunityActivityUncheckedCreateWithoutRegistrationsInput>
-    connectOrCreate?: CommunityActivityCreateOrConnectWithoutRegistrationsInput
-    connect?: CommunityActivityWhereUniqueInput
-  }
-
-  export type CommunityActivityUpdateOneRequiredWithoutRegistrationsNestedInput = {
-    create?: XOR<CommunityActivityCreateWithoutRegistrationsInput, CommunityActivityUncheckedCreateWithoutRegistrationsInput>
-    connectOrCreate?: CommunityActivityCreateOrConnectWithoutRegistrationsInput
-    upsert?: CommunityActivityUpsertWithoutRegistrationsInput
-    connect?: CommunityActivityWhereUniqueInput
-    update?: XOR<XOR<CommunityActivityUpdateToOneWithWhereWithoutRegistrationsInput, CommunityActivityUpdateWithoutRegistrationsInput>, CommunityActivityUncheckedUpdateWithoutRegistrationsInput>
-  }
-
-  export type RideOrderCreateNestedManyWithoutDriverInput = {
-    create?: XOR<RideOrderCreateWithoutDriverInput, RideOrderUncheckedCreateWithoutDriverInput> | RideOrderCreateWithoutDriverInput[] | RideOrderUncheckedCreateWithoutDriverInput[]
-    connectOrCreate?: RideOrderCreateOrConnectWithoutDriverInput | RideOrderCreateOrConnectWithoutDriverInput[]
-    createMany?: RideOrderCreateManyDriverInputEnvelope
-    connect?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
-  }
-
-  export type RideOrderUncheckedCreateNestedManyWithoutDriverInput = {
-    create?: XOR<RideOrderCreateWithoutDriverInput, RideOrderUncheckedCreateWithoutDriverInput> | RideOrderCreateWithoutDriverInput[] | RideOrderUncheckedCreateWithoutDriverInput[]
-    connectOrCreate?: RideOrderCreateOrConnectWithoutDriverInput | RideOrderCreateOrConnectWithoutDriverInput[]
-    createMany?: RideOrderCreateManyDriverInputEnvelope
-    connect?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
-  }
-
-  export type RideOrderUpdateManyWithoutDriverNestedInput = {
-    create?: XOR<RideOrderCreateWithoutDriverInput, RideOrderUncheckedCreateWithoutDriverInput> | RideOrderCreateWithoutDriverInput[] | RideOrderUncheckedCreateWithoutDriverInput[]
-    connectOrCreate?: RideOrderCreateOrConnectWithoutDriverInput | RideOrderCreateOrConnectWithoutDriverInput[]
-    upsert?: RideOrderUpsertWithWhereUniqueWithoutDriverInput | RideOrderUpsertWithWhereUniqueWithoutDriverInput[]
-    createMany?: RideOrderCreateManyDriverInputEnvelope
-    set?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
-    disconnect?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
-    delete?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
-    connect?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
-    update?: RideOrderUpdateWithWhereUniqueWithoutDriverInput | RideOrderUpdateWithWhereUniqueWithoutDriverInput[]
-    updateMany?: RideOrderUpdateManyWithWhereWithoutDriverInput | RideOrderUpdateManyWithWhereWithoutDriverInput[]
-    deleteMany?: RideOrderScalarWhereInput | RideOrderScalarWhereInput[]
-  }
-
-  export type RideOrderUncheckedUpdateManyWithoutDriverNestedInput = {
-    create?: XOR<RideOrderCreateWithoutDriverInput, RideOrderUncheckedCreateWithoutDriverInput> | RideOrderCreateWithoutDriverInput[] | RideOrderUncheckedCreateWithoutDriverInput[]
-    connectOrCreate?: RideOrderCreateOrConnectWithoutDriverInput | RideOrderCreateOrConnectWithoutDriverInput[]
-    upsert?: RideOrderUpsertWithWhereUniqueWithoutDriverInput | RideOrderUpsertWithWhereUniqueWithoutDriverInput[]
-    createMany?: RideOrderCreateManyDriverInputEnvelope
-    set?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
-    disconnect?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
-    delete?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
-    connect?: RideOrderWhereUniqueInput | RideOrderWhereUniqueInput[]
-    update?: RideOrderUpdateWithWhereUniqueWithoutDriverInput | RideOrderUpdateWithWhereUniqueWithoutDriverInput[]
-    updateMany?: RideOrderUpdateManyWithWhereWithoutDriverInput | RideOrderUpdateManyWithWhereWithoutDriverInput[]
-    deleteMany?: RideOrderScalarWhereInput | RideOrderScalarWhereInput[]
-  }
-
-  export type DriverCreateNestedOneWithoutRideOrdersInput = {
-    create?: XOR<DriverCreateWithoutRideOrdersInput, DriverUncheckedCreateWithoutRideOrdersInput>
-    connectOrCreate?: DriverCreateOrConnectWithoutRideOrdersInput
-    connect?: DriverWhereUniqueInput
-  }
-
-  export type NullableDecimalFieldUpdateOperationsInput = {
-    set?: Decimal | DecimalJsLike | number | string | null
-    increment?: Decimal | DecimalJsLike | number | string
-    decrement?: Decimal | DecimalJsLike | number | string
-    multiply?: Decimal | DecimalJsLike | number | string
-    divide?: Decimal | DecimalJsLike | number | string
-  }
-
-  export type DriverUpdateOneWithoutRideOrdersNestedInput = {
-    create?: XOR<DriverCreateWithoutRideOrdersInput, DriverUncheckedCreateWithoutRideOrdersInput>
-    connectOrCreate?: DriverCreateOrConnectWithoutRideOrdersInput
-    upsert?: DriverUpsertWithoutRideOrdersInput
-    disconnect?: DriverWhereInput | boolean
-    delete?: DriverWhereInput | boolean
-    connect?: DriverWhereUniqueInput
-    update?: XOR<XOR<DriverUpdateToOneWithWhereWithoutRideOrdersInput, DriverUpdateWithoutRideOrdersInput>, DriverUncheckedUpdateWithoutRideOrdersInput>
+  export type SecondhandListingUpdateOneRequiredWithoutReservationsNestedInput = {
+    create?: XOR<SecondhandListingCreateWithoutReservationsInput, SecondhandListingUncheckedCreateWithoutReservationsInput>
+    connectOrCreate?: SecondhandListingCreateOrConnectWithoutReservationsInput
+    upsert?: SecondhandListingUpsertWithoutReservationsInput
+    connect?: SecondhandListingWhereUniqueInput
+    update?: XOR<XOR<SecondhandListingUpdateToOneWithWhereWithoutReservationsInput, SecondhandListingUpdateWithoutReservationsInput>, SecondhandListingUncheckedUpdateWithoutReservationsInput>
   }
 
   export type QueueEntryCreateNestedManyWithoutQueueInput = {
@@ -52059,33 +43856,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
-  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type CmsHomepageServiceCreateWithoutVendorInput = {
@@ -54526,7 +46296,6 @@ export namespace Prisma {
     creTime?: Date | string
     updId: string
     updTime?: Date | string
-    communityNickname?: string | null
   }
 
   export type MemberAccountUncheckedCreateWithoutAddressesInput = {
@@ -54544,7 +46313,6 @@ export namespace Prisma {
     creTime?: Date | string
     updId: string
     updTime?: Date | string
-    communityNickname?: string | null
   }
 
   export type MemberAccountCreateOrConnectWithoutAddressesInput = {
@@ -54660,7 +46428,6 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updId?: StringFieldUpdateOperationsInput | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    communityNickname?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MemberAccountUncheckedUpdateWithoutAddressesInput = {
@@ -54678,7 +46445,6 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updId?: StringFieldUpdateOperationsInput | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    communityNickname?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ChatMessageCreateWithoutListingInput = {
@@ -54731,7 +46497,6 @@ export namespace Prisma {
     creTime?: Date | string
     updTime?: Date | string
     pickupDeadline?: Date | string | null
-    storedAt?: Date | string | null
   }
 
   export type PickupReservationUncheckedCreateWithoutListingInput = {
@@ -54748,7 +46513,6 @@ export namespace Prisma {
     creTime?: Date | string
     updTime?: Date | string
     pickupDeadline?: Date | string | null
-    storedAt?: Date | string | null
   }
 
   export type PickupReservationCreateOrConnectWithoutListingInput = {
@@ -54828,7 +46592,6 @@ export namespace Prisma {
     creTime?: DateTimeFilter<"PickupReservation"> | Date | string
     updTime?: DateTimeFilter<"PickupReservation"> | Date | string
     pickupDeadline?: DateTimeNullableFilter<"PickupReservation"> | Date | string | null
-    storedAt?: DateTimeNullableFilter<"PickupReservation"> | Date | string | null
   }
 
   export type CommunityGroupCreateWithoutMessagesInput = {
@@ -55021,106 +46784,6 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
     reservations?: PickupReservationUncheckedUpdateManyWithoutListingNestedInput
-  }
-
-  export type SecondhandListingCreateWithoutReservationsInput = {
-    id?: string
-    sellerId: string
-    sellerName: string
-    sellerPhone?: string | null
-    productName: string
-    description?: string | null
-    price?: number
-    isFree?: boolean
-    category: string
-    imageUrl?: string | null
-    pickupStore: string
-    pickupMethod: string
-    carbonSaved?: Decimal | DecimalJsLike | number | string
-    status?: string
-    isDeleted?: boolean
-    creTime?: Date | string
-    updTime?: Date | string
-    messages?: ChatMessageCreateNestedManyWithoutListingInput
-  }
-
-  export type SecondhandListingUncheckedCreateWithoutReservationsInput = {
-    id?: string
-    sellerId: string
-    sellerName: string
-    sellerPhone?: string | null
-    productName: string
-    description?: string | null
-    price?: number
-    isFree?: boolean
-    category: string
-    imageUrl?: string | null
-    pickupStore: string
-    pickupMethod: string
-    carbonSaved?: Decimal | DecimalJsLike | number | string
-    status?: string
-    isDeleted?: boolean
-    creTime?: Date | string
-    updTime?: Date | string
-    messages?: ChatMessageUncheckedCreateNestedManyWithoutListingInput
-  }
-
-  export type SecondhandListingCreateOrConnectWithoutReservationsInput = {
-    where: SecondhandListingWhereUniqueInput
-    create: XOR<SecondhandListingCreateWithoutReservationsInput, SecondhandListingUncheckedCreateWithoutReservationsInput>
-  }
-
-  export type SecondhandListingUpsertWithoutReservationsInput = {
-    update: XOR<SecondhandListingUpdateWithoutReservationsInput, SecondhandListingUncheckedUpdateWithoutReservationsInput>
-    create: XOR<SecondhandListingCreateWithoutReservationsInput, SecondhandListingUncheckedCreateWithoutReservationsInput>
-    where?: SecondhandListingWhereInput
-  }
-
-  export type SecondhandListingUpdateToOneWithWhereWithoutReservationsInput = {
-    where?: SecondhandListingWhereInput
-    data: XOR<SecondhandListingUpdateWithoutReservationsInput, SecondhandListingUncheckedUpdateWithoutReservationsInput>
-  }
-
-  export type SecondhandListingUpdateWithoutReservationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    sellerId?: StringFieldUpdateOperationsInput | string
-    sellerName?: StringFieldUpdateOperationsInput | string
-    sellerPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    productName?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    price?: IntFieldUpdateOperationsInput | number
-    isFree?: BoolFieldUpdateOperationsInput | boolean
-    category?: StringFieldUpdateOperationsInput | string
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    pickupStore?: StringFieldUpdateOperationsInput | string
-    pickupMethod?: StringFieldUpdateOperationsInput | string
-    carbonSaved?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    status?: StringFieldUpdateOperationsInput | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    messages?: ChatMessageUpdateManyWithoutListingNestedInput
-  }
-
-  export type SecondhandListingUncheckedUpdateWithoutReservationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    sellerId?: StringFieldUpdateOperationsInput | string
-    sellerName?: StringFieldUpdateOperationsInput | string
-    sellerPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    productName?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    price?: IntFieldUpdateOperationsInput | number
-    isFree?: BoolFieldUpdateOperationsInput | boolean
-    category?: StringFieldUpdateOperationsInput | string
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    pickupStore?: StringFieldUpdateOperationsInput | string
-    pickupMethod?: StringFieldUpdateOperationsInput | string
-    carbonSaved?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    status?: StringFieldUpdateOperationsInput | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    messages?: ChatMessageUncheckedUpdateManyWithoutListingNestedInput
   }
 
   export type ChatMessageCreateWithoutGroupInput = {
@@ -55318,329 +46981,104 @@ export namespace Prisma {
     messages?: ChatMessageUncheckedUpdateManyWithoutGroupNestedInput
   }
 
-  export type ActivityRegistrationCreateWithoutActivityInput = {
+  export type SecondhandListingCreateWithoutReservationsInput = {
     id?: string
-    userId: string
-    userName: string
-    userPhone?: string | null
-    status?: string
-    registeredAt?: Date | string
-    source?: string
-    specialNeeds?: string | null
-  }
-
-  export type ActivityRegistrationUncheckedCreateWithoutActivityInput = {
-    id?: string
-    userId: string
-    userName: string
-    userPhone?: string | null
-    status?: string
-    registeredAt?: Date | string
-    source?: string
-    specialNeeds?: string | null
-  }
-
-  export type ActivityRegistrationCreateOrConnectWithoutActivityInput = {
-    where: ActivityRegistrationWhereUniqueInput
-    create: XOR<ActivityRegistrationCreateWithoutActivityInput, ActivityRegistrationUncheckedCreateWithoutActivityInput>
-  }
-
-  export type ActivityRegistrationCreateManyActivityInputEnvelope = {
-    data: ActivityRegistrationCreateManyActivityInput | ActivityRegistrationCreateManyActivityInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type ActivityRegistrationUpsertWithWhereUniqueWithoutActivityInput = {
-    where: ActivityRegistrationWhereUniqueInput
-    update: XOR<ActivityRegistrationUpdateWithoutActivityInput, ActivityRegistrationUncheckedUpdateWithoutActivityInput>
-    create: XOR<ActivityRegistrationCreateWithoutActivityInput, ActivityRegistrationUncheckedCreateWithoutActivityInput>
-  }
-
-  export type ActivityRegistrationUpdateWithWhereUniqueWithoutActivityInput = {
-    where: ActivityRegistrationWhereUniqueInput
-    data: XOR<ActivityRegistrationUpdateWithoutActivityInput, ActivityRegistrationUncheckedUpdateWithoutActivityInput>
-  }
-
-  export type ActivityRegistrationUpdateManyWithWhereWithoutActivityInput = {
-    where: ActivityRegistrationScalarWhereInput
-    data: XOR<ActivityRegistrationUpdateManyMutationInput, ActivityRegistrationUncheckedUpdateManyWithoutActivityInput>
-  }
-
-  export type ActivityRegistrationScalarWhereInput = {
-    AND?: ActivityRegistrationScalarWhereInput | ActivityRegistrationScalarWhereInput[]
-    OR?: ActivityRegistrationScalarWhereInput[]
-    NOT?: ActivityRegistrationScalarWhereInput | ActivityRegistrationScalarWhereInput[]
-    id?: UuidFilter<"ActivityRegistration"> | string
-    activityId?: UuidFilter<"ActivityRegistration"> | string
-    userId?: UuidFilter<"ActivityRegistration"> | string
-    userName?: StringFilter<"ActivityRegistration"> | string
-    userPhone?: StringNullableFilter<"ActivityRegistration"> | string | null
-    status?: StringFilter<"ActivityRegistration"> | string
-    registeredAt?: DateTimeFilter<"ActivityRegistration"> | Date | string
-    source?: StringFilter<"ActivityRegistration"> | string
-    specialNeeds?: StringNullableFilter<"ActivityRegistration"> | string | null
-  }
-
-  export type CommunityActivityCreateWithoutRegistrationsInput = {
-    id?: string
-    title: string
+    sellerId: string
+    sellerName: string
+    sellerPhone?: string | null
+    productName: string
     description?: string | null
-    category?: string
-    location?: string | null
-    activityDate: Date | string
-    activityEndDate?: Date | string | null
-    maxParticipants?: number
-    status?: string
+    price?: number
+    isFree?: boolean
+    category: string
     imageUrl?: string | null
-    organizerId: string
-    organizerName: string
+    pickupStore: string
+    pickupMethod: string
+    carbonSaved?: Decimal | DecimalJsLike | number | string
+    status?: string
     isDeleted?: boolean
     creTime?: Date | string
     updTime?: Date | string
-    extraParticipants?: number
-    volunteersAssigned?: number
-    volunteersNeeded?: number
+    messages?: ChatMessageCreateNestedManyWithoutListingInput
   }
 
-  export type CommunityActivityUncheckedCreateWithoutRegistrationsInput = {
+  export type SecondhandListingUncheckedCreateWithoutReservationsInput = {
     id?: string
-    title: string
+    sellerId: string
+    sellerName: string
+    sellerPhone?: string | null
+    productName: string
     description?: string | null
-    category?: string
-    location?: string | null
-    activityDate: Date | string
-    activityEndDate?: Date | string | null
-    maxParticipants?: number
-    status?: string
+    price?: number
+    isFree?: boolean
+    category: string
     imageUrl?: string | null
-    organizerId: string
-    organizerName: string
+    pickupStore: string
+    pickupMethod: string
+    carbonSaved?: Decimal | DecimalJsLike | number | string
+    status?: string
     isDeleted?: boolean
     creTime?: Date | string
     updTime?: Date | string
-    extraParticipants?: number
-    volunteersAssigned?: number
-    volunteersNeeded?: number
+    messages?: ChatMessageUncheckedCreateNestedManyWithoutListingInput
   }
 
-  export type CommunityActivityCreateOrConnectWithoutRegistrationsInput = {
-    where: CommunityActivityWhereUniqueInput
-    create: XOR<CommunityActivityCreateWithoutRegistrationsInput, CommunityActivityUncheckedCreateWithoutRegistrationsInput>
+  export type SecondhandListingCreateOrConnectWithoutReservationsInput = {
+    where: SecondhandListingWhereUniqueInput
+    create: XOR<SecondhandListingCreateWithoutReservationsInput, SecondhandListingUncheckedCreateWithoutReservationsInput>
   }
 
-  export type CommunityActivityUpsertWithoutRegistrationsInput = {
-    update: XOR<CommunityActivityUpdateWithoutRegistrationsInput, CommunityActivityUncheckedUpdateWithoutRegistrationsInput>
-    create: XOR<CommunityActivityCreateWithoutRegistrationsInput, CommunityActivityUncheckedCreateWithoutRegistrationsInput>
-    where?: CommunityActivityWhereInput
+  export type SecondhandListingUpsertWithoutReservationsInput = {
+    update: XOR<SecondhandListingUpdateWithoutReservationsInput, SecondhandListingUncheckedUpdateWithoutReservationsInput>
+    create: XOR<SecondhandListingCreateWithoutReservationsInput, SecondhandListingUncheckedCreateWithoutReservationsInput>
+    where?: SecondhandListingWhereInput
   }
 
-  export type CommunityActivityUpdateToOneWithWhereWithoutRegistrationsInput = {
-    where?: CommunityActivityWhereInput
-    data: XOR<CommunityActivityUpdateWithoutRegistrationsInput, CommunityActivityUncheckedUpdateWithoutRegistrationsInput>
+  export type SecondhandListingUpdateToOneWithWhereWithoutReservationsInput = {
+    where?: SecondhandListingWhereInput
+    data: XOR<SecondhandListingUpdateWithoutReservationsInput, SecondhandListingUncheckedUpdateWithoutReservationsInput>
   }
 
-  export type CommunityActivityUpdateWithoutRegistrationsInput = {
+  export type SecondhandListingUpdateWithoutReservationsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
+    sellerName?: StringFieldUpdateOperationsInput | string
+    sellerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    isFree?: BoolFieldUpdateOperationsInput | boolean
     category?: StringFieldUpdateOperationsInput | string
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    activityDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    activityEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    maxParticipants?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    organizerId?: StringFieldUpdateOperationsInput | string
-    organizerName?: StringFieldUpdateOperationsInput | string
+    pickupStore?: StringFieldUpdateOperationsInput | string
+    pickupMethod?: StringFieldUpdateOperationsInput | string
+    carbonSaved?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    extraParticipants?: IntFieldUpdateOperationsInput | number
-    volunteersAssigned?: IntFieldUpdateOperationsInput | number
-    volunteersNeeded?: IntFieldUpdateOperationsInput | number
+    messages?: ChatMessageUpdateManyWithoutListingNestedInput
   }
 
-  export type CommunityActivityUncheckedUpdateWithoutRegistrationsInput = {
+  export type SecondhandListingUncheckedUpdateWithoutReservationsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
+    sellerName?: StringFieldUpdateOperationsInput | string
+    sellerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    isFree?: BoolFieldUpdateOperationsInput | boolean
     category?: StringFieldUpdateOperationsInput | string
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    activityDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    activityEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    maxParticipants?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    organizerId?: StringFieldUpdateOperationsInput | string
-    organizerName?: StringFieldUpdateOperationsInput | string
+    pickupStore?: StringFieldUpdateOperationsInput | string
+    pickupMethod?: StringFieldUpdateOperationsInput | string
+    carbonSaved?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    extraParticipants?: IntFieldUpdateOperationsInput | number
-    volunteersAssigned?: IntFieldUpdateOperationsInput | number
-    volunteersNeeded?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type RideOrderCreateWithoutDriverInput = {
-    id?: string
-    passengerId: string
-    passengerName: string
-    passengerPhone?: string | null
-    pickup: string
-    destination: string
-    carType?: string
-    mode?: string
-    scheduledAt?: Date | string | null
-    status?: string
-    fare?: number | null
-    distance?: Decimal | DecimalJsLike | number | string | null
-    rating?: number | null
-    ratingComment?: string | null
-    creTime?: Date | string
-    updTime?: Date | string
-    completedAt?: Date | string | null
-  }
-
-  export type RideOrderUncheckedCreateWithoutDriverInput = {
-    id?: string
-    passengerId: string
-    passengerName: string
-    passengerPhone?: string | null
-    pickup: string
-    destination: string
-    carType?: string
-    mode?: string
-    scheduledAt?: Date | string | null
-    status?: string
-    fare?: number | null
-    distance?: Decimal | DecimalJsLike | number | string | null
-    rating?: number | null
-    ratingComment?: string | null
-    creTime?: Date | string
-    updTime?: Date | string
-    completedAt?: Date | string | null
-  }
-
-  export type RideOrderCreateOrConnectWithoutDriverInput = {
-    where: RideOrderWhereUniqueInput
-    create: XOR<RideOrderCreateWithoutDriverInput, RideOrderUncheckedCreateWithoutDriverInput>
-  }
-
-  export type RideOrderCreateManyDriverInputEnvelope = {
-    data: RideOrderCreateManyDriverInput | RideOrderCreateManyDriverInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type RideOrderUpsertWithWhereUniqueWithoutDriverInput = {
-    where: RideOrderWhereUniqueInput
-    update: XOR<RideOrderUpdateWithoutDriverInput, RideOrderUncheckedUpdateWithoutDriverInput>
-    create: XOR<RideOrderCreateWithoutDriverInput, RideOrderUncheckedCreateWithoutDriverInput>
-  }
-
-  export type RideOrderUpdateWithWhereUniqueWithoutDriverInput = {
-    where: RideOrderWhereUniqueInput
-    data: XOR<RideOrderUpdateWithoutDriverInput, RideOrderUncheckedUpdateWithoutDriverInput>
-  }
-
-  export type RideOrderUpdateManyWithWhereWithoutDriverInput = {
-    where: RideOrderScalarWhereInput
-    data: XOR<RideOrderUpdateManyMutationInput, RideOrderUncheckedUpdateManyWithoutDriverInput>
-  }
-
-  export type RideOrderScalarWhereInput = {
-    AND?: RideOrderScalarWhereInput | RideOrderScalarWhereInput[]
-    OR?: RideOrderScalarWhereInput[]
-    NOT?: RideOrderScalarWhereInput | RideOrderScalarWhereInput[]
-    id?: UuidFilter<"RideOrder"> | string
-    passengerId?: UuidFilter<"RideOrder"> | string
-    passengerName?: StringFilter<"RideOrder"> | string
-    passengerPhone?: StringNullableFilter<"RideOrder"> | string | null
-    pickup?: StringFilter<"RideOrder"> | string
-    destination?: StringFilter<"RideOrder"> | string
-    carType?: StringFilter<"RideOrder"> | string
-    mode?: StringFilter<"RideOrder"> | string
-    scheduledAt?: DateTimeNullableFilter<"RideOrder"> | Date | string | null
-    status?: StringFilter<"RideOrder"> | string
-    driverId?: UuidNullableFilter<"RideOrder"> | string | null
-    fare?: IntNullableFilter<"RideOrder"> | number | null
-    distance?: DecimalNullableFilter<"RideOrder"> | Decimal | DecimalJsLike | number | string | null
-    rating?: IntNullableFilter<"RideOrder"> | number | null
-    ratingComment?: StringNullableFilter<"RideOrder"> | string | null
-    creTime?: DateTimeFilter<"RideOrder"> | Date | string
-    updTime?: DateTimeFilter<"RideOrder"> | Date | string
-    completedAt?: DateTimeNullableFilter<"RideOrder"> | Date | string | null
-  }
-
-  export type DriverCreateWithoutRideOrdersInput = {
-    id?: string
-    name: string
-    phone: string
-    plateNumber: string
-    carModel: string
-    carType?: string
-    rating?: Decimal | DecimalJsLike | number | string
-    totalTrips?: number
-    status?: string
-    isDeleted?: boolean
-    creTime?: Date | string
-  }
-
-  export type DriverUncheckedCreateWithoutRideOrdersInput = {
-    id?: string
-    name: string
-    phone: string
-    plateNumber: string
-    carModel: string
-    carType?: string
-    rating?: Decimal | DecimalJsLike | number | string
-    totalTrips?: number
-    status?: string
-    isDeleted?: boolean
-    creTime?: Date | string
-  }
-
-  export type DriverCreateOrConnectWithoutRideOrdersInput = {
-    where: DriverWhereUniqueInput
-    create: XOR<DriverCreateWithoutRideOrdersInput, DriverUncheckedCreateWithoutRideOrdersInput>
-  }
-
-  export type DriverUpsertWithoutRideOrdersInput = {
-    update: XOR<DriverUpdateWithoutRideOrdersInput, DriverUncheckedUpdateWithoutRideOrdersInput>
-    create: XOR<DriverCreateWithoutRideOrdersInput, DriverUncheckedCreateWithoutRideOrdersInput>
-    where?: DriverWhereInput
-  }
-
-  export type DriverUpdateToOneWithWhereWithoutRideOrdersInput = {
-    where?: DriverWhereInput
-    data: XOR<DriverUpdateWithoutRideOrdersInput, DriverUncheckedUpdateWithoutRideOrdersInput>
-  }
-
-  export type DriverUpdateWithoutRideOrdersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    plateNumber?: StringFieldUpdateOperationsInput | string
-    carModel?: StringFieldUpdateOperationsInput | string
-    carType?: StringFieldUpdateOperationsInput | string
-    rating?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    totalTrips?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DriverUncheckedUpdateWithoutRideOrdersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    plateNumber?: StringFieldUpdateOperationsInput | string
-    carModel?: StringFieldUpdateOperationsInput | string
-    carType?: StringFieldUpdateOperationsInput | string
-    rating?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    totalTrips?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: ChatMessageUncheckedUpdateManyWithoutListingNestedInput
   }
 
   export type QueueEntryCreateWithoutQueueInput = {
@@ -56911,7 +48349,6 @@ export namespace Prisma {
     creTime?: Date | string
     updTime?: Date | string
     pickupDeadline?: Date | string | null
-    storedAt?: Date | string | null
   }
 
   export type ChatMessageUpdateWithoutListingInput = {
@@ -56967,7 +48404,6 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
     pickupDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    storedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type PickupReservationUncheckedUpdateWithoutListingInput = {
@@ -56984,7 +48420,6 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
     pickupDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    storedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type PickupReservationUncheckedUpdateManyWithoutListingInput = {
@@ -57001,7 +48436,6 @@ export namespace Prisma {
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
     pickupDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    storedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ChatMessageCreateManyGroupInput = {
@@ -57082,130 +48516,6 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     userName?: StringFieldUpdateOperationsInput | string
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ActivityRegistrationCreateManyActivityInput = {
-    id?: string
-    userId: string
-    userName: string
-    userPhone?: string | null
-    status?: string
-    registeredAt?: Date | string
-    source?: string
-    specialNeeds?: string | null
-  }
-
-  export type ActivityRegistrationUpdateWithoutActivityInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    userName?: StringFieldUpdateOperationsInput | string
-    userPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    source?: StringFieldUpdateOperationsInput | string
-    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type ActivityRegistrationUncheckedUpdateWithoutActivityInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    userName?: StringFieldUpdateOperationsInput | string
-    userPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    source?: StringFieldUpdateOperationsInput | string
-    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type ActivityRegistrationUncheckedUpdateManyWithoutActivityInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    userName?: StringFieldUpdateOperationsInput | string
-    userPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    registeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    source?: StringFieldUpdateOperationsInput | string
-    specialNeeds?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type RideOrderCreateManyDriverInput = {
-    id?: string
-    passengerId: string
-    passengerName: string
-    passengerPhone?: string | null
-    pickup: string
-    destination: string
-    carType?: string
-    mode?: string
-    scheduledAt?: Date | string | null
-    status?: string
-    fare?: number | null
-    distance?: Decimal | DecimalJsLike | number | string | null
-    rating?: number | null
-    ratingComment?: string | null
-    creTime?: Date | string
-    updTime?: Date | string
-    completedAt?: Date | string | null
-  }
-
-  export type RideOrderUpdateWithoutDriverInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    passengerId?: StringFieldUpdateOperationsInput | string
-    passengerName?: StringFieldUpdateOperationsInput | string
-    passengerPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    pickup?: StringFieldUpdateOperationsInput | string
-    destination?: StringFieldUpdateOperationsInput | string
-    carType?: StringFieldUpdateOperationsInput | string
-    mode?: StringFieldUpdateOperationsInput | string
-    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    fare?: NullableIntFieldUpdateOperationsInput | number | null
-    distance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    rating?: NullableIntFieldUpdateOperationsInput | number | null
-    ratingComment?: NullableStringFieldUpdateOperationsInput | string | null
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type RideOrderUncheckedUpdateWithoutDriverInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    passengerId?: StringFieldUpdateOperationsInput | string
-    passengerName?: StringFieldUpdateOperationsInput | string
-    passengerPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    pickup?: StringFieldUpdateOperationsInput | string
-    destination?: StringFieldUpdateOperationsInput | string
-    carType?: StringFieldUpdateOperationsInput | string
-    mode?: StringFieldUpdateOperationsInput | string
-    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    fare?: NullableIntFieldUpdateOperationsInput | number | null
-    distance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    rating?: NullableIntFieldUpdateOperationsInput | number | null
-    ratingComment?: NullableStringFieldUpdateOperationsInput | string | null
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type RideOrderUncheckedUpdateManyWithoutDriverInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    passengerId?: StringFieldUpdateOperationsInput | string
-    passengerName?: StringFieldUpdateOperationsInput | string
-    passengerPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    pickup?: StringFieldUpdateOperationsInput | string
-    destination?: StringFieldUpdateOperationsInput | string
-    carType?: StringFieldUpdateOperationsInput | string
-    mode?: StringFieldUpdateOperationsInput | string
-    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    fare?: NullableIntFieldUpdateOperationsInput | number | null
-    distance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    rating?: NullableIntFieldUpdateOperationsInput | number | null
-    ratingComment?: NullableStringFieldUpdateOperationsInput | string | null
-    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type QueueEntryCreateManyQueueInput = {
