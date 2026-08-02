@@ -69,7 +69,7 @@ router.post('/login', async (req, res) => {
     // 設定 HttpOnly Secure SameSite=Strict cookie
     res.cookie('token', result.token, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       path: '/',
       maxAge: cookieMaxAgeForRole(role),
@@ -126,7 +126,7 @@ router.post('/register', async (req, res) => {
 
     res.cookie('token', result.token, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       path: '/',
       maxAge: cookieMaxAgeForRole(role),
