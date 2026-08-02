@@ -8,40 +8,40 @@ const prisma = require('../utils/prismaClient')
 router.get('/', async (req, res) => {
   try {
     const { category, status, userId } = req.query
-    const where = { isDeleted: false }
+    const where = { is_deleted: false }
     if (status && status !== 'all') where.status = status
     if (category && category !== 'all') where.category = category
 
     const activities = await prisma.community_activity.findMany({
       where,
-      orderBy: { activityDate: 'asc' },
-      include: { registrations: true },
+      orderBy: { activity_date: 'asc' },
+      include: { activity_registration: true },
     })
 
     const result = activities.map(a => {
-      const registered = a.registrations.filter(r => r.status === 'registered')
-      const waitlisted = a.registrations.filter(r => r.status === 'waitlisted')
-      const totalParticipants = registered.length + (a.extraParticipants || 0)
+      const registered = a.activity_registration.filter(r => r.status === 'registered')
+      const waitlisted = a.activity_registration.filter(r => r.status === 'waitlisted')
+      const totalParticipants = registered.length + (a.extra_participants || 0)
       return {
         id: a.id,
         title: a.title,
         description: a.description,
         category: a.category,
         location: a.location,
-        activityDate: a.activityDate,
-        activityEndDate: a.activityEndDate,
-        maxParticipants: a.maxParticipants,
+        activityDate: a.activity_date,
+        activityEndDate: a.activity_end_date,
+        maxParticipants: a.max_participants,
         currentParticipants: totalParticipants,
         waitlistCount: waitlisted.length,
-        volunteersNeeded: a.volunteersNeeded,
-        volunteersAssigned: a.volunteersAssigned,
+        volunteersNeeded: a.volunteers_needed,
+        volunteersAssigned: a.volunteers_assigned,
         status: a.status,
-        imageUrl: a.imageUrl,
-        organizerName: a.organizerName,
-        isRegistered: userId ? registered.some(r => r.userId === userId) : false,
-        isWaitlisted: userId ? waitlisted.some(r => r.userId === userId) : false,
-        isFull: totalParticipants >= a.maxParticipants,
-        creTime: a.creTime,
+        imageUrl: a.image_url,
+        organizerName: a.organizer_name,
+        isRegistered: userId ? registered.some(r => r.user_id === userId) : false,
+        isWaitlisted: userId ? waitlisted.some(r => r.user_id === userId) : false,
+        isFull: totalParticipants >= a.max_participants,
+        creTime: a.cre_time,
       }
     })
 
@@ -59,23 +59,23 @@ router.get('/my', async (req, res) => {
     if (!userId) return res.status(400).json({ error: 'userId required' })
 
     const registrations = await prisma.activity_registration.findMany({
-      where: { userId, status: 'registered' },
-      include: { activity: true },
-      orderBy: { activity: { activityDate: 'asc' } },
+      where: { user_id: userId, status: 'registered' },
+      include: { community_activity: true },
+      orderBy: { community_activity: { activity_date: 'asc' } },
     })
 
     const result = registrations.map(r => ({
       registrationId: r.id,
-      activityId: r.activityId,
-      title: r.activity.title,
-      description: r.activity.description,
-      category: r.activity.category,
-      location: r.activity.location,
-      activityDate: r.activity.activityDate,
-      activityEndDate: r.activity.activityEndDate,
-      status: r.activity.status,
-      organizerName: r.activity.organizerName,
-      registeredAt: r.registeredAt,
+      activityId: r.activity_id,
+      title: r.community_activity.title,
+      description: r.community_activity.description,
+      category: r.community_activity.category,
+      location: r.community_activity.location,
+      activityDate: r.community_activity.activity_date,
+      activityEndDate: r.community_activity.activity_end_date,
+      status: r.community_activity.status,
+      organizerName: r.community_activity.organizer_name,
+      registeredAt: r.registered_at,
     }))
 
     res.json(result)
@@ -91,19 +91,19 @@ router.get('/:id', async (req, res) => {
     const { id } = req.params
     const activity = await prisma.community_activity.findUnique({
       where: { id },
-      include: { registrations: { orderBy: { registeredAt: 'asc' } } },
+      include: { activity_registration: { orderBy: { registered_at: 'asc' } } },
     })
     if (!activity) return res.status(404).json({ error: 'Activity not found' })
 
-    const registered = activity.registrations.filter(r => r.status === 'registered' || r.status === 'attended')
-    const waitlisted = activity.registrations.filter(r => r.status === 'waitlisted')
-    const totalParticipants = registered.length + (activity.extraParticipants || 0)
+    const registered = activity.activity_registration.filter(r => r.status === 'registered' || r.status === 'attended')
+    const waitlisted = activity.activity_registration.filter(r => r.status === 'waitlisted')
+    const totalParticipants = registered.length + (activity.extra_participants || 0)
 
     res.json({
       ...activity,
       currentParticipants: totalParticipants,
       waitlistCount: waitlisted.length,
-      isFull: totalParticipants >= activity.maxParticipants,
+      isFull: totalParticipants >= activity.max_participants,
       registrations: registered,
       waitlist: waitlisted,
     })
@@ -125,12 +125,12 @@ router.post('/', async (req, res) => {
         description: description || null,
         category: category || 'general',
         location: location || null,
-        activityDate: new Date(activityDate),
-        activityEndDate: activityEndDate ? new Date(activityEndDate) : null,
-        maxParticipants: maxParticipants || 50,
+        activity_date: new Date(activityDate),
+        activity_end_date: activityEndDate ? new Date(activityEndDate) : null,
+        max_participants: maxParticipants || 50,
         status: status || 'open',
-        organizerId: organizerId || '00000000-0000-0000-0000-eeeeeeeeeeee',
-        organizerName: organizerName || '信義區里辦公處',
+        organizer_id: organizerId || '00000000-0000-0000-0000-eeeeeeeeeeee',
+        organizer_name: organizerName || '信義區里辦公處',
       },
     })
 
@@ -152,9 +152,9 @@ router.patch('/:id', async (req, res) => {
     if (description !== undefined) data.description = description
     if (category) data.category = category
     if (location !== undefined) data.location = location
-    if (activityDate) data.activityDate = new Date(activityDate)
-    if (activityEndDate) data.activityEndDate = new Date(activityEndDate)
-    if (maxParticipants) data.maxParticipants = maxParticipants
+    if (activityDate) data.activity_date = new Date(activityDate)
+    if (activityEndDate) data.activity_end_date = new Date(activityEndDate)
+    if (maxParticipants) data.max_participants = maxParticipants
     if (status) data.status = status
 
     const activity = await prisma.community_activity.update({ where: { id }, data })
@@ -169,7 +169,7 @@ router.patch('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params
-    await prisma.community_activity.update({ where: { id }, data: { isDeleted: true } })
+    await prisma.community_activity.update({ where: { id }, data: { is_deleted: true } })
     res.json({ success: true })
   } catch (err) {
     console.error('DELETE /api/activities/:id error:', err)
@@ -188,26 +188,26 @@ router.post('/:id/register', async (req, res) => {
 
     // 檢查是否已報名或候補
     const existing = await prisma.activity_registration.findFirst({
-      where: { activityId: id, userId, status: { in: ['registered', 'waitlisted'] } },
+      where: { activity_id: id, user_id: userId, status: { in: ['registered', 'waitlisted'] } },
     })
     if (existing) return res.status(409).json({ error: existing.status === 'waitlisted' ? '您已在候補名單中' : '您已報名此活動' })
 
     // 檢查是否額滿
     const activity = await prisma.community_activity.findUnique({
       where: { id },
-      include: { registrations: { where: { status: 'registered' } } },
+      include: { activity_registration: { where: { status: 'registered' } } },
     })
     if (!activity) return res.status(404).json({ error: 'Activity not found' })
 
-    const totalParticipants = activity.registrations.length + (activity.extraParticipants || 0)
-    const isFull = totalParticipants >= activity.maxParticipants
+    const totalParticipants = activity.activity_registration.length + (activity.extra_participants || 0)
+    const isFull = totalParticipants >= activity.max_participants
 
     const registration = await prisma.activity_registration.create({
       data: {
-        activityId: id,
-        userId,
-        userName,
-        userPhone: userPhone || null,
+        activity_id: id,
+        user_id: userId,
+        user_name: userName,
+        user_phone: userPhone || null,
         status: isFull ? 'waitlisted' : 'registered',
         source: source || 'app',
       },
@@ -232,7 +232,7 @@ router.delete('/:id/register', async (req, res) => {
     if (!userId) return res.status(400).json({ error: 'userId required' })
 
     const registration = await prisma.activity_registration.findFirst({
-      where: { activityId: id, userId, status: { in: ['registered', 'waitlisted'] } },
+      where: { activity_id: id, user_id: userId, status: { in: ['registered', 'waitlisted'] } },
     })
     if (!registration) return res.status(404).json({ error: '未找到報名記錄' })
 
@@ -244,8 +244,8 @@ router.delete('/:id/register', async (req, res) => {
     // 如果取消的是正式報名者，自動遞補最早的候補者
     if (registration.status === 'registered') {
       const nextWaitlisted = await prisma.activity_registration.findFirst({
-        where: { activityId: id, status: 'waitlisted' },
-        orderBy: { registeredAt: 'asc' },
+        where: { activity_id: id, status: 'waitlisted' },
+        orderBy: { registered_at: 'asc' },
       })
       if (nextWaitlisted) {
         await prisma.activity_registration.update({
@@ -257,8 +257,8 @@ router.delete('/:id/register', async (req, res) => {
           data: {
             senderId: '00000000-0000-0000-0000-eeeeeeeeeeee',
             senderName: '信義區里辦公處',
-            receiverId: nextWaitlisted.userId,
-            receiverName: nextWaitlisted.userName,
+            receiverId: nextWaitlisted.user_id,
+            receiverName: nextWaitlisted.user_name,
             content: `🎉 恭喜！有名額釋出，您已從候補名單遞補成功！請準時參加活動。`,
             messageType: 'text',
           },
@@ -283,7 +283,7 @@ router.post('/:id/complete', async (req, res) => {
     })
     // 將所有候補者標記為 cancelled
     await prisma.activity_registration.updateMany({
-      where: { activityId: id, status: 'waitlisted' },
+      where: { activity_id: id, status: 'waitlisted' },
       data: { status: 'cancelled' },
     })
     res.json({ success: true, activity })
@@ -302,9 +302,9 @@ router.post('/:id/notify', async (req, res) => {
     const { content, organizerId, organizerName } = req.body
     if (!content) return res.status(400).json({ error: 'content required' })
 
-    const activity = await prisma.communityActivity.findUnique({
+    const activity = await prisma.community_activity.findUnique({
       where: { id },
-      include: { registrations: { where: { status: 'registered' } } },
+      include: { activity_registration: { where: { status: 'registered' } } },
     })
     if (!activity) return res.status(404).json({ error: 'Activity not found' })
 
@@ -313,13 +313,13 @@ router.post('/:id/notify', async (req, res) => {
 
     // 對每位報名者發私訊
     const messages = []
-    for (const reg of activity.registrations) {
+    for (const reg of activity.activity_registration) {
       const msg = await prisma.chatMessage.create({
         data: {
           senderId,
           senderName,
-          receiverId: reg.userId,
-          receiverName: reg.userName,
+          receiverId: reg.user_id,
+          receiverName: reg.user_name,
           content: `📢【${activity.title}】${content}`,
           messageType: 'text',
         },
@@ -340,12 +340,12 @@ router.post('/:id/notify', async (req, res) => {
 router.get('/questions/list', async (req, res) => {
   try {
     const { status } = req.query
-    const where = { isDeleted: false }
+    const where = { is_deleted: false }
     if (status && status !== 'all') where.status = status
 
     const questions = await prisma.community_question.findMany({
       where,
-      orderBy: { creTime: 'desc' },
+      orderBy: { cre_time: 'desc' },
     })
     res.json(questions)
   } catch (err) {
@@ -362,11 +362,11 @@ router.post('/questions', async (req, res) => {
 
     const question = await prisma.community_question.create({
       data: {
-        askerId,
-        askerName: askerName || '匿名居民',
+        asker_id: askerId,
+        asker_name: askerName || '匿名居民',
         content,
         category: category || 'general',
-        isAnonymous: isAnonymous || false,
+        is_anonymous: isAnonymous || false,
       },
     })
     res.status(201).json(question)
@@ -386,9 +386,9 @@ router.patch('/questions/:id/reply', async (req, res) => {
     const question = await prisma.community_question.update({
       where: { id },
       data: {
-        replyContent,
-        repliedBy: repliedBy || '里長',
-        repliedAt: new Date(),
+        reply_content: replyContent,
+        replied_by: repliedBy || '里長',
+        replied_at: new Date(),
         status: 'replied',
       },
     })
@@ -398,8 +398,8 @@ router.patch('/questions/:id/reply', async (req, res) => {
       data: {
         senderId: '00000000-0000-0000-0000-eeeeeeeeeeee',
         senderName: '信義區里辦公處',
-        receiverId: question.askerId,
-        receiverName: question.askerName,
+        receiverId: question.asker_id,
+        receiverName: question.asker_name,
         content: `📩 您的提問已收到回覆：\n\n「${question.content.slice(0, 30)}...」\n\n里長回覆：${replyContent}`,
         messageType: 'text',
       },
