@@ -25,6 +25,7 @@ const PORT = process.env.PORT || 3001;
 // CORS 設定：允許前端網域發送 cookies
 const allowedOrigins = [
   'http://localhost:3000',
+  'https://main.d1wtq1dth6sl4x.amplifyapp.com',
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
