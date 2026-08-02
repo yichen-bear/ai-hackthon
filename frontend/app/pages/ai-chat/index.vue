@@ -9,6 +9,7 @@ import {
 definePageMeta({
   layout: 'blank',
 })
+const { apiFetch } = useApi()
 
 const router = useRouter()
 
@@ -90,7 +91,7 @@ async function getAutoFillForTopic(topicTitle: string): Promise<AutoFillInfo | n
   if (!isNameTopic && !isPhoneTopic && !isEmailTopic) return null
 
   try {
-    const res = await $fetch<{ name?: string; email?: string; phone?: string }>('/api/auth/me', {
+    const res = await apiFetch<{ name?: string; email?: string; phone?: string }>('/api/auth/me', {
       credentials: 'include',
     })
 
@@ -329,7 +330,7 @@ async function doSend(text: string, mode: 'text' | 'voice') {
     // 地址題：主動取得已儲存地址
     if (isAddressTopic.value) {
       try {
-        const addrRes = await $fetch<{ success: boolean; data: any[] }>('/api/member/addresses', {
+        const addrRes = await apiFetch<{ success: boolean; data: any[] }>('/api/member/addresses', {
           credentials: 'include',
         })
         if (addrRes?.success && Array.isArray(addrRes.data) && addrRes.data.length > 0) {
@@ -578,7 +579,7 @@ async function handleImageSelected(files: FileList | null) {
   for (const file of Array.from(files)) {
     try {
       const base64 = await fileToBase64(file)
-      const res = await $fetch<{ url: string; filename: string }>('/api/upload', {
+      const res = await apiFetch<{ url: string; filename: string }>('/api/upload', {
         method: 'POST',
         body: { image: base64, filename: file.name },
       })

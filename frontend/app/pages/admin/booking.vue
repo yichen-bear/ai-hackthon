@@ -499,7 +499,7 @@ const secondhandItems = ref<SecondhandStoreItem[]>([])
 async function fetchSecondhandItems() {
   try {
     const store = encodeURIComponent(selectedStore.value)
-    const res = await $fetch<SecondhandStoreItem[]>(`/api/secondhand-items?store=${store}`)
+    const res = await apiFetch<SecondhandStoreItem[]>(`/api/secondhand-items?store=${store}`)
     secondhandItems.value = res
   } catch (err) {
     console.error('fetchSecondhandItems error:', err)

@@ -45,12 +45,13 @@ const counties = ref<County[]>([])
 const districts = ref<District[]>([])
 const isLoadingCounties = ref(false)
 const isLoadingDistricts = ref(false)
+const { apiFetch } = useApi()
 
 // 載入縣市清單
 async function fetchCounties() {
   isLoadingCounties.value = true
   try {
-    const res = await $fetch<{ success: boolean; data: County[] }>('/api/address/counties')
+    const res = await apiFetch<{ success: boolean; data: County[] }>('/api/address/counties')
     if (res.success) {
       counties.value = res.data
     }
@@ -69,7 +70,7 @@ async function fetchDistricts(countyCode: string) {
   }
   isLoadingDistricts.value = true
   try {
-    const res = await $fetch<{ success: boolean; data: District[] }>(`/api/address/districts/${countyCode}`)
+    const res = await apiFetch<{ success: boolean; data: District[] }>(`/api/address/districts/${countyCode}`)
     if (res.success) {
       districts.value = res.data
     }
