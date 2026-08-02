@@ -66,11 +66,11 @@ router.post('/login', async (req, res) => {
       result = await loginVendor(email, password);
     }
 
-    // 設定 HttpOnly Secure SameSite=Strict cookie
+    // 設定 HttpOnly Secure SameSite=None cookie（跨域需要）
     res.cookie('token', result.token, {
       httpOnly: true,
       secure: true,
-      sameSite: 'strict',
+      sameSite: 'none',
       path: '/',
       maxAge: cookieMaxAgeForRole(role),
     });
@@ -127,7 +127,7 @@ router.post('/register', async (req, res) => {
     res.cookie('token', result.token, {
       httpOnly: true,
       secure: true,
-      sameSite: 'strict',
+      sameSite: 'none',
       path: '/',
       maxAge: cookieMaxAgeForRole(role),
     });
@@ -157,7 +157,7 @@ router.post('/logout', (req, res) => {
   res.clearCookie('token', {
     httpOnly: true,
     secure: true,
-    sameSite: 'strict',
+    sameSite: 'none',
     path: '/',
   });
 
