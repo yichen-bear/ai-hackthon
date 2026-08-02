@@ -470,64 +470,6 @@ function addToTracking(drug: DrugItem) {
         <!-- AI 同步健康追蹤卡片 -->
         <HealthTracker @data-updated="handleHealthDataUpdated" />
 
-        <!-- 🥤 今日飲水追蹤 -->
-        <div class="med-card med-card--rounded">
-          <div class="med-card__header">
-            <h3 class="med-card__title">🥤 今日飲水追蹤</h3>
-            <button
-              class="edit-pencil-btn"
-              aria-label="編輯飲水設定"
-              @click="isEditingWater = !isEditingWater"
-            >✏️</button>
-          </div>
-
-          <!-- 編輯模式 -->
-          <Transition name="card-slide">
-            <div v-if="isEditingWater" class="edit-form">
-              <label class="edit-form__label">
-                每日目標水量 (ml)
-                <input
-                  v-model.number="dailyWaterGoal"
-                  type="number"
-                  min="500"
-                  max="10000"
-                  class="edit-form__input"
-                />
-              </label>
-              <label class="edit-form__label">
-                我的水壺/水杯容量 (ml)
-                <input
-                  v-model.number="cupCapacity"
-                  type="number"
-                  min="100"
-                  max="3000"
-                  class="edit-form__input"
-                />
-              </label>
-              <button class="save-btn" @click="saveWaterSettings">
-                💾 儲存水壺設定
-              </button>
-            </div>
-          </Transition>
-
-          <!-- 檢視模式 -->
-          <Transition name="card-slide">
-            <div v-if="!isEditingWater" class="view-mode">
-              <p class="med-card__water-text">
-                今日喝水：<strong>{{ waterIntake.toLocaleString() }}</strong> / {{ dailyWaterGoal.toLocaleString() }} ml
-              </p>
-              <div class="water-bar">
-                <div class="water-bar__fill" :style="{ width: waterPercent + '%' }" />
-              </div>
-              <div class="water-actions">
-                <button class="water-btn water-btn--cup" @click="addWater(cupCapacity)">
-                  🥤 喝完一杯 (+{{ cupCapacity }}ml)
-                </button>
-              </div>
-            </div>
-          </Transition>
-        </div>
-
         <!-- 💊 保健品追蹤清單 -->
         <div class="med-card med-card--rounded">
           <div class="med-card__header">

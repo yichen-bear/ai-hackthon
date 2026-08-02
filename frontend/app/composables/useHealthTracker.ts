@@ -19,6 +19,11 @@ export interface HealthTrackerData {
   supplement: SupplementData
 }
 
+export interface WaterLogData {
+  date: string
+  intake: number
+}
+
 const API_BASE = 'http://localhost:3001/api'
 
 export function useHealthTracker() {
@@ -26,6 +31,11 @@ export function useHealthTracker() {
   const loading = ref(false)
   const error = ref<string | null>(null)
 
+  // 每日飲水進度
+  const waterLog = ref<WaterLogData>({ date: '', intake: 0 })
+  const waterLogLoading = ref(false)
+
+  /** 取得最新飲水/保健品設定 */
   async function fetchLatest() {
     loading.value = true
     error.value = null
@@ -44,6 +54,7 @@ export function useHealthTracker() {
     }
   }
 
+  /** 儲存飲水/保健品設定 (手動或 AI) */
   async function saveData(payload: { water?: Partial<WaterData>; supplement?: Partial<SupplementData> }) {
     try {
       const res = await fetch(`${API_BASE}/health-tracker/save`, {
@@ -61,11 +72,67 @@ export function useHealthTracker() {
     }
   }
 
+  /** 取得今日飲水進度 */
+  async function fetchTodayWaterLog() {
+    waterLogLoading.value = true
+    try {
+      const res = await fetch(`${API_BASE}/health-tracker/water-log/today`)
+      const json = await res.json()
+      if (json.success) {
+        waterLog.value = json.data
+      }
+    } catch (e: any) {
+      console.error('fetchTodayWaterLog error:', e.message)
+    } finally {
+      waterLogLoading.value = false
+    }
+  }
+
+  /** 新增飲水量 (累加) */
+  async function addWaterIntake(amount: number) {
+    try {
+      const res = await fetch(`${API_BASE}/health-tracker/water-log`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount }),
+      })
+      const json = await res.json()
+      if (json.success) {
+        waterLog.value = json.data
+      }
+      return json
+    } catch (e: any) {
+      return { success: false, message: e.message }
+    }
+  }
+
+  /** 歸零今日飲水量 */
+  async function resetWaterLog() {
+    try {
+      const res = await fetch(`${API_BASE}/health-tracker/water-log/reset`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      })
+      const json = await res.json()
+      if (json.success) {
+        waterLog.value = json.data
+      }
+      return json
+    } catch (e: any) {
+      return { success: false, message: e.message }
+    }
+  }
+
   return {
     data,
     loading,
     error,
+    waterLog,
+    waterLogLoading,
     fetchLatest,
     saveData,
+    fetchTodayWaterLog,
+    addWaterIntake,
+    resetWaterLog,
   }
 }

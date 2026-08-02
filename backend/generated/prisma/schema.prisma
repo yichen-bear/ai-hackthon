@@ -241,6 +241,18 @@ model PmsFormFeedback {
   @@map("pms_form_feedback")
 }
 
+/// 每日飲水紀錄 — 追蹤使用者每天實際喝了多少水
+model HealthWaterLog {
+  id      Int      @id @default(autoincrement())
+  date    String   @db.VarChar(10) // "YYYY-MM-DD"
+  intake  Int      @default(0) // 目前累積飲水量 (ml)
+  creTime DateTime @default(now()) @map("cre_time") @db.Timestamptz(6)
+  updTime DateTime @default(now()) @map("upd_time") @db.Timestamptz(6)
+
+  @@unique([date])
+  @@map("health_water_log")
+}
+
 model MmsOrderRecord {
   recordId          BigInt    @id @default(autoincrement()) @map("record_id")
   orderNo           String    @map("order_no") @db.VarChar(50)

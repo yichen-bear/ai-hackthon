@@ -299,6 +299,14 @@ exports.Prisma.PmsFormFeedbackScalarFieldEnum = {
   updTime: 'updTime'
 };
 
+exports.Prisma.HealthWaterLogScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
+  intake: 'intake',
+  creTime: 'creTime',
+  updTime: 'updTime'
+};
+
 exports.Prisma.MmsOrderRecordScalarFieldEnum = {
   recordId: 'recordId',
   orderNo: 'orderNo',
@@ -655,6 +663,7 @@ exports.Prisma.ModelName = {
   PmsTopicMedia: 'PmsTopicMedia',
   PmsTopicCountyDistrictRelation: 'PmsTopicCountyDistrictRelation',
   PmsFormFeedback: 'PmsFormFeedback',
+  HealthWaterLog: 'HealthWaterLog',
   MmsOrderRecord: 'MmsOrderRecord',
   MemberAccount: 'MemberAccount',
   MemberAddress: 'MemberAddress',
