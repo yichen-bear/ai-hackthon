@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
     if (status && status !== 'all') where.status = status
     if (category && category !== 'all') where.category = category
 
-    const activities = await prisma.communityActivity.findMany({
+    const activities = await prisma.community_activity.findMany({
       where,
       orderBy: { activityDate: 'asc' },
       include: { registrations: true },
@@ -58,7 +58,7 @@ router.get('/my', async (req, res) => {
     const { userId } = req.query
     if (!userId) return res.status(400).json({ error: 'userId required' })
 
-    const registrations = await prisma.activityRegistration.findMany({
+    const registrations = await prisma.activity_registration.findMany({
       where: { userId, status: 'registered' },
       include: { activity: true },
       orderBy: { activity: { activityDate: 'asc' } },
@@ -89,7 +89,7 @@ router.get('/my', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params
-    const activity = await prisma.communityActivity.findUnique({
+    const activity = await prisma.community_activity.findUnique({
       where: { id },
       include: { registrations: { orderBy: { registeredAt: 'asc' } } },
     })
@@ -119,7 +119,7 @@ router.post('/', async (req, res) => {
     const { title, description, category, location, activityDate, activityEndDate, maxParticipants, organizerId, organizerName, status } = req.body
     if (!title || !activityDate) return res.status(400).json({ error: 'title, activityDate required' })
 
-    const activity = await prisma.communityActivity.create({
+    const activity = await prisma.community_activity.create({
       data: {
         title,
         description: description || null,
@@ -157,7 +157,7 @@ router.patch('/:id', async (req, res) => {
     if (maxParticipants) data.maxParticipants = maxParticipants
     if (status) data.status = status
 
-    const activity = await prisma.communityActivity.update({ where: { id }, data })
+    const activity = await prisma.community_activity.update({ where: { id }, data })
     res.json(activity)
   } catch (err) {
     console.error('PATCH /api/activities/:id error:', err)
@@ -169,7 +169,7 @@ router.patch('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params
-    await prisma.communityActivity.update({ where: { id }, data: { isDeleted: true } })
+    await prisma.community_activity.update({ where: { id }, data: { isDeleted: true } })
     res.json({ success: true })
   } catch (err) {
     console.error('DELETE /api/activities/:id error:', err)
@@ -187,13 +187,13 @@ router.post('/:id/register', async (req, res) => {
     if (!userId || !userName) return res.status(400).json({ error: 'userId, userName required' })
 
     // 檢查是否已報名或候補
-    const existing = await prisma.activityRegistration.findFirst({
+    const existing = await prisma.activity_registration.findFirst({
       where: { activityId: id, userId, status: { in: ['registered', 'waitlisted'] } },
     })
     if (existing) return res.status(409).json({ error: existing.status === 'waitlisted' ? '您已在候補名單中' : '您已報名此活動' })
 
     // 檢查是否額滿
-    const activity = await prisma.communityActivity.findUnique({
+    const activity = await prisma.community_activity.findUnique({
       where: { id },
       include: { registrations: { where: { status: 'registered' } } },
     })
@@ -202,7 +202,7 @@ router.post('/:id/register', async (req, res) => {
     const totalParticipants = activity.registrations.length + (activity.extraParticipants || 0)
     const isFull = totalParticipants >= activity.maxParticipants
 
-    const registration = await prisma.activityRegistration.create({
+    const registration = await prisma.activity_registration.create({
       data: {
         activityId: id,
         userId,
@@ -231,24 +231,24 @@ router.delete('/:id/register', async (req, res) => {
     const { userId } = req.body
     if (!userId) return res.status(400).json({ error: 'userId required' })
 
-    const registration = await prisma.activityRegistration.findFirst({
+    const registration = await prisma.activity_registration.findFirst({
       where: { activityId: id, userId, status: { in: ['registered', 'waitlisted'] } },
     })
     if (!registration) return res.status(404).json({ error: '未找到報名記錄' })
 
-    await prisma.activityRegistration.update({
+    await prisma.activity_registration.update({
       where: { id: registration.id },
       data: { status: 'cancelled' },
     })
 
     // 如果取消的是正式報名者，自動遞補最早的候補者
     if (registration.status === 'registered') {
-      const nextWaitlisted = await prisma.activityRegistration.findFirst({
+      const nextWaitlisted = await prisma.activity_registration.findFirst({
         where: { activityId: id, status: 'waitlisted' },
         orderBy: { registeredAt: 'asc' },
       })
       if (nextWaitlisted) {
-        await prisma.activityRegistration.update({
+        await prisma.activity_registration.update({
           where: { id: nextWaitlisted.id },
           data: { status: 'registered' },
         })
@@ -277,12 +277,12 @@ router.delete('/:id/register', async (req, res) => {
 router.post('/:id/complete', async (req, res) => {
   try {
     const { id } = req.params
-    const activity = await prisma.communityActivity.update({
+    const activity = await prisma.community_activity.update({
       where: { id },
       data: { status: 'completed' },
     })
     // 將所有候補者標記為 cancelled
-    await prisma.activityRegistration.updateMany({
+    await prisma.activity_registration.updateMany({
       where: { activityId: id, status: 'waitlisted' },
       data: { status: 'cancelled' },
     })
@@ -343,7 +343,7 @@ router.get('/questions/list', async (req, res) => {
     const where = { isDeleted: false }
     if (status && status !== 'all') where.status = status
 
-    const questions = await prisma.communityQuestion.findMany({
+    const questions = await prisma.community_question.findMany({
       where,
       orderBy: { creTime: 'desc' },
     })
@@ -360,7 +360,7 @@ router.post('/questions', async (req, res) => {
     const { askerId, askerName, content, category, isAnonymous } = req.body
     if (!askerId || !content) return res.status(400).json({ error: 'askerId, content required' })
 
-    const question = await prisma.communityQuestion.create({
+    const question = await prisma.community_question.create({
       data: {
         askerId,
         askerName: askerName || '匿名居民',
@@ -383,7 +383,7 @@ router.patch('/questions/:id/reply', async (req, res) => {
     const { replyContent, repliedBy } = req.body
     if (!replyContent) return res.status(400).json({ error: 'replyContent required' })
 
-    const question = await prisma.communityQuestion.update({
+    const question = await prisma.community_question.update({
       where: { id },
       data: {
         replyContent,

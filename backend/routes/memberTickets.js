@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
     if (!userId) return res.status(400).json({ error: 'userId required' })
 
     // 1. 社區活動報名
-    const activityRegs = await prisma.activityRegistration.findMany({
+    const activityRegs = await prisma.activity_registration.findMany({
       where: { userId, status: { in: ['registered', 'attended'] } },
       include: { activity: { select: { title: true, activityDate: true, activityEndDate: true, location: true, organizerName: true, status: true } } },
       orderBy: { registeredAt: 'desc' },
@@ -32,7 +32,7 @@ router.get('/', async (req, res) => {
     }))
 
     // 2. 叫車行程（已完成）
-    const rideOrders = await prisma.rideOrder.findMany({
+    const rideOrders = await prisma.ride_order.findMany({
       where: { passengerId: userId, status: 'completed' },
       include: { driver: { select: { name: true, plateNumber: true, carModel: true } } },
       orderBy: { completedAt: 'desc' },
