@@ -29,18 +29,14 @@ router.get('/latest', async (req, res) => {
 
     // 解析 feedbackContent JSON
     const content = feedback.feedbackContent;
-    // content 結構為 { "4021": { topicId: 4021, value: "60" }, ... }
-    // 或 { answers: [{ topicId: 4021, optionIds: [], value: "60" }] }
 
     let fields = {};
     if (content && typeof content === 'object') {
       if (content.answers && Array.isArray(content.answers)) {
-        // 來自前端表單送出的格式
         for (const ans of content.answers) {
           fields[String(ans.topicId)] = ans.value;
         }
       } else {
-        // 來自 AI chat 的格式 (collectedFields)
         for (const [key, val] of Object.entries(content)) {
           if (val && typeof val === 'object' && 'value' in val) {
             fields[key] = val.value;
@@ -90,8 +86,8 @@ router.get('/latest', async (req, res) => {
 
 /**
  * POST /api/health-tracker/save
- * AI 對話完成後，直接儲存飲水/保健品資料至 form 1020 feedback
- * 供 AI chat 系統在填寫完成後呼叫，或前端手動觸發
+ * 儲存飲水/保健品設定至 form 1020 feedback
+ * 可由 AI chat 或前端卡片手動觸發
  */
 router.post('/save', async (req, res) => {
   try {
@@ -174,6 +170,123 @@ router.post('/save', async (req, res) => {
     });
   } catch (err) {
     console.error('[POST /api/health-tracker/save] error:', err.message);
+    return res.status(500).json({ success: false, message: '系統錯誤' });
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════
+ *  每日飲水量紀錄 API (HealthWaterLog)
+ * ═══════════════════════════════════════════════════════════ */
+
+/**
+ * 取得今日日期字串 (YYYY-MM-DD, 以本地時區為準)
+ */
+function getTodayDateStr() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+/**
+ * GET /api/health-tracker/water-log/today
+ * 取得今日的飲水進度
+ */
+router.get('/water-log/today', async (req, res) => {
+  try {
+    const today = getTodayDateStr();
+
+    const log = await prisma.healthWaterLog.findUnique({
+      where: { date: today },
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        date: today,
+        intake: log ? log.intake : 0,
+      },
+    });
+  } catch (err) {
+    console.error('[GET /api/health-tracker/water-log/today] error:', err.message);
+    return res.status(500).json({ success: false, message: '系統錯誤' });
+  }
+});
+
+/**
+ * POST /api/health-tracker/water-log
+ * 增加飲水量 (累加)
+ * body: { amount: number }  — 本次新增的 ml 數
+ */
+router.post('/water-log', async (req, res) => {
+  try {
+    const { amount } = req.body;
+
+    if (!amount || typeof amount !== 'number' || amount <= 0) {
+      return res.status(400).json({ success: false, message: '請提供有效的 amount (正整數, ml)' });
+    }
+
+    const today = getTodayDateStr();
+    const now = new Date();
+
+    // upsert: 如果今天已經有紀錄就累加，沒有就建新的
+    const log = await prisma.healthWaterLog.upsert({
+      where: { date: today },
+      create: {
+        date: today,
+        intake: amount,
+        creTime: now,
+        updTime: now,
+      },
+      update: {
+        intake: { increment: amount },
+        updTime: now,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        date: today,
+        intake: log.intake,
+      },
+    });
+  } catch (err) {
+    console.error('[POST /api/health-tracker/water-log] error:', err.message);
+    return res.status(500).json({ success: false, message: '系統錯誤' });
+  }
+});
+
+/**
+ * POST /api/health-tracker/water-log/reset
+ * 手動歸零今日飲水量
+ */
+router.post('/water-log/reset', async (req, res) => {
+  try {
+    const today = getTodayDateStr();
+    const now = new Date();
+
+    await prisma.healthWaterLog.upsert({
+      where: { date: today },
+      create: {
+        date: today,
+        intake: 0,
+        creTime: now,
+        updTime: now,
+      },
+      update: {
+        intake: 0,
+        updTime: now,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: { date: today, intake: 0 },
+    });
+  } catch (err) {
+    console.error('[POST /api/health-tracker/water-log/reset] error:', err.message);
     return res.status(500).json({ success: false, message: '系統錯誤' });
   }
 });
