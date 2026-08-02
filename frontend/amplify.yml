@@ -8,6 +8,7 @@ applications:
             - npm ci
         build:
           commands:
+            - echo "NUXT_PUBLIC_API_BASE=$NUXT_PUBLIC_API_BASE"
             - npm run build
       artifacts:
         baseDirectory: .amplify-hosting
