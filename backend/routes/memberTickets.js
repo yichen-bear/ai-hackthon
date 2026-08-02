@@ -13,29 +13,29 @@ router.get('/', async (req, res) => {
 
     // 1. 社區活動報名
     const activityRegs = await prisma.activity_registration.findMany({
-      where: { userId, status: { in: ['registered', 'attended'] } },
-      include: { activity: { select: { title: true, activityDate: true, activityEndDate: true, location: true, organizerName: true, status: true } } },
-      orderBy: { registeredAt: 'desc' },
+      where: { user_id: userId, status: { in: ['registered', 'attended'] } },
+      include: { community_activity: { select: { title: true, activity_date: true, activity_end_date: true, location: true, organizer_name: true, status: true } } },
+      orderBy: { registered_at: 'desc' },
     })
 
     const activityTickets = activityRegs.map(r => ({
       id: `act-${r.id}`,
       type: 'activity',
-      title: r.activity.title,
-      date: r.activity.activityDate,
-      endDate: r.activity.activityEndDate,
-      location: r.activity.location,
-      organizer: r.activity.organizerName,
-      status: r.activity.status === 'completed' ? 'used' : 'active',
+      title: r.community_activity.title,
+      date: r.community_activity.activity_date,
+      endDate: r.community_activity.activity_end_date,
+      location: r.community_activity.location,
+      organizer: r.community_activity.organizer_name,
+      status: r.community_activity.status === 'completed' ? 'used' : 'active',
       code: `ACT-${r.id.slice(0, 8).toUpperCase()}`,
-      registeredAt: r.registeredAt,
+      registeredAt: r.registered_at,
     }))
 
     // 2. 叫車行程（已完成）
     const rideOrders = await prisma.ride_order.findMany({
-      where: { passengerId: userId, status: 'completed' },
-      include: { driver: { select: { name: true, plateNumber: true, carModel: true } } },
-      orderBy: { completedAt: 'desc' },
+      where: { passenger_id: userId, status: 'completed' },
+      include: { driver: { select: { name: true, plate_number: true, car_model: true } } },
+      orderBy: { completed_at: 'desc' },
       take: 10,
     })
 
@@ -48,10 +48,10 @@ router.get('/', async (req, res) => {
       fare: r.fare,
       distance: r.distance,
       driver: r.driver?.name || '',
-      plateNumber: r.driver?.plateNumber || '',
+      plateNumber: r.driver?.plate_number || '',
       rating: r.rating,
       status: 'used',
-      date: r.completedAt || r.creTime,
+      date: r.completed_at || r.cre_time,
       code: `RIDE-${r.id.slice(0, 8).toUpperCase()}`,
     }))
 
