@@ -74,6 +74,11 @@ export type PmsTopicCountyDistrictRelation = $Result.DefaultSelection<Prisma.$Pm
  */
 export type PmsFormFeedback = $Result.DefaultSelection<Prisma.$PmsFormFeedbackPayload>
 /**
+ * Model HealthWaterLog
+ * 每日飲水紀錄 — 追蹤使用者每天實際喝了多少水
+ */
+export type HealthWaterLog = $Result.DefaultSelection<Prisma.$HealthWaterLogPayload>
+/**
  * Model MmsOrderRecord
  * 
  */
@@ -404,6 +409,16 @@ export class PrismaClient<
     * ```
     */
   get pmsFormFeedback(): Prisma.PmsFormFeedbackDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.healthWaterLog`: Exposes CRUD operations for the **HealthWaterLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more HealthWaterLogs
+    * const healthWaterLogs = await prisma.healthWaterLog.findMany()
+    * ```
+    */
+  get healthWaterLog(): Prisma.HealthWaterLogDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.mmsOrderRecord`: Exposes CRUD operations for the **MmsOrderRecord** model.
@@ -1043,6 +1058,7 @@ export namespace Prisma {
     PmsTopicMedia: 'PmsTopicMedia',
     PmsTopicCountyDistrictRelation: 'PmsTopicCountyDistrictRelation',
     PmsFormFeedback: 'PmsFormFeedback',
+    HealthWaterLog: 'HealthWaterLog',
     MmsOrderRecord: 'MmsOrderRecord',
     MemberAccount: 'MemberAccount',
     MemberAddress: 'MemberAddress',
@@ -1076,7 +1092,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "cmsHomepageServiceVendor" | "cmsHomepageService" | "serviceType" | "sysCounty" | "sysDistrict" | "pmsForm" | "pmsFormGroup" | "pmsFormTopic" | "pmsTopicOption" | "pmsTopicMedia" | "pmsTopicCountyDistrictRelation" | "pmsFormFeedback" | "mmsOrderRecord" | "memberAccount" | "memberAddress" | "vendorUser" | "secondhandListing" | "chatMessage" | "communityGroup" | "groupMember" | "pickupReservation" | "restaurantQueue" | "queueEntry" | "reservation" | "slotCapacity" | "activity_registration" | "community_activity" | "community_question" | "driver" | "ride_order"
+      modelProps: "cmsHomepageServiceVendor" | "cmsHomepageService" | "serviceType" | "sysCounty" | "sysDistrict" | "pmsForm" | "pmsFormGroup" | "pmsFormTopic" | "pmsTopicOption" | "pmsTopicMedia" | "pmsTopicCountyDistrictRelation" | "pmsFormFeedback" | "healthWaterLog" | "mmsOrderRecord" | "memberAccount" | "memberAddress" | "vendorUser" | "secondhandListing" | "chatMessage" | "communityGroup" | "groupMember" | "pickupReservation" | "restaurantQueue" | "queueEntry" | "reservation" | "slotCapacity" | "activity_registration" | "community_activity" | "community_question" | "driver" | "ride_order"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1965,6 +1981,80 @@ export namespace Prisma {
           count: {
             args: Prisma.PmsFormFeedbackCountArgs<ExtArgs>
             result: $Utils.Optional<PmsFormFeedbackCountAggregateOutputType> | number
+          }
+        }
+      }
+      HealthWaterLog: {
+        payload: Prisma.$HealthWaterLogPayload<ExtArgs>
+        fields: Prisma.HealthWaterLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.HealthWaterLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HealthWaterLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.HealthWaterLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HealthWaterLogPayload>
+          }
+          findFirst: {
+            args: Prisma.HealthWaterLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HealthWaterLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.HealthWaterLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HealthWaterLogPayload>
+          }
+          findMany: {
+            args: Prisma.HealthWaterLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HealthWaterLogPayload>[]
+          }
+          create: {
+            args: Prisma.HealthWaterLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HealthWaterLogPayload>
+          }
+          createMany: {
+            args: Prisma.HealthWaterLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.HealthWaterLogCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HealthWaterLogPayload>[]
+          }
+          delete: {
+            args: Prisma.HealthWaterLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HealthWaterLogPayload>
+          }
+          update: {
+            args: Prisma.HealthWaterLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HealthWaterLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.HealthWaterLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.HealthWaterLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.HealthWaterLogUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HealthWaterLogPayload>[]
+          }
+          upsert: {
+            args: Prisma.HealthWaterLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HealthWaterLogPayload>
+          }
+          aggregate: {
+            args: Prisma.HealthWaterLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateHealthWaterLog>
+          }
+          groupBy: {
+            args: Prisma.HealthWaterLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<HealthWaterLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.HealthWaterLogCountArgs<ExtArgs>
+            result: $Utils.Optional<HealthWaterLogCountAggregateOutputType> | number
           }
         }
       }
@@ -3435,6 +3525,7 @@ export namespace Prisma {
     pmsTopicMedia?: PmsTopicMediaOmit
     pmsTopicCountyDistrictRelation?: PmsTopicCountyDistrictRelationOmit
     pmsFormFeedback?: PmsFormFeedbackOmit
+    healthWaterLog?: HealthWaterLogOmit
     mmsOrderRecord?: MmsOrderRecordOmit
     memberAccount?: MemberAccountOmit
     memberAddress?: MemberAddressOmit
@@ -18822,6 +18913,1044 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: PmsFormFeedbackInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model HealthWaterLog
+   */
+
+  export type AggregateHealthWaterLog = {
+    _count: HealthWaterLogCountAggregateOutputType | null
+    _avg: HealthWaterLogAvgAggregateOutputType | null
+    _sum: HealthWaterLogSumAggregateOutputType | null
+    _min: HealthWaterLogMinAggregateOutputType | null
+    _max: HealthWaterLogMaxAggregateOutputType | null
+  }
+
+  export type HealthWaterLogAvgAggregateOutputType = {
+    id: number | null
+    intake: number | null
+  }
+
+  export type HealthWaterLogSumAggregateOutputType = {
+    id: number | null
+    intake: number | null
+  }
+
+  export type HealthWaterLogMinAggregateOutputType = {
+    id: number | null
+    date: string | null
+    intake: number | null
+    creTime: Date | null
+    updTime: Date | null
+  }
+
+  export type HealthWaterLogMaxAggregateOutputType = {
+    id: number | null
+    date: string | null
+    intake: number | null
+    creTime: Date | null
+    updTime: Date | null
+  }
+
+  export type HealthWaterLogCountAggregateOutputType = {
+    id: number
+    date: number
+    intake: number
+    creTime: number
+    updTime: number
+    _all: number
+  }
+
+
+  export type HealthWaterLogAvgAggregateInputType = {
+    id?: true
+    intake?: true
+  }
+
+  export type HealthWaterLogSumAggregateInputType = {
+    id?: true
+    intake?: true
+  }
+
+  export type HealthWaterLogMinAggregateInputType = {
+    id?: true
+    date?: true
+    intake?: true
+    creTime?: true
+    updTime?: true
+  }
+
+  export type HealthWaterLogMaxAggregateInputType = {
+    id?: true
+    date?: true
+    intake?: true
+    creTime?: true
+    updTime?: true
+  }
+
+  export type HealthWaterLogCountAggregateInputType = {
+    id?: true
+    date?: true
+    intake?: true
+    creTime?: true
+    updTime?: true
+    _all?: true
+  }
+
+  export type HealthWaterLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which HealthWaterLog to aggregate.
+     */
+    where?: HealthWaterLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HealthWaterLogs to fetch.
+     */
+    orderBy?: HealthWaterLogOrderByWithRelationInput | HealthWaterLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: HealthWaterLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HealthWaterLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HealthWaterLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned HealthWaterLogs
+    **/
+    _count?: true | HealthWaterLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: HealthWaterLogAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: HealthWaterLogSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: HealthWaterLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: HealthWaterLogMaxAggregateInputType
+  }
+
+  export type GetHealthWaterLogAggregateType<T extends HealthWaterLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateHealthWaterLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateHealthWaterLog[P]>
+      : GetScalarType<T[P], AggregateHealthWaterLog[P]>
+  }
+
+
+
+
+  export type HealthWaterLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: HealthWaterLogWhereInput
+    orderBy?: HealthWaterLogOrderByWithAggregationInput | HealthWaterLogOrderByWithAggregationInput[]
+    by: HealthWaterLogScalarFieldEnum[] | HealthWaterLogScalarFieldEnum
+    having?: HealthWaterLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: HealthWaterLogCountAggregateInputType | true
+    _avg?: HealthWaterLogAvgAggregateInputType
+    _sum?: HealthWaterLogSumAggregateInputType
+    _min?: HealthWaterLogMinAggregateInputType
+    _max?: HealthWaterLogMaxAggregateInputType
+  }
+
+  export type HealthWaterLogGroupByOutputType = {
+    id: number
+    date: string
+    intake: number
+    creTime: Date
+    updTime: Date
+    _count: HealthWaterLogCountAggregateOutputType | null
+    _avg: HealthWaterLogAvgAggregateOutputType | null
+    _sum: HealthWaterLogSumAggregateOutputType | null
+    _min: HealthWaterLogMinAggregateOutputType | null
+    _max: HealthWaterLogMaxAggregateOutputType | null
+  }
+
+  type GetHealthWaterLogGroupByPayload<T extends HealthWaterLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<HealthWaterLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof HealthWaterLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], HealthWaterLogGroupByOutputType[P]>
+            : GetScalarType<T[P], HealthWaterLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type HealthWaterLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    date?: boolean
+    intake?: boolean
+    creTime?: boolean
+    updTime?: boolean
+  }, ExtArgs["result"]["healthWaterLog"]>
+
+  export type HealthWaterLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    date?: boolean
+    intake?: boolean
+    creTime?: boolean
+    updTime?: boolean
+  }, ExtArgs["result"]["healthWaterLog"]>
+
+  export type HealthWaterLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    date?: boolean
+    intake?: boolean
+    creTime?: boolean
+    updTime?: boolean
+  }, ExtArgs["result"]["healthWaterLog"]>
+
+  export type HealthWaterLogSelectScalar = {
+    id?: boolean
+    date?: boolean
+    intake?: boolean
+    creTime?: boolean
+    updTime?: boolean
+  }
+
+  export type HealthWaterLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "intake" | "creTime" | "updTime", ExtArgs["result"]["healthWaterLog"]>
+
+  export type $HealthWaterLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "HealthWaterLog"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      date: string
+      intake: number
+      creTime: Date
+      updTime: Date
+    }, ExtArgs["result"]["healthWaterLog"]>
+    composites: {}
+  }
+
+  type HealthWaterLogGetPayload<S extends boolean | null | undefined | HealthWaterLogDefaultArgs> = $Result.GetResult<Prisma.$HealthWaterLogPayload, S>
+
+  type HealthWaterLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<HealthWaterLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: HealthWaterLogCountAggregateInputType | true
+    }
+
+  export interface HealthWaterLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['HealthWaterLog'], meta: { name: 'HealthWaterLog' } }
+    /**
+     * Find zero or one HealthWaterLog that matches the filter.
+     * @param {HealthWaterLogFindUniqueArgs} args - Arguments to find a HealthWaterLog
+     * @example
+     * // Get one HealthWaterLog
+     * const healthWaterLog = await prisma.healthWaterLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends HealthWaterLogFindUniqueArgs>(args: SelectSubset<T, HealthWaterLogFindUniqueArgs<ExtArgs>>): Prisma__HealthWaterLogClient<$Result.GetResult<Prisma.$HealthWaterLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one HealthWaterLog that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {HealthWaterLogFindUniqueOrThrowArgs} args - Arguments to find a HealthWaterLog
+     * @example
+     * // Get one HealthWaterLog
+     * const healthWaterLog = await prisma.healthWaterLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends HealthWaterLogFindUniqueOrThrowArgs>(args: SelectSubset<T, HealthWaterLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__HealthWaterLogClient<$Result.GetResult<Prisma.$HealthWaterLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first HealthWaterLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HealthWaterLogFindFirstArgs} args - Arguments to find a HealthWaterLog
+     * @example
+     * // Get one HealthWaterLog
+     * const healthWaterLog = await prisma.healthWaterLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends HealthWaterLogFindFirstArgs>(args?: SelectSubset<T, HealthWaterLogFindFirstArgs<ExtArgs>>): Prisma__HealthWaterLogClient<$Result.GetResult<Prisma.$HealthWaterLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first HealthWaterLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HealthWaterLogFindFirstOrThrowArgs} args - Arguments to find a HealthWaterLog
+     * @example
+     * // Get one HealthWaterLog
+     * const healthWaterLog = await prisma.healthWaterLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends HealthWaterLogFindFirstOrThrowArgs>(args?: SelectSubset<T, HealthWaterLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__HealthWaterLogClient<$Result.GetResult<Prisma.$HealthWaterLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more HealthWaterLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HealthWaterLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all HealthWaterLogs
+     * const healthWaterLogs = await prisma.healthWaterLog.findMany()
+     * 
+     * // Get first 10 HealthWaterLogs
+     * const healthWaterLogs = await prisma.healthWaterLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const healthWaterLogWithIdOnly = await prisma.healthWaterLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends HealthWaterLogFindManyArgs>(args?: SelectSubset<T, HealthWaterLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HealthWaterLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a HealthWaterLog.
+     * @param {HealthWaterLogCreateArgs} args - Arguments to create a HealthWaterLog.
+     * @example
+     * // Create one HealthWaterLog
+     * const HealthWaterLog = await prisma.healthWaterLog.create({
+     *   data: {
+     *     // ... data to create a HealthWaterLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends HealthWaterLogCreateArgs>(args: SelectSubset<T, HealthWaterLogCreateArgs<ExtArgs>>): Prisma__HealthWaterLogClient<$Result.GetResult<Prisma.$HealthWaterLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many HealthWaterLogs.
+     * @param {HealthWaterLogCreateManyArgs} args - Arguments to create many HealthWaterLogs.
+     * @example
+     * // Create many HealthWaterLogs
+     * const healthWaterLog = await prisma.healthWaterLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends HealthWaterLogCreateManyArgs>(args?: SelectSubset<T, HealthWaterLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many HealthWaterLogs and returns the data saved in the database.
+     * @param {HealthWaterLogCreateManyAndReturnArgs} args - Arguments to create many HealthWaterLogs.
+     * @example
+     * // Create many HealthWaterLogs
+     * const healthWaterLog = await prisma.healthWaterLog.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many HealthWaterLogs and only return the `id`
+     * const healthWaterLogWithIdOnly = await prisma.healthWaterLog.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends HealthWaterLogCreateManyAndReturnArgs>(args?: SelectSubset<T, HealthWaterLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HealthWaterLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a HealthWaterLog.
+     * @param {HealthWaterLogDeleteArgs} args - Arguments to delete one HealthWaterLog.
+     * @example
+     * // Delete one HealthWaterLog
+     * const HealthWaterLog = await prisma.healthWaterLog.delete({
+     *   where: {
+     *     // ... filter to delete one HealthWaterLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends HealthWaterLogDeleteArgs>(args: SelectSubset<T, HealthWaterLogDeleteArgs<ExtArgs>>): Prisma__HealthWaterLogClient<$Result.GetResult<Prisma.$HealthWaterLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one HealthWaterLog.
+     * @param {HealthWaterLogUpdateArgs} args - Arguments to update one HealthWaterLog.
+     * @example
+     * // Update one HealthWaterLog
+     * const healthWaterLog = await prisma.healthWaterLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends HealthWaterLogUpdateArgs>(args: SelectSubset<T, HealthWaterLogUpdateArgs<ExtArgs>>): Prisma__HealthWaterLogClient<$Result.GetResult<Prisma.$HealthWaterLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more HealthWaterLogs.
+     * @param {HealthWaterLogDeleteManyArgs} args - Arguments to filter HealthWaterLogs to delete.
+     * @example
+     * // Delete a few HealthWaterLogs
+     * const { count } = await prisma.healthWaterLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends HealthWaterLogDeleteManyArgs>(args?: SelectSubset<T, HealthWaterLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more HealthWaterLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HealthWaterLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many HealthWaterLogs
+     * const healthWaterLog = await prisma.healthWaterLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends HealthWaterLogUpdateManyArgs>(args: SelectSubset<T, HealthWaterLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more HealthWaterLogs and returns the data updated in the database.
+     * @param {HealthWaterLogUpdateManyAndReturnArgs} args - Arguments to update many HealthWaterLogs.
+     * @example
+     * // Update many HealthWaterLogs
+     * const healthWaterLog = await prisma.healthWaterLog.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more HealthWaterLogs and only return the `id`
+     * const healthWaterLogWithIdOnly = await prisma.healthWaterLog.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends HealthWaterLogUpdateManyAndReturnArgs>(args: SelectSubset<T, HealthWaterLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HealthWaterLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one HealthWaterLog.
+     * @param {HealthWaterLogUpsertArgs} args - Arguments to update or create a HealthWaterLog.
+     * @example
+     * // Update or create a HealthWaterLog
+     * const healthWaterLog = await prisma.healthWaterLog.upsert({
+     *   create: {
+     *     // ... data to create a HealthWaterLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the HealthWaterLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends HealthWaterLogUpsertArgs>(args: SelectSubset<T, HealthWaterLogUpsertArgs<ExtArgs>>): Prisma__HealthWaterLogClient<$Result.GetResult<Prisma.$HealthWaterLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of HealthWaterLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HealthWaterLogCountArgs} args - Arguments to filter HealthWaterLogs to count.
+     * @example
+     * // Count the number of HealthWaterLogs
+     * const count = await prisma.healthWaterLog.count({
+     *   where: {
+     *     // ... the filter for the HealthWaterLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends HealthWaterLogCountArgs>(
+      args?: Subset<T, HealthWaterLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], HealthWaterLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a HealthWaterLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HealthWaterLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends HealthWaterLogAggregateArgs>(args: Subset<T, HealthWaterLogAggregateArgs>): Prisma.PrismaPromise<GetHealthWaterLogAggregateType<T>>
+
+    /**
+     * Group by HealthWaterLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HealthWaterLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends HealthWaterLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: HealthWaterLogGroupByArgs['orderBy'] }
+        : { orderBy?: HealthWaterLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, HealthWaterLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetHealthWaterLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the HealthWaterLog model
+   */
+  readonly fields: HealthWaterLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for HealthWaterLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__HealthWaterLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the HealthWaterLog model
+   */
+  interface HealthWaterLogFieldRefs {
+    readonly id: FieldRef<"HealthWaterLog", 'Int'>
+    readonly date: FieldRef<"HealthWaterLog", 'String'>
+    readonly intake: FieldRef<"HealthWaterLog", 'Int'>
+    readonly creTime: FieldRef<"HealthWaterLog", 'DateTime'>
+    readonly updTime: FieldRef<"HealthWaterLog", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * HealthWaterLog findUnique
+   */
+  export type HealthWaterLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HealthWaterLog
+     */
+    select?: HealthWaterLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HealthWaterLog
+     */
+    omit?: HealthWaterLogOmit<ExtArgs> | null
+    /**
+     * Filter, which HealthWaterLog to fetch.
+     */
+    where: HealthWaterLogWhereUniqueInput
+  }
+
+  /**
+   * HealthWaterLog findUniqueOrThrow
+   */
+  export type HealthWaterLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HealthWaterLog
+     */
+    select?: HealthWaterLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HealthWaterLog
+     */
+    omit?: HealthWaterLogOmit<ExtArgs> | null
+    /**
+     * Filter, which HealthWaterLog to fetch.
+     */
+    where: HealthWaterLogWhereUniqueInput
+  }
+
+  /**
+   * HealthWaterLog findFirst
+   */
+  export type HealthWaterLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HealthWaterLog
+     */
+    select?: HealthWaterLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HealthWaterLog
+     */
+    omit?: HealthWaterLogOmit<ExtArgs> | null
+    /**
+     * Filter, which HealthWaterLog to fetch.
+     */
+    where?: HealthWaterLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HealthWaterLogs to fetch.
+     */
+    orderBy?: HealthWaterLogOrderByWithRelationInput | HealthWaterLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for HealthWaterLogs.
+     */
+    cursor?: HealthWaterLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HealthWaterLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HealthWaterLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of HealthWaterLogs.
+     */
+    distinct?: HealthWaterLogScalarFieldEnum | HealthWaterLogScalarFieldEnum[]
+  }
+
+  /**
+   * HealthWaterLog findFirstOrThrow
+   */
+  export type HealthWaterLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HealthWaterLog
+     */
+    select?: HealthWaterLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HealthWaterLog
+     */
+    omit?: HealthWaterLogOmit<ExtArgs> | null
+    /**
+     * Filter, which HealthWaterLog to fetch.
+     */
+    where?: HealthWaterLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HealthWaterLogs to fetch.
+     */
+    orderBy?: HealthWaterLogOrderByWithRelationInput | HealthWaterLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for HealthWaterLogs.
+     */
+    cursor?: HealthWaterLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HealthWaterLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HealthWaterLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of HealthWaterLogs.
+     */
+    distinct?: HealthWaterLogScalarFieldEnum | HealthWaterLogScalarFieldEnum[]
+  }
+
+  /**
+   * HealthWaterLog findMany
+   */
+  export type HealthWaterLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HealthWaterLog
+     */
+    select?: HealthWaterLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HealthWaterLog
+     */
+    omit?: HealthWaterLogOmit<ExtArgs> | null
+    /**
+     * Filter, which HealthWaterLogs to fetch.
+     */
+    where?: HealthWaterLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HealthWaterLogs to fetch.
+     */
+    orderBy?: HealthWaterLogOrderByWithRelationInput | HealthWaterLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing HealthWaterLogs.
+     */
+    cursor?: HealthWaterLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HealthWaterLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HealthWaterLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of HealthWaterLogs.
+     */
+    distinct?: HealthWaterLogScalarFieldEnum | HealthWaterLogScalarFieldEnum[]
+  }
+
+  /**
+   * HealthWaterLog create
+   */
+  export type HealthWaterLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HealthWaterLog
+     */
+    select?: HealthWaterLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HealthWaterLog
+     */
+    omit?: HealthWaterLogOmit<ExtArgs> | null
+    /**
+     * The data needed to create a HealthWaterLog.
+     */
+    data: XOR<HealthWaterLogCreateInput, HealthWaterLogUncheckedCreateInput>
+  }
+
+  /**
+   * HealthWaterLog createMany
+   */
+  export type HealthWaterLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many HealthWaterLogs.
+     */
+    data: HealthWaterLogCreateManyInput | HealthWaterLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * HealthWaterLog createManyAndReturn
+   */
+  export type HealthWaterLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HealthWaterLog
+     */
+    select?: HealthWaterLogSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the HealthWaterLog
+     */
+    omit?: HealthWaterLogOmit<ExtArgs> | null
+    /**
+     * The data used to create many HealthWaterLogs.
+     */
+    data: HealthWaterLogCreateManyInput | HealthWaterLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * HealthWaterLog update
+   */
+  export type HealthWaterLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HealthWaterLog
+     */
+    select?: HealthWaterLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HealthWaterLog
+     */
+    omit?: HealthWaterLogOmit<ExtArgs> | null
+    /**
+     * The data needed to update a HealthWaterLog.
+     */
+    data: XOR<HealthWaterLogUpdateInput, HealthWaterLogUncheckedUpdateInput>
+    /**
+     * Choose, which HealthWaterLog to update.
+     */
+    where: HealthWaterLogWhereUniqueInput
+  }
+
+  /**
+   * HealthWaterLog updateMany
+   */
+  export type HealthWaterLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update HealthWaterLogs.
+     */
+    data: XOR<HealthWaterLogUpdateManyMutationInput, HealthWaterLogUncheckedUpdateManyInput>
+    /**
+     * Filter which HealthWaterLogs to update
+     */
+    where?: HealthWaterLogWhereInput
+    /**
+     * Limit how many HealthWaterLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * HealthWaterLog updateManyAndReturn
+   */
+  export type HealthWaterLogUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HealthWaterLog
+     */
+    select?: HealthWaterLogSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the HealthWaterLog
+     */
+    omit?: HealthWaterLogOmit<ExtArgs> | null
+    /**
+     * The data used to update HealthWaterLogs.
+     */
+    data: XOR<HealthWaterLogUpdateManyMutationInput, HealthWaterLogUncheckedUpdateManyInput>
+    /**
+     * Filter which HealthWaterLogs to update
+     */
+    where?: HealthWaterLogWhereInput
+    /**
+     * Limit how many HealthWaterLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * HealthWaterLog upsert
+   */
+  export type HealthWaterLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HealthWaterLog
+     */
+    select?: HealthWaterLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HealthWaterLog
+     */
+    omit?: HealthWaterLogOmit<ExtArgs> | null
+    /**
+     * The filter to search for the HealthWaterLog to update in case it exists.
+     */
+    where: HealthWaterLogWhereUniqueInput
+    /**
+     * In case the HealthWaterLog found by the `where` argument doesn't exist, create a new HealthWaterLog with this data.
+     */
+    create: XOR<HealthWaterLogCreateInput, HealthWaterLogUncheckedCreateInput>
+    /**
+     * In case the HealthWaterLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<HealthWaterLogUpdateInput, HealthWaterLogUncheckedUpdateInput>
+  }
+
+  /**
+   * HealthWaterLog delete
+   */
+  export type HealthWaterLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HealthWaterLog
+     */
+    select?: HealthWaterLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HealthWaterLog
+     */
+    omit?: HealthWaterLogOmit<ExtArgs> | null
+    /**
+     * Filter which HealthWaterLog to delete.
+     */
+    where: HealthWaterLogWhereUniqueInput
+  }
+
+  /**
+   * HealthWaterLog deleteMany
+   */
+  export type HealthWaterLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which HealthWaterLogs to delete
+     */
+    where?: HealthWaterLogWhereInput
+    /**
+     * Limit how many HealthWaterLogs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * HealthWaterLog without action
+   */
+  export type HealthWaterLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HealthWaterLog
+     */
+    select?: HealthWaterLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HealthWaterLog
+     */
+    omit?: HealthWaterLogOmit<ExtArgs> | null
   }
 
 
@@ -40778,6 +41907,17 @@ export namespace Prisma {
   export type PmsFormFeedbackScalarFieldEnum = (typeof PmsFormFeedbackScalarFieldEnum)[keyof typeof PmsFormFeedbackScalarFieldEnum]
 
 
+  export const HealthWaterLogScalarFieldEnum: {
+    id: 'id',
+    date: 'date',
+    intake: 'intake',
+    creTime: 'creTime',
+    updTime: 'updTime'
+  };
+
+  export type HealthWaterLogScalarFieldEnum = (typeof HealthWaterLogScalarFieldEnum)[keyof typeof HealthWaterLogScalarFieldEnum]
+
+
   export const MmsOrderRecordScalarFieldEnum: {
     recordId: 'recordId',
     orderNo: 'orderNo',
@@ -42471,6 +43611,60 @@ export namespace Prisma {
     creTime?: DateTimeWithAggregatesFilter<"PmsFormFeedback"> | Date | string
     updId?: UuidNullableWithAggregatesFilter<"PmsFormFeedback"> | string | null
     updTime?: DateTimeWithAggregatesFilter<"PmsFormFeedback"> | Date | string
+  }
+
+  export type HealthWaterLogWhereInput = {
+    AND?: HealthWaterLogWhereInput | HealthWaterLogWhereInput[]
+    OR?: HealthWaterLogWhereInput[]
+    NOT?: HealthWaterLogWhereInput | HealthWaterLogWhereInput[]
+    id?: IntFilter<"HealthWaterLog"> | number
+    date?: StringFilter<"HealthWaterLog"> | string
+    intake?: IntFilter<"HealthWaterLog"> | number
+    creTime?: DateTimeFilter<"HealthWaterLog"> | Date | string
+    updTime?: DateTimeFilter<"HealthWaterLog"> | Date | string
+  }
+
+  export type HealthWaterLogOrderByWithRelationInput = {
+    id?: SortOrder
+    date?: SortOrder
+    intake?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+  }
+
+  export type HealthWaterLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    date?: string
+    AND?: HealthWaterLogWhereInput | HealthWaterLogWhereInput[]
+    OR?: HealthWaterLogWhereInput[]
+    NOT?: HealthWaterLogWhereInput | HealthWaterLogWhereInput[]
+    intake?: IntFilter<"HealthWaterLog"> | number
+    creTime?: DateTimeFilter<"HealthWaterLog"> | Date | string
+    updTime?: DateTimeFilter<"HealthWaterLog"> | Date | string
+  }, "id" | "date">
+
+  export type HealthWaterLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    date?: SortOrder
+    intake?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+    _count?: HealthWaterLogCountOrderByAggregateInput
+    _avg?: HealthWaterLogAvgOrderByAggregateInput
+    _max?: HealthWaterLogMaxOrderByAggregateInput
+    _min?: HealthWaterLogMinOrderByAggregateInput
+    _sum?: HealthWaterLogSumOrderByAggregateInput
+  }
+
+  export type HealthWaterLogScalarWhereWithAggregatesInput = {
+    AND?: HealthWaterLogScalarWhereWithAggregatesInput | HealthWaterLogScalarWhereWithAggregatesInput[]
+    OR?: HealthWaterLogScalarWhereWithAggregatesInput[]
+    NOT?: HealthWaterLogScalarWhereWithAggregatesInput | HealthWaterLogScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"HealthWaterLog"> | number
+    date?: StringWithAggregatesFilter<"HealthWaterLog"> | string
+    intake?: IntWithAggregatesFilter<"HealthWaterLog"> | number
+    creTime?: DateTimeWithAggregatesFilter<"HealthWaterLog"> | Date | string
+    updTime?: DateTimeWithAggregatesFilter<"HealthWaterLog"> | Date | string
   }
 
   export type MmsOrderRecordWhereInput = {
@@ -45610,6 +46804,59 @@ export namespace Prisma {
     inbrAccountId?: StringFieldUpdateOperationsInput | string
     creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updId?: NullableStringFieldUpdateOperationsInput | string | null
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HealthWaterLogCreateInput = {
+    date: string
+    intake?: number
+    creTime?: Date | string
+    updTime?: Date | string
+  }
+
+  export type HealthWaterLogUncheckedCreateInput = {
+    id?: number
+    date: string
+    intake?: number
+    creTime?: Date | string
+    updTime?: Date | string
+  }
+
+  export type HealthWaterLogUpdateInput = {
+    date?: StringFieldUpdateOperationsInput | string
+    intake?: IntFieldUpdateOperationsInput | number
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HealthWaterLogUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: StringFieldUpdateOperationsInput | string
+    intake?: IntFieldUpdateOperationsInput | number
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HealthWaterLogCreateManyInput = {
+    id?: number
+    date: string
+    intake?: number
+    creTime?: Date | string
+    updTime?: Date | string
+  }
+
+  export type HealthWaterLogUpdateManyMutationInput = {
+    date?: StringFieldUpdateOperationsInput | string
+    intake?: IntFieldUpdateOperationsInput | number
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    updTime?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HealthWaterLogUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: StringFieldUpdateOperationsInput | string
+    intake?: IntFieldUpdateOperationsInput | number
+    creTime?: DateTimeFieldUpdateOperationsInput | Date | string
     updTime?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -48958,6 +50205,40 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedBytesNullableFilter<$PrismaModel>
     _max?: NestedBytesNullableFilter<$PrismaModel>
+  }
+
+  export type HealthWaterLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    intake?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+  }
+
+  export type HealthWaterLogAvgOrderByAggregateInput = {
+    id?: SortOrder
+    intake?: SortOrder
+  }
+
+  export type HealthWaterLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    intake?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+  }
+
+  export type HealthWaterLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    intake?: SortOrder
+    creTime?: SortOrder
+    updTime?: SortOrder
+  }
+
+  export type HealthWaterLogSumOrderByAggregateInput = {
+    id?: SortOrder
+    intake?: SortOrder
   }
 
   export type BigIntFilter<$PrismaModel = never> = {
