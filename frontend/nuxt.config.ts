@@ -10,7 +10,7 @@ export default defineNuxtConfig({
 	runtimeConfig: {
 		public: {
 			googleMapsKey: process.env.NUXT_PUBLIC_GOOGLE_MAPS_KEY || '',
-			apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3001',
+			apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://50.112.104.252',
 		},
 	},
 });
