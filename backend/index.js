@@ -40,8 +40,8 @@ app.use(cors({
   credentials: true,
 }));
 
-// Body parser
-app.use(express.json());
+// Body parser（提高 limit 以支援圖片 base64 上傳）
+app.use(express.json({ limit: '10mb' }));
 
 // Cookie parser
 app.use(cookieParser());

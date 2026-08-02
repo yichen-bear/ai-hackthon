@@ -30,7 +30,9 @@ router.post('/', express.json({ limit: '10mb' }), async (req, res) => {
 
     fs.writeFileSync(filePath, data)
 
-    const url = `/uploads/${fname}`
+    // 組合完整 URL（跨域部署時前端需要完整路徑）
+    const baseUrl = `${req.protocol}://${req.get('host')}`
+    const url = `${baseUrl}/uploads/${fname}`
     res.status(201).json({ url, filename: fname })
   } catch (err) {
     console.error('POST /api/upload error:', err)
