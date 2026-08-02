@@ -1,5 +1,6 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { apiFetch } = useApi()
 
 useHead({
   htmlAttrs: { lang: 'zh-TW' },
@@ -71,7 +72,7 @@ const LINKED_PLACE_ID = 'linked_restaurant_01'
 
 async function syncToClient() {
   try {
-    await $fetch('http://localhost:3001/api/queue/admin/update', {
+    await apiFetch('/api/queue/admin/update', {
       method: 'PUT',
       body: {
         placeId: LINKED_PLACE_ID,
@@ -93,7 +94,7 @@ const waitingCustomers = ref<{ id: number; ticketNumber: number; partySize: numb
 async function fetchSeatDetail() {
   seatLoading.value = true
   try {
-    const res = await $fetch<{ success: boolean; data: any }>(`http://localhost:3001/api/queue/detail/${LINKED_PLACE_ID}`)
+    const res = await apiFetch<{ success: boolean; data: any }>(`/api/queue/detail/${LINKED_PLACE_ID}`)
     if (res.success) {
       seatedCustomers.value = res.data.seated
       waitingCustomers.value = res.data.waiting
@@ -118,7 +119,7 @@ function closeSeatPanel() {
 
 async function callNextCustomer() {
   try {
-    await $fetch('http://localhost:3001/api/queue/admin/call-next', {
+    await apiFetch('/api/queue/admin/call-next', {
       method: 'POST',
       body: { placeId: LINKED_PLACE_ID },
     })
@@ -182,7 +183,7 @@ async function fetchTimeSlots() {
   slotsLoading.value = true
   try {
     const dateStr = selectedDate.value.toISOString().slice(0, 10)
-    const res = await $fetch<{ success: boolean; data: { slots: { time: string; remainingTables: number; totalTables: number; capacity: number; status: string; bookedCount: number }[] } }>(`http://localhost:3001/api/food-reservations/slots/linked_restaurant_01?date=${dateStr}`)
+    const res = await apiFetch<{ success: boolean; data: { slots: { time: string; remainingTables: number; totalTables: number; capacity: number; status: string; bookedCount: number }[] } }>(`/api/food-reservations/slots/linked_restaurant_01?date=${dateStr}`)
     if (res.success) {
       timeSlots.value = res.data.slots.map((s, idx) => ({
         id: `ts-${idx}`,
@@ -203,7 +204,7 @@ async function fetchTimeSlots() {
 
 async function closeSlot(slot: TimeSlot) {
   try {
-    await $fetch(`http://localhost:3001/api/food-reservations/slots/linked_restaurant_01`, {
+    await apiFetch(`/api/food-reservations/slots/linked_restaurant_01`, {
       method: 'PUT',
       body: { time: slot.time, totalTables: 0 },
     })
@@ -234,7 +235,7 @@ function startEditSlot(slot: TimeSlot) {
 async function saveSlotTables(slot: TimeSlot) {
   const newTotal = Math.max(0, editingSlotValue.value)
   try {
-    await $fetch(`http://localhost:3001/api/food-reservations/slots/linked_restaurant_01`, {
+    await apiFetch(`/api/food-reservations/slots/linked_restaurant_01`, {
       method: 'PUT',
       body: { time: slot.time, totalTables: newTotal },
     })
@@ -264,7 +265,7 @@ async function toggleSlotDetail(slotTime: string) {
   slotResLoading.value = true
   try {
     const dateStr = selectedDate.value.toISOString().slice(0, 10)
-    const res = await $fetch<{ success: boolean; data: { bySlot: Record<string, any[]> } }>(`http://localhost:3001/api/food-reservations/linked_restaurant_01?date=${dateStr}`)
+    const res = await apiFetch<{ success: boolean; data: { bySlot: Record<string, any[]> } }>(`/api/food-reservations/linked_restaurant_01?date=${dateStr}`)
     if (res.success) {
       slotReservations.value = res.data.bySlot[slotTime] || []
     }

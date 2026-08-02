@@ -14,6 +14,7 @@ const emit = defineEmits<{ 'route-selected': [route: any] }>()
 
 const runtimeConfig = useRuntimeConfig()
 const GOOGLE_MAPS_KEY = runtimeConfig.public.googleMapsKey || ''
+const { apiFetch } = useApi()
 
 const { sharedDestination, sharedOrigin } = useTransportState()
 
@@ -76,7 +77,7 @@ async function handleSearch() {
 
   // 嘗試從 API 取得距離和時間
   try {
-    const data: any = await $fetch('/api/directions', {
+    const data: any = await apiFetch('/api/directions', {
       params: { origin: originInput.value, destination: destinationInput.value, mode: currentGmapMode.value },
     })
     if (data?.status === 'OK' && data.routes?.[0]?.legs?.[0]) {
@@ -98,7 +99,7 @@ async function handleSearch() {
 
   // DB
   try {
-    await $fetch('/api/orders', {
+    await apiFetch('/api/orders', {
       method: 'POST',
       body: { category: 'TRANSPORT', serviceType: '路線規劃', source: 'MANUAL', customerName: '使用者', customerPhone: '', storeId: destinationInput.value, details: { origin: originInput.value, destination: destinationInput.value, mode: selectedMode.value, duration: routeSummary.value?.duration, distance: routeSummary.value?.distance, plannedAt: new Date().toISOString() } },
     })

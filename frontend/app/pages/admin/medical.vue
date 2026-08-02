@@ -1,5 +1,6 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { apiFetch } = useApi()
 
 // --- State ---
 const currentRole = ref<'clinic' | 'pharmacy' | 'delivery'>('clinic')
@@ -68,7 +69,7 @@ async function fetchAppointments() {
   appointmentsLoading.value = true
   appointmentsError.value = ''
   try {
-    const res = await $fetch<{ success: boolean; data: any[] }>('http://localhost:3001/api/diagnosis/appointments')
+    const res = await apiFetch<{ success: boolean; data: any[] }>('/api/diagnosis/appointments')
     if (res.success) {
       appointments.value = res.data.map(item => ({
         ...item,

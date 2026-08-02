@@ -91,6 +91,7 @@ export function useChatSession() {
   const session = useState<ChatSession>('ai-chat-session', () => createInitialSession())
   const isLoading = useState<boolean>('ai-chat-loading', () => false)
   const error = useState<string | null>('ai-chat-error', () => null)
+  const { apiFetch } = useApi()
 
   /** 重置 Chat_Session 為初始狀態（例如離開頁面或重新開始對話） */
   function resetSession() {
@@ -124,14 +125,13 @@ export function useChatSession() {
     }
 
     try {
-      const response = await $fetch<ChatMessageResponse>('/api/ai-chat/message', {
+      const response = await apiFetch<ChatMessageResponse>('/api/ai-chat/message', {
         method: 'POST',
         body: {
           session: sessionToSend,
           userInput,
           inputMode,
         },
-        credentials: 'include',
       })
 
       session.value = response.session
@@ -155,10 +155,9 @@ export function useChatSession() {
     error.value = null
 
     try {
-      const response = await $fetch<ChatSubmitResponse>('/api/ai-chat/submit', {
+      const response = await apiFetch<ChatSubmitResponse>('/api/ai-chat/submit', {
         method: 'POST',
         body: { session: session.value },
-        credentials: 'include',
       })
 
       if (response.session) {

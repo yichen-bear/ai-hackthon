@@ -4,6 +4,7 @@
  * 從 /api/auth/me 取得登入者資料並顯示
  * 可編輯欄位、修改密碼、大頭貼上傳
  */
+const { apiFetch } = useApi()
 const isEditing = ref(false)
 const isLoadingProfile = ref(true)
 
@@ -21,14 +22,14 @@ const user = ref({
 async function fetchProfile() {
   isLoadingProfile.value = true
   try {
-    const res = await $fetch<{
+    const res = await apiFetch<{
       userId: string
       role: string
       name?: string
       email?: string
       phone?: string
       createdAt?: string
-    }>('/api/auth/me', { credentials: 'include' })
+    }>('/api/auth/me')
 
     if (res.name) user.value.name = res.name
     if (res.email) user.value.email = res.email
@@ -77,7 +78,7 @@ function handleAvatarUpload(event: Event) {
 // 登出
 async function handleLogout() {
   try {
-    await $fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
+    await apiFetch('/api/auth/logout', { method: 'POST' })
   } catch {
     // 即使 API 失敗也繼續導向登入頁
   }

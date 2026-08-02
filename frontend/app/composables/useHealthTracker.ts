@@ -19,26 +19,24 @@ export interface HealthTrackerData {
   supplement: SupplementData
 }
 
-const API_BASE = 'http://localhost:3001/api'
-
 export function useHealthTracker() {
   const data = ref<HealthTrackerData | null>(null)
   const loading = ref(false)
   const error = ref<string | null>(null)
+  const { apiFetch } = useApi()
 
   async function fetchLatest() {
     loading.value = true
     error.value = null
     try {
-      const res = await fetch(`${API_BASE}/health-tracker/latest`)
-      const json = await res.json()
+      const json = await apiFetch<{ success: boolean; data: HealthTrackerData; message?: string }>('/api/health-tracker/latest')
       if (json.success) {
         data.value = json.data
       } else {
         error.value = json.message || '載入失敗'
       }
     } catch (e: any) {
-      error.value = e.message || '網路錯誤'
+      error.value = e?.data?.message || e?.message || '網路錯誤'
     } finally {
       loading.value = false
     }
@@ -46,18 +44,16 @@ export function useHealthTracker() {
 
   async function saveData(payload: { water?: Partial<WaterData>; supplement?: Partial<SupplementData> }) {
     try {
-      const res = await fetch(`${API_BASE}/health-tracker/save`, {
+      const json = await apiFetch<{ success: boolean; message?: string }>('/api/health-tracker/save', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: payload,
       })
-      const json = await res.json()
       if (json.success) {
         await fetchLatest() // 重新載入最新資料
       }
       return json
     } catch (e: any) {
-      return { success: false, message: e.message }
+      return { success: false, message: e?.message }
     }
   }
 

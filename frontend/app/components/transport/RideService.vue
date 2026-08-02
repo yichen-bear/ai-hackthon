@@ -134,6 +134,7 @@ function handleConfirmRide() {
 
 const { currentUser: rideUser } = useCurrentUser()
 const currentRideId = ref<string | null>(null)
+const { apiFetch } = useApi()
 
 async function handleDispatch() {
   const rideData: RideRequest = {
@@ -147,7 +148,7 @@ async function handleDispatch() {
 
   // 寫入 DB
   try {
-    const order: any = await $fetch('/api/rides', {
+    const order: any = await apiFetch('/api/rides', {
       method: 'POST',
       body: {
         passengerId: rideUser.value.id,
@@ -178,7 +179,7 @@ function startPolling() {
 
     if (!currentRideId.value) return
     try {
-      const order: any = await $fetch(`/api/rides`, { params: { userId: rideUser.value.id, status: 'all' } })
+      const order: any = await apiFetch(`/api/rides`, { params: { userId: rideUser.value.id, status: 'all' } })
       const myOrder = Array.isArray(order) ? order.find((o: any) => o.id === currentRideId.value) : null
       if (!myOrder) return
 
@@ -222,7 +223,7 @@ async function handleCancel() {
   stopPolling()
   stopRidingPoll()
   if (currentRideId.value) {
-    try { await $fetch(`/api/rides/${currentRideId.value}/cancel`, { method: 'PATCH' }) } catch {}
+    try { await apiFetch(`/api/rides/${currentRideId.value}/cancel`, { method: 'PATCH' }) } catch {}
   }
   currentRideId.value = null
   rideState.value = 'idle'
@@ -231,7 +232,7 @@ async function handleCancel() {
 // 用戶確認上車 → 進入 riding 狀態 + 通知後端 in_progress + 開始輪詢
 async function handleBoarding() {
   if (currentRideId.value) {
-    try { await $fetch(`/api/rides/${currentRideId.value}/start`, { method: 'PATCH' }) } catch {}
+    try { await apiFetch(`/api/rides/${currentRideId.value}/start`, { method: 'PATCH' }) } catch {}
   }
   rideState.value = 'riding'
   startRidingPoll()
@@ -244,7 +245,7 @@ function startRidingPoll() {
   ridingPollTimer = setInterval(async () => {
     if (!currentRideId.value) return
     try {
-      const orders: any[] = await $fetch('/api/rides', { params: { userId: rideUser.value.id, status: 'all' } })
+      const orders: any[] = await apiFetch('/api/rides', { params: { userId: rideUser.value.id, status: 'all' } })
       const myOrder = orders.find((o: any) => o.id === currentRideId.value)
       if (!myOrder) return
       if (myOrder.status === 'completed') {
@@ -269,7 +270,7 @@ async function handleComplete() {
 const ratingValue = ref(5)
 async function handleRate() {
   if (currentRideId.value) {
-    try { await $fetch(`/api/rides/${currentRideId.value}/rate`, { method: 'POST', body: { rating: ratingValue.value } }) } catch {}
+    try { await apiFetch(`/api/rides/${currentRideId.value}/rate`, { method: 'POST', body: { rating: ratingValue.value } }) } catch {}
   }
   handleReset()
 }
@@ -287,7 +288,7 @@ const rideHistory = ref<any[]>([])
 
 async function fetchHistory() {
   try {
-    const data: any[] = await $fetch('/api/rides', { params: { userId: rideUser.value.id, status: 'completed' } })
+    const data: any[] = await apiFetch('/api/rides', { params: { userId: rideUser.value.id, status: 'completed' } })
     rideHistory.value = data
   } catch { rideHistory.value = [] }
 }

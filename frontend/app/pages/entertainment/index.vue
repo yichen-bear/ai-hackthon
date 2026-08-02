@@ -14,6 +14,7 @@ import type {
 
 const { purchasedTickets, crossModuleTicket, aiRecommendation, dismissRecommendation, triggerCrossModule, userPoints, userInterests } = useEntertainmentState()
 const { matchIntent } = useEntertainmentAgent()
+const { apiFetch } = useApi()
 
 // ─── 功能區塊導航列 ───
 const navTabs = [
@@ -140,7 +141,7 @@ const dbCommunityEvents = ref<CommunityEvent[]>([])
 
 async function fetchCommunityActivities() {
   try {
-    const data: any[] = await $fetch('/api/activities', { params: { status: 'open', userId: activityUser.value.id } })
+    const data: any[] = await apiFetch('/api/activities', { params: { status: 'open', userId: activityUser.value.id } })
     dbCommunityEvents.value = data.map(a => ({
       id: a.id,
       name: a.title,
@@ -261,7 +262,7 @@ async function handleRegister(payload: { eventId: string; type: 'community' | 'c
   if (payload.type === 'community') {
     // 呼叫 API 報名
     try {
-      await $fetch(`/api/activities/${payload.eventId}/register`, {
+      await apiFetch(`/api/activities/${payload.eventId}/register`, {
         method: 'POST',
         body: { userId: activityUser.value.id, userName: activityUser.value.name },
       })

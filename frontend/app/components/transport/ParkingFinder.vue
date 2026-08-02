@@ -24,6 +24,7 @@ const emit = defineEmits<{ 'park-recorded': [record: ParkedRecord]; 'park-cleare
 
 const runtimeConfig = useRuntimeConfig()
 const GOOGLE_MAPS_KEY = runtimeConfig.public.googleMapsKey || ''
+const { apiFetch } = useApi()
 
 // ─── Refs ───
 const formRef = ref<HTMLElement | null>(null)
@@ -112,7 +113,7 @@ async function handleConfirmRecord() {
   }
 
   try {
-    await $fetch('/api/orders', {
+    await apiFetch('/api/orders', {
       method: 'POST',
       body: {
         category: 'TRANSPORT',

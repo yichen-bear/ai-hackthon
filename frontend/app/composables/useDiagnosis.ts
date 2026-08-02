@@ -47,8 +47,6 @@ export interface AppointmentPayload {
   nationalId: string
 }
 
-const API_BASE = 'http://localhost:3001/api'
-
 export function useDiagnosis() {
   const diagnosisResult = ref<DiagnosisResult | null>(null)
   const clinics = ref<ClinicInfo[]>([])
@@ -56,25 +54,24 @@ export function useDiagnosis() {
   const analyzing = ref(false)
   const submitting = ref(false)
   const error = ref<string | null>(null)
+  const { apiFetch } = useApi()
 
   async function analyzeSymptoms(symptoms: string) {
     analyzing.value = true
     error.value = null
     diagnosisResult.value = null
     try {
-      const res = await fetch(`${API_BASE}/diagnosis/analyze`, {
+      const json = await apiFetch<{ success: boolean; data: DiagnosisResult; message?: string }>('/api/diagnosis/analyze', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ symptoms }),
+        body: { symptoms },
       })
-      const json = await res.json()
       if (json.success) {
         diagnosisResult.value = json.data
       } else {
         error.value = json.message || 'AI 分析失敗'
       }
     } catch (e: any) {
-      error.value = e.message || '網路錯誤'
+      error.value = e?.data?.message || e?.message || '網路錯誤'
     } finally {
       analyzing.value = false
     }
@@ -82,11 +79,9 @@ export function useDiagnosis() {
 
   async function fetchClinics(department?: string) {
     try {
-      const url = department
-        ? `${API_BASE}/diagnosis/clinics?department=${encodeURIComponent(department)}`
-        : `${API_BASE}/diagnosis/clinics`
-      const res = await fetch(url)
-      const json = await res.json()
+      const params: Record<string, string> = {}
+      if (department) params.department = department
+      const json = await apiFetch<{ success: boolean; data: ClinicInfo[] }>('/api/diagnosis/clinics', { params })
       if (json.success) {
         clinics.value = json.data
       }
@@ -99,12 +94,10 @@ export function useDiagnosis() {
     submitting.value = true
     error.value = null
     try {
-      const res = await fetch(`${API_BASE}/diagnosis/appointment`, {
+      const json = await apiFetch<{ success: boolean; data: any; message?: string }>('/api/diagnosis/appointment', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: payload,
       })
-      const json = await res.json()
       if (json.success) {
         return json.data
       } else {
@@ -112,7 +105,7 @@ export function useDiagnosis() {
         return null
       }
     } catch (e: any) {
-      error.value = e.message || '網路錯誤'
+      error.value = e?.data?.message || e?.message || '網路錯誤'
       return null
     } finally {
       submitting.value = false
@@ -121,8 +114,7 @@ export function useDiagnosis() {
 
   async function fetchLatestAppointment() {
     try {
-      const res = await fetch(`${API_BASE}/diagnosis/latest-appointment`)
-      const json = await res.json()
+      const json = await apiFetch<{ success: boolean; data: AppointmentData }>('/api/diagnosis/latest-appointment')
       if (json.success) {
         latestAppointment.value = json.data
       }

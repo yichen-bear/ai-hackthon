@@ -4,6 +4,8 @@ import FoodBookingCard from '~/components/food/BookingCard.vue'
 import MidpointMap from '~/components/food/MidpointMap.vue'
 import { useFormApi } from '~/composables/useFormApi'
 import type { FeedbackAnswer } from '~/composables/useFormApi'
+
+const { apiFetch } = useApi()
 import type { Restaurant } from '~/composables/useRestaurantRecommend'
 import { useAiMenu } from '~/composables/useAiMenu'
 
@@ -180,7 +182,7 @@ const slotsLoadingClient = ref(false)
 async function fetchClientSlots() {
   slotsLoadingClient.value = true
   try {
-    const res = await $fetch<{ success: boolean; data: { slots: { time: string; remainingTables: number; status: string }[] } }>(`http://localhost:3001/api/food-reservations/slots/linked_restaurant_01?date=${reserveSelectedDate.value}`)
+    const res = await apiFetch<{ success: boolean; data: { slots: { time: string; remainingTables: number; status: string }[] } }>(`/api/food-reservations/slots/linked_restaurant_01?date=${reserveSelectedDate.value}`)
     if (res.success) {
       liveTimeSlots.value = res.data.slots.map(s => ({
         time: s.time,
@@ -225,7 +227,7 @@ async function submitReserve() {
   if (!canConfirmReserve.value || !selectedRestaurant.value) return
   reserveSubmitting.value = true
   try {
-    await $fetch('http://localhost:3001/api/food-reservations', {
+    await apiFetch('/api/food-reservations', {
       method: 'POST',
       body: {
         placeId: 'linked_restaurant_01',
@@ -270,10 +272,10 @@ async function fetchQueueStatus(placeId: string) {
   queueTicketResult.value = null
   try {
     // 先嘗試用餐廳自身 placeId 查詢，若無資料則用連動 ID
-    let res = await $fetch<{ success: boolean; data: { waitingGroups: number; estimatedMinutes: number; emptyTables: number; notRegistered?: boolean } }>(`http://localhost:3001/api/queue/status/${encodeURIComponent(placeId)}`)
+    let res = await apiFetch<{ success: boolean; data: { waitingGroups: number; estimatedMinutes: number; emptyTables: number; notRegistered?: boolean } }>(`/api/queue/status/${encodeURIComponent(placeId)}`)
     if (res.success && res.data.notRegistered) {
       // 這間餐廳沒有候位系統，用共用連動的餐廳
-      res = await $fetch<{ success: boolean; data: { waitingGroups: number; estimatedMinutes: number; emptyTables: number } }>(`http://localhost:3001/api/queue/status/${LINKED_PLACE_ID}`)
+      res = await apiFetch<{ success: boolean; data: { waitingGroups: number; estimatedMinutes: number; emptyTables: number } }>(`/api/queue/status/${LINKED_PLACE_ID}`)
     }
     if (res.success) {
       queueData.value = {
@@ -294,7 +296,7 @@ async function submitQueue() {
   queueLoading.value = true
   queueError.value = null
   try {
-    const res = await $fetch<{ success: boolean; data: { ticketNumber: number; waitingAhead: number; estimatedMinutes: number }; error?: string }>('http://localhost:3001/api/queue/take-number', {
+    const res = await apiFetch<{ success: boolean; data: { ticketNumber: number; waitingAhead: number; estimatedMinutes: number }; error?: string }>('/api/queue/take-number', {
       method: 'POST',
       body: {
         placeId: LINKED_PLACE_ID,

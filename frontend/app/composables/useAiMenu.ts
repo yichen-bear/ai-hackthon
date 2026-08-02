@@ -22,6 +22,7 @@ export function useAiMenu() {
   const error = ref<string | null>(null)
   const menuItems = ref<MenuItem[]>([])
   const fromCache = ref(false)
+  const { apiFetch } = useApi()
 
   /**
    * 根據餐廳資訊取得 AI 生成的菜單
@@ -39,7 +40,7 @@ export function useAiMenu() {
     menuItems.value = []
 
     try {
-      const data = await $fetch<MenuResponse>('http://localhost:3001/api/food/menu', {
+      const data = await apiFetch<MenuResponse>('/api/food/menu', {
         method: 'POST',
         body: {
           restaurantId: params.restaurantId,

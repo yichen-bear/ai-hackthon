@@ -77,6 +77,7 @@ export function useMidpoint() {
   const carpoolLoading = ref(false)
   const carpoolError = ref<string | null>(null)
   const carpoolResult = ref<CarpoolResponse | null>(null)
+  const { apiFetch } = useApi()
 
   /**
    * 發送推薦請求
@@ -96,7 +97,7 @@ export function useMidpoint() {
         body.cuisineType = cuisineType.trim()
       }
 
-      const data = await $fetch<MidpointResponse>('http://localhost:3001/api/midpoint/recommend', {
+      const data = await apiFetch<MidpointResponse>('/api/midpoint/recommend', {
         method: 'POST',
         body,
       })
@@ -138,7 +139,7 @@ export function useMidpoint() {
         mode: t.mode,
       }))
 
-      const data = await $fetch<CarpoolResponse>('http://localhost:3001/api/midpoint/carpool', {
+      const data = await apiFetch<CarpoolResponse>('/api/midpoint/carpool', {
         method: 'POST',
         body: { origins, destination, travelDetails },
       })

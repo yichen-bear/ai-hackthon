@@ -39,7 +39,7 @@ interface NextAvailable {
 }
 
 // ─── State ───
-const API_BASE = 'http://localhost:3001'
+const { apiFetch } = useApi()
 
 const userLat = ref<number | null>(null)
 const userLng = ref<number | null>(null)
@@ -117,7 +117,7 @@ async function fetchNearbyStops() {
 
   isLoading.value = true
   try {
-    const result = await $fetch<{
+    const result = await apiFetch<{
       success: boolean
       data: {
         todaySchedule: TodaySchedule
@@ -126,7 +126,7 @@ async function fetchNearbyStops() {
         source: 'taipei-opendata' | 'fallback'
         cards: CardData | null
       }
-    }>(`${API_BASE}/api/garbage/nearby`, {
+    }>(`/api/garbage/nearby`, {
       method: 'GET',
       params: { lat: userLat.value, lng: userLng.value },
     })
@@ -142,14 +142,14 @@ async function fetchNearbyStops() {
     console.error('取得清運點失敗:', err)
     // 如果新 API 失敗，嘗試 fallback 到舊 API
     try {
-      const fallbackResult = await $fetch<{
+      const fallbackResult = await apiFetch<{
         success: boolean
         data: {
           todaySchedule: TodaySchedule
           nextAvailable: NextAvailable | null
           stops: TruckStop[]
         }
-      }>(`${API_BASE}/api/truck-schedule/nearby`, {
+      }>(`/api/truck-schedule/nearby`, {
         method: 'POST',
         body: { lat: userLat.value, lng: userLng.value },
       })
@@ -177,7 +177,7 @@ async function handleSetReminder(stop: TruckStop) {
   const reminderTime = `${String(reminderH).padStart(2, '0')}:${String(reminderM).padStart(2, '0')}`
 
   try {
-    await $fetch(`${API_BASE}/api/truck-schedule/set-reminder`, {
+    await apiFetch(`/api/truck-schedule/set-reminder`, {
       method: 'POST',
       body: {
         stopId: stop.id,
@@ -209,14 +209,14 @@ async function handleNavigate(stop: TruckStop) {
   const destName = navData?.stopName ?? stop.name
 
   try {
-    const result = await $fetch<{
+    const result = await apiFetch<{
       success: boolean
       data: {
         stopName: string
         directionsEmbedUrl: string | null
         externalNavUrl: string
       }
-    }>(`${API_BASE}/api/truck-schedule/navigate`, {
+    }>(`/api/truck-schedule/navigate`, {
       method: 'POST',
       body: {
         stopId: stop.id,

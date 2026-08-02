@@ -51,6 +51,7 @@ export function useNearbyClinic() {
   const userLat = ref<number | null>(null)
   const userLng = ref<number | null>(null)
   const locationReady = ref(false)
+  const { apiFetch } = useApi()
 
   // 可用科別列表（動態從結果中提取）
   const availableDepartments = computed(() => {
@@ -109,8 +110,8 @@ export function useNearbyClinic() {
       })
       if (keyword) params.set('keyword', keyword)
 
-      const response = await $fetch<{ results: NearbyClinic[] }>(
-        `http://localhost:3001/api/nearby-clinic?${params.toString()}`
+      const response = await apiFetch<{ results: NearbyClinic[] }>(
+        `/api/nearby-clinic?${params.toString()}`
       )
 
       clinics.value = response.results || []
@@ -126,8 +127,8 @@ export function useNearbyClinic() {
    */
   async function getClinicDetail(placeId: string): Promise<ClinicDetail | null> {
     try {
-      const detail = await $fetch<ClinicDetail>(
-        `http://localhost:3001/api/nearby-clinic/${placeId}/details`
+      const detail = await apiFetch<ClinicDetail>(
+        `/api/nearby-clinic/${placeId}/details`
       )
       return detail
     } catch (e: any) {

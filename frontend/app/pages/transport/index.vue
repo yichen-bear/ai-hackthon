@@ -20,6 +20,7 @@ const {
   setRideDestination,
   dismissSuggestion,
 } = useTransportState()
+const { apiFetch } = useApi()
 
 // ─── 跨模組路線規劃：從 query params 讀取目的地 ───
 const currentRoute = useRoute()
@@ -190,7 +191,7 @@ function handleFavDelete(routeId: string) {
 // 寫入 DB
 async function saveFavoriteRoutesToDB() {
   try {
-    await $fetch('/api/orders', {
+    await apiFetch('/api/orders', {
       method: 'POST',
       body: {
         category: 'TRANSPORT',

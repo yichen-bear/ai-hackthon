@@ -1,7 +1,7 @@
 /**
  * 認證狀態管理 composable
  * 使用 Nuxt useState 確保 SSR/CSR 狀態一致
- * 使用 $fetch + credentials: 'include' 確保 cookie 傳送
+ * 使用 useApi() 的 apiFetch 確保請求打到正確後端
  */
 
 export interface AuthUser {
@@ -39,6 +39,7 @@ const defaultState: AuthState = {
 
 export function useAuth() {
   const state = useState<AuthState>('auth', () => ({ ...defaultState }))
+  const { apiFetch } = useApi()
 
   /**
    * 登入
@@ -49,14 +50,13 @@ export function useAuth() {
     state.value.error = null
 
     try {
-      const response = await $fetch<{
+      const response = await apiFetch<{
         success: boolean
         user: AuthUser
         message?: string
       }>('/api/auth/login', {
         method: 'POST',
         body: { email, password, role },
-        credentials: 'include',
       })
 
       if (response.success && response.user) {
@@ -88,14 +88,13 @@ export function useAuth() {
     state.value.error = null
 
     try {
-      const response = await $fetch<{
+      const response = await apiFetch<{
         success: boolean
         user: AuthUser
         message?: string
       }>('/api/auth/register', {
         method: 'POST',
         body: payload,
-        credentials: 'include',
       })
 
       if (response.success && response.user) {
@@ -121,9 +120,8 @@ export function useAuth() {
    */
   async function logout(): Promise<void> {
     try {
-      await $fetch('/api/auth/logout', {
+      await apiFetch('/api/auth/logout', {
         method: 'POST',
-        credentials: 'include',
       })
     } catch {
       // 即使 API 失敗也強制登出（清除本地狀態）
@@ -143,9 +141,7 @@ export function useAuth() {
     state.value.isLoading = true
 
     try {
-      const user = await $fetch<AuthUser>('/api/auth/me', {
-        credentials: 'include',
-      })
+      const user = await apiFetch<AuthUser>('/api/auth/me')
 
       state.value.isAuthenticated = true
       state.value.user = user

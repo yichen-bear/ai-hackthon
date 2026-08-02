@@ -13,6 +13,7 @@ const AVAILABLE_INTERESTS = ['攝影', '登山', '桌遊', '手作', '咖啡', '
 const { currentUser: authUser } = useCurrentUser()
 const currentUserId = computed(() => authUser.value.id)
 const currentUserName = computed(() => authUser.value.nickname)
+const { apiFetch } = useApi()
 
 // ─── 篩選標籤（改為篩選制度：未選全列、選了 OR） ───
 const localInterests = ref<string[]>([])
@@ -34,7 +35,7 @@ const joinedGroups = ref<Set<string>>(new Set())
 
 async function fetchGroups() {
   try {
-    const data: any[] = await $fetch('/api/groups/discover', { params: { userId: currentUserId.value, tags: localInterests.value.join(',') } })
+    const data: any[] = await apiFetch('/api/groups/discover', { params: { userId: currentUserId.value, tags: localInterests.value.join(',') } })
     dbGroups.value = data
     data.forEach(g => { if (g.isJoined) joinedGroups.value.add(g.id) })
   } catch { /* use props fallback */ }
@@ -54,7 +55,7 @@ const sortedGroups = computed(() => {
 async function joinGroup(group: any) {
   if (group.isJoined) return
   try {
-    await $fetch('/api/groups/join', { method: 'POST', body: { groupId: group.id, userId: currentUserId.value, userName: currentUserName.value } })
+    await apiFetch('/api/groups/join', { method: 'POST', body: { groupId: group.id, userId: currentUserId.value, userName: currentUserName.value } })
     joinedGroups.value.add(group.id)
     group.isJoined = true
     if (group.memberCount != null) group.memberCount++
@@ -77,7 +78,7 @@ async function openGroupChat(group: any) {
   activeGroup.value = group
   showGroupChat.value = true
   try {
-    const msgs: any[] = await $fetch(`/api/groups/${group.id}/messages`)
+    const msgs: any[] = await apiFetch(`/api/groups/${group.id}/messages`)
     chatMessages.value = msgs.filter(m => !m.content.startsWith('【')).map(m => ({
       author: m.senderId === currentUserId.value ? '我' : m.senderName,
       content: m.content,
@@ -92,7 +93,7 @@ async function sendMessage() {
   if (!newMessage.value.trim() || !activeGroup.value) return
   const content = newMessage.value.trim(); newMessage.value = ''
   chatMessages.value.push({ author: '我', content, time: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }) })
-  try { await $fetch(`/api/groups/${activeGroup.value.id}/messages`, { method: 'POST', body: { senderId: currentUserId.value, senderName: currentUserName.value, content } }) } catch {}
+  try { await apiFetch(`/api/groups/${activeGroup.value.id}/messages`, { method: 'POST', body: { senderId: currentUserId.value, senderName: currentUserName.value, content } }) } catch {}
 }
 
 // ─── 團長功能 ───
@@ -103,12 +104,12 @@ async function sendAnnouncement() {
   const msg = prompt('輸入團長公告：')
   if (!msg) return
   chatMessages.value.push({ author: '📌 團長公告', content: msg, time: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }), isPinned: true })
-  try { await $fetch(`/api/groups/${activeGroup.value.id}/messages`, { method: 'POST', body: { senderId: currentUserId.value, senderName: '📌 團長公告', content: msg } }) } catch {}
+  try { await apiFetch(`/api/groups/${activeGroup.value.id}/messages`, { method: 'POST', body: { senderId: currentUserId.value, senderName: '📌 團長公告', content: msg } }) } catch {}
 }
 
 async function disbandGroup() {
   if (!activeGroup.value || !confirm(`確定解散「${activeGroup.value.name}」？`)) return
-  try { await $fetch('/api/groups/leave', { method: 'POST', body: { groupId: activeGroup.value.id, userId: currentUserId.value, userName: currentUserName.value } }) } catch {}
+  try { await apiFetch('/api/groups/leave', { method: 'POST', body: { groupId: activeGroup.value.id, userId: currentUserId.value, userName: currentUserName.value } }) } catch {}
   dbGroups.value = dbGroups.value.filter(g => g.id !== activeGroup.value!.id)
   closeGroupChat()
 }
@@ -129,7 +130,7 @@ async function createGroup() {
   if (!newGroupName.value.trim()) return
   isCreating.value = true
   try {
-    await $fetch('/api/groups', { method: 'POST', body: { name: newGroupName.value.trim(), type: 'interest', icon: '💡', tags: newGroupTags.value, activityDate: newGroupDate.value || null, activityLocation: newGroupLocation.value || null, creatorId: currentUserId.value, creatorName: currentUserName.value } })
+    await apiFetch('/api/groups', { method: 'POST', body: { name: newGroupName.value.trim(), type: 'interest', icon: '💡', tags: newGroupTags.value, activityDate: newGroupDate.value || null, activityLocation: newGroupLocation.value || null, creatorId: currentUserId.value, creatorName: currentUserName.value } })
     closeCreate(); fetchGroups()
   } catch {}
   isCreating.value = false

@@ -3,6 +3,7 @@
  * 會員中心主頁
  * 標籤：點數、條碼/錢包、活動票券、獎章
  */
+const { apiFetch } = useApi()
 
 const activeTab = ref<'points' | 'barcode' | 'tickets' | 'badges' | 'groups' | 'messages'>('points')
 
@@ -49,7 +50,7 @@ const msgUnreadTotal = ref(0)
 
 async function fetchConversations() {
   try {
-    const msgs: any[] = await $fetch('/api/messages', { params: { userId: currentUserId.value } })
+    const msgs: any[] = await apiFetch('/api/messages', { params: { userId: currentUserId.value } })
     // 聚合為對話列表
     const peers = new Map<string, ChatConversation>()
     msgs.forEach((m: any) => {
@@ -94,10 +95,10 @@ async function openChat(conv: ChatConversation) {
   msgUnreadTotal.value = conversations.value.reduce((s, c) => s + c.unreadCount, 0)
 
   try {
-    const msgs: any[] = await $fetch('/api/messages', { params: { userId: currentUserId.value, peerId: conv.peerId } })
+    const msgs: any[] = await apiFetch('/api/messages', { params: { userId: currentUserId.value, peerId: conv.peerId } })
     chatMessages.value = msgs
     // 標記已讀
-    await $fetch('/api/messages/read', { method: 'PATCH', body: { userId: currentUserId.value, peerId: conv.peerId } })
+    await apiFetch('/api/messages/read', { method: 'PATCH', body: { userId: currentUserId.value, peerId: conv.peerId } })
   } catch {
     chatMessages.value = [
       { id: '1', senderId: conv.peerId, senderName: conv.peerName, content: '你好！我對你的商品有興趣', messageType: 'text', creTime: new Date(Date.now() - 7200000).toISOString() },
@@ -115,7 +116,7 @@ async function sendChatMessage() {
   chatMessages.value.push({ id: `msg-${Date.now()}`, senderId: currentUserId.value, senderName: currentUserName.value, content, messageType: 'text', creTime: new Date().toISOString() })
 
   try {
-    await $fetch('/api/messages', { method: 'POST', body: { senderId: currentUserId.value, senderName: currentUserName.value, receiverId: activePeer.value.peerId, receiverName: activePeer.value.peerName, content } })
+    await apiFetch('/api/messages', { method: 'POST', body: { senderId: currentUserId.value, senderName: currentUserName.value, receiverId: activePeer.value.peerId, receiverName: activePeer.value.peerName, content } })
   } catch { /* silent */ }
 }
 
@@ -144,7 +145,7 @@ function getReservationStatusLabel(status: string): string {
 async function confirmReservation(reservationId: string, newStatus: string) {
   if (!reservationId) return
   try {
-    await $fetch(`/api/reservations/${reservationId}`, { method: 'PATCH', body: { status: newStatus } })
+    await apiFetch(`/api/reservations/${reservationId}`, { method: 'PATCH', body: { status: newStatus } })
     showToast(newStatus === 'APPROVED_MEETUP' ? '✅ 已同意面交！買家已收到通知。' : '❌ 已拒絕交易')
     // 重新載入對話以更新卡片狀態
     if (activePeer.value) await openChat(activePeer.value)
@@ -170,7 +171,7 @@ const newGroupMsg = ref('')
 // 從 DB 取得我的社群
 async function fetchMyGroups() {
   try {
-    const data: any[] = await $fetch('/api/groups/my', { params: { userId: currentUserId.value } })
+    const data: any[] = await apiFetch('/api/groups/my', { params: { userId: currentUserId.value } })
     myGroups.value = data.map(g => ({
       id: g.id, name: g.name, type: g.type || 'interest', icon: g.icon || '💡',
       memberCount: g.memberCount || 0, unreadCount: g.unreadCount || 0,
@@ -188,7 +189,7 @@ async function enterGroupChat(group: MyGroup) {
   group.unreadCount = 0
   showGroupChat.value = true
   try {
-    const msgs: any[] = await $fetch(`/api/groups/${group.id}/messages`)
+    const msgs: any[] = await apiFetch(`/api/groups/${group.id}/messages`)
     groupChatMessages.value = msgs.map(m => ({
       author: m.senderId === currentUserId.value ? '我' : m.senderName,
       content: m.content,
@@ -206,13 +207,13 @@ async function sendGroupMsg() {
   newGroupMsg.value = ''
   groupChatMessages.value.push({ author: '我', content, time: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }) })
   try {
-    await $fetch(`/api/groups/${activeGroupChat.value.id}/messages`, { method: 'POST', body: { senderId: currentUserId.value, senderName: currentUserName.value, content } })
+    await apiFetch(`/api/groups/${activeGroupChat.value.id}/messages`, { method: 'POST', body: { senderId: currentUserId.value, senderName: currentUserName.value, content } })
   } catch { /* silent */ }
 }
 
 async function leaveGroup(group: MyGroup) {
   try {
-    await $fetch('/api/groups/leave', { method: 'POST', body: { groupId: group.id, userId: currentUserId.value, userName: currentUserName.value } })
+    await apiFetch('/api/groups/leave', { method: 'POST', body: { groupId: group.id, userId: currentUserId.value, userName: currentUserName.value } })
   } catch { /* silent */ }
   myGroups.value = myGroups.value.filter(g => g.id !== group.id)
   if (activeGroupChat.value?.id === group.id) { showGroupChat.value = false; activeGroupChat.value = null }
@@ -228,12 +229,12 @@ async function sendGroupAnnouncement() {
   const msg = prompt('輸入團長公告：')
   if (!msg) return
   groupChatMessages.value.push({ author: '📌 團長公告', content: msg, time: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }), isPinned: true })
-  try { await $fetch(`/api/groups/${activeGroupChat.value.id}/messages`, { method: 'POST', body: { senderId: currentUserId.value, senderName: '📌 團長公告', content: msg } }) } catch {}
+  try { await apiFetch(`/api/groups/${activeGroupChat.value.id}/messages`, { method: 'POST', body: { senderId: currentUserId.value, senderName: '📌 團長公告', content: msg } }) } catch {}
 }
 
 async function disbandGroupFromMember() {
   if (!activeGroupChat.value || !confirm(`確定解散「${activeGroupChat.value.name}」？`)) return
-  try { await $fetch('/api/groups/leave', { method: 'POST', body: { groupId: activeGroupChat.value.id, userId: currentUserId.value, userName: currentUserName.value } }) } catch {}
+  try { await apiFetch('/api/groups/leave', { method: 'POST', body: { groupId: activeGroupChat.value.id, userId: currentUserId.value, userName: currentUserName.value } }) } catch {}
   myGroups.value = myGroups.value.filter(g => g.id !== activeGroupChat.value!.id)
   closeGroupChatOverlay()
 }
@@ -317,7 +318,7 @@ const mockTickets = ref([
 // 從 DB 載入真實票券
 async function fetchMyTickets() {
   try {
-    const data: any = await $fetch('/api/member/tickets', { params: { userId: currentUserId.value } })
+    const data: any = await apiFetch('/api/member/tickets', { params: { userId: currentUserId.value } })
     // 社區活動
     if (data.activities?.length > 0) {
       const actTks = data.activities.map((a: any) => ({

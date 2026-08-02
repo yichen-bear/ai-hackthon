@@ -1,10 +1,11 @@
 <script setup lang="ts">
 // 未讀私訊數（全局狀態）
 const msgUnread = useState<number>('global-msg-unread', () => 0)
+const { apiFetch } = useApi()
 
 onMounted(async () => {
   try {
-    const data: any = await $fetch('/api/messages/unread', { params: { userId: '00000000-0000-0000-0000-000000000001' } })
+    const data: any = await apiFetch('/api/messages/unread', { params: { userId: '00000000-0000-0000-0000-000000000001' } })
     msgUnread.value = data?.unreadCount || 0
   } catch { /* silent */ }
 })

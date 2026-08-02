@@ -1,7 +1,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
 useHead({ htmlAttrs: { lang: 'zh-TW' } })
-
+const { apiFetch } = useApi()
 // ─── Types ───
 type OrderSource = 'preorder' | 'groupbuy'
 type StoreOrderStatus = 'pending' | 'submitted' | 'shipping' | 'arrived' | 'notified' | 'completed'
@@ -534,7 +534,7 @@ function formatDate(dateStr: string): string {
 
 async function confirmSecondhandPickup(item: SecondhandStoreItem) {
   try {
-    await $fetch(`/api/secondhand-items/${item.id}/pickup`, { method: 'PATCH' })
+    await apiFetch(`/api/secondhand-items/${item.id}/pickup`, { method: 'PATCH' })
     showToast('✅ 核銷成功！物品已由買家取走。')
     await fetchSecondhandItems()
   } catch (err) {
@@ -545,7 +545,7 @@ async function confirmSecondhandPickup(item: SecondhandStoreItem) {
 
 async function returnToSeller(item: SecondhandStoreItem) {
   try {
-    await $fetch(`/api/secondhand-items/${item.id}/return-to-seller`, { method: 'PATCH' })
+    await apiFetch(`/api/secondhand-items/${item.id}/return-to-seller`, { method: 'PATCH' })
     showToast('↩️ 已通知賣家前來領回商品')
     await fetchSecondhandItems()
   } catch (err) {

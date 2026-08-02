@@ -54,28 +54,26 @@ export interface FeedbackPayload {
   description?: string
 }
 
-const API_BASE = 'http://localhost:3001/api'
-
 export function useFormApi() {
   const formData = ref<FormData | null>(null)
   const loading = ref(false)
   const error = ref<string | null>(null)
   const submitting = ref(false)
   const submitSuccess = ref(false)
+  const { apiFetch } = useApi()
 
   async function fetchForm(formId: number) {
     loading.value = true
     error.value = null
     try {
-      const res = await fetch(`${API_BASE}/forms/${formId}`)
-      const json = await res.json()
+      const json = await apiFetch<{ success: boolean; data: FormData; message?: string }>(`/api/forms/${formId}`)
       if (json.success) {
         formData.value = json.data
       } else {
         error.value = json.message || '載入表單失敗'
       }
     } catch (e: any) {
-      error.value = e.message || '網路錯誤'
+      error.value = e?.data?.message || e?.message || '網路錯誤'
     } finally {
       loading.value = false
     }
@@ -86,12 +84,10 @@ export function useFormApi() {
     submitSuccess.value = false
     error.value = null
     try {
-      const res = await fetch(`${API_BASE}/forms/${formId}/feedback`, {
+      const json = await apiFetch<{ success: boolean; message?: string }>(`/api/forms/${formId}/feedback`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: payload,
       })
-      const json = await res.json()
       if (json.success) {
         submitSuccess.value = true
       } else {
@@ -99,7 +95,7 @@ export function useFormApi() {
       }
       return json
     } catch (e: any) {
-      error.value = e.message || '網路錯誤'
+      error.value = e?.data?.message || e?.message || '網路錯誤'
       return { success: false, message: error.value }
     } finally {
       submitting.value = false

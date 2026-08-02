@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
-
+const { apiFetch } = useApi()
 useHead({
   htmlAttrs: { lang: 'zh-TW' },
 })
@@ -91,7 +91,7 @@ function showToast(msg: string) {
 async function fetchDbRides() {
   try {
     // 待派車
-    const pending: any[] = await $fetch('/api/rides/pending')
+    const pending: any[] = await apiFetch('/api/rides/pending')
     if (pending.length > 0) {
       const dbConsults: ConsultationForm[] = pending.map(r => ({
         id: r.id,
@@ -114,7 +114,7 @@ async function fetchDbRides() {
     }
 
     // 進行中
-    const active: any[] = await $fetch('/api/rides/active')
+    const active: any[] = await apiFetch('/api/rides/active')
     if (active.length > 0) {
       const dbOrders: Order[] = active.map(r => ({
         id: r.id,
@@ -139,7 +139,7 @@ async function fetchDbRides() {
 
 async function fetchDbDrivers() {
   try {
-    const data: any[] = await $fetch('/api/rides/drivers')
+    const data: any[] = await apiFetch('/api/rides/drivers')
     if (data.length > 0) {
       drivers.value = data.map(d => ({
         id: d.id,
@@ -319,7 +319,7 @@ async function convertToOrder(consultation: ConsultationForm) {
 
   // 呼叫 API 派車
   try {
-    await $fetch(`/api/rides/${consultation.id}/dispatch`, {
+    await apiFetch(`/api/rides/${consultation.id}/dispatch`, {
       method: 'PATCH',
       body: { driverId: available.id },
     })
@@ -364,7 +364,7 @@ function advanceOrderStatus(order: Order) {
     if (order.status === 'completed') {
       order.completeTime = new Date().toLocaleString('zh-TW', { hour12: false })
       // 呼叫 API 完成
-      try { $fetch(`/api/rides/${order.id}/complete`, { method: 'PATCH' }) } catch {}
+      try { apiFetch(`/api/rides/${order.id}/complete`, { method: 'PATCH' }) } catch {}
       // 釋放司機
       const driver = drivers.value.find(d => d.name === order.assignedDriver)
       if (driver) {

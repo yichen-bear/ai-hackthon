@@ -4,6 +4,8 @@ import HealthTracker from '~/components/medical/HealthTracker.vue'
 import DiagnosisFlow from '~/components/medical/DiagnosisFlow.vue'
 import { useNearbyClinic } from '~/composables/useNearbyClinic'
 
+const { apiFetch } = useApi()
+
 useHead({
   htmlAttrs: { lang: 'zh-TW' },
 })
@@ -241,7 +243,7 @@ async function submitBooking() {
   if (!validateBookingForm()) return
   bookingSubmitting.value = true
   try {
-    const res = await $fetch<{ success: boolean; data: { feedbackNo: string; appointmentNumber: number } }>('http://localhost:3001/api/diagnosis/appointment', {
+    const res = await apiFetch<{ success: boolean; data: { feedbackNo: string; appointmentNumber: number } }>('/api/diagnosis/appointment', {
       method: 'POST',
       body: {
         patientName: bookingForm.value.patientName,

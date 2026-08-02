@@ -213,6 +213,7 @@ definePageMeta({ layout: false })
 
 const { login, register, state: authState } = useAuth()
 const route = useRoute()
+const { apiFetch } = useApi()
 
 type Role = 'member' | 'vendor'
 
@@ -375,7 +376,7 @@ async function handleRegisterSubmit() {
     // 註冊成功後，若會員有填寫通訊地址，儲存至 MemberAddress
     if (activeRole.value === 'member' && address.value.countyCode && address.value.districtCode && address.value.addressDetail.trim()) {
       try {
-        await $fetch('/api/member/addresses', {
+        await apiFetch('/api/member/addresses', {
           method: 'POST',
           body: {
             type: 'mailing',

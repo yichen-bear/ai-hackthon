@@ -38,6 +38,7 @@ const isLoading = ref(false)
 // 當前用戶（從登入狀態取得）
 const { currentUser: authUser } = useCurrentUser()
 const currentUser = computed(() => ({ id: authUser.value.id, name: authUser.value.maskedName }))
+const { apiFetch } = useApi()
 
 // ─── Toast 通知系統（APP 風格） ───
 const toastMsg = ref('')
@@ -66,7 +67,7 @@ function handleConfirmNo() { confirmVisible.value = false; confirmResolve?.(fals
 async function fetchListings() {
   isLoading.value = true
   try {
-    const data: any = await $fetch('/api/listings', { params: { category: activeCategory.value } })
+    const data: any = await apiFetch('/api/listings', { params: { category: activeCategory.value } })
     items.value = data
   } catch {
     // fallback mock（API 不可用時）
@@ -115,14 +116,14 @@ async function handlePost() {
   // 上傳圖片
   if (imageBase64.value) {
     try {
-      const uploadRes: any = await $fetch('/api/upload', { method: 'POST', body: { image: imageBase64.value } })
+      const uploadRes: any = await apiFetch('/api/upload', { method: 'POST', body: { image: imageBase64.value } })
       imageUrl = uploadRes.url
     } catch { /* 圖片上傳失敗仍可刊登 */ }
   }
 
   // 建立商品
   try {
-    await $fetch('/api/listings', {
+    await apiFetch('/api/listings', {
       method: 'POST',
       body: {
         sellerId: currentUser.value.id,
@@ -173,7 +174,7 @@ function openMsgModal(item: SecondhandItem) {
 async function sendMsg() {
   if (!msgTarget.value || !msgContent.value.trim()) return
   try {
-    await $fetch('/api/messages', {
+    await apiFetch('/api/messages', {
       method: 'POST',
       body: { senderId: currentUser.value.id, senderName: currentUser.value.name, receiverId: msgTarget.value.sellerId, receiverName: msgTarget.value.sellerName, listingId: msgTarget.value.id, content: msgContent.value.trim() },
     })
@@ -213,7 +214,7 @@ async function handleReserve() {
     : null
 
   try {
-    await $fetch('/api/reservations', {
+    await apiFetch('/api/reservations', {
       method: 'POST',
       body: {
         listingId: item.id,
@@ -266,7 +267,7 @@ async function fetchMyListings() {
   showMyListings.value = !showMyListings.value
   if (!showMyListings.value) return
   try {
-    const data: any = await $fetch('/api/listings', { params: { category: 'all' } })
+    const data: any = await apiFetch('/api/listings', { params: { category: 'all' } })
     myListings.value = data.filter((i: any) => i.sellerId === currentUser.value.id)
   } catch {
     myListings.value = []
@@ -277,7 +278,7 @@ async function cancelMyListing(item: SecondhandItem) {
   const yes = await appConfirm(`確定要取消「${item.productName}」的刊登嗎？`)
   if (!yes) return
   try {
-    await $fetch(`/api/listings/${item.id}`, { method: 'PATCH', body: { status: 'cancelled' } })
+    await apiFetch(`/api/listings/${item.id}`, { method: 'PATCH', body: { status: 'cancelled' } })
     showToast('✅ 已取消刊登')
     myListings.value = myListings.value.filter(i => i.id !== item.id)
     fetchListings()

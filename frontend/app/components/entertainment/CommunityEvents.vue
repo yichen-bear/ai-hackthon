@@ -23,7 +23,7 @@ const tabs = [
 ] as const
 type TabKey = typeof tabs[number]['key']
 const activeTab = ref<TabKey>('community')
-
+const { apiFetch } = useApi()
 // 報名狀態
 const registeredIds = ref<Set<string>>(new Set())
 const paymentTarget = ref<{ id: string; name: string; fee: number; type: 'community' | 'course'; details?: string } | null>(null)
@@ -121,7 +121,7 @@ function openAskQuestion(eventId: string) {
 async function submitQuestion() {
   if (!questionText.value.trim()) return
   try {
-    await $fetch('/api/activities/questions', {
+    await apiFetch('/api/activities/questions', {
       method: 'POST',
       body: {
         askerId: questionUser.value.id,

@@ -99,6 +99,7 @@
 
 <script setup lang="ts">
 definePageMeta({ layout: 'blank' })
+const { apiFetch } = useApi()
 
 interface AddressItem {
   id: number
@@ -135,7 +136,7 @@ const editingAddress = ref<{
 async function fetchAddresses() {
   isLoading.value = true
   try {
-    const res = await $fetch<{ success: boolean; data: AddressItem[] }>('/api/member/addresses', {
+    const res = await apiFetch<{ success: boolean; data: AddressItem[] }>('/api/member/addresses', {
       credentials: 'include',
     })
     if (res.success) {
@@ -159,7 +160,7 @@ async function handleAdd() {
 
   isSaving.value = true
   try {
-    await $fetch('/api/member/addresses', {
+    await apiFetch('/api/member/addresses', {
       method: 'POST',
       body: {
         type,
@@ -212,7 +213,7 @@ async function handleUpdate() {
 
   isSaving.value = true
   try {
-    await $fetch(`/api/member/addresses/${id}`, {
+    await apiFetch(`/api/member/addresses/${id}`, {
       method: 'PUT',
       body: {
         type,
@@ -237,7 +238,7 @@ async function handleDelete(id: number) {
   if (!confirm('確定要刪除此地址嗎？')) return
 
   try {
-    await $fetch(`/api/member/addresses/${id}`, {
+    await apiFetch(`/api/member/addresses/${id}`, {
       method: 'DELETE',
       credentials: 'include',
     })

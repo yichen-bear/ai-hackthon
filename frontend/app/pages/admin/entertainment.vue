@@ -1,6 +1,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
 useHead({ htmlAttrs: { lang: 'zh-TW' } })
+const { apiFetch } = useApi()
 
 // ─── Types ───
 type RegistrationStatus = 'pending' | 'confirmed' | 'checked_in' | 'completed' | 'cancelled'
@@ -75,7 +76,7 @@ function showToast(msg: string) {
 // ─── 從 DB 載入活動（覆蓋 mock） ───
 async function fetchDbActivities() {
   try {
-    const data: any[] = await $fetch('/api/activities', { params: { status: 'all' } })
+    const data: any[] = await apiFetch('/api/activities', { params: { status: 'all' } })
     if (data.length > 0) {
       activities.value = data.map(a => ({
         id: a.id,
@@ -98,7 +99,7 @@ async function fetchDbActivities() {
       // 載入每個活動的報名名單（含候補）
       for (const act of activities.value) {
         try {
-          const detail: any = await $fetch(`/api/activities/${act.id}`)
+          const detail: any = await apiFetch(`/api/activities/${act.id}`)
           if (detail.registrations) {
             act.registrations = detail.registrations.map((r: any) => ({
               id: r.id,
@@ -138,7 +139,7 @@ function mapDbCategory(cat: string): ActivityCategory {
 // ─── 從 DB 載入居民提問（覆蓋 mock） ───
 async function fetchDbQuestions() {
   try {
-    const data: any[] = await $fetch('/api/activities/questions/list')
+    const data: any[] = await apiFetch('/api/activities/questions/list')
     if (data.length > 0) {
       residentQuestions.value = data.map(q => ({
         id: q.id,
@@ -158,7 +159,7 @@ async function fetchDbQuestions() {
 async function answerQuestionDb(q: ResidentQuestion) {
   if (!replyText.value.trim()) return
   try {
-    await $fetch(`/api/activities/questions/${q.id}/reply`, {
+    await apiFetch(`/api/activities/questions/${q.id}/reply`, {
       method: 'PATCH',
       body: { replyContent: replyText.value.trim(), repliedBy: '里長' },
     })
@@ -178,7 +179,7 @@ async function sendNotifyDb() {
   const msg = selectedTemplate.value === 'custom' ? customMessage.value.trim() : getTemplateMsg(selectedTemplate.value)
   if (!msg) { showToast('⚠️ 請輸入通知內容'); return }
   try {
-    const result: any = await $fetch(`/api/activities/${sendTargetId.value}/notify`, {
+    const result: any = await apiFetch(`/api/activities/${sendTargetId.value}/notify`, {
       method: 'POST',
       body: { content: msg },
     })
@@ -404,7 +405,7 @@ function closeActivity(act: ManagedActivity) {
 }
 async function completeActivity(act: ManagedActivity) {
   try {
-    await $fetch(`/api/activities/${act.id}/complete`, { method: 'POST' })
+    await apiFetch(`/api/activities/${act.id}/complete`, { method: 'POST' })
     act.status = 'completed'
     act.registrations.forEach(r => { if (r.status === 'confirmed' || r.status === 'checked_in') r.status = 'completed' })
     showToast(`🎉 活動完成：${act.name}`)

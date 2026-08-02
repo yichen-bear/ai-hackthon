@@ -14,6 +14,7 @@ import type { WishlistItem } from '~/components/booking/WishlistPanel.vue'
 import type { StoreInfo } from '~/composables/useBookingState'
 
 const { agentRecommendation, currentStore, dismissRecommendation } = useBookingState()
+const { apiFetch } = useApi()
 
 // ─── 功能區塊導航列 ───
 const navTabs = [
@@ -98,7 +99,7 @@ const { currentUser } = useCurrentUser()
 
 async function fetchSecondhandOrders() {
   try {
-    const data: any[] = await $fetch('/api/reservations/my-orders', { params: { userId: currentUser.value.id } })
+    const data: any[] = await apiFetch('/api/reservations/my-orders', { params: { userId: currentUser.value.id } })
     // 轉換為 BookingOrder 格式並合併
     const shOrders: BookingOrder[] = data.map(r => {
       const isMeetup = r.pickupMethod === '門市面交'
@@ -134,7 +135,7 @@ async function fetchSecondhandOrders() {
 
 async function fetchSecondhandPickups() {
   try {
-    const data: any[] = await $fetch('/api/reservations/my-pickups', { params: { userId: currentUser.value.id } })
+    const data: any[] = await apiFetch('/api/reservations/my-pickups', { params: { userId: currentUser.value.id } })
     const shPickups: PickupItem[] = data.map(r => {
       const isMeetup = r.pickupMethod === '門市面交'
       const label = isMeetup ? '面交' : '代收'

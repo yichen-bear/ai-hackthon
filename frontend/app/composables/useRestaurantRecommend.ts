@@ -41,6 +41,7 @@ export function useRestaurantRecommend() {
   const restaurants = ref<Restaurant[]>([])
   const userLocation = ref<{ lat: number; lng: number } | null>(null)
   const locationError = ref<string | null>(null)
+  const { apiFetch } = useApi()
 
   /**
    * 取得使用者目前位置（透過瀏覽器 Geolocation API）
@@ -147,8 +148,8 @@ export function useRestaurantRecommend() {
         params.set('mode', options.mode)
       }
 
-      const data = await $fetch<RecommendResponse>(
-        `http://localhost:3001/api/food/recommend?${params.toString()}`
+      const data = await apiFetch<RecommendResponse>(
+        `/api/food/recommend?${params.toString()}`
       )
 
       if (!data.success) {

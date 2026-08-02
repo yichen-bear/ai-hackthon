@@ -37,10 +37,10 @@ const conversationHistory = computed(() =>
 )
 
 // ─── API 呼叫 ───
-const API_BASE = 'http://localhost:3001'
+const { apiFetch } = useApi()
 
 async function callClassifyAPI(userInput: string, imageDescription?: string) {
-  const response = await $fetch<{
+  const response = await apiFetch<{
     success: boolean
     data: {
       action: 'classify' | 'ask_detail'
@@ -49,7 +49,7 @@ async function callClassifyAPI(userInput: string, imageDescription?: string) {
       quickReplies: string[] | null
       feedbackNo: string | null
     }
-  }>(`${API_BASE}/api/waste-classification/classify`, {
+  }>(`/api/waste-classification/classify`, {
     method: 'POST',
     body: {
       conversationHistory: conversationHistory.value,
