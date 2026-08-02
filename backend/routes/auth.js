@@ -70,7 +70,7 @@ router.post('/login', async (req, res) => {
     res.cookie('token', result.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'lax',
       path: '/',
       maxAge: cookieMaxAgeForRole(role),
     });
@@ -127,7 +127,7 @@ router.post('/register', async (req, res) => {
     res.cookie('token', result.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'lax',
       path: '/',
       maxAge: cookieMaxAgeForRole(role),
     });
