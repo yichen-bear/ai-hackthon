@@ -1,4 +1,5 @@
 const express = require('express')
+const crypto = require('crypto')
 const router = express.Router()
 const prisma = require('../utils/prismaClient')
 
@@ -14,6 +15,7 @@ router.post('/', async (req, res) => {
 
     const order = await prisma.ride_order.create({
       data: {
+        id: crypto.randomUUID(),
         passenger_id: passengerId,
         passenger_name: passengerName || '乘客',
         passenger_phone: passengerPhone || null,
