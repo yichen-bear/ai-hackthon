@@ -82,7 +82,7 @@ async function handleLogout() {
   } catch {
     // 即使 API 失敗也繼續導向登入頁
   }
-  navigateTo('/login')
+  await navigateTo('/login', { replace: true })
 }
 
 // 修改密碼
